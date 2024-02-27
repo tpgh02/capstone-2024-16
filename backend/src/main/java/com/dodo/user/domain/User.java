@@ -1,10 +1,7 @@
 package com.dodo.user.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -21,9 +18,7 @@ public class User {
     // password or social
     @Enumerated(EnumType.STRING)
     private AuthenticationType authenticationType;
-
     private String email;
-    private String password;
     private String name;
     private Integer mileage;
 

@@ -2,6 +2,8 @@ package com.dodo.user;
 
 import com.dodo.user.dto.UserCreateRequestData;
 import com.dodo.user.dto.UserCreateResponseData;
+import com.dodo.user.dto.UserLoginRequestData;
+import com.dodo.user.dto.UserLoginResponseData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,5 +23,12 @@ public class UserController {
     public UserCreateResponseData register(
           @RequestBody  UserCreateRequestData request) {
         return new UserCreateResponseData(userservice.register(request));
+    }
+
+    @PostMapping("login")
+    public UserLoginResponseData login(
+            @RequestBody UserLoginRequestData request
+    ) {
+        return new UserLoginResponseData(userservice.login(request));
     }
 }

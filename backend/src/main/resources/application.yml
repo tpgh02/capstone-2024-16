@@ -16,3 +16,8 @@ spring:
   h2:
     console:
       enabled: true
+
+
+authentication:
+  access-token:
+    secretKey: "136314nj6134lk6n413kvb"

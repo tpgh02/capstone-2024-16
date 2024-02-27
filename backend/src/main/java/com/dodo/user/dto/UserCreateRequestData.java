@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.*;
 
-@Data
+@Getter
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         property = "type"
@@ -14,7 +14,6 @@ import lombok.*;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = UserCreateRequestData.PasswordUserCreateRequestData.class, name = "password"),
         @JsonSubTypes.Type(value = UserCreateRequestData.SocialUserCreateRequestData.class, name = "social"),
-
 })
 public abstract class UserCreateRequestData {
 
