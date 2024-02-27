@@ -1,9 +1,6 @@
 package com.dodo.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +15,10 @@ import lombok.Setter;
 @Table(name="MEMBER")
 public class UserDomain {
     @Id
-    @Column(name="email", columnDefinition="VARCHAR(100)", nullable=true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+    private String authenticationType;
     private String email;
 }

@@ -38,7 +38,7 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         email = token.getPrincipal().getAttribute("email").toString();
 
 
-        log.info("LOGIN SUCCESS : {} FROM {}", email);
+        log.info("LOGIN SUCCESS : {}", email);
 
         UserDomain user = userService.getUserByEmail(email);
 

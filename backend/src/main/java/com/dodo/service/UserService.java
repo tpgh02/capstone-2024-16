@@ -28,7 +28,9 @@ public class UserService extends DefaultOAuth2UserService {
         Map<String, Object> attributes = super.loadUser(userRequest).getAttributes();
         log.info("ATTR INFO : {}", attributes.toString());
 
+        // String name = attributes.get("name").toString();
         String email = null;
+        String authenticationType = userRequest.getClientRegistration().getRegistrationId();
 
         OAuth2User user2 = super.loadUser(userRequest);
 
@@ -36,9 +38,11 @@ public class UserService extends DefaultOAuth2UserService {
 
         // User 존재여부 확인 및 없으면 생성
         if(getUserByEmail(email) == null) {
-            log.info("{}({}) NOT EXISTS. REGISTER", email);
+            log.info("{} NOT EXISTS. REGISTER", email);
             UserDomain user = new UserDomain();
             user.setEmail(email);
+            user.setAuthenticationType(authenticationType);
+            // user.setName(name);
 
             save(user);
         }
