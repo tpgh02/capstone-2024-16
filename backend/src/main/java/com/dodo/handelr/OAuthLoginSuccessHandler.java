@@ -1,9 +1,8 @@
 package com.dodo.handelr;
 
 import java.io.IOException;
-import java.util.Map;
 
-import com.dodo.domain.UserDomain;
+import com.dodo.user.domain.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,7 +14,7 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import com.dodo.service.UserService;
+import com.dodo.user.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,7 +39,7 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
         log.info("LOGIN SUCCESS : {}", email);
 
-        UserDomain user = userService.getUserByEmail(email);
+        User user = userService.getUserByEmail(email);
 
         // 세션에 user 저장
         log.info("USER SAVED IN SESSION");

@@ -1,7 +1,8 @@
-package com.dodo.service;
+package com.dodo.user.service;
 
 import java.util.Map;
 
+import com.dodo.user.domain.AuthenticationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -9,8 +10,8 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import com.dodo.domain.UserDomain;
-import com.dodo.repository.UserRepository;
+import com.dodo.user.domain.User;
+import com.dodo.user.repository.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,7 +32,7 @@ public class UserService extends DefaultOAuth2UserService {
 
         String name = attributes.get("name").toString();
         String email = null;
-        String authenticationType = userRequest.getClientRegistration().getRegistrationId();
+        AuthenticationType type = AuthenticationType.google;
 
         OAuth2User user2 = super.loadUser(userRequest);
 
@@ -40,10 +41,7 @@ public class UserService extends DefaultOAuth2UserService {
         // User 존재여부 확인 및 없으면 생성
         if(getUserByEmail(email) == null) {
             log.info("{} NOT EXISTS. REGISTER", email);
-            UserDomain user = new UserDomain();
-            user.setEmail(email);
-            user.setAuthenticationType(authenticationType);
-            user.setName(name);
+            User user = new User(type, email, 0);
 
             save(user);
         }
@@ -52,11 +50,11 @@ public class UserService extends DefaultOAuth2UserService {
     }
 
     // 저장, 조회만 수행.
-    public void save(UserDomain user) {
+    public void save(User user) {
         userRepository.save(user);
     }
 
-    public UserDomain getUserByEmail(String email) {
+    public User getUserByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
     }
 }

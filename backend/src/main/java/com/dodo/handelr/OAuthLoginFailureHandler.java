@@ -2,7 +2,7 @@ package com.dodo.handelr;
 
 import java.io.IOException;
 
-import com.dodo.service.UserService;
+import com.dodo.user.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
-
-import com.dodo.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
 

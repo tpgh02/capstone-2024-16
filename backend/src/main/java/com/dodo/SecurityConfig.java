@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 
 import com.dodo.handelr.OAuthLoginFailureHandler;
 import com.dodo.handelr.OAuthLoginSuccessHandler;
-import com.dodo.service.UserService;
+import com.dodo.user.service.UserService;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
