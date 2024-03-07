@@ -32,8 +32,6 @@ public class UserService {
             // 비밀번호 로그인
 
             var req = (UserCreateRequestData.PasswordUserCreateRequestData)request;
-            log.info("password 1 : {}", req.getPassword());
-            log.info("encoded password : {}", passwordEncoder.encode(req.getPassword()));
             String password = passwordEncoder.encode(req.getPassword());
             passwordAuthenticationRepository.save(new PasswordAuthentication(user, password));
         } else {
@@ -58,8 +56,6 @@ public class UserService {
                     .orElseThrow(IllegalArgumentException::new);
             PasswordAuthentication passwordAuthentication = passwordAuthenticationRepository.findByUser(user)
                     .orElseThrow(IllegalArgumentException::new);
-            log.info("{}", passwordAuthentication.getPassword());
-            log.info("{}", passwordEncoder.encode(req.getPassword()));
             if (passwordEncoder.matches(
                     req.getPassword(),
                     passwordAuthentication.getPassword())

@@ -1,7 +1,10 @@
 package com.dodo.user.domain;
 
+import com.dodo.roomuser.domain.RoomUser;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,6 +24,9 @@ public class User {
     private String email;
     private String name;
     private Integer mileage;
+
+    @OneToMany(mappedBy = "user")
+    private List<RoomUser> roomUsers;
 
 //    TODO
 //    private String image;
