@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/capstone-2024-16.iml" filepath="$PROJECT_DIR$/.idea/capstone-2024-16.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dodo.main.iml" filepath="$PROJECT_DIR$/.idea/modules/dodo.main.iml" />
     </modules>
   </component>
 </project>

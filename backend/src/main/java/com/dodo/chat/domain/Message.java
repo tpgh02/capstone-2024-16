@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Entity
+@Setter
 @Table(name = "message")
 public class Message {
     @Id
