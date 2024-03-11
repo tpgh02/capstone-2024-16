@@ -23,8 +23,8 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
 
     // 채팅방 생성
-    @PostMapping("/chat/create-room")
-    public void createRoom(@RequestParam("roomName") String name,
+    @PostMapping("/create-room")
+    public String createRoom(@RequestParam("roomName") String name,
                              @RequestParam("category") String category,
                              @RequestParam("info") String info,
                              @RequestParam(value = "maxUserCnt", defaultValue = "10") String maxUserCnt,
@@ -35,6 +35,7 @@ public class ChatRoomController {
 
         log.info("CREATE Chat Room {}", room);
 
+        return "room id : " + room.getRoomId();
     }
 
     // TODO
