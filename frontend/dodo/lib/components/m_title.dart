@@ -1,3 +1,4 @@
+import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 
 class m_title extends StatelessWidget {
@@ -20,7 +21,8 @@ class m_title extends StatelessWidget {
                   //color: Colors.amber,
                   child: Text(
                     '안녕하세요,',
-                    style: TextStyle(fontFamily: "kcc", fontSize: 20),
+                    style: TextStyle(
+                        fontFamily: "kcc", fontSize: 20, color: DARKGREY),
                   ),
                 ),
                 Container(
@@ -32,10 +34,11 @@ class m_title extends StatelessWidget {
                           style: TextStyle(
                               fontFamily: "kcc",
                               fontSize: 40,
-                              color: Color(0xff1cb5e0))),
+                              color: PRIMARY_COLOR)),
                       Text(
                         '님',
-                        style: TextStyle(fontFamily: "kcc", fontSize: 30),
+                        style: TextStyle(
+                            fontFamily: "kcc", fontSize: 30, color: DARKGREY),
                       ),
                     ],
                   ),

@@ -1,5 +1,7 @@
 import 'package:dodo/components/m_state.dart';
 import 'package:dodo/components/m_title.dart';
+import 'package:dodo/components/m_todo.dart';
+import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -33,25 +35,25 @@ class _mainPageState extends State<mainPage>
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: LIGHTGREY,
       bottomNavigationBar: SizedBox(
         height: 60,
         child: TabBar(
-          indicatorColor: Colors.blue,
+          indicatorColor: PRIMARY_COLOR,
           labelColor: Colors.black,
           controller: _tabController,
           tabs: [
             Tab(
               icon: Icon(
                 _selectedIndex == 0 ? Icons.home : Icons.home_outlined,
-                color: _selectedIndex == 0 ? Color(0xff1cb5e0) : Colors.black54,
+                color: _selectedIndex == 0 ? PRIMARY_COLOR : Colors.black54,
               ),
               text: "홈",
             ),
             Tab(
               icon: Icon(
                 _selectedIndex == 1 ? Icons.water : Icons.water_outlined,
-                color: _selectedIndex == 1 ? Color(0xff1cb5e0) : Colors.black54,
+                color: _selectedIndex == 1 ? PRIMARY_COLOR : Colors.black54,
               ),
               text: "바다",
             ),
@@ -60,21 +62,21 @@ class _mainPageState extends State<mainPage>
                 _selectedIndex == 2
                     ? Icons.door_front_door
                     : Icons.door_front_door_outlined,
-                color: _selectedIndex == 2 ? Color(0xff1cb5e0) : Colors.black54,
+                color: _selectedIndex == 2 ? PRIMARY_COLOR : Colors.black54,
               ),
               text: "방",
             ),
             Tab(
               icon: Icon(
                 _selectedIndex == 3 ? Icons.search : Icons.search_outlined,
-                color: _selectedIndex == 3 ? Color(0xff1cb5e0) : Colors.black54,
+                color: _selectedIndex == 3 ? PRIMARY_COLOR : Colors.black54,
               ),
               text: "검색",
             ),
             Tab(
               icon: Icon(
                 _selectedIndex == 4 ? Icons.person : Icons.person_outlined,
-                color: _selectedIndex == 4 ? Color(0xff1cb5e0) : Colors.black54,
+                color: _selectedIndex == 4 ? PRIMARY_COLOR : Colors.black54,
               ),
               text: "개인",
             ),
@@ -87,7 +89,14 @@ class _mainPageState extends State<mainPage>
               child: Container(
                 //color: Colors.black,
                 child: Column(
-                  children: [m_title('거북이도도'), m_state("목표까지 얼마 안남았어요!")],
+                  children: [
+                    m_title('거북이도도'),
+                    m_state("목표까지 얼마 안남았어요!"),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    m_todo()
+                  ],
                 ),
               ),
             )

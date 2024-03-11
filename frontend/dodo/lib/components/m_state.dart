@@ -1,3 +1,4 @@
+import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 
 class m_state extends StatelessWidget {
@@ -12,7 +13,7 @@ class m_state extends StatelessWidget {
     return Center(
         child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xff1cb5e0),
+              backgroundColor: PRIMARY_COLOR,
               textStyle: const TextStyle(fontSize: 20),
               minimumSize: Size(500, 100),
             ),
