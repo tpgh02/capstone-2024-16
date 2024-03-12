@@ -1,3 +1,4 @@
+import 'package:dodo/screen/findpass_screen.dart';
 import 'package:dodo/screen/login_screen.dart';
 import 'package:dodo/screen/signup_screen.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: mainPage(),
+      home: findpassPage(),
     );
   }
 }
