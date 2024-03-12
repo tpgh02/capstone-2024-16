@@ -21,3 +21,7 @@ spring:
 authentication:
   access-token:
     secretKey: "136314nj6134lk6n413kvb"
+
+
+# 실제 이미지 저장 경로
+imagepath : "/Users/w/Downloads/capstone/backend/src/main/resources/images/"

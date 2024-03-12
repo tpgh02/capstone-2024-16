@@ -1,8 +1,11 @@
 package com.dodo.roomuser.domain;
 
+import com.dodo.certification.domain.Certification;
 import com.dodo.room.domain.Room;
 import com.dodo.user.domain.User;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class RoomUser {
@@ -16,5 +19,8 @@ public class RoomUser {
 
     @ManyToOne
     private Room room;
+
+    @OneToMany(mappedBy = "roomUser")
+    private List<Certification> certification;
 
 }
