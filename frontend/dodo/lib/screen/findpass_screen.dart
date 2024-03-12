@@ -47,10 +47,7 @@ class findpassPage extends StatelessWidget {
                     const SizedBox(
                       height: 50,
                     ),
-                    const Text(
-                      '비밀번호 찾기',
-                      style: TextStyle(fontFamily: 'kcc', fontSize: 30),
-                    ),
+                    const l_title("비밀번호 찾기"),
                     const SizedBox(
                       height: 20,
                     ),

@@ -2,7 +2,7 @@ import 'package:dodo/components/todo.dart';
 import 'package:flutter/material.dart';
 
 class m_todo extends StatelessWidget {
-  int? room_num;
+  //int? room_num;
 
   @override
   Widget build(BuildContext context) {
