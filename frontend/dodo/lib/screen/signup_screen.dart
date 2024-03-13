@@ -45,16 +45,6 @@ class SignupPage extends StatelessWidget {
                 child: ListView(
                   shrinkWrap: true,
                   children: [
-                    // Image.asset(
-                    //   'assets/images/logo.png',
-                    //   width: 20,
-                    //   height: 20,
-                    //   //fit: BoxFit.fitWidth,
-                    //   alignment: Alignment.centerRight,
-                    // ),
-                    // const SizedBox(
-                    //   height: 50,
-                    // ),
                     const Text(
                       '회원가입',
                       style: TextStyle(fontFamily: 'kcc', fontSize: 30),

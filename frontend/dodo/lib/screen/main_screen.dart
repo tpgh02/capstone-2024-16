@@ -1,6 +1,7 @@
 import 'package:dodo/components/m_state.dart';
 import 'package:dodo/components/m_title.dart';
 import 'package:dodo/components/m_todo.dart';
+import 'package:dodo/components/test.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -45,6 +46,7 @@ class _mainPageState extends State<mainPage>
           labelColor: Colors.black,
           controller: _tabController,
           tabs: [
+            //탭 생성
             Tab(
               icon: Icon(
                 _selectedIndex == 0 ? Icons.home : Icons.home_outlined,
@@ -103,12 +105,20 @@ class _mainPageState extends State<mainPage>
               ),
             )
           : _selectedIndex == 1
-              ? Text("2")
+              ?
+              //바다 화면 구성. sea_screen.dart
+              TestView()
               : _selectedIndex == 2
-                  ? Text("3")
+                  ?
+                  //방 화면 구성. room_screen.dart
+                  Text("3")
                   : _selectedIndex == 3
-                      ? Text("4")
-                      : Text("5"),
+                      ?
+                      // 검색 화면 구성. search_screen.dart
+                      Text("4")
+                      :
+                      // 개인 화면 구성. personal_screen.dart
+                      Text("5"),
     );
   }
 }
