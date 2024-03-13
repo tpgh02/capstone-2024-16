@@ -16,6 +16,8 @@ class _mainPageState extends State<mainPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _selectedIndex = 0;
+  String? user_name = '거북이도도';
+  //List? user_romm;
 
   @override
   void initState() {
@@ -90,9 +92,9 @@ class _mainPageState extends State<mainPage>
                 //color: Colors.black,
                 child: Column(
                   children: [
-                    m_title('거북이도도'),
-                    m_state("목표까지 얼마 안남았어요!"),
-                    SizedBox(
+                    m_title('$user_name'),
+                    const m_state("목표까지 얼마 안남았어요!"),
+                    const SizedBox(
                       height: 20,
                     ),
                     m_todo()

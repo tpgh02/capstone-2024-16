@@ -37,7 +37,7 @@ class SignupPage extends StatelessWidget {
           ),
         ),
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -52,9 +52,9 @@ class SignupPage extends StatelessWidget {
                     //   //fit: BoxFit.fitWidth,
                     //   alignment: Alignment.centerRight,
                     // ),
-                    const SizedBox(
-                      height: 50,
-                    ),
+                    // const SizedBox(
+                    //   height: 50,
+                    // ),
                     const Text(
                       '회원가입',
                       style: TextStyle(fontFamily: 'kcc', fontSize: 30),
@@ -172,11 +172,15 @@ class SignupPage extends StatelessWidget {
                 ),
               ),
             ),
-            Image.asset('assets/images/earth.png',
-                width: 500,
-                height: 175,
-                fit: BoxFit.cover,
-                alignment: Alignment.bottomCenter),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              alignment: Alignment.bottomRight,
+              child: Image.asset('assets/images/turtle.png',
+                  width: 150,
+                  height: 150, //175
+                  fit: BoxFit.cover,
+                  alignment: Alignment.bottomCenter),
+            ),
           ],
         ));
   }

@@ -34,72 +34,81 @@ class findpassPage extends StatelessWidget {
               ),
             ),
           ),
-          body: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50),
-              child: Form(
-                child: ListView(
-                  shrinkWrap: true,
+          body: Container(
+              //color: Colors.amber,
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    const l_title("비밀번호 찾기"),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Text(
-                      '이메일 주소를 입력해주세요',
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                      keyboardType: TextInputType.emailAddress,
-                      style: TextStyle(fontSize: 20),
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide.none,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                  child: Form(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        // const SizedBox(
+                        //   height: 50,
+                        // ),
+                        const l_title("비밀번호 찾기"),
+                        const SizedBox(
+                          height: 20,
                         ),
-                        //labelText: '이메일주소',
-                        filled: true,
-                        fillColor: LIGHTGREY,
-                        labelStyle: TextStyle(color: DARKGREY, fontSize: 18),
-                      ),
+                        const Text(
+                          '이메일 주소를 입력해주세요',
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        TextFormField(
+                          keyboardType: TextInputType.emailAddress,
+                          style: TextStyle(fontSize: 20),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide.none,
+                            ),
+                            //labelText: '이메일주소',
+                            filled: true,
+                            fillColor: LIGHTGREY,
+                            labelStyle:
+                                TextStyle(color: DARKGREY, fontSize: 18),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        ElevatedButton(
+                          style: l_button,
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SignupPage()));
+                          },
+                          child: const Text(
+                            '비밀번호 찾기',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        // SizedBox(
+                        //   height: 73,
+                        // ),
+                      ],
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    ElevatedButton(
-                      style: l_button,
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SignupPage()));
-                      },
-                      child: const Text(
-                        '비밀번호 찾기',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    // SizedBox(
-                    //   height: 73,
-                    // ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            Image.asset('assets/images/earth.png',
-                width: 500,
-                height: 250, //175
-                fit: BoxFit.cover,
-                alignment: Alignment.bottomCenter),
-          ])),
+                // SizedBox(
+                //   height: ,
+                // ),
+                Container(
+                  alignment: Alignment.bottomRight,
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  child: Image.asset('assets/images/turtle.png',
+                      width: 150,
+                      height: 150, //175
+                      fit: BoxFit.cover,
+                      alignment: Alignment.bottomCenter),
+                ),
+              ]))),
     );
   }
 }
