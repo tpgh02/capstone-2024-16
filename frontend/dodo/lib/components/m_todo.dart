@@ -20,6 +20,7 @@ class _m_todoState extends State<m_todo> {
 
   @override
   Widget build(BuildContext context) {
+    //int? num = postList.length;
     return Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20), color: Colors.white),
@@ -39,11 +40,35 @@ class _m_todoState extends State<m_todo> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
               child: Container(
-                color: Colors.yellow,
+                //color: Colors.yellow,
+                alignment: Alignment.centerRight,
+                padding: EdgeInsets.all(20),
                 height: 300,
                 child: ListView.builder(
                   itemCount: postList.length,
                   itemBuilder: (BuildContext context, int idx) {
+                    //여기는 어떻게 할지 약간 많이 시간이 필요할 듯
+                    // while (num != 0) {
+                    //   if (num! % 2 == 0) {
+                    //     Row(children: [
+                    //       postContainer(
+                    //         postList[idx]['room_title'],
+                    //         postList[idx]['room_img'],
+                    //       ),
+                    //       postContainer(
+                    //         postList[idx]['room_title'],
+                    //         postList[idx]['room_img'],
+                    //       )
+                    //     ]);
+                    //   } else {
+                    //     postContainer(
+                    //       postList[idx]['room_title'],
+                    //       postList[idx]['room_img'],
+                    //     );
+                    //   }
+                    //   num = num! - 2;
+                    // }
+                    // ;
                     return postContainer(
                       postList[idx]['room_title'],
                       postList[idx]['room_img'],
@@ -58,23 +83,10 @@ class _m_todoState extends State<m_todo> {
 
   Container postContainer(title, img_root) {
     return Container(
-      child: Stack(
-        children: [
-          todo(title, img_root),
-          //방 이름을 사진 위에 얹는 부분
-          Container(
-            //color: Colors.amber,
-            alignment: Alignment.bottomLeft,
-            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-            child: Text(
-              title,
-              style: const TextStyle(
-                  fontFamily: "bm", fontSize: 25, color: Colors.white),
-            ),
-          )
-        ],
-      ),
-      //stack 끝
+      //color: Colors.black,
+      margin: EdgeInsets.all(10),
+      alignment: Alignment.center, //왜 가운데로 안 모아지는지...
+      child: todo(title, img_root),
     );
   }
 }
