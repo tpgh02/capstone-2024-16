@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 //소유하고 있는 방들의 각각 컴포넌트를 생성
 class todo extends StatelessWidget {
   final String room_name;
-  final Image room_img;
+  final String room_img;
 
   const todo(this.room_name, this.room_img);
 
@@ -29,7 +29,10 @@ class todo extends StatelessWidget {
                 //사진을 둥글게 만들 수 있는 함수
                 ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: room_img,
+              child: Image.asset(
+                room_img,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),

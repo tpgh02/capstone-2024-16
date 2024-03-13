@@ -1,9 +1,23 @@
 import 'package:dodo/components/todo.dart';
+//import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 
 //m_state 아래부터 네비게이션 바 위까지 구성
 //안의 방들은 todo.dart 파일에 있음
-class m_todo extends StatelessWidget {
+class m_todo extends StatefulWidget {
+  const m_todo({super.key});
+
+  @override
+  State<m_todo> createState() => _m_todoState();
+}
+
+class _m_todoState extends State<m_todo> {
+  final postList = [
+    {"room_title": "자취요리왕", "room_img": "assets/images/cook.jpg"},
+    {"room_title": "오운완", "room_img": "assets/images/turtle_noradius.png"},
+    {"room_title": "H.O.T", "room_img": "assets/images/turtle_noradius.png"},
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,35 +38,43 @@ class m_todo extends StatelessWidget {
             ),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                        margin: EdgeInsets.all(10),
-                        //todo로 타이틀이랑 사진을 전달
-                        child: todo(
-                          "자취요리왕",
-                          Image.asset(
-                            "assets/images/cook.jpg",
-                            fit: BoxFit.cover,
-                          ),
-                        )),
-                    Container(
-                        margin: const EdgeInsets.all(10),
-                        //todo로 타이틀이랑 사진을 전달
-                        child: todo(
-                          "no_name",
-                          Image.asset(
-                            "assets/images/Turtle_noradius.png",
-                            fit: BoxFit.cover,
-                          ),
-                        )),
-                  ],
+              child: Container(
+                color: Colors.yellow,
+                height: 300,
+                child: ListView.builder(
+                  itemCount: postList.length,
+                  itemBuilder: (BuildContext context, int idx) {
+                    return postContainer(
+                      postList[idx]['room_title'],
+                      postList[idx]['room_img'],
+                    );
+                  },
                 ),
-              ]),
+              ),
             ),
           ],
         )));
+  }
+
+  Container postContainer(title, img_root) {
+    return Container(
+      child: Stack(
+        children: [
+          todo(title, img_root),
+          //방 이름을 사진 위에 얹는 부분
+          Container(
+            //color: Colors.amber,
+            alignment: Alignment.bottomLeft,
+            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+            child: Text(
+              title,
+              style: const TextStyle(
+                  fontFamily: "bm", fontSize: 25, color: Colors.white),
+            ),
+          )
+        ],
+      ),
+      //stack 끝
+    );
   }
 }
