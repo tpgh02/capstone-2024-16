@@ -39,9 +39,9 @@ class m_todo extends StatelessWidget {
                           ),
                         )),
                     todo(
-                      "몰?루",
+                      "no_name",
                       Image.asset(
-                        "assets/images/cook.jpg",
+                        "assets/images/Turtle_noradius.png",
                         fit: BoxFit.cover,
                       ),
                     ),

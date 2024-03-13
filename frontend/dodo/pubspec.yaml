@@ -81,6 +81,9 @@ flutter:
     - family: kcc
       fonts:
         - asset: assets/fonts/KCC-Ganpan.ttf
+    - family: bm
+      fonts:
+        - asset: assets/fonts/BMHANNAPro.ttf
   # fonts:
   #   - family: kcc
   #     fonts:
