@@ -1,5 +1,4 @@
 //import 'package:dodo/const/colors.dart';
-import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 
 //소유하고 있는 방들의 각각 컴포넌트를 생성
@@ -18,7 +17,6 @@ class todo extends StatelessWidget {
           height: 180,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            //color: Colors.amber,
           ),
           child: InkWell(
             onTap: () {
@@ -38,9 +36,8 @@ class todo extends StatelessWidget {
         ),
         //방 이름을 사진 위에 얹는 부분
         Container(
-          //color: Colors.amber,
-          alignment: Alignment.bottomLeft,
-          margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+          alignment: Alignment.topLeft,
+          margin: const EdgeInsets.fromLTRB(15, 15, 50, 50),
           child: Text(
             "$room_name",
             style: const TextStyle(
