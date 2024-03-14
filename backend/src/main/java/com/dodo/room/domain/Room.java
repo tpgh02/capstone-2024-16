@@ -2,13 +2,16 @@ package com.dodo.room.domain;
 
 import com.dodo.roomuser.domain.RoomUser;
 import jakarta.persistence.*;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
+@Setter @Getter
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +21,7 @@ public class Room {
     private String password;
     private String info;
     private String notice;
+    private String category;
     private LocalDateTime endDay;
     private Long maxUser;
     private Long nowUser;
