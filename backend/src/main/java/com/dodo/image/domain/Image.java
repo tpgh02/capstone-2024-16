@@ -1,5 +1,6 @@
 package com.dodo.image.domain;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,4 +19,5 @@ public class Image {
     public Image(String url) {
         this.url = url;
     }
+
 }

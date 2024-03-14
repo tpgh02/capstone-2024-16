@@ -23,6 +23,13 @@ public class Room {
     private Long nowUser;
     private String tag;
 
+
+    // 매일, 최대 3개까지
+    // 주간, 주에 몇번
+    @Enumerated(EnumType.STRING)
+    private Periodicity periodicity;
+    private Integer frequency;
+
     @OneToMany(mappedBy = "room")
     private List<RoomUser> roomUsers;
 

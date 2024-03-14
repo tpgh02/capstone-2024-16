@@ -1,5 +1,6 @@
 package com.dodo.user.domain;
 
+import com.dodo.image.domain.Image;
 import com.dodo.roomuser.domain.RoomUser;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,18 +25,11 @@ public class User {
     private String email;
     private String name;
     private Integer mileage;
+    private String introduceMessage;
 
     @OneToMany(mappedBy = "user")
     private List<RoomUser> roomUsers;
 
-//    TODO
-//    private String image;
-
-    public User(AuthenticationType type, String email, Integer mileage) {
-        this.authenticationType = type;
-        this.email = email;
-        this.mileage = mileage;
-    }
-
-
+    @OneToOne
+    private Image image;
 }

@@ -1,5 +1,7 @@
 package com.dodo.user;
 
+import com.dodo.image.ImageRepository;
+import com.dodo.image.domain.Image;
 import com.dodo.token.TokenService;
 import com.dodo.user.domain.AuthenticationType;
 import com.dodo.user.domain.PasswordAuthentication;
@@ -21,11 +23,28 @@ public class UserService {
     private final PasswordAuthenticationRepository passwordAuthenticationRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
+    private final ImageRepository imageRepository;
 
+    private final String DEFAULT_IMAGE_URL = "http://localhost:8080/img?url=default";
+
+    @Transactional
     public User register(UserCreateRequestData request) {
 
+        // TODO
+        // 기본 이미지 설정
+        // 나중에 바꿔야 함
+        Image image = imageRepository.findById(1L)
+                .orElse(imageRepository.save(new Image(DEFAULT_IMAGE_URL)));
 
-        User user = new User(request.getType(), request.getEmail(), 0);
+
+        User user = User.builder()
+                .authenticationType(request.getType())
+                .email(request.getEmail())
+                .mileage(0)
+                .image(image)
+                .introduceMessage("")
+                .build();
+
         userRepository.save(user);
 
         if(request instanceof UserCreateRequestData.PasswordUserCreateRequestData) {

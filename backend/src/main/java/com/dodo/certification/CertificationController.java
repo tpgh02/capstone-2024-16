@@ -18,34 +18,26 @@ import java.nio.file.Files;
 @RestController
 @RequiredArgsConstructor
 public class CertificationController {
-
-    @Value("${imagepath}")
-    private String PATH;
-
     private final CertificationService certificationService;
 
+    // 인증 생성, 인증은 아직 X
     @PostMapping("/api/photo")
     @CustomAuthentication
-    public void certificateImage(
+    public void makeCertification(
             @RequestAttribute UserContext userContext,
             @RequestParam Long roomId,
             @RequestParam MultipartFile img
     ) throws IOException {
-        certificationService.certificate(userContext, roomId, img);
+        certificationService.makeCertification(userContext, roomId, img);
     }
 
-
-    @GetMapping("/img")
-    public ResponseEntity<byte[]> getImage(@RequestParam String url) {
-        File file = new File(PATH + url + ".png");
-        ResponseEntity<byte[]> result = null;
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Type", Files.probeContentType(file.toPath()));
-            result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file),headers, HttpStatus.OK);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
+    /*
+    사진 업로드,
+    방 사람들 인증 현황 불러오기,
+    사진 불러오기,
+    인증대기,
+    투표,
+    방장 승인,
+    AI 승인
+     */
 }
