@@ -33,8 +33,15 @@ public class ChatRoomService {
     }
 
     // 채팅방 인원 증가
-    public void plusUserCnt(int roomId){
+    public void plusUserCnt(Long roomId){
         Room room = em.find(RoomUser.class, roomId).getRoom();
         room.setNowUser(room.getNowUser()+1);
     }
+
+    // 채팅방 인원 감소
+    public void minusUserCnt(Long roomId){
+        Room room = em.find(RoomUser.class, roomId).getRoom();
+        room.setNowUser(room.getNowUser()-1);
+    }
+
 }

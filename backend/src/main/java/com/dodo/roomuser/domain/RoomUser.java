@@ -4,12 +4,14 @@ import com.dodo.certification.domain.Certification;
 import com.dodo.room.domain.Room;
 import com.dodo.user.domain.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
 
 @Entity
 @Getter
+@Builder
 public class RoomUser {
 
     @Id

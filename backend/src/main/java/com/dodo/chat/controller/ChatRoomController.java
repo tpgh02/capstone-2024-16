@@ -1,15 +1,23 @@
 package com.dodo.chat.controller;
 
 import com.dodo.chat.service.ChatRoomService;
+import com.dodo.config.auth.CustomAuthentication;
+import com.dodo.room.RoomRepository;
 import com.dodo.room.domain.Room;
+import com.dodo.roomuser.RoomUserRepository;
+import com.dodo.roomuser.RoomUserService;
+import com.dodo.roomuser.domain.RoomUser;
+import com.dodo.user.UserRepository;
+import com.dodo.user.domain.User;
+import com.dodo.user.domain.UserContext;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,6 +26,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
+    private final RoomUserService roomUserService;
+    private final RoomUserRepository roomUserRepository;
+    private final RoomRepository roomRepository;
+    private final UserRepository userRepository;
 
     // 채팅방 생성
     @PostMapping("/create-room")
@@ -36,13 +48,27 @@ public class ChatRoomController {
         return "room id : " + room.getId();
     }
 
-    // TODO
-    /**
-     * 채팅방 입장
-     * 엔티티를 새로 만들어서 거기에 채팅방id, 유저id를 넣기로 했었나??
+    // 채팅방 입장
+    @CustomAuthentication
     @GetMapping("/chat/enter")
-    public String roomEnter(Model model,int roomId){
+    public String roomEnter(Long roomId, @RequestAttribute UserContext userContext){
         log.info("roomId {}", roomId);
+        log.info("userId {}", userContext.getUserId());
+
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(IllegalArgumentException::new);
+        User user = userRepository.findById(userContext.getUserId())
+                .orElseThrow(IllegalArgumentException::new);
+
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)
+                .orElse(null);
+
+        // 유저가 채팅방에 처음 입장
+        if (roomUser == null) {
+            chatRoomService.plusUserCnt(roomId);
+            roomUserService.createRoomUser(user, room);
+        }
+
+        return userContext.toString();
     }
-    **/
 }
