@@ -44,7 +44,7 @@ class todo extends StatelessWidget {
           child: Text(
             "$room_name",
             style: const TextStyle(
-                fontFamily: "bm", fontSize: 25, color: POINT_COLOR),
+                fontFamily: "bm", fontSize: 25, color: Colors.white),
           ),
         )
       ],

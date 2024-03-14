@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:dodo/components/todo.dart';
 //import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +19,10 @@ class _m_todoState extends State<m_todo> {
     {"room_title": "오운완", "room_img": "assets/images/turtle_noradius.png"},
     {"room_title": "H.O.T", "room_img": "assets/images/turtle_noradius.png"},
   ];
-
+  List<int> top = <int>[];
+  List<int> bottom = <int>[0];
   @override
   Widget build(BuildContext context) {
-    //int? num = postList.length;
     return Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20), color: Colors.white),
@@ -44,36 +46,23 @@ class _m_todoState extends State<m_todo> {
                 alignment: Alignment.centerRight,
                 padding: EdgeInsets.all(20),
                 height: 300,
-                child: ListView.builder(
-                  itemCount: postList.length,
-                  itemBuilder: (BuildContext context, int idx) {
-                    //여기는 어떻게 할지 약간 많이 시간이 필요할 듯
-                    // while (num != 0) {
-                    //   if (num! % 2 == 0) {
-                    //     Row(children: [
-                    //       postContainer(
-                    //         postList[idx]['room_title'],
-                    //         postList[idx]['room_img'],
-                    //       ),
-                    //       postContainer(
-                    //         postList[idx]['room_title'],
-                    //         postList[idx]['room_img'],
-                    //       )
-                    //     ]);
-                    //   } else {
-                    //     postContainer(
-                    //       postList[idx]['room_title'],
-                    //       postList[idx]['room_img'],
-                    //     );
-                    //   }
-                    //   num = num! - 2;
-                    // }
-                    // ;
-                    return postContainer(
-                      postList[idx]['room_title'],
-                      postList[idx]['room_img'],
-                    );
-                  },
+                child:
+                    //오늘도 도전의 스크롤하는 부분
+                    CustomScrollView(
+                  slivers: <Widget>[
+                    SliverGrid(
+                        delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int idx) {
+                          return postContainer(
+                            postList[idx]['room_title'],
+                            postList[idx]['room_img'],
+                          );
+                        }, childCount: postList.length),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                        ))
+                  ],
                 ),
               ),
             ),
@@ -83,9 +72,8 @@ class _m_todoState extends State<m_todo> {
 
   Container postContainer(title, img_root) {
     return Container(
-      //color: Colors.black,
       margin: EdgeInsets.all(10),
-      alignment: Alignment.center, //왜 가운데로 안 모아지는지...
+      alignment: Alignment.center,
       child: todo(title, img_root),
     );
   }
