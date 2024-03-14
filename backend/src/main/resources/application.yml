@@ -1,0 +1,28 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+
+  datasource:
+    url: jdbc:h2:mem:tes;MODE=PostgreSQL;NON_KEYWORDS=USER
+    username: sa
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+
+
+authentication:
+  access-token:
+    secretKey: "136314nj6134lk6n413kvb"
+
+
+# 실제 이미지 저장 경로
+imagepath : "/Users/w/Downloads/capstone/backend/src/main/resources/images/"
+serverurl : "http://localhost:8080"
