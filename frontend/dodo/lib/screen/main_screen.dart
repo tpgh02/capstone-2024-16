@@ -42,7 +42,8 @@ class _mainPageState extends State<mainPage>
         height: 60,
         child: TabBar(
           indicatorColor: PRIMARY_COLOR,
-          labelColor: Colors.black,
+          labelColor: PRIMARY_COLOR,
+          unselectedLabelColor: Colors.black,
           controller: _tabController,
           tabs: [
             //탭 생성
