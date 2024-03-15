@@ -1,3 +1,4 @@
+import 'package:dodo/components/m2_tabbar.dart';
 import 'package:flutter/material.dart';
 
 class m2_board extends StatefulWidget {
@@ -28,6 +29,7 @@ class _m2_board extends State<m2_board> {
               '오늘도 도전',
               style: TextStyle(fontFamily: "kcc", fontSize: 20),
             ),
+            TabBarScreen(),
             //tap 추가
             //캘린더 추가
           ],
