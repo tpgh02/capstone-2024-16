@@ -1,4 +1,3 @@
-import 'package:dodo/components/m_todo.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,23 +12,11 @@ class roomList extends StatefulWidget {
 class _roomListState extends State<roomList>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  int _selectedIndex = 2;
-  bool _showAppBar = true;
-
-  // 다른 탭으로 이동하면 상단바 노출되지 않게 처리
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      _showAppBar = _selectedIndex == 2;
-    });
-  }
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 5, vsync: this);
-    // _tabController.addListener(
-    //     () => setState(() => _selectedIndex = _tabController.index));
   }
 
   @override
