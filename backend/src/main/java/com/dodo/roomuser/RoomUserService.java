@@ -21,4 +21,11 @@ public class RoomUserService {
 
         roomUserRepository.save(roomUser);
     }
+
+    public void findRoomUsers(Long id){
+        RoomUser roomUser = roomUserRepository.findById(id)
+                .orElseThrow(IllegalArgumentException::new);
+
+
+    }
 }

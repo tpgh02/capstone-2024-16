@@ -34,7 +34,9 @@ public class ChatRoomService {
 
     // 채팅방 인원 증가
     public void plusUserCnt(Long roomId){
-        Room room = em.find(RoomUser.class, roomId).getRoom();
+        log.info("room Id : {}", roomId);
+        Room room = roomRepository.findById(roomId)
+                .orElse(null);
         room.setNowUser(room.getNowUser()+1);
     }
 

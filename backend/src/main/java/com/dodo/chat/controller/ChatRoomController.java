@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/chat")
 @Slf4j
@@ -37,11 +37,11 @@ public class ChatRoomController {
     public String createRoom(@RequestParam("roomName") String name,
                              @RequestParam("category") String category,
                              @RequestParam("info") String info,
-                             @RequestParam(value = "maxUserCnt", defaultValue = "10") String maxUserCnt,
+                             @RequestParam(value = "maxUserCnt", defaultValue = "10") Long maxUserCnt,
                              @Nullable @RequestParam("roomPwd") String roomPwd){
         Room room;
 
-        room = chatRoomService.creatChatRoom(name, roomPwd, Long.parseLong(maxUserCnt), category, info);
+        room = chatRoomService.creatChatRoom(name, roomPwd, maxUserCnt, category, info);
 
         log.info("CREATE Chat Room {}", room);
 
@@ -50,8 +50,8 @@ public class ChatRoomController {
 
     // 채팅방 입장
     @CustomAuthentication
-    @GetMapping("/chat/enter")
-    public String roomEnter(Long roomId, @RequestAttribute UserContext userContext){
+    @GetMapping("/enter/{roomId}")
+    public Long roomEnter(@PathVariable Long roomId, @RequestAttribute UserContext userContext){
         log.info("roomId {}", roomId);
         log.info("userId {}", userContext.getUserId());
 
@@ -67,8 +67,11 @@ public class ChatRoomController {
         if (roomUser == null) {
             chatRoomService.plusUserCnt(roomId);
             roomUserService.createRoomUser(user, room);
+            roomUser = roomUserRepository.findByUserAndRoom(user, room)
+                    .orElse(null);
         }
 
-        return userContext.toString();
+
+        return roomUser.getRoom().getNowUser();
     }
 }

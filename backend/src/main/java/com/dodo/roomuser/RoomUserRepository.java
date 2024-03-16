@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface RoomUserRepository extends JpaRepository<RoomUser, Long> {
     Optional<RoomUser> findByUserAndRoom(User user, Room room);
+    Optional<RoomUser> findById(Long id);
 }
