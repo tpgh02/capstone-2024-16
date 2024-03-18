@@ -250,27 +250,6 @@ class _SignupPageState extends State<SignupPage> {
                 fit: BoxFit.cover,
                 alignment: Alignment.bottomCenter),
           ),
-          // FutureBuilder<data>(
-          //   // 통신 데이터 가져오기
-          //   future: fetchInfo(data),
-          //   builder: (context, snapshot) {
-          //     if (snapshot.connectionState == ConnectionState.waiting) {
-          //       // 데이터 로딩 중인 경우
-          //       return CircularProgressIndicator();
-          //     } else if (snapshot.hasError) {
-          //       // 오류 발생 시
-          //       return Text('오류: ${snapshot.error}');
-          //     } else if (snapshot.hasData) {
-          //       // 데이터가 있는 경우
-          //       data userData = snapshot.data!;
-          //       // TODO: 데이터 사용하여 UI 업데이트
-          //       return Text('사용자 데이터: $userData');
-          //     } else {
-          //       // 그 외의 경우
-          //       return Text('데이터 없음');
-          //     }
-          //   },
-          // )
         ],
       ),
     );
