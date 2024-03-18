@@ -2,14 +2,14 @@ import 'package:dodo/const/colors.dart';
 import 'package:dodo/screen/findpass_screen.dart';
 import 'package:flutter/material.dart';
 
-class SignupPage extends StatelessWidget {
-  //final SignupPage({super.key});
-  String? emailAddress;
-  String? name;
-  String? password;
-  String? passcheck;
-  int? state;
+class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
 
+  @override
+  State<SignupPage> createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     final ButtonStyle style = ElevatedButton.styleFrom(
@@ -20,6 +20,18 @@ class SignupPage extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
     );
+    TextEditingController _email = TextEditingController();
+    TextEditingController _username = TextEditingController();
+    TextEditingController _password1 = TextEditingController();
+    TextEditingController _password2 = TextEditingController();
+    Map data = {};
+    // var dev_data = jsonDecode(data);
+    // var type = dev_data[0];
+    // var email = dev_data[1];
+    // var username = dev_data[2];
+    // var password1 = dev_data[3];
+    // var password2 = dev_data[4];
+
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: PreferredSize(
@@ -53,18 +65,19 @@ class SignupPage extends StatelessWidget {
                       height: 20,
                     ),
                     //이메일
-                    const SizedBox(
+                    SizedBox(
                       height: 50,
                       child: TextField(
+                        controller: _email,
                         keyboardType: TextInputType.emailAddress,
-                        style: TextStyle(fontSize: 20),
-                        decoration: InputDecoration(
+                        style: const TextStyle(fontSize: 20),
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(20)),
                             //borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide.none,
                           ),
-                          labelText: '이메일주소',
+                          labelText: '이메일 주소',
                           filled: true,
                           fillColor: Color(0xffEDEDED),
                           labelStyle:
@@ -72,6 +85,7 @@ class SignupPage extends StatelessWidget {
                         ),
                       ),
                     ),
+
                     const SizedBox(
                       height: 20,
                     ),
@@ -79,7 +93,8 @@ class SignupPage extends StatelessWidget {
                     SizedBox(
                       height: 50,
                       child: TextField(
-                        keyboardType: TextInputType.emailAddress,
+                        controller: _username,
+                        keyboardType: TextInputType.name,
                         style: const TextStyle(fontSize: 20),
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(
@@ -98,13 +113,14 @@ class SignupPage extends StatelessWidget {
                       height: 20,
                     ),
                     //비밀번호
-                    const SizedBox(
+                    SizedBox(
                       height: 50,
                       child: TextField(
-                        keyboardType: TextInputType.emailAddress,
-                        style: TextStyle(fontSize: 20),
+                        controller: _password1,
+                        keyboardType: TextInputType.visiblePassword,
+                        style: const TextStyle(fontSize: 20),
                         obscureText: true,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(20)),
                             //borderRadius: BorderRadius.circular(20),
@@ -122,13 +138,14 @@ class SignupPage extends StatelessWidget {
                       height: 20,
                     ),
                     //비밀번호 확인
-                    const SizedBox(
+                    SizedBox(
                       height: 50,
                       child: TextField(
+                        controller: _password2,
                         keyboardType: TextInputType.emailAddress,
-                        style: TextStyle(fontSize: 20),
+                        style: const TextStyle(fontSize: 20),
                         obscureText: true,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(20)),
                             //borderRadius: BorderRadius.circular(20),
@@ -148,6 +165,13 @@ class SignupPage extends StatelessWidget {
                     ElevatedButton(
                       style: style,
                       onPressed: () {
+                        data['type'] = 'password';
+                        data['email'] = _email.text;
+                        data['username'] = _username.text;
+                        data['password1'] = _password1.text;
+                        data['password2'] = _password2.text;
+                        //print(data);
+
                         Navigator.push(
                             context,
                             MaterialPageRoute(

@@ -2,6 +2,7 @@ import 'package:dodo/components/m_state.dart';
 import 'package:dodo/components/m_title.dart';
 import 'package:dodo/components/m_todo.dart';
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/screen/main2_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -18,6 +19,7 @@ class _mainPageState extends State<mainPage>
   int _selectedIndex = 0;
   String? user_name = '거북이도도';
   //List? user_romm;
+  int _main_idx = 0;
 
   @override
   void initState() {
@@ -99,7 +101,59 @@ class _mainPageState extends State<mainPage>
                     const SizedBox(
                       height: 20,
                     ),
-                    m_todo()
+                    const m_todo(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.all(10),
+                          width: 12,
+                          height: 12,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: LIGHTGREY,
+                            ),
+                            borderRadius: _main_idx == 0
+                                ? null
+                                : BorderRadius.circular(50),
+                          ),
+                          child: FloatingActionButton(
+                            onPressed: () {
+                              _main_idx = 0;
+                            },
+                            backgroundColor:
+                                _main_idx == 0 ? DARKGREY : LIGHTGREY,
+                            hoverColor: LIGHTGREY,
+                            elevation: 0,
+                          ),
+                        ),
+                        Container(
+                            margin: EdgeInsets.all(10),
+                            width: 12,
+                            height: 12,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: LIGHTGREY,
+                              ),
+                              borderRadius: _main_idx == 0
+                                  ? null
+                                  : BorderRadius.circular(50),
+                            ),
+                            child: FloatingActionButton(
+                              onPressed: () {
+                                _main_idx = 1;
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => main2Page()));
+                              },
+                              backgroundColor:
+                                  _main_idx == 1 ? DARKGREY : Colors.black12,
+                              hoverColor: LIGHTGREY,
+                              elevation: 0,
+                            )),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -107,7 +161,9 @@ class _mainPageState extends State<mainPage>
           : _selectedIndex == 1
               ?
               //바다 화면 구성. sea_screen.dart
-              m_todo()
+              Container(
+                  color: PRIMARY_COLOR,
+                )
               : _selectedIndex == 2
                   ?
                   //방 화면 구성. room_screen.dart

@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -12,14 +10,14 @@ class m_state extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle style =
+    const TextStyle style =
         TextStyle(color: Colors.white, fontFamily: "kcc", fontSize: 30);
     return Center(
         child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: PRIMARY_COLOR,
-              textStyle: const TextStyle(fontSize: 20),
               minimumSize: Size(500, 100),
+              elevation: 5, //그림자
             ),
             onPressed: () {
               statedialog(context, 70);
