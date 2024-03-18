@@ -4,14 +4,18 @@ import com.dodo.certification.domain.Certification;
 import com.dodo.room.domain.Room;
 import com.dodo.user.domain.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class RoomUser {
 
     @Id
@@ -26,5 +30,4 @@ public class RoomUser {
 
     @OneToMany(mappedBy = "roomUser")
     private List<Certification> certification;
-
 }

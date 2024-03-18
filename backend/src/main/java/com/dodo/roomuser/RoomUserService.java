@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RoomUserService {
 
     private final RoomUserRepository roomUserRepository;
@@ -27,5 +28,18 @@ public class RoomUserService {
                 .orElseThrow(IllegalArgumentException::new);
 
 
+    }
+
+    // 룸유저 연결 엔티티 삭제
+    public void deleteChatRoomUser(Room room, User user){
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)
+                .orElse(null);
+        if (roomUser == null) {
+            System.out.println("roomUser = null");
+            return;
+        }
+        roomUserRepository.delete(roomUser);
+
+        log.info("삭제한 room : {}, user : {}", roomUser.getRoom().getId(), roomUser.getUser().getId());
     }
 }

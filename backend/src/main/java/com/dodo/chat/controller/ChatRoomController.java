@@ -51,14 +51,12 @@ public class ChatRoomController {
     // 채팅방 입장
     @CustomAuthentication
     @GetMapping("/enter/{roomId}")
-    public Long roomEnter(@PathVariable Long roomId, @RequestAttribute UserContext userContext){
+    public String roomEnter(@PathVariable Long roomId, @RequestAttribute UserContext userContext){
         log.info("roomId {}", roomId);
         log.info("userId {}", userContext.getUserId());
 
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(IllegalArgumentException::new);
-        User user = userRepository.findById(userContext.getUserId())
-                .orElseThrow(IllegalArgumentException::new);
+        Room room = roomRepository.findById(roomId).get();
+        User user = userRepository.findById(userContext.getUserId()).get();
 
         RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)
                 .orElse(null);
@@ -72,6 +70,31 @@ public class ChatRoomController {
         }
 
 
-        return roomUser.getRoom().getNowUser();
+        return "nowUser : " + roomUser.getRoom().getNowUser().toString() + "\n" +
+                "room title : " +  roomUser.getRoom().getName();
+    }
+
+    // 인증방 나가기
+    @CustomAuthentication
+    @GetMapping("/room-out/{roomId}")
+    public String roomDelete(@PathVariable Long roomId, @RequestAttribute UserContext userContext){
+        log.info("del roomId : {}", roomId);
+        log.info("del userId : {]", userContext.getUserId());
+
+        Room room = roomRepository.findById(roomId).get();
+        User user = userRepository.findById(userContext.getUserId()).get();
+
+        chatRoomService.minusUserCnt(roomId);
+        roomUserService.deleteChatRoomUser(room, user);
+
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)
+                .orElse(null);
+        if (roomUser == null) {
+            return "roomUser = null" + "\n" +
+                    "nowUser = " + room.getNowUser();
+        }
+        else {
+            return "roomUser = " + roomUser.getId() ;
+        }
     }
 }
