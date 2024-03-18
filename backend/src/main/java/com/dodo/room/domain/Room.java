@@ -28,7 +28,7 @@ public class Room {
     private Long nowUser;
     private String tag;
 
-    @OneToOne
+    @ManyToOne
     private Image image;
 
     // 매일, 최대 3개까지

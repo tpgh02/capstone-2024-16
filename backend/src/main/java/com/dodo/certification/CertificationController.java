@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/v1/Certification")
+@RequestMapping("/api/v1/certification")
 @RequiredArgsConstructor
 @CustomAuthentication
 public class CertificationController {

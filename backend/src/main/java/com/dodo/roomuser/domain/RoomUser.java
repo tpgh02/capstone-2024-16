@@ -22,7 +22,14 @@ public class RoomUser {
     @ManyToOne
     private Room room;
 
+    @Enumerated(EnumType.STRING)
+    private RoomRole roomRole;
+
     @OneToMany(mappedBy = "roomUser")
     private List<Certification> certification;
 
+    public RoomUser(User user, Room room) {
+        this.room = room;
+        this.user = user;
+    }
 }

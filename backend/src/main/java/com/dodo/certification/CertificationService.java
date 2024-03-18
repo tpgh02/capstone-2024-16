@@ -34,19 +34,24 @@ public class CertificationService {
     public CertificationResponseData makeCertification(UserContext userContext, Long roomId, MultipartFile img) throws IOException {
         User user = userRepository.findById(userContext.getUserId())
                 .orElseThrow(NotFoundException::new);
+
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(NotFoundException::new);
+//        Room room = roomRepository.save(new Room());
 
         RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)
                         .orElseThrow(NotFoundException::new);
+//        RoomUser roomUser = roomUserRepository.save(new RoomUser(user, room));
 
         Image image = imageService.saveImage(img);
+//        log.info("{}", image.getUrl());
 
-        Certification.builder()
+        Certification saved = certificationRepository.save(Certification.builder()
                 .status(CertificationStatus.WAIT)
                 .roomUser(roomUser)
-                .image(image);
-        return new CertificationResponseData();
+                .image(image)
+                .build());
+        return new CertificationResponseData(saved);
     }
 
     public void voting(UserContext userContext, Long certificationId) {

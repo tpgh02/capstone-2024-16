@@ -1,7 +1,6 @@
 package com.dodo.room;
 
 import com.dodo.exception.NotFoundException;
-import com.dodo.room.domain.Room;
 import com.dodo.room.dto.RoomData;
 import com.dodo.room.dto.UserData;
 import com.dodo.roomuser.RoomUserRepository;
