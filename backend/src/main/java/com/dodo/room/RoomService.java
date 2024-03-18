@@ -21,6 +21,7 @@ public class RoomService {
     private final UserRepository userRepository;
     private final RoomUserRepository roomUserRepository;
 
+
     public List<RoomData> getMyRoomList(UserContext userContext) {
         User user = userRepository.findById(userContext.getUserId())
                         .orElseThrow(NotFoundException::new);
@@ -36,7 +37,7 @@ public class RoomService {
         return roomUserRepository.findAllByRoomId(roomId)
                 .orElseThrow(NotFoundException::new)
                 .stream()
-                .map(UserData::new)
+                .map(UserData::new) //TODO
                 .toList();
     }
 }

@@ -4,12 +4,9 @@ import com.dodo.user.domain.User;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
-import javax.annotation.processing.Generated;
-
 @Entity
 @NoArgsConstructor
 public class Vote {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

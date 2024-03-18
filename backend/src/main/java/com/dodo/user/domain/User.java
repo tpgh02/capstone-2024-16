@@ -30,6 +30,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<RoomUser> roomUsers;
 
-    @OneToOne
+    @ManyToOne
     private Image image;
 }
