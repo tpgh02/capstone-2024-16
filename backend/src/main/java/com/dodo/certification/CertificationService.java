@@ -2,6 +2,7 @@ package com.dodo.certification;
 
 import com.dodo.certification.domain.Certification;
 import com.dodo.certification.domain.CertificationStatus;
+import com.dodo.exception.NotFoundException;
 import com.dodo.image.ImageRepository;
 import com.dodo.image.ImageService;
 import com.dodo.image.domain.Image;
@@ -35,12 +36,12 @@ public class CertificationService {
 
     public void makeCertification(UserContext userContext, Long roomId, MultipartFile img) throws IOException {
 //        User user = userRepository.findById(userContext.getUserId())
-//                .orElseThrow(IllegalArgumentException::new);
+//                .orElseThrow(NotFoundException::new);
 //        Room room = roomRepository.findById(roomId)
-//                .orElseThrow(IllegalArgumentException::new);
+//                .orElseThrow(NotFoundException::new);
 //
 //        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)
-//                        .orElseThrow(IllegalArgumentException::new);
+//                        .orElseThrow(NotFoundException::new);
 
         imageService.saveImage(img);
 //        Certification.builder()

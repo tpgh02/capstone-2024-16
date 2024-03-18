@@ -1,5 +1,6 @@
 package com.dodo.user;
 
+import com.dodo.exception.NotFoundException;
 import com.dodo.image.ImageRepository;
 import com.dodo.image.domain.Image;
 import com.dodo.token.TokenService;
@@ -72,16 +73,16 @@ public class UserService {
             // 비밀번호 로그인
             UserLoginRequestData.PasswordLoginRequestData req = (UserLoginRequestData.PasswordLoginRequestData)request;
             User user = userRepository.findByEmail(req.getEmail())
-                    .orElseThrow(IllegalArgumentException::new);
+                    .orElseThrow(NotFoundException::new);
             PasswordAuthentication passwordAuthentication = passwordAuthenticationRepository.findByUser(user)
-                    .orElseThrow(IllegalArgumentException::new);
+                    .orElseThrow(NotFoundException::new);
             if (passwordEncoder.matches(
                     req.getPassword(),
                     passwordAuthentication.getPassword())
             ) {
                 return user.getId();
             }
-            throw new IllegalArgumentException();
+            throw new NotFoundException();
         } else {
 
         }

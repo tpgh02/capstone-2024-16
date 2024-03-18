@@ -1,5 +1,6 @@
 package com.dodo.room.domain;
 
+import com.dodo.image.domain.Image;
 import com.dodo.roomuser.domain.RoomUser;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,12 +28,18 @@ public class Room {
     private Long nowUser;
     private String tag;
 
+    @OneToOne
+    private Image image;
 
     // 매일, 최대 3개까지
     // 주간, 주에 몇번
     @Enumerated(EnumType.STRING)
     private Periodicity periodicity;
     private Integer frequency;
+
+    //인증 방식 (AI, 직접)
+    @Enumerated(EnumType.STRING)
+    private CertificationType certificationType;
 
     @OneToMany(mappedBy = "room")
     private List<RoomUser> roomUsers;
