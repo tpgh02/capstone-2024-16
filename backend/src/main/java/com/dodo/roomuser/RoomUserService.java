@@ -14,13 +14,15 @@ public class RoomUserService {
 
     private final RoomUserRepository roomUserRepository;
 
-    public void createRoomUser(User user, Room room) {
+    public RoomUser createRoomUser(User user, Room room) {
         RoomUser roomUser = RoomUser.builder()
                 .user(user)
                 .room(room)
                 .build();
 
         roomUserRepository.save(roomUser);
+
+        return roomUser;
     }
 
     public void findRoomUsers(Long id){

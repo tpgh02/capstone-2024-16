@@ -4,10 +4,7 @@ import com.dodo.certification.domain.Certification;
 import com.dodo.room.domain.Room;
 import com.dodo.user.domain.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -21,6 +18,10 @@ public class RoomUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Builder.Default
+    @Setter
+    private Boolean isManager = false;
 
     @ManyToOne
     private User user;

@@ -26,7 +26,7 @@ public class ChatRoomService {
                 .name(roomName)
                 .password(roomPwd)
                 .maxUser(maxUserCnt)
-                .nowUser(0L)
+                .nowUser(1L)
                 .category(category)
                 .info(info)
                 .build();
@@ -37,7 +37,7 @@ public class ChatRoomService {
 
     // 채팅방 인원 증가
     public void plusUserCnt(Long roomId){
-        log.info("room Id : {}", roomId);
+        log.info("plus room Id : {}", roomId);
         Room room = roomRepository.findById(roomId).get();
         room.setNowUser(room.getNowUser()+1);
     }
