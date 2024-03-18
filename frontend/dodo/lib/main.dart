@@ -1,6 +1,6 @@
-// import 'package:dodo/screen/findpass_screen.dart';
-// import 'package:dodo/screen/login_screen.dart';
-// import 'package:dodo/screen/signup_screen.dart';
+import 'package:dodo/screen/findpass_screen.dart';
+import 'package:dodo/screen/login_screen.dart';
+import 'package:dodo/screen/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:dodo/screen/main_screen.dart';
 
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: mainPage(),
+      home: SignupPage(),
     );
   }
 }
