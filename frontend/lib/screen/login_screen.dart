@@ -1,3 +1,4 @@
+import 'package:dodo/components/l_title.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/screen/findpass_screen.dart';
 import 'package:dodo/screen/signup_screen.dart';
@@ -5,40 +6,23 @@ import 'package:flutter/material.dart';
 
 //이건 너가 만든 대로 넣으면 돼!
 class loginPage extends StatelessWidget {
-<<<<<<< HEAD:frontend/lib/screen/login_screen.dart
-  // final Map? userData;
   final int? userId;
   const loginPage({Key? key, this.userId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          children: [
-            //수현이 파일들어갈 곳!
-            l_title('로그인'),
-            Text("UID : $userId"),
-          ],
-=======
-//  loginPage({super.key});
+    GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
+    TextEditingController _emailEditingcontroller = TextEditingController();
+    TextEditingController _passwordEditingcontroller = TextEditingController();
+    AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
+    bool? _isEnabled = true;
 
-  GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
-  TextEditingController _emailEditingcontroller = TextEditingController();
-  TextEditingController _passwordEditingcontroller = TextEditingController();
-  AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
-  bool? _isEnabled = true;
+    void dispose() {
+      _emailEditingcontroller.dispose();
+      _passwordEditingcontroller.dispose();
+      dispose();
+    }
 
-  void dispose() {
-    _emailEditingcontroller.dispose();
-    _passwordEditingcontroller.dispose();
-    dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     final ButtonStyle style = ElevatedButton.styleFrom(
       backgroundColor: PRIMARY_COLOR,
       textStyle: const TextStyle(fontSize: 20),
@@ -61,7 +45,6 @@ class loginPage extends StatelessWidget {
             width: 110,
             height: 110,
           ),
->>>>>>> origin/front:frontend/dodo/lib/screen/login_screen.dart
         ),
       ),
       body: Column(
@@ -73,13 +56,7 @@ class loginPage extends StatelessWidget {
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  const Text(
-                    '로그인',
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontFamily: "kcc",
-                    ),
-                  ),
+                  l_title('로그인'),
 
                   const SizedBox(
                     height: 30,
