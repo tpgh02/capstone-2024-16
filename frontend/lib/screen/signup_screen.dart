@@ -1,12 +1,43 @@
+import 'dart:convert';
+
 import 'package:dodo/const/colors.dart';
-import 'package:dodo/screen/findpass_screen.dart';
+// import 'package:dodo/screen/findpass_screen.dart';
+import 'package:dodo/screen/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
 
   @override
   State<SignupPage> createState() => _SignupPageState();
+}
+
+Future<int> fetchInfo(Map<String, String> userData) async {
+  var url = 'http://43.203.195.126:8080/api/v1/users/register';
+  final response = await http.post(
+    Uri.parse(url),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(userData),
+  );
+  try {
+    if (response.statusCode == 200) {
+      print('회원가입 성공!');
+      Map<String, dynamic> responseData = json.decode(response.body);
+      int userId = responseData['userId'];
+      print('userid: $userId'); //log 찍는 걸로 차후에 변경하기
+      return userId;
+    } else {
+      print('회원가입 실패: ${response.body}');
+      throw Exception('회원가입에 실패했습니다');
+    }
+  } catch (e) {
+    print(response.body);
+    print('네트워크 오류: $e');
+    throw Exception('네트워크 오류가 발생했습니다');
+  }
 }
 
 class _SignupPageState extends State<SignupPage> {
@@ -24,31 +55,26 @@ class _SignupPageState extends State<SignupPage> {
     TextEditingController _username = TextEditingController();
     TextEditingController _password1 = TextEditingController();
     TextEditingController _password2 = TextEditingController();
-    Map data = {};
-    // var dev_data = jsonDecode(data);
-    // var type = dev_data[0];
-    // var email = dev_data[1];
-    // var username = dev_data[2];
-    // var password1 = dev_data[3];
-    // var password2 = dev_data[4];
 
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(120),
-          child: Container(
-            width: 100,
-            height: 100,
-            alignment: Alignment.topRight,
-            padding: const EdgeInsets.fromLTRB(0, 30, 30, 0),
-            child: const Image(
-              image: AssetImage('../assets/images/logo.png'),
-              width: 110,
-              height: 110,
-            ),
+      backgroundColor: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(120),
+        child: Container(
+          width: 100,
+          height: 100,
+          alignment: Alignment.topRight,
+          padding: const EdgeInsets.fromLTRB(0, 30, 30, 0),
+          child: const Image(
+            image: AssetImage('../assets/images/logo.png'),
+            width: 110,
+            height: 110,
           ),
         ),
-        body: Column(
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
@@ -85,7 +111,6 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                       ),
                     ),
-
                     const SizedBox(
                       height: 20,
                     ),
@@ -148,7 +173,6 @@ class _SignupPageState extends State<SignupPage> {
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(20)),
-                            //borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide.none,
                           ),
                           labelText: '비밀번호확인',
@@ -165,17 +189,25 @@ class _SignupPageState extends State<SignupPage> {
                     ElevatedButton(
                       style: style,
                       onPressed: () {
-                        data['type'] = 'password';
-                        data['email'] = _email.text;
-                        data['username'] = _username.text;
-                        data['password1'] = _password1.text;
-                        data['password2'] = _password2.text;
-                        //print(data);
-
-                        Navigator.push(
+                        Map<String, String> userData = {
+                          'type': 'password',
+                          'email': _email.text,
+                          'username': _username.text,
+                          'password1': _password1.text,
+                          'password2': _password2.text,
+                        };
+                        fetchInfo(userData).then((data) {
+                          print("로그인으로 넘어감");
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => findpassPage()));
+                              builder: (context) => loginPage(userId: data),
+                            ),
+                          );
+                        }).catchError((error) {
+                          print("망할 에러$error");
+                          print("$userData");
+                        });
                       },
                       child: const Text(
                         '회원가입',
@@ -187,15 +219,17 @@ class _SignupPageState extends State<SignupPage> {
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 20),
-              alignment: Alignment.bottomRight,
-              child: Image.asset('assets/images/turtle.png',
-                  width: 150,
-                  height: 150, //175
+              //margin: EdgeInsets.symmetric(horizontal: 20),
+              alignment: Alignment.bottomCenter,
+              child: Image.asset('assets/images/turtle_w_e.png',
+                  // width: 200,
+                  // height: 200, //175
                   fit: BoxFit.cover,
                   alignment: Alignment.bottomCenter),
             ),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }
