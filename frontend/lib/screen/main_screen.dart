@@ -18,7 +18,6 @@ class _mainPageState extends State<mainPage>
   late TabController _tabController;
   int _selectedIndex = 0;
   String? user_name = '거북이도도';
-  //List? user_romm;
   int _main_idx = 0;
 
   @override
