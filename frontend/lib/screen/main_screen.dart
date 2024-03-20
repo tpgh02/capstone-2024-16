@@ -41,51 +41,54 @@ class _mainPageState extends State<mainPage>
       backgroundColor: LIGHTGREY,
       bottomNavigationBar: SizedBox(
         height: 60,
-        child: TabBar(
-          indicatorColor: PRIMARY_COLOR,
-          labelColor: PRIMARY_COLOR,
-          unselectedLabelColor: Colors.black,
-          controller: _tabController,
-          tabs: [
-            //탭 생성
-            Tab(
-              icon: Icon(
-                _selectedIndex == 0 ? Icons.home : Icons.home_outlined,
-                color: _selectedIndex == 0 ? PRIMARY_COLOR : Colors.black54,
+        child: Container(
+          color: Colors.white,
+          child: TabBar(
+            indicatorColor: PRIMARY_COLOR,
+            labelColor: PRIMARY_COLOR,
+            unselectedLabelColor: Colors.black,
+            controller: _tabController,
+            tabs: [
+              //탭 생성
+              Tab(
+                icon: Icon(
+                  _selectedIndex == 0 ? Icons.home : Icons.home_outlined,
+                  color: _selectedIndex == 0 ? PRIMARY_COLOR : Colors.black54,
+                ),
+                text: "홈",
               ),
-              text: "홈",
-            ),
-            Tab(
-              icon: Icon(
-                _selectedIndex == 1 ? Icons.water : Icons.water_outlined,
-                color: _selectedIndex == 1 ? PRIMARY_COLOR : Colors.black54,
+              Tab(
+                icon: Icon(
+                  _selectedIndex == 1 ? Icons.water : Icons.water_outlined,
+                  color: _selectedIndex == 1 ? PRIMARY_COLOR : Colors.black54,
+                ),
+                text: "바다",
               ),
-              text: "바다",
-            ),
-            Tab(
-              icon: Icon(
-                _selectedIndex == 2
-                    ? Icons.door_front_door
-                    : Icons.door_front_door_outlined,
-                color: _selectedIndex == 2 ? PRIMARY_COLOR : Colors.black54,
+              Tab(
+                icon: Icon(
+                  _selectedIndex == 2
+                      ? Icons.door_front_door
+                      : Icons.door_front_door_outlined,
+                  color: _selectedIndex == 2 ? PRIMARY_COLOR : Colors.black54,
+                ),
+                text: "방",
               ),
-              text: "방",
-            ),
-            Tab(
-              icon: Icon(
-                _selectedIndex == 3 ? Icons.search : Icons.search_outlined,
-                color: _selectedIndex == 3 ? PRIMARY_COLOR : Colors.black54,
+              Tab(
+                icon: Icon(
+                  _selectedIndex == 3 ? Icons.search : Icons.search_outlined,
+                  color: _selectedIndex == 3 ? PRIMARY_COLOR : Colors.black54,
+                ),
+                text: "검색",
               ),
-              text: "검색",
-            ),
-            Tab(
-              icon: Icon(
-                _selectedIndex == 4 ? Icons.person : Icons.person_outlined,
-                color: _selectedIndex == 4 ? PRIMARY_COLOR : Colors.black54,
+              Tab(
+                icon: Icon(
+                  _selectedIndex == 4 ? Icons.person : Icons.person_outlined,
+                  color: _selectedIndex == 4 ? PRIMARY_COLOR : Colors.black54,
+                ),
+                text: "개인",
               ),
-              text: "개인",
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       body: _selectedIndex == 0

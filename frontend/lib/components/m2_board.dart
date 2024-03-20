@@ -25,12 +25,7 @@ class _m2_board extends State<m2_board> {
             SizedBox(
               height: 20,
             ),
-            Text(
-              '오늘도 도전',
-              style: TextStyle(fontFamily: "kcc", fontSize: 20),
-            ),
-            TabBarScreen(),
-            //tap 추가
+            m2Tabbar(),
             //캘린더 추가
           ],
         )));
