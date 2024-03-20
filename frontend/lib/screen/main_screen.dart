@@ -3,6 +3,7 @@ import 'package:dodo/components/m_title.dart';
 import 'package:dodo/components/m_todo.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/screen/main2_screen.dart';
+import 'package:dodo/screen/sea_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -92,7 +93,8 @@ class _mainPageState extends State<mainPage>
         ),
       ),
       body: _selectedIndex == 0
-          ? Container(
+          ? SingleChildScrollView(
+              scrollDirection: Axis.vertical,
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Container(
                 //color: Colors.black,
@@ -163,9 +165,7 @@ class _mainPageState extends State<mainPage>
           : _selectedIndex == 1
               ?
               //바다 화면 구성. sea_screen.dart
-              Container(
-                  color: PRIMARY_COLOR,
-                )
+              seaPage()
               : _selectedIndex == 2
                   ?
                   //방 화면 구성. room_screen.dart
