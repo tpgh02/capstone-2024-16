@@ -1,13 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
 
-class TabBarScreen extends StatefulWidget {
-  const TabBarScreen({Key? key}) : super(key: key);
+class m2Tabbar extends StatefulWidget {
+  const m2Tabbar({Key? key}) : super(key: key);
 
   @override
-  State<TabBarScreen> createState() => _TabBarScreenState();
+  State<m2Tabbar> createState() => _m2TabbarState();
 }
 
-class _TabBarScreenState extends State<TabBarScreen>
+class _m2TabbarState extends State<m2Tabbar>
     with SingleTickerProviderStateMixin {
   late TabController tabController = TabController(
     length: 3,
@@ -17,7 +19,15 @@ class _TabBarScreenState extends State<TabBarScreen>
     /// 탭 변경 애니메이션 시간
     animationDuration: const Duration(milliseconds: 200),
   );
+
   List dayoff = ['1month', '3month', '6month'];
+  String month = '1month';
+  DateTime selectedDate = DateTime.utc(
+    DateTime.now().year,
+    DateTime.now().month,
+    DateTime.now().day,
+  );
+  int state = 40;
 
   @override
   void dispose() {
@@ -27,8 +37,35 @@ class _TabBarScreenState extends State<TabBarScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: _tabBar(),
+    return Column(
+      children: [
+        Container(
+          child: _tabBar(),
+        ),
+        TableCalendar(
+          onDaySelected: onDaySelected,
+          selectedDayPredicate: (day) {
+            return isSameDay(selectedDate, day);
+          },
+          focusedDay: selectedDate,
+          firstDay: DateTime(2024),
+          lastDay: DateTime(2025),
+          headerStyle: const HeaderStyle(
+              titleCentered: true,
+              formatButtonVisible: false,
+              titleTextStyle: TextStyle(fontFamily: 'bm', fontSize: 20)),
+        ),
+        Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          const Text(
+            "이번 달성률 : ",
+            style: TextStyle(fontFamily: "bm", fontSize: 20),
+          ),
+          Text(
+            "$state%",
+            style: const TextStyle(fontFamily: "bm", fontSize: 30),
+          )
+        ])
+      ],
     );
   }
 
@@ -45,12 +82,18 @@ class _TabBarScreenState extends State<TabBarScreen>
               alignment: Alignment.bottomCenter,
               child: Text(
                 value,
-                style: TextStyle(fontFamily: 'bm', fontSize: 20),
+                style: const TextStyle(fontFamily: 'bm', fontSize: 20),
               ),
             ),
           );
         },
       ).toList(),
     );
+  }
+
+  void onDaySelected(DateTime selectedDate, DateTime focusedDate) {
+    setState(() {
+      this.selectedDate = selectedDate;
+    });
   }
 }

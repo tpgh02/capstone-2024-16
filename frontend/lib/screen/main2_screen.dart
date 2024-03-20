@@ -12,6 +12,11 @@ class main2Page extends StatefulWidget {
 class _main2PageState extends State<main2Page> {
   List _roomname = ['오.운.완', '지금 일어나지 않으면...', '자취요리왕'];
   Object? _select = '오.운.완';
+  DateTime selectedDate = DateTime.utc(
+    DateTime.now().year,
+    DateTime.now().month,
+    DateTime.now().day,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +43,7 @@ class _main2PageState extends State<main2Page> {
                   ],
                 ),
               ),
-              m2_board()
+              m2_board(),
             ],
           )),
     );
