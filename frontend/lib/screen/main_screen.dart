@@ -4,6 +4,7 @@ import 'package:dodo/components/m_todo.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/screen/main2_screen.dart';
 import 'package:dodo/screen/sea_screen.dart';
+import 'package:dodo/screen/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -173,7 +174,7 @@ class _mainPageState extends State<mainPage>
                   : _selectedIndex == 3
                       ?
                       // 검색 화면 구성. search_screen.dart
-                      Text("4")
+                      searchPage()
                       :
                       // 개인 화면 구성. personal_screen.dart
                       Text("5"),
