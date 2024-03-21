@@ -1,9 +1,6 @@
-package com.dodo.chat.controller;
+package com.dodo.room;
 
-import com.dodo.chat.service.ChatRoomService;
 import com.dodo.config.auth.CustomAuthentication;
-import com.dodo.room.RoomRepository;
-import com.dodo.room.RoomService;
 import com.dodo.room.domain.Room;
 import com.dodo.room.dto.RoomData;
 import com.dodo.roomuser.RoomUserRepository;
@@ -12,23 +9,18 @@ import com.dodo.roomuser.domain.RoomUser;
 import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
 import com.dodo.user.domain.UserContext;
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/chat")
 @Slf4j
-public class ChatRoomController {
+public class RoomController {
 
-    private final ChatRoomService chatRoomService;
     private final RoomUserService roomUserService;
     private final RoomUserRepository roomUserRepository;
     private final RoomRepository roomRepository;
@@ -45,7 +37,7 @@ public class ChatRoomController {
 //                             @RequestParam(value = "maxUserCnt", defaultValue = "10") Long maxUserCnt,
 //                             @Nullable @RequestParam("roomPwd") String roomPwd,
 //                             @RequestAttribute UserContext userContext){
-//        Room room = chatRoomService.creatChatRoom(name, roomPwd, maxUserCnt, category, info);
+//        Room room = roomService.creatChatRoom(name, roomPwd, maxUserCnt, category, info);
 //        User user = userRepository.findById(userContext.getUserId()).get();
 //        RoomUser roomUser = roomUserService.createRoomUser(user, room);
 //        roomUser.setIsManager(true);
@@ -59,7 +51,7 @@ public class ChatRoomController {
     @ResponseBody
     @CustomAuthentication
     public RoomData createRoom(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext){
-        Room room = chatRoomService.creatChatRoom(roomData.getName(), roomData.getPwd(), roomData.getMaxUsers(), roomData.getCategory(), roomData.getInfo());
+        Room room = roomService.creatChatRoom(roomData.getName(), roomData.getPwd(), roomData.getMaxUsers(), roomData.getCategory(), roomData.getInfo());
         User user = userRepository.findById(userContext.getUserId()).get();
         RoomUser roomUser = roomUserService.createRoomUser(user, room);
         roomUser.setIsManager(true);
@@ -85,7 +77,7 @@ public class ChatRoomController {
 
         // 유저가 채팅방에 처음 입장
         if (roomUser == null) {
-            chatRoomService.plusUserCnt(roomId);
+            roomService.plusUserCnt(roomId);
             roomUser = roomUserService.createRoomUser(user, room);
             roomUser = roomUserRepository.findByUserAndRoom(user, room)
                     .orElse(null);
@@ -105,7 +97,7 @@ public class ChatRoomController {
         Room room = roomRepository.findById(roomId).get();
         User user = userRepository.findById(userContext.getUserId()).get();
 
-        chatRoomService.minusUserCnt(roomId);
+        roomService.minusUserCnt(roomId);
         roomUserService.deleteChatRoomUser(room, user);
 
         RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)
