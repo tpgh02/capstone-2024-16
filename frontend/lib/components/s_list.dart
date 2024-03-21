@@ -6,9 +6,6 @@ import 'package:flutter/widgets.dart';
 class s_list extends StatefulWidget {
   const s_list({super.key});
 
-  // const s_list(this.menu);
-  // final String menu;
-
   @override
   State<s_list> createState() => _s_listState();
 }
@@ -28,8 +25,8 @@ class _s_listState extends State<s_list> {
         child: Column(
           children: [
             //운동 카테고리
-            Opacity(
-              opacity: 1,
+            InkWell(
+              onTap: () {},
               child: Container(
                 margin: EdgeInsets.all(10),
                 child: Row(
