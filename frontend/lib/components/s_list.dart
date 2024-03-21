@@ -6,9 +6,6 @@ import 'package:flutter/widgets.dart';
 class s_list extends StatefulWidget {
   const s_list({super.key});
 
-  // const s_list(this.menu);
-  // final String menu;
-
   @override
   State<s_list> createState() => _s_listState();
 }
