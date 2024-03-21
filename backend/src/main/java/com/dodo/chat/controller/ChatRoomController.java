@@ -5,6 +5,7 @@ import com.dodo.config.auth.CustomAuthentication;
 import com.dodo.room.RoomRepository;
 import com.dodo.room.RoomService;
 import com.dodo.room.domain.Room;
+import com.dodo.room.dto.RoomData;
 import com.dodo.roomuser.RoomUserRepository;
 import com.dodo.roomuser.RoomUserService;
 import com.dodo.roomuser.domain.RoomUser;
@@ -35,24 +36,38 @@ public class ChatRoomController {
     private final RoomService roomService;
 
     // 인증방 생성
+//    @PostMapping("/create-room")
+//    @ResponseBody
+//    @CustomAuthentication
+//    public String createRoom(@RequestParam("roomName") String name,
+//                             @RequestParam("category") String category,
+//                             @RequestParam("info") String info,
+//                             @RequestParam(value = "maxUserCnt", defaultValue = "10") Long maxUserCnt,
+//                             @Nullable @RequestParam("roomPwd") String roomPwd,
+//                             @RequestAttribute UserContext userContext){
+//        Room room = chatRoomService.creatChatRoom(name, roomPwd, maxUserCnt, category, info);
+//        User user = userRepository.findById(userContext.getUserId()).get();
+//        RoomUser roomUser = roomUserService.createRoomUser(user, room);
+//        roomUser.setIsManager(true);
+//        roomUserRepository.save(roomUser);
+//
+//        log.info("CREATE Chat Room {}", room);
+//
+//        return "room id : " + room.getId();
+//    }
     @PostMapping("/create-room")
     @ResponseBody
     @CustomAuthentication
-    public String createRoom(@RequestParam("roomName") String name,
-                             @RequestParam("category") String category,
-                             @RequestParam("info") String info,
-                             @RequestParam(value = "maxUserCnt", defaultValue = "10") Long maxUserCnt,
-                             @Nullable @RequestParam("roomPwd") String roomPwd,
-                             @RequestAttribute UserContext userContext){
-        Room room = chatRoomService.creatChatRoom(name, roomPwd, maxUserCnt, category, info);
+    public RoomData createRoom(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext){
+        Room room = chatRoomService.creatChatRoom(roomData.getName(), roomData.getPwd(), roomData.getMaxUsers(), roomData.getCategory(), roomData.getInfo());
         User user = userRepository.findById(userContext.getUserId()).get();
         RoomUser roomUser = roomUserService.createRoomUser(user, room);
         roomUser.setIsManager(true);
         roomUserRepository.save(roomUser);
 
-        log.info("CREATE Chat Room {}", room);
+        log.info("CREATE Chat RoomId: {}", room.getId());
 
-        return "room id : " + room.getId();
+        return roomData;
     }
 
     // 인증방 입장
@@ -134,6 +149,23 @@ public class ChatRoomController {
         }
 
         return "Error";
+    }
+
+    // 공지 수정하기
+    @CustomAuthentication
+    @PostMapping("/edit-info")
+    public String editInfo(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext, @RequestParam String txt) {
+        Room room = roomRepository.findById(roomData.getRoomId()).get();
+        User user = userRepository.findById(userContext.getUserId()).get();
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).get();
+
+        if (!roomUser.getIsManager()) {
+            return "방장이 아닙니다.";
+        }
+
+        roomService.editInfo(room.getId(), txt);
+
+        return room.getInfo();
     }
 
 }

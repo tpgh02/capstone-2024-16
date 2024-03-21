@@ -34,6 +34,11 @@ public class Room {
     private Periodicity periodicity;
     private Integer frequency;
 
+    // 인증 방식
+    // AI, 일반
+    @Enumerated(EnumType.STRING)
+    private RoomClassification roomClassification;
+
     @OneToMany(mappedBy = "room")
     private List<RoomUser> roomUsers;
 
