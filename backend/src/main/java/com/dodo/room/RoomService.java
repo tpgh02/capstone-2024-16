@@ -15,7 +15,7 @@ public class RoomService {
     private final RoomRepository roomRepository;
 
     // 채팅방 생성
-    public Room creatChatRoom(String roomName, String roomPwd, Long maxUserCnt, String category, String info){
+    public Room creatChatRoom(String roomName, String roomPwd, Long maxUserCnt, String category, String info, String hashtag){
         Room room = Room.builder()
                 .name(roomName)
                 .password(roomPwd)
@@ -23,6 +23,7 @@ public class RoomService {
                 .nowUser(1L)
                 .category(category)
                 .info(info)
+                .tag(hashtag)
                 .build();
 
         roomRepository.save(room);
@@ -42,6 +43,8 @@ public class RoomService {
         Room room = roomRepository.findById(roomId).get();
         room.setNowUser(room.getNowUser()-1);
     }
+
+    // 채팅방 삭제
     public void deleteRoom(Long roomId){
         Room room = roomRepository.findById(roomId).
                 orElse(null);
@@ -52,6 +55,7 @@ public class RoomService {
         roomRepository.delete(room);
     }
 
+    // 채팅방 공지 수정
     public void editInfo(Long roomId, String txt){
         Room room = roomRepository.findById(roomId).get();
         room.setInfo(txt);

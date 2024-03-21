@@ -17,6 +17,7 @@ public class RoomData {
     public String pwd;
     public String category;
     public String info;
+    public String tag;
 
     public CertificationStatus status;
 

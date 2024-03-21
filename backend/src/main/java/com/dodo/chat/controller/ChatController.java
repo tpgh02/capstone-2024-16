@@ -1,7 +1,6 @@
 package com.dodo.chat.controller;
 
 import com.dodo.chat.domain.Message;
-import com.dodo.chat.service.ChatRoomService;
 import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +17,6 @@ import org.springframework.stereotype.Controller;
 public class ChatController {
 
     private final SimpMessageSendingOperations template;
-
-    private final ChatRoomService chatRoomService;
     private final UserRepository user;
 
 

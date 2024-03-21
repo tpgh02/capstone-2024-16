@@ -27,31 +27,11 @@ public class RoomController {
     private final UserRepository userRepository;
     private final RoomService roomService;
 
-    // 인증방 생성
-//    @PostMapping("/create-room")
-//    @ResponseBody
-//    @CustomAuthentication
-//    public String createRoom(@RequestParam("roomName") String name,
-//                             @RequestParam("category") String category,
-//                             @RequestParam("info") String info,
-//                             @RequestParam(value = "maxUserCnt", defaultValue = "10") Long maxUserCnt,
-//                             @Nullable @RequestParam("roomPwd") String roomPwd,
-//                             @RequestAttribute UserContext userContext){
-//        Room room = roomService.creatChatRoom(name, roomPwd, maxUserCnt, category, info);
-//        User user = userRepository.findById(userContext.getUserId()).get();
-//        RoomUser roomUser = roomUserService.createRoomUser(user, room);
-//        roomUser.setIsManager(true);
-//        roomUserRepository.save(roomUser);
-//
-//        log.info("CREATE Chat Room {}", room);
-//
-//        return "room id : " + room.getId();
-//    }
     @PostMapping("/create-room")
     @ResponseBody
     @CustomAuthentication
     public RoomData createRoom(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext){
-        Room room = roomService.creatChatRoom(roomData.getName(), roomData.getPwd(), roomData.getMaxUsers(), roomData.getCategory(), roomData.getInfo());
+        Room room = roomService.creatChatRoom(roomData.getName(), roomData.getPwd(), roomData.getMaxUsers(), roomData.getCategory(), roomData.getInfo(), roomData.getTag());
         User user = userRepository.findById(userContext.getUserId()).get();
         RoomUser roomUser = roomUserService.createRoomUser(user, room);
         roomUser.setIsManager(true);
