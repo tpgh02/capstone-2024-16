@@ -4,26 +4,29 @@ import com.dodo.certification.domain.Certification;
 import com.dodo.room.domain.Room;
 import com.dodo.user.domain.User;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 public class RoomUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Builder.Default
+    @Setter
+    private Boolean isManager = false;
+
     @ManyToOne
     private User user;
 
     @ManyToOne
     private Room room;
-
-    @Enumerated(EnumType.STRING)
-    private RoomRole roomRole;
 
     @OneToMany(mappedBy = "roomUser")
     private List<Certification> certification;

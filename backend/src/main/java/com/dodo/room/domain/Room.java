@@ -1,6 +1,5 @@
 package com.dodo.room.domain;
 
-import com.dodo.image.domain.Image;
 import com.dodo.roomuser.domain.RoomUser;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,7 +16,6 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private String password;
     private String info;
