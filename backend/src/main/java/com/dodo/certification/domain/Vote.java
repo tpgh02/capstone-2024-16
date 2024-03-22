@@ -14,6 +14,9 @@ public class Vote {
     @ManyToOne
     private User user;
 
+    @Enumerated(EnumType.STRING)
+    private VoteStatus voteStatus;
+
     @OneToOne
     private Certification certification;
 }
