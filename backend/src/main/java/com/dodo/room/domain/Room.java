@@ -1,5 +1,6 @@
 package com.dodo.room.domain;
 
+import com.dodo.image.domain.Image;
 import com.dodo.roomuser.domain.RoomUser;
 import jakarta.persistence.*;
 import lombok.*;
