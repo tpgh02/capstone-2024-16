@@ -3,11 +3,12 @@ import 'package:dodo/components/m_title.dart';
 import 'package:dodo/components/m_todo.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/screen/main2_screen.dart';
-import 'package:dodo/screen/mypage.dart';
 import 'package:dodo/screen/sea_screen.dart';
 import 'package:dodo/screen/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:dodo/screen/mypage.dart';
+import 'package:dodo/screen/roomlist_screen.dart';
 
 class mainPage extends StatefulWidget {
   const mainPage({super.key});
@@ -171,7 +172,7 @@ class _mainPageState extends State<mainPage>
               : _selectedIndex == 2
                   ?
                   //방 화면 구성. room_screen.dart
-                  Text("3")
+                  roomListPage()
                   : _selectedIndex == 3
                       ?
                       // 검색 화면 구성. search_screen.dart
