@@ -18,6 +18,7 @@ public class RoomData {
     public String category;
     public String info;
     public String tag;
+    public Boolean canChat;
 
     public CertificationStatus status;
 

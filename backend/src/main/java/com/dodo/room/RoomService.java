@@ -1,6 +1,7 @@
 package com.dodo.room;
 
 import com.dodo.exception.NotFoundException;
+import com.dodo.room.domain.CertificationType;
 import com.dodo.room.dto.RoomData;
 import com.dodo.room.dto.UserData;
 import com.dodo.roomuser.RoomUserRepository;
@@ -44,7 +45,7 @@ public class RoomService {
     }
 
     // 채팅방 생성
-    public Room creatChatRoom(String roomName, String roomPwd, Long maxUserCnt, String category, String info, String hashtag){
+    public Room creatChatRoom(String roomName, String roomPwd, Long maxUserCnt, String category, String info, String hashtag, CertificationType certificationType, Boolean canChat){
         Room room = Room.builder()
                 .name(roomName)
                 .password(roomPwd)
@@ -53,10 +54,17 @@ public class RoomService {
                 .category(category)
                 .info(info)
                 .tag(hashtag)
+                .certificationType(certificationType)
+                .canChat(canChat)
                 .build();
 
         roomRepository.save(room);
         return room;
+    }
+
+    // 인증방 비밀번호 조회
+    public boolean confirmPwd(Long roomId, String roomPwd){
+        return roomPwd.equals(roomRepository.findById(roomId).get().getPassword());
     }
 
     // 채팅방 인원 증가

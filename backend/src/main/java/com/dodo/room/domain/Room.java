@@ -26,6 +26,7 @@ public class Room {
     private Long maxUser;
     private Long nowUser;
     private String tag;
+    private Boolean canChat;
 
     @ManyToOne
     private Image image;

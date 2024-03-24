@@ -49,11 +49,12 @@ public class RoomController {
         return roomService.getUsers(userContext, roomId);
     }
 
+    // 인증방 생성
     @PostMapping("/create-room")
     @ResponseBody
     @CustomAuthentication
     public RoomData createRoom(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext){
-        Room room = roomService.creatChatRoom(roomData.getName(), roomData.getPwd(), roomData.getMaxUsers(), roomData.getCategory(), roomData.getInfo(), roomData.getTag());
+        Room room = roomService.creatChatRoom(roomData.getName(), roomData.getPwd(), roomData.getMaxUsers(), roomData.getCategory(), roomData.getInfo(), roomData.getTag(), roomData.getCertificationType(), roomData.getCanChat());
         User user = userRepository.findById(userContext.getUserId()).get();
         RoomUser roomUser = roomUserService.createRoomUser(user, room);
         roomUser.setIsManager(true);
@@ -87,6 +88,13 @@ public class RoomController {
 
         return "nowUser : " + roomUser.getRoom().getNowUser().toString() + "\n" +
                 "room id : " +  roomUser.getRoom().getId();
+    }
+
+    // 비공개 인증방 입장시 비밀번호 확인 절차
+    @PostMapping("/confirmPwd/{roomId}")
+    @ResponseBody
+    public boolean confirmPwd(@PathVariable Long roomId, @RequestParam String roomPwd){
+        return roomService.confirmPwd(roomId, roomPwd);
     }
 
     // 인증방 나가기
