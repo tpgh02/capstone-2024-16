@@ -5,8 +5,10 @@ import com.dodo.image.domain.Image;
 import com.dodo.room.domain.CertificationType;
 import com.dodo.room.domain.Room;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Data
+@RequiredArgsConstructor
 public class RoomData {
     public Long roomId;
     public String name;

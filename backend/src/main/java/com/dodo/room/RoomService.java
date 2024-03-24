@@ -63,7 +63,7 @@ public class RoomService {
     }
 
     // 인증방 비밀번호 조회
-    public boolean confirmPwd(Long roomId, String roomPwd){
+    public Boolean confirmPwd(Long roomId, String roomPwd){
         return roomPwd.equals(roomRepository.findById(roomId).get().getPassword());
     }
 
@@ -97,5 +97,17 @@ public class RoomService {
         Room room = roomRepository.findById(roomId).get();
         room.setInfo(txt);
         roomRepository.save(room);
+    }
+
+    // 방장 권한 위임
+    public void delegate(Room room, User manager, User user){
+        RoomUser roomManager = roomUserRepository.findByUserAndRoom(manager, room).get();
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).get();
+
+        roomManager.setIsManager(false);
+        roomUser.setIsManager(true);
+
+        roomUserRepository.save(roomManager);
+        roomUserRepository.save(roomUser);
     }
 }

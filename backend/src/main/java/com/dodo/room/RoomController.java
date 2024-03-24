@@ -93,7 +93,7 @@ public class RoomController {
     // 비공개 인증방 입장시 비밀번호 확인 절차
     @PostMapping("/confirmPwd/{roomId}")
     @ResponseBody
-    public boolean confirmPwd(@PathVariable Long roomId, @RequestParam String roomPwd){
+    public Boolean confirmPwd(@PathVariable Long roomId, @RequestParam String roomPwd){
         return roomService.confirmPwd(roomId, roomPwd);
     }
 
@@ -168,5 +168,18 @@ public class RoomController {
         roomService.editInfo(room.getId(), txt);
 
         return room.getInfo();
+    }
+
+    // 방장 위임하기
+    @CustomAuthentication
+    @PostMapping("/delegate")
+    public Boolean delegate(@RequestBody RoomData roomData, @RequestParam Long userId, @RequestAttribute UserContext userContext){
+        Room room = roomRepository.findById(roomData.getRoomId()).get();
+        User manager = userRepository.findById(userContext.getUserId()).get();
+        User user = userRepository.findById(userId).get();
+
+        roomService.delegate(room, manager, user);
+
+        return roomUserRepository.findByUserAndRoom(user, room).get().getIsManager();
     }
 }
