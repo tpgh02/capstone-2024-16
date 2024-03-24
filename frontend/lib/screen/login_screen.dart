@@ -3,34 +3,60 @@ import 'package:dodo/const/colors.dart';
 import 'package:dodo/screen/findpass_screen.dart';
 import 'package:dodo/screen/signup_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-//이건 너가 만든 대로 넣으면 돼!
-class loginPage extends StatelessWidget {
+class loginPage extends StatefulWidget {
   final int? userId;
   const loginPage({Key? key, this.userId}) : super(key: key);
 
   @override
+  State<loginPage> createState() => _loginPageState();
+}
+
+Future<int> fetchInfo(Map<String, String> form) async {
+  var url = 'http://43.203.195.126:8080/api/v1/users/login';
+  final response = await http.post(
+    Uri.parse(url),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(form),
+  );
+  try {
+    if (response.statusCode == 200) {
+      print('회원가입 성공!');
+      Map<String, dynamic> responseData = json.decode(response.body);
+      int userId = responseData['userId'];
+      print('userid: $userId'); //log 찍는 걸로 차후에 변경하기
+      return userId;
+    } else {
+      print('회원가입 실패: ${response.body}');
+      throw Exception('회원가입에 실패했습니다');
+    }
+  } catch (e) {
+    print(response.body);
+    print('$e');
+    throw Exception('네트워크 오류가 발생했습니다');
+  }
+}
+
+class _loginPageState extends State<loginPage> {
+  @override
   Widget build(BuildContext context) {
     GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
-    TextEditingController _emailEditingcontroller = TextEditingController();
-    TextEditingController _passwordEditingcontroller = TextEditingController();
+    TextEditingController _email = TextEditingController();
+    TextEditingController _password = TextEditingController();
     AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
     bool? _isEnabled = true;
 
     void dispose() {
-      _emailEditingcontroller.dispose();
-      _passwordEditingcontroller.dispose();
+      _email.dispose();
+      _password.dispose();
       dispose();
     }
 
-    final ButtonStyle style = ElevatedButton.styleFrom(
-      backgroundColor: PRIMARY_COLOR,
-      textStyle: const TextStyle(fontSize: 20),
-      minimumSize: const Size(300, 70),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-    );
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
@@ -53,10 +79,12 @@ class loginPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 50),
             child: Form(
+              key: _globalKey,
+              autovalidateMode: _autovalidateMode,
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  l_title('로그인'),
+                  const l_title('로그인'),
 
                   const SizedBox(
                     height: 30,
@@ -81,24 +109,46 @@ class loginPage extends StatelessWidget {
                   const SizedBox(
                     height: 30,
                   ),
-
                   // 또는
-                  const Text(
-                    '또는',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                    ),
+
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Divider(
+                          thickness: 1,
+                          height: 1,
+                          color: LIGHTGREY,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        child: const Text(
+                          '또는',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                      Flexible(
+                        child: Divider(
+                          thickness: 1,
+                          height: 1,
+                          color: LIGHTGREY,
+                        ),
+                      ),
+                    ],
                   ),
 
                   const SizedBox(
                     height: 30,
                   ),
 
-                  //이메일
+                  //이메일주소
                   TextFormField(
                     keyboardType: TextInputType.emailAddress,
+                    controller: _email,
                     style: const TextStyle(
                       color: Color(0xff4f4f4f),
                       fontSize: 20,
@@ -115,14 +165,9 @@ class loginPage extends StatelessWidget {
                         filled: true,
                         fillColor: const Color(0xffEDEDED)),
                     validator: (value) {
-                      //아무것도 입력하지 않았을 때
-                      //공백만 입력했을 때
-                      //이메일 형식이 아닐 때
-                      // if (value == null ||
-                      //     value.trim().isEmpty ||
-                      //     isEmail(value.trim())) {
-                      //   return '이메일을 입력해주세요';
-                      // }
+                      if (value == null || value.trim().isEmpty) {
+                        return '이메일을 입력해주세요';
+                      }
                       return null;
                     },
                   ),
@@ -132,7 +177,7 @@ class loginPage extends StatelessWidget {
                   //패스워드
                   TextFormField(
                     enabled: _isEnabled,
-                    controller: _passwordEditingcontroller,
+                    controller: _password,
                     obscureText: true,
                     style: const TextStyle(
                       color: Color(0xff4f4f4f),
@@ -143,13 +188,6 @@ class loginPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide.none,
                         ),
-                        // focusedBorder: OutlineInputBorder(
-                        //   borderRadius: BorderRadius.circular(20),
-                        //   borderSide: BorderSide(
-                        //     color: Color(0xffEDEDED),
-                        //     width: 25.0,
-                        //   ),
-                        // ),
                         labelText: '비밀번호',
                         labelStyle: const TextStyle(
                             color: Color(0xff4f4f4f), fontSize: 18),
@@ -169,9 +207,27 @@ class loginPage extends StatelessWidget {
 
                   const SizedBox(height: 30),
 
-                  // 로그인
+                  // 로그인 버튼
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Map<String, String> userData = {
+                        "type": "password",
+                        'username': _email.text,
+                        'password': _password.text
+                      };
+                      fetchInfo(userData).then((data) {
+                        print("로그인으로 넘어감");
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => loginPage(userId: data),
+                          ),
+                        );
+                      }).catchError((error) {
+                        print("망할 에러$error");
+                        print("$userData");
+                      });
+                    },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       textStyle: const TextStyle(fontSize: 20),

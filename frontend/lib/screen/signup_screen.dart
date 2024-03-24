@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:dodo/const/colors.dart';
-// import 'package:dodo/screen/findpass_screen.dart';
 import 'package:dodo/screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
