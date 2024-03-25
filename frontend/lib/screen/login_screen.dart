@@ -1,6 +1,7 @@
 import 'package:dodo/components/l_title.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/screen/findpass_screen.dart';
+import 'package:dodo/screen/main_screen.dart';
 import 'package:dodo/screen/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -15,7 +16,7 @@ class loginPage extends StatefulWidget {
   State<loginPage> createState() => _loginPageState();
 }
 
-Future<int> fetchInfo(Map<String, String> form) async {
+Future<String> fetchInfo(Map<String, String> form) async {
   var url = 'http://43.203.195.126:8080/api/v1/users/login';
   final response = await http.post(
     Uri.parse(url),
@@ -28,9 +29,9 @@ Future<int> fetchInfo(Map<String, String> form) async {
     if (response.statusCode == 200) {
       print('회원가입 성공!');
       Map<String, dynamic> responseData = json.decode(response.body);
-      int userId = responseData['userId'];
-      print('userid: $userId'); //log 찍는 걸로 차후에 변경하기
-      return userId;
+      String token = responseData['token'];
+      print('response token: $token'); //log 찍는 걸로 차후에 변경하기
+      return token;
     } else {
       print('회원가입 실패: ${response.body}');
       throw Exception('회원가입에 실패했습니다');
@@ -212,15 +213,16 @@ class _loginPageState extends State<loginPage> {
                     onPressed: () {
                       Map<String, String> userData = {
                         "type": "password",
-                        'username': _email.text,
-                        'password': _password.text
+                        "email": _email.text,
+                        "password": _password.text
                       };
                       fetchInfo(userData).then((data) {
-                        print("로그인으로 넘어감");
+                        print("메인으로 넘어감");
+                        print(data);
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => loginPage(userId: data),
+                            builder: (context) => mainPage(token: data),
                           ),
                         );
                       }).catchError((error) {

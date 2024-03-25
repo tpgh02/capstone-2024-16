@@ -10,7 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class mainPage extends StatefulWidget {
-  const mainPage({super.key});
+  final String? token;
+  const mainPage({Key? key, this.token}) : super(key: key);
+  //const loginPage({Key? key, this.userId}) : super(key: key);
 
   @override
   State<mainPage> createState() => _mainPageState();
