@@ -1,4 +1,5 @@
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 
@@ -111,7 +112,8 @@ class _MyPageState extends State<MyPage> {
           actions: <Widget>[
             OutlinedButton(
               onPressed: () {
-                Navigator.of(context).pop(); //창 닫기
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => loginPage()));
               },
               style: OutlinedButton.styleFrom(
                 foregroundColor: POINT_COLOR,
