@@ -1,9 +1,6 @@
 package com.dodo.certification;
 
-import com.dodo.certification.dto.CertificationDetailResponseData;
-import com.dodo.certification.dto.CertificationListResponseData;
-import com.dodo.certification.dto.CertificationUploadResponseData;
-import com.dodo.certification.dto.VoteRequestData;
+import com.dodo.certification.dto.*;
 import com.dodo.config.auth.CustomAuthentication;
 import com.dodo.user.domain.UserContext;
 import lombok.RequiredArgsConstructor;
@@ -64,8 +61,8 @@ public class CertificationController {
     @PostMapping("/approval")
     public CertificationDetailResponseData approval(
             @RequestAttribute UserContext userContext,
-            @RequestParam Long certificationId
-    ) {
-        return certificationService.approval(userContext, certificationId);
+            @RequestBody ApprovalRequestData requestData
+            ) {
+        return certificationService.approval(userContext, requestData);
     }
 }

@@ -4,10 +4,7 @@ import com.dodo.certification.domain.Certification;
 import com.dodo.certification.domain.CertificationStatus;
 import com.dodo.certification.domain.Vote;
 import com.dodo.certification.domain.VoteStatus;
-import com.dodo.certification.dto.CertificationDetailResponseData;
-import com.dodo.certification.dto.CertificationListResponseData;
-import com.dodo.certification.dto.CertificationUploadResponseData;
-import com.dodo.certification.dto.VoteRequestData;
+import com.dodo.certification.dto.*;
 import com.dodo.exception.NotFoundException;
 import com.dodo.image.ImageService;
 import com.dodo.image.domain.Image;
@@ -120,8 +117,20 @@ public class CertificationService {
         return new CertificationDetailResponseData(certification, vote);
     }
 
-    public CertificationDetailResponseData approval(UserContext userContext, Long certificationId) {
+    public CertificationDetailResponseData approval(UserContext userContext, ApprovalRequestData requestData) {
+        User user = getUser(userContext);
+        Certification certification = certificationRepository.findById(requestData.getCertificationId())
+                .orElseThrow(NotFoundException::new);
+        Room room = certification.getRoomUser().getRoom();
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)
+                .orElseThrow(NotFoundException::new);
+        if(roomUser.getIsManager()) {
+            certification.setStatus(CertificationStatus.SUCCESS);
+        } else {
+            // 방장아님에러
+        }
 
+        return new CertificationDetailResponseData(certification, null);
     }
 
 
