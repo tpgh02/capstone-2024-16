@@ -1,7 +1,9 @@
 package com.dodo.certification;
 
+import com.dodo.certification.dto.CertificationDetailResponseData;
 import com.dodo.certification.dto.CertificationListResponseData;
 import com.dodo.certification.dto.CertificationUploadResponseData;
+import com.dodo.certification.dto.VoteRequestData;
 import com.dodo.config.auth.CustomAuthentication;
 import com.dodo.user.domain.UserContext;
 import lombok.RequiredArgsConstructor;
@@ -40,33 +42,30 @@ public class CertificationController {
 
     // 특정 인증 클릭했을 때 나오는 디테일 화면 보여주기
     @GetMapping("/detail/{certificationId}")
-    public void getCertificationDetail(
+    public CertificationDetailResponseData getCertificationDetail(
             @RequestAttribute UserContext userContext,
-            @PathVariable String certificationId
+            @PathVariable Long certificationId
     ) {
-
+        return certificationService.getCertificationDetail(userContext, certificationId);
     }
 
 
     // 투표
     @PostMapping("/vote")
-    public void voting(
+    public CertificationDetailResponseData voting(
             @RequestAttribute UserContext userContext,
-            @RequestParam Long certificationId
+            @RequestBody VoteRequestData requestData
     ) {
-        certificationService.voting(userContext, certificationId);
+        return certificationService.voting(userContext, requestData);
     }
 
 
     // 방장 승인
-    @PostMapping("/")
-    public void approval(
+    @PostMapping("/approval")
+    public CertificationDetailResponseData approval(
             @RequestAttribute UserContext userContext,
             @RequestParam Long certificationId
     ) {
-        certificationService.approval(userContext, certificationId);
+        return certificationService.approval(userContext, certificationId);
     }
-
-
-
 }

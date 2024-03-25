@@ -2,8 +2,12 @@ package com.dodo.certification;
 
 import com.dodo.certification.domain.Certification;
 import com.dodo.certification.domain.CertificationStatus;
+import com.dodo.certification.domain.Vote;
+import com.dodo.certification.domain.VoteStatus;
+import com.dodo.certification.dto.CertificationDetailResponseData;
 import com.dodo.certification.dto.CertificationListResponseData;
 import com.dodo.certification.dto.CertificationUploadResponseData;
+import com.dodo.certification.dto.VoteRequestData;
 import com.dodo.exception.NotFoundException;
 import com.dodo.image.ImageService;
 import com.dodo.image.domain.Image;
@@ -37,37 +41,89 @@ public class CertificationService {
     private final UserRepository userRepository;
     private final RoomRepository roomRepository;
     private final RoomUserRepository roomUserRepository;
+    private final VoteRepository voteRepository;
     private final ImageService imageService;
 
     public CertificationUploadResponseData makeCertification(UserContext userContext, Long roomId, MultipartFile img) throws IOException {
         User user = getUser(userContext);
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(NotFoundException::new);
-//        Room room = roomRepository.save(new Room());
-
         RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)
-                        .orElseThrow(NotFoundException::new);
-//        RoomUser roomUser = roomUserRepository.save(new RoomUser(user, room));
-
+                .orElseThrow(NotFoundException::new);
         Image image = imageService.saveImage(img);
+
+        // 테스트용
+//        RoomUser roomUser = roomUserRepository.save(new RoomUser(user, room));
+//        Room room = roomRepository.save(new Room());
 //        log.info("{}", image.getUrl());
 
         Certification saved = certificationRepository.save(Certification.builder()
                 .status(CertificationStatus.WAIT)
                 .roomUser(roomUser)
                 .image(image)
+                .voteUp(0)
+                .voteDown(0)
                 .build());
         return new CertificationUploadResponseData(saved);
     }
 
-    public void voting(UserContext userContext, Long certificationId) {
+    public CertificationDetailResponseData getCertificationDetail(
+            UserContext userContext,
+            Long certificationId
+    ) {
+        User user = getUser(userContext);
+        Certification certification = certificationRepository.findById(certificationId)
+                .orElseThrow(NotFoundException::new);
+        Vote vote = voteRepository.findByUserAndCertification(user, certification).orElse(null);
+        return new CertificationDetailResponseData(certification, vote);
+    }
 
+    public CertificationDetailResponseData voting(UserContext userContext, VoteRequestData requestData) {
+        User user = getUser(userContext);
+        Certification certification = certificationRepository.findById(requestData.getCertificationId())
+                .orElseThrow(NotFoundException::new);
+        Room room = certification.getRoomUser().getRoom();
+
+        Vote vote = voteRepository.findByUserAndCertification(user, certification)
+                .orElse(new Vote(user, certification));
+
+        if(vote.getVoteStatus() == VoteStatus.NONE) {
+            if(requestData.getVoteStatus() == VoteStatus.UP) certification.addVoteUp();
+            else certification.addVoteDown();
+        }
+        if(vote.getVoteStatus() == VoteStatus.UP && requestData.getVoteStatus() == VoteStatus.DOWN) {
+            certification.addVoteDown();
+            certification.subVoteUp();
+        }
+        if(vote.getVoteStatus() == VoteStatus.DOWN && requestData.getVoteStatus() == VoteStatus.UP) {
+            certification.addVoteUp();
+            certification.subVoteDown();
+        }
+
+        vote.setVoteStatus(requestData.getVoteStatus());
+        voteRepository.save(vote);
+
+
+        // TODO
+        // 인증방 구성원 투표 최소 투표율>?
+        // 따봉 다 차면 어떻게할지
+        // 붐따 다 차면 어떻게할지
+//        if(certification.getVoteUp() == room.getMaxVoteUp()) {
+//
+//        }
+//
+//        if(certification.getVoteDown() == room.getMaxVoteDown()) {
+//
+//        }
+
+
+        return new CertificationDetailResponseData(certification, vote);
+    }
+
+    public CertificationDetailResponseData approval(UserContext userContext, Long certificationId) {
 
     }
 
-    public void approval(UserContext userContext, Long certificationId) {
-
-    }
 
     public List<CertificationListResponseData> getList(UserContext userContext, Long roomId) {
         User user = getUser(userContext);
@@ -111,24 +167,6 @@ public class CertificationService {
         return groupList.stream()
                 .map(CertificationListResponseData::new)
                 .toList();
-
-        /*
-        원하는 응답값
-        {
-            certificationList : [
-                "userId" : 1,
-                "username": "hello",
-                "userImage" : {
-                    "url" : "sdfasdfsdfasdfadfafd"
-                },
-                "max" : 3,
-                "success" : 1,
-                "wait" : 1,
-                "certification" : false
-            ]
-
-        }
-        */
     }
 
     @Data

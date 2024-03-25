@@ -17,6 +17,10 @@ spring:
     console:
       enabled: true
 
+  output:
+    ansi:
+      enabled: always
+
 
 authentication:
   access-token:

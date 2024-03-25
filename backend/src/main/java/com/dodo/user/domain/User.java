@@ -3,7 +3,10 @@ package com.dodo.user.domain;
 import com.dodo.image.domain.Image;
 import com.dodo.roomuser.domain.RoomUser;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -22,6 +25,8 @@ public class User {
     // password or social
     @Enumerated(EnumType.STRING)
     private AuthenticationType authenticationType;
+
+    @Column(name = "email", unique = true)
     private String email;
     private String name;
     private Integer mileage;

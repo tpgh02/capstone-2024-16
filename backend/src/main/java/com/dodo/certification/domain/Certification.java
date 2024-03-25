@@ -39,4 +39,9 @@ public class Certification {
 
     private Integer voteUp;
     private Integer voteDown;
+
+    public void addVoteUp() { voteUp++; }
+    public void subVoteUp() { voteUp--; }
+    public void addVoteDown() { voteDown++; }
+    public void subVoteDown() { voteDown--; }
 }
