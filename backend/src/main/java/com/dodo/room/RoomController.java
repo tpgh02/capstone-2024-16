@@ -54,7 +54,11 @@ public class RoomController {
     @ResponseBody
     @CustomAuthentication
     public RoomData createRoom(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext){
-        Room room = roomService.creatChatRoom(roomData.getName(), roomData.getPwd(), roomData.getMaxUsers(), roomData.getCategory(), roomData.getInfo(), roomData.getTag(), roomData.getCertificationType(), roomData.getCanChat());
+        Room room = roomService.creatChatRoom(roomData.getName(), roomData.getPwd(),
+                roomData.getMaxUsers(), roomData.getCategory(), roomData.getInfo(),
+                roomData.getTag(), roomData.getCertificationType(), roomData.getCanChat(),
+                roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
+                roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay());
         User user = userRepository.findById(userContext.getUserId()).get();
         RoomUser roomUser = roomUserService.createRoomUser(user, room);
         roomUser.setIsManager(true);
@@ -113,11 +117,11 @@ public class RoomController {
         RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)
                 .orElse(null);
         if (roomUser == null) {
-            return "roomUser = null" + "\n" +
+            return "해당 유저는 인증방에서 삭제되었습니다." + "\n" +
                     "nowUser = " + room.getNowUser();
         }
         else {
-            return "roomUser = " + roomUser.getId() ;
+            return "유저가 인증방에서 삭제되지 않았습니다.." ;
         }
     }
 
@@ -147,7 +151,7 @@ public class RoomController {
                 .orElse(null);
 
         if (roomUserList.isEmpty()) {
-            return "null";
+            return "인증방 해체 완료";
         }
 
         return "Error";

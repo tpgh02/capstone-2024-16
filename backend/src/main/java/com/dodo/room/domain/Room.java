@@ -27,6 +27,8 @@ public class Room {
     private Long nowUser;
     private String tag;
     private Boolean canChat;
+    private Integer numOfVoteSuccess;
+    private Integer numOfVoteFail;
 
     @ManyToOne
     private Image image;
