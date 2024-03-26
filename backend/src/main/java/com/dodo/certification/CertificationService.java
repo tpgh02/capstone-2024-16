@@ -125,9 +125,9 @@ public class CertificationService {
         RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)
                 .orElseThrow(NotFoundException::new);
         if(roomUser.getIsManager()) {
-            certification.setStatus(CertificationStatus.SUCCESS);
+            certification.setStatus(requestData.getStatus());
         } else {
-            // 방장아님에러
+            // 요청한 사람이 방장이 아니라면 에러
         }
 
         return new CertificationDetailResponseData(certification, null);
