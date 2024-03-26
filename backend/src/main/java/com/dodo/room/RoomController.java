@@ -49,11 +49,16 @@ public class RoomController {
         return roomService.getUsers(userContext, roomId);
     }
 
+    // 인증방 생성
     @PostMapping("/create-room")
     @ResponseBody
     @CustomAuthentication
     public RoomData createRoom(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext){
-        Room room = roomService.creatChatRoom(roomData.getName(), roomData.getPwd(), roomData.getMaxUsers(), roomData.getCategory(), roomData.getInfo(), roomData.getTag());
+        Room room = roomService.creatChatRoom(roomData.getName(), roomData.getPwd(),
+                roomData.getMaxUsers(), roomData.getCategory(), roomData.getInfo(),
+                roomData.getTag(), roomData.getCertificationType(), roomData.getCanChat(),
+                roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
+                roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay());
         User user = userRepository.findById(userContext.getUserId()).get();
         RoomUser roomUser = roomUserService.createRoomUser(user, room);
         roomUser.setIsManager(true);
@@ -89,6 +94,13 @@ public class RoomController {
                 "room id : " +  roomUser.getRoom().getId();
     }
 
+    // 비공개 인증방 입장시 비밀번호 확인 절차
+    @PostMapping("/confirmPwd/{roomId}")
+    @ResponseBody
+    public Boolean confirmPwd(@PathVariable Long roomId, @RequestParam String roomPwd){
+        return roomService.confirmPwd(roomId, roomPwd);
+    }
+
     // 인증방 나가기
     @CustomAuthentication
     @GetMapping("/room-out/{roomId}")
@@ -105,11 +117,11 @@ public class RoomController {
         RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)
                 .orElse(null);
         if (roomUser == null) {
-            return "roomUser = null" + "\n" +
+            return "해당 유저는 인증방에서 삭제되었습니다." + "\n" +
                     "nowUser = " + room.getNowUser();
         }
         else {
-            return "roomUser = " + roomUser.getId() ;
+            return "유저가 인증방에서 삭제되지 않았습니다.." ;
         }
     }
 
@@ -139,7 +151,7 @@ public class RoomController {
                 .orElse(null);
 
         if (roomUserList.isEmpty()) {
-            return "null";
+            return "인증방 해체 완료";
         }
 
         return "Error";
@@ -160,5 +172,18 @@ public class RoomController {
         roomService.editInfo(room.getId(), txt);
 
         return room.getInfo();
+    }
+
+    // 방장 위임하기
+    @CustomAuthentication
+    @PostMapping("/delegate")
+    public Boolean delegate(@RequestBody RoomData roomData, @RequestParam Long userId, @RequestAttribute UserContext userContext){
+        Room room = roomRepository.findById(roomData.getRoomId()).get();
+        User manager = userRepository.findById(userContext.getUserId()).get();
+        User user = userRepository.findById(userId).get();
+
+        roomService.delegate(room, manager, user);
+
+        return roomUserRepository.findByUserAndRoom(user, room).get().getIsManager();
     }
 }

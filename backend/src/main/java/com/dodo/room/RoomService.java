@@ -1,6 +1,8 @@
 package com.dodo.room;
 
 import com.dodo.exception.NotFoundException;
+import com.dodo.room.domain.CertificationType;
+import com.dodo.room.domain.Periodicity;
 import com.dodo.room.dto.RoomData;
 import com.dodo.room.dto.UserData;
 import com.dodo.roomuser.RoomUserRepository;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -44,7 +47,10 @@ public class RoomService {
     }
 
     // 채팅방 생성
-    public Room creatChatRoom(String roomName, String roomPwd, Long maxUserCnt, String category, String info, String hashtag){
+    public Room creatChatRoom(String roomName, String roomPwd, Long maxUserCnt, String category,
+                              String info, String hashtag, CertificationType certificationType,
+                              Boolean canChat, Integer numOfVoteSuccess, Integer numOfVoteFail,
+                              Integer frequency, Periodicity periodicity, LocalDateTime endDate){
         Room room = Room.builder()
                 .name(roomName)
                 .password(roomPwd)
@@ -53,10 +59,21 @@ public class RoomService {
                 .category(category)
                 .info(info)
                 .tag(hashtag)
+                .certificationType(certificationType)
+                .periodicity(periodicity)
+                .canChat(canChat)
+                .endDay(endDate)
+                .frequency(frequency)
+                .numOfVoteSuccess(numOfVoteSuccess).numOfVoteFail(numOfVoteFail)
                 .build();
 
         roomRepository.save(room);
         return room;
+    }
+
+    // 인증방 비밀번호 조회
+    public Boolean confirmPwd(Long roomId, String roomPwd){
+        return roomPwd.equals(roomRepository.findById(roomId).get().getPassword());
     }
 
     // 채팅방 인원 증가
@@ -89,5 +106,17 @@ public class RoomService {
         Room room = roomRepository.findById(roomId).get();
         room.setInfo(txt);
         roomRepository.save(room);
+    }
+
+    // 방장 권한 위임
+    public void delegate(Room room, User manager, User user){
+        RoomUser roomManager = roomUserRepository.findByUserAndRoom(manager, room).get();
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).get();
+
+        roomManager.setIsManager(false);
+        roomUser.setIsManager(true);
+
+        roomUserRepository.save(roomManager);
+        roomUserRepository.save(roomUser);
     }
 }
