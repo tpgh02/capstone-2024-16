@@ -1,4 +1,7 @@
 import 'package:dodo/screen/category1_screen.dart';
+import 'package:dodo/screen/category2_screen.dart';
+import 'package:dodo/screen/category3_screen.dart';
+import 'package:dodo/screen/category4_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -57,8 +60,26 @@ class _s_listState extends State<s_list> {
                     Container(
                       color: Colors.white,
                       margin: const EdgeInsets.all(10),
-                      child: const Column(
-                        children: [Text("참여중"), Text("112,788명 활동중")],
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.green,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              const Text("참여중"),
+                            ],
+                          ),
+                          const Text("112,788명 활동중")
+                        ],
                       ),
                     ),
                     Container(
@@ -74,7 +95,10 @@ class _s_listState extends State<s_list> {
             ),
             //식단 카테고리
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => category2Page()));
+              },
               child: Container(
                 margin: const EdgeInsets.all(10),
                 child: Row(
@@ -102,8 +126,26 @@ class _s_listState extends State<s_list> {
                     Container(
                       color: Colors.white,
                       margin: const EdgeInsets.all(10),
-                      child: const Column(
-                        children: [Text("참여중"), Text("112,788명 활동중")],
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.green,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              const Text("참여중"),
+                            ],
+                          ),
+                          const Text("112,788명 활동중")
+                        ],
                       ),
                     ),
                     Container(
@@ -117,10 +159,12 @@ class _s_listState extends State<s_list> {
                 ),
               ),
             ),
-
             //공부 카테고리
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => category3Page()));
+              },
               child: Container(
                 margin: const EdgeInsets.all(10),
                 child: Row(
@@ -148,8 +192,26 @@ class _s_listState extends State<s_list> {
                     Container(
                       color: Colors.white,
                       margin: const EdgeInsets.all(10),
-                      child: const Column(
-                        children: [Text("참여중"), Text("112,788명 활동중")],
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.green,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              const Text("참여중"),
+                            ],
+                          ),
+                          const Text("112,788명 활동중")
+                        ],
                       ),
                     ),
                     Container(
@@ -165,7 +227,10 @@ class _s_listState extends State<s_list> {
             ),
             //기타 카테고리
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => category4Page()));
+              },
               child: Container(
                 margin: const EdgeInsets.all(10),
                 child: Row(
@@ -193,8 +258,26 @@ class _s_listState extends State<s_list> {
                     Container(
                       color: Colors.white,
                       margin: const EdgeInsets.all(10),
-                      child: const Column(
-                        children: [Text("참여중"), Text("112,788명 활동중")],
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.green,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              const Text("참여중"),
+                            ],
+                          ),
+                          const Text("112,788명 활동중")
+                        ],
                       ),
                     ),
                     Container(
