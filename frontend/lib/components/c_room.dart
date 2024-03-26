@@ -1,4 +1,5 @@
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/screen/room_join.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -47,71 +48,79 @@ class _c_roomState extends State<c_room> {
         borderRadius: BorderRadius.circular(20),
         color: Colors.white,
       ),
-      child: Column(
-        children: [
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "${postList[num]["room_title"]}",
-              style: const TextStyle(
-                fontSize: 25,
-                fontFamily: "bm",
-              ),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  "${postList[num]["room_cap"]}",
-                  style: const TextStyle(
-                      fontFamily: "bm", fontSize: 15, color: PRIMARY_COLOR),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => room_join())); //postList[0])));
+        },
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "${postList[num]["room_title"]}",
+                style: const TextStyle(
+                  fontSize: 25,
+                  fontFamily: "bm",
                 ),
               ),
-              const SizedBox(
-                width: 5,
-              ),
-              const Icon(
-                size: 5,
-                Icons.circle,
-                color: PRIMARY_COLOR,
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              const Icon(
-                Icons.person,
-                color: PRIMARY_COLOR,
-              ),
-              Container(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  "${postList[num]["room_mem"]} / ${postList[num]["room_maxmem"]}명",
-                  style: const TextStyle(
-                      fontFamily: "bm", fontSize: 15, color: PRIMARY_COLOR),
-                ),
-              ),
-            ],
-          ),
-          Divider(
-            thickness: 1,
-            height: 1,
-            color: DARKGREY,
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Container(
-            alignment: Alignment.centerRight,
-            child: Text(
-              "${postList[num]["room_txt"]}",
-              style: const TextStyle(
-                  fontFamily: "bm", fontSize: 15, color: Colors.black),
             ),
-          ),
-        ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    "${postList[num]["room_cap"]}",
+                    style: const TextStyle(
+                        fontFamily: "bm", fontSize: 15, color: PRIMARY_COLOR),
+                  ),
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                const Icon(
+                  size: 5,
+                  Icons.circle,
+                  color: PRIMARY_COLOR,
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                const Icon(
+                  Icons.person,
+                  color: PRIMARY_COLOR,
+                ),
+                Container(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    "${postList[num]["room_mem"]} / ${postList[num]["room_maxmem"]}명",
+                    style: const TextStyle(
+                        fontFamily: "bm", fontSize: 15, color: PRIMARY_COLOR),
+                  ),
+                ),
+              ],
+            ),
+            Divider(
+              thickness: 1,
+              height: 1,
+              color: DARKGREY,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Container(
+              alignment: Alignment.centerRight,
+              child: Text(
+                "${postList[num]["room_txt"]}",
+                style: const TextStyle(
+                    fontFamily: "bm", fontSize: 15, color: Colors.black),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
