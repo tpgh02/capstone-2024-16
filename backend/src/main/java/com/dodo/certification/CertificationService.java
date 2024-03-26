@@ -44,9 +44,9 @@ public class CertificationService {
     public CertificationUploadResponseData makeCertification(UserContext userContext, Long roomId, MultipartFile img) throws IOException {
         User user = getUser(userContext);
         Room room = roomRepository.findById(roomId)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(() -> new NotFoundException("인증방 정보를 찾을 수 없습니다"));
         RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(() -> new NotFoundException("인증방에 소속되어 있지 않습니다"));
         Image image = imageService.saveImage(img);
 
         // 테스트용
@@ -70,7 +70,7 @@ public class CertificationService {
     ) {
         User user = getUser(userContext);
         Certification certification = certificationRepository.findById(certificationId)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(() -> new NotFoundException("인증 정보를 찾을 수 없습니다"));
         Vote vote = voteRepository.findByUserAndCertification(user, certification).orElse(null);
         return new CertificationDetailResponseData(certification, vote);
     }
@@ -78,7 +78,7 @@ public class CertificationService {
     public CertificationDetailResponseData voting(UserContext userContext, VoteRequestData requestData) {
         User user = getUser(userContext);
         Certification certification = certificationRepository.findById(requestData.getCertificationId())
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(() -> new NotFoundException("인증 정보를 찾을 수 없습니다"));
         Room room = certification.getRoomUser().getRoom();
 
         Vote vote = voteRepository.findByUserAndCertification(user, certification)
@@ -102,16 +102,16 @@ public class CertificationService {
 
 
         // TODO
-        // 인증방 구성원 투표 최소 투표율>?
-        // 따봉 다 차면 어떻게할지
-        // 붐따 다 차면 어떻게할지
-//        if(certification.getVoteUp() == room.getMaxVoteUp()) {
-//
-//        }
-//
-//        if(certification.getVoteDown() == room.getMaxVoteDown()) {
-//
-//        }
+        // 투표 수 다 차면 어떻게 할지
+        // 인증 상태 변경
+        // (알림 어떻게함)
+        if(certification.getVoteUp().equals(room.getNumOfVoteSuccess())) {
+            certification.setStatus(CertificationStatus.SUCCESS);
+        }
+
+        if(certification.getVoteDown().equals(room.getNumOfVoteFail())) {
+            certification.setStatus(CertificationStatus.FAIL);
+        }
 
 
         return new CertificationDetailResponseData(certification, vote);
@@ -120,10 +120,10 @@ public class CertificationService {
     public CertificationDetailResponseData approval(UserContext userContext, ApprovalRequestData requestData) {
         User user = getUser(userContext);
         Certification certification = certificationRepository.findById(requestData.getCertificationId())
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(() -> new NotFoundException("인증 정보를 찾을 수 없습니다"));
         Room room = certification.getRoomUser().getRoom();
         RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(() -> new NotFoundException("인증방에 소속되어 있지 않습니다"));
         if(roomUser.getIsManager()) {
             certification.setStatus(requestData.getStatus());
         } else {
@@ -137,10 +137,10 @@ public class CertificationService {
     public List<CertificationListResponseData> getList(UserContext userContext, Long roomId) {
         User user = getUser(userContext);
         Room room = roomRepository.findById(roomId)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(() -> new NotFoundException("인증방을 찾을 수 없습니다"));
 
         List<RoomUser> roomUser = roomUserRepository.findAllByUserAndRoom(user, room)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(() -> new NotFoundException("인증방의 회원을 찾을 수 엇습니다"));
 
 
         // 날짜비교
@@ -195,6 +195,6 @@ public class CertificationService {
 
     private User getUser(UserContext userContext) {
         return userRepository.findById(userContext.getUserId())
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다"));
     }
 }

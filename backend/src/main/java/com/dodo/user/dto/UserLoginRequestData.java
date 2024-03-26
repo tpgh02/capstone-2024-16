@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         property = "type"
@@ -21,13 +23,10 @@ public abstract class UserLoginRequestData {
     @JsonTypeName("password")
     @Getter
     public static class PasswordLoginRequestData extends UserLoginRequestData {
-        private final String email;
-        private final String password;
-
-        public PasswordLoginRequestData(String email, String password) {
+        private String email;
+        private String password;
+        public PasswordLoginRequestData() {
             super(AuthenticationType.PASSWORD);
-            this.email = email;
-            this.password = password;
         }
     }
 

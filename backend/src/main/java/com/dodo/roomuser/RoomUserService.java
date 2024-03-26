@@ -25,13 +25,6 @@ public class RoomUserService {
         return roomUser;
     }
 
-    public void findRoomUsers(Long id){
-        RoomUser roomUser = roomUserRepository.findById(id)
-                .orElseThrow(IllegalArgumentException::new);
-
-
-    }
-
     // 룸유저 연결 엔티티 삭제
     public void deleteChatRoomUser(Room room, User user){
         RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)

@@ -30,6 +30,9 @@ public class UserService {
 
     @Transactional
     public User register(UserCreateRequestData request) {
+        if(userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("이메일이 이미 존재합니다");
+        }
 
         // TODO
         // 기본 이미지 설정
@@ -45,6 +48,7 @@ public class UserService {
                 .image(image)
                 .introduceMessage("")
                 .build();
+
 
         userRepository.save(user);
 
@@ -63,6 +67,7 @@ public class UserService {
     }
 
     public String login(UserLoginRequestData request) {
+        log.info("{}", request.getAuthenticationType());
         Long userId = getUserId(request);
         return tokenService.makeToken(userId);
     }
@@ -73,9 +78,9 @@ public class UserService {
             // 비밀번호 로그인
             UserLoginRequestData.PasswordLoginRequestData req = (UserLoginRequestData.PasswordLoginRequestData)request;
             User user = userRepository.findByEmail(req.getEmail())
-                    .orElseThrow(NotFoundException::new);
+                    .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다"));
             PasswordAuthentication passwordAuthentication = passwordAuthenticationRepository.findByUser(user)
-                    .orElseThrow(NotFoundException::new);
+                    .orElseThrow(() -> new NotFoundException("비밀번호 인증 정보를 찾을 수 없습니다"));
             if (passwordEncoder.matches(
                     req.getPassword(),
                     passwordAuthentication.getPassword())

@@ -2,6 +2,7 @@ package com.dodo.config.auth;
 
 
 import com.dodo.config.auth.service.AuthService;
+import com.dodo.exception.UnauthorizedException;
 import com.dodo.user.domain.UserContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -57,7 +58,7 @@ public class UserAuthenticationInterceptor implements HandlerInterceptor {
         log.info("Token = {}", authorizationToken);
         if (authorizationToken == null) {
             // 인증 실패
-            throw new RuntimeException();
+            throw new UnauthorizedException("인증 헤더가 필요합니다");
         }
 
         UserContext context = authService.authenticate(authorizationToken);

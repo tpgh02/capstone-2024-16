@@ -13,9 +13,11 @@ import com.dodo.room.domain.Room;
 import com.dodo.user.domain.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.NotFound;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,9 +31,9 @@ public class RoomService {
 
     public List<RoomData> getMyRoomList(UserContext userContext) {
         User user = userRepository.findById(userContext.getUserId())
-                        .orElseThrow(NotFoundException::new);
+                        .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다"));
         return roomUserRepository.findAllByUser(user)
-                .orElseThrow(NotFoundException::new)
+                .orElse(new ArrayList<>())
                 .stream()
                 .map(RoomUser::getRoom)
                 .map(RoomData::new)
@@ -40,7 +42,7 @@ public class RoomService {
 
     public List<UserData> getUsers(UserContext userContext, Long roomId) {
         return roomUserRepository.findAllByRoomId(roomId)
-                .orElseThrow(NotFoundException::new)
+                .orElse(new ArrayList<>())
                 .stream()
                 .map(UserData::new) //TODO
                 .toList();
