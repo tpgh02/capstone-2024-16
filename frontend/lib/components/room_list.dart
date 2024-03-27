@@ -1,3 +1,4 @@
+import 'package:dodo/components/room_main.dart';
 import 'package:flutter/material.dart';
 
 class room_list extends StatefulWidget {
@@ -48,11 +49,12 @@ class _roomListState extends State<room_list> {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return Dialog(child: Text('히히'));
-                          });
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => room_main(
+                                    room_title: postList[num]["room_title"],
+                                  )));
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
