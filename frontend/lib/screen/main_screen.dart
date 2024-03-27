@@ -172,7 +172,7 @@ class _mainPageState extends State<mainPage>
               : _selectedIndex == 2
                   ?
                   //방 화면 구성. room_screen.dart
-                  roomListPage()
+                  RoomListPage()
                   : _selectedIndex == 3
                       ?
                       // 검색 화면 구성. search_screen.dart

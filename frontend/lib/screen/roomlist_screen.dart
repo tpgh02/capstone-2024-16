@@ -3,14 +3,14 @@ import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class roomListPage extends StatefulWidget {
-  const roomListPage({super.key});
+class RoomListPage extends StatefulWidget {
+  const RoomListPage({super.key});
 
   @override
-  State<roomListPage> createState() => _roomListState();
+  State<RoomListPage> createState() => _RoomListState();
 }
 
-class _roomListState extends State<roomListPage>
+class _RoomListState extends State<RoomListPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
@@ -55,7 +55,7 @@ class _roomListState extends State<roomListPage>
 
   PreferredSizeWidget _roomListAppBar() {
     return PreferredSize(
-      preferredSize: Size.fromHeight(80),
+      preferredSize: const Size.fromHeight(80),
       child: Container(
         width: 390,
         height: 80,
@@ -82,14 +82,20 @@ class _roomListState extends State<roomListPage>
     );
   }
 
-  FloatingActionButton appendRoom() {
-    return FloatingActionButton(
-      onPressed: () {},
-      backgroundColor: PRIMARY_COLOR,
-      shape: const CircleBorder(),
-      child: const Icon(
-        Icons.add,
-        color: Colors.white,
+  Container appendRoom() {
+    return Container(
+      width: 70,
+      height: 70,
+      margin: const EdgeInsets.all(20),
+      child: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: PRIMARY_COLOR,
+        elevation: 1,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
     );
   }
