@@ -40,13 +40,8 @@ class _RoomListState extends State<RoomListPage>
             SizedBox(
               height: 10,
             ),
-            room_list(
-              room_name: "자취요리왕",
-              room_img: "assets/images/cook.jpg",
-            ),
-            room_list(
-                room_name: "오운완",
-                room_img: "assets/images/turtle_noradius.png"),
+            room_list(num: 0),
+            room_list(num: 1),
           ],
         ),
       ),
