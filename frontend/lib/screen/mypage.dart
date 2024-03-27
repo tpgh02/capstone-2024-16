@@ -1,5 +1,4 @@
 import 'package:dodo/const/colors.dart';
-import 'package:dodo/screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 
@@ -112,8 +111,7 @@ class _MyPageState extends State<MyPage> {
           actions: <Widget>[
             OutlinedButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => loginPage()));
+                Navigator.of(context).pop(); //창 닫기
               },
               style: OutlinedButton.styleFrom(
                 foregroundColor: POINT_COLOR,
@@ -255,7 +253,7 @@ class MyPageSetting extends StatelessWidget {
                 title: const Text('앱 버전'),
                 value: const Text('1.0.0'),
                 leading: const Icon(Icons.info_outline),
-                onPressed: ((context) {}),
+                // onPressed: ((context) {}),
               ),
               SettingsTile.navigation(
                 title: const Text('서비스 이용 약관'),
