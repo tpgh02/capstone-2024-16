@@ -22,6 +22,7 @@ class _room_joinState extends State<room_join> {
   //   super.initState();
   //   room = widget.room;
   // }
+
   Map room = {
     "room_title": "자취요리왕",
     "room_cap": "거북이도도",
@@ -113,7 +114,10 @@ class _room_joinState extends State<room_join> {
                             ),
                             Text(
                               "${room['room_cap']}",
-                              style: TextStyle(color: POINT_COLOR),
+                              style: const TextStyle(
+                                  color: POINT_COLOR,
+                                  fontFamily: 'bm',
+                                  fontSize: 20),
                             ),
                           ],
                         ),
@@ -128,7 +132,9 @@ class _room_joinState extends State<room_join> {
                               child: Text(
                                 "${room["room_mem"]} / ${room["room_maxmem"]}명",
                                 style: const TextStyle(
-                                    fontSize: 15, color: PRIMARY_COLOR),
+                                    fontFamily: "bm",
+                                    fontSize: 15,
+                                    color: PRIMARY_COLOR),
                               ),
                             ),
                           ],
@@ -143,7 +149,7 @@ class _room_joinState extends State<room_join> {
                       alignment: Alignment.centerLeft,
                       child: const Text(
                         "방 소개",
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, fontFamily: 'bma'),
                       ),
                     ),
                     Container(
@@ -152,8 +158,11 @@ class _room_joinState extends State<room_join> {
                           borderRadius: BorderRadius.circular(10)),
                       width: double.infinity,
                       //height: 50,
-                      padding: EdgeInsets.all(10),
-                      child: Text("${room["room_txt"]}"),
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                        "${room["room_txt"]}",
+                        style: const TextStyle(fontFamily: 'bm', fontSize: 15),
+                      ),
                     ),
                     const SizedBox(
                       height: 10,
@@ -163,7 +172,7 @@ class _room_joinState extends State<room_join> {
                       alignment: Alignment.centerLeft,
                       child: const Text(
                         "목표 기한",
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, fontFamily: 'bma'),
                       ),
                     ),
                     Container(
@@ -175,9 +184,7 @@ class _room_joinState extends State<room_join> {
                       padding: const EdgeInsets.all(10),
                       child: const Text(
                         "2024.06.01까지",
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
+                        style: TextStyle(fontSize: 20, fontFamily: 'bm'),
                       ),
                     ),
                     const SizedBox(
@@ -188,7 +195,7 @@ class _room_joinState extends State<room_join> {
                       alignment: Alignment.centerLeft,
                       child: const Text(
                         "인증 방식",
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, fontFamily: 'bma'),
                       ),
                     ),
 
@@ -201,9 +208,7 @@ class _room_joinState extends State<room_join> {
                       padding: const EdgeInsets.all(10),
                       child: const Text(
                         "AI, 방장 인증",
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
+                        style: TextStyle(fontSize: 20, fontFamily: 'bm'),
                       ),
                     ),
                     const SizedBox(
@@ -217,15 +222,16 @@ class _room_joinState extends State<room_join> {
                           alignment: Alignment.centerLeft,
                           child: const Text(
                             "AI인증여부",
-                            style: TextStyle(fontSize: 25),
+                            style: TextStyle(fontSize: 20, fontFamily: 'bma'),
                           ),
                         ),
                         Opacity(
-                          opacity: 0.6,
+                          opacity: 0.6, //비활성화라 살짝 투명하게 보이도록 함
                           child: CupertinoSwitch(
                             value: _ischeck,
                             activeColor: PRIMARY_COLOR,
                             onChanged: (bool? value) {
+                              //비활성화
                               // setState(() {
                               //   _ischeck = value ?? false;
                               // });
@@ -243,16 +249,17 @@ class _room_joinState extends State<room_join> {
                           alignment: Alignment.centerLeft,
                           child: const Text(
                             "채팅 여부",
-                            style: TextStyle(fontSize: 25),
+                            style: TextStyle(fontSize: 20, fontFamily: 'bma'),
                           ),
                         ),
                         Opacity(
-                          opacity: 0.6,
+                          opacity: 0.6, //비활성화라 살짝 투명하게 보이도록 함
                           child: CupertinoSwitch(
                             value: _ischeck1,
                             trackColor: DARKGREY,
-                            activeColor: CupertinoColors.activeBlue,
+                            activeColor: PRIMARY_COLOR,
                             onChanged: (bool? value) {
+                              //비활성화
                               // setState(() {
                               //   _ischeck = value ?? false;
                               // });
@@ -269,7 +276,7 @@ class _room_joinState extends State<room_join> {
                       alignment: Alignment.centerLeft,
                       child: const Text(
                         "이 방의 해시태그",
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, fontFamily: 'bma'),
                       ),
                     ),
                     s2_tag(),
@@ -278,22 +285,25 @@ class _room_joinState extends State<room_join> {
               ),
 
               //body
-              //바닥 버튼ㄴ
+              //바닥 버튼
               Container(
-                alignment: Alignment.bottomCenter,
-                // height: double.maxFinite,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: Text(
-                    "가입하기",
-                    style: TextStyle(color: Colors.white),
+                width: double.infinity,
+                height: 70,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20.0), // 왼쪽 위 모서리
+                    topRight: Radius.circular(20.0), // 오른쪽 위 모서리
                   ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: PRIMARY_COLOR,
-                    minimumSize: Size(double.infinity, 60),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                  color: PRIMARY_COLOR, // 버튼 배경색
+                ),
+                child: TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    '가입하기',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'kcc',
+                        fontSize: 20), // 버튼 텍스트 색상
                   ),
                 ),
               ),
