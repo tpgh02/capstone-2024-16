@@ -87,6 +87,10 @@ flutter:
     - family: bm
       fonts:
         - asset: assets/fonts/BMHANNAPro.ttf
+    - family: bma
+      fonts:
+        - asset: assets/fonts/BMHANNAAir.ttf
+  
   # fonts:
   #   - family: kcc
   #     fonts:

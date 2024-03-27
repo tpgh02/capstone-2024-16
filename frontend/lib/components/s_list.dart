@@ -1,4 +1,7 @@
-import 'package:dodo/const/colors.dart';
+import 'package:dodo/screen/category1_screen.dart';
+import 'package:dodo/screen/category2_screen.dart';
+import 'package:dodo/screen/category3_screen.dart';
+import 'package:dodo/screen/category4_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -20,21 +23,24 @@ class _s_listState extends State<s_list> {
           borderRadius: BorderRadius.circular(22),
           color: Colors.white,
         ),
-        padding: EdgeInsets.all(20),
-        margin: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
+        margin: const EdgeInsets.all(20),
         child: Column(
           children: [
             //운동 카테고리
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => category1Page()));
+              },
               child: Container(
-                margin: EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
-                        Container(
+                        SizedBox(
                           width: 100,
                           height: 100,
                           child: ClipRRect(
@@ -53,14 +59,32 @@ class _s_listState extends State<s_list> {
                     ),
                     Container(
                       color: Colors.white,
-                      margin: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       child: Column(
-                        children: [Text("참여중"), Text("112,788명 활동중")],
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.green,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              const Text("참여중"),
+                            ],
+                          ),
+                          const Text("112,788명 활동중")
+                        ],
                       ),
                     ),
                     Container(
                       alignment: Alignment.centerRight,
-                      child: Icon(
+                      child: const Icon(
                         Icons.arrow_forward_ios_rounded,
                         color: Colors.black,
                       ),
@@ -69,131 +93,202 @@ class _s_listState extends State<s_list> {
                 ),
               ),
             ),
-            //식단
-            Container(
-              margin: EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 100,
-                        height: 100,
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(
-                                "../assets/images/turtle_noradius.png")),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      const Text(
-                        "식단",
-                        style: TextStyle(fontFamily: 'kcc', fontSize: 20),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    color: Colors.white,
-                    margin: EdgeInsets.all(10),
-                    child: Column(
-                      children: [Text("참여중"), Text("112,788명 활동중")],
+            //식단 카테고리
+            InkWell(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => category2Page()));
+              },
+              child: Container(
+                margin: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.asset(
+                                  "../assets/images/turtle_noradius.png")),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        const Text(
+                          "식단",
+                          style: TextStyle(fontFamily: 'kcc', fontSize: 20),
+                        ),
+                      ],
                     ),
-                  ),
-                  Container(
-                    alignment: Alignment.centerRight,
-                    child: Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      color: Colors.black,
+                    Container(
+                      color: Colors.white,
+                      margin: const EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.green,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              const Text("참여중"),
+                            ],
+                          ),
+                          const Text("112,788명 활동중")
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: const Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             //공부 카테고리
-            Container(
-              margin: EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 100,
-                        height: 100,
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(
-                                "../assets/images/turtle_noradius.png")),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      const Text(
-                        "공부",
-                        style: TextStyle(fontFamily: 'kcc', fontSize: 20),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    color: Colors.white,
-                    margin: EdgeInsets.all(10),
-                    child: Column(
-                      children: [Text("참여중"), Text("112,788명 활동중")],
+            InkWell(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => category3Page()));
+              },
+              child: Container(
+                margin: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.asset(
+                                  "../assets/images/turtle_noradius.png")),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        const Text(
+                          "공부",
+                          style: TextStyle(fontFamily: 'kcc', fontSize: 20),
+                        ),
+                      ],
                     ),
-                  ),
-                  Container(
-                    alignment: Alignment.centerRight,
-                    child: Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      color: Colors.black,
+                    Container(
+                      color: Colors.white,
+                      margin: const EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.green,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              const Text("참여중"),
+                            ],
+                          ),
+                          const Text("112,788명 활동중")
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: const Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             //기타 카테고리
-            Container(
-              color: Colors.white,
-              margin: EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 100,
-                        height: 100,
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(
-                                "../assets/images/turtle_noradius.png")),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      const Text(
-                        "기타",
-                        style: TextStyle(fontFamily: 'kcc', fontSize: 20),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    color: Colors.white,
-                    margin: EdgeInsets.all(10),
-                    child: Column(
-                      children: [Text("참여중"), Text("112,788명 활동중")],
+            InkWell(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => category4Page()));
+              },
+              child: Container(
+                margin: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.asset(
+                                  "../assets/images/turtle_noradius.png")),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        const Text(
+                          "기타",
+                          style: TextStyle(fontFamily: 'kcc', fontSize: 20),
+                        ),
+                      ],
                     ),
-                  ),
-                  Container(
-                    alignment: Alignment.centerRight,
-                    child: Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      color: Colors.black,
+                    Container(
+                      color: Colors.white,
+                      margin: const EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.green,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              const Text("참여중"),
+                            ],
+                          ),
+                          const Text("112,788명 활동중")
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: const Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
