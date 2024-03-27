@@ -3,13 +3,16 @@ import 'package:dodo/components/m_title.dart';
 import 'package:dodo/components/m_todo.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/screen/main2_screen.dart';
+import 'package:dodo/screen/mypage.dart';
 import 'package:dodo/screen/sea_screen.dart';
 import 'package:dodo/screen/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class mainPage extends StatefulWidget {
-  const mainPage({super.key});
+  final String? token;
+  const mainPage({Key? key, this.token}) : super(key: key);
+  //const loginPage({Key? key, this.userId}) : super(key: key);
 
   @override
   State<mainPage> createState() => _mainPageState();
@@ -177,7 +180,7 @@ class _mainPageState extends State<mainPage>
                       searchPage()
                       :
                       // 개인 화면 구성. personal_screen.dart
-                      Text("5"),
+                      MyPage(),
     );
   }
 }
