@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
 
 class room_list extends StatefulWidget {
-  final String room_name;
-  final String room_img;
-
-  const room_list({
-    super.key,
-    required this.room_name,
-    required this.room_img,
-  });
+  final int num;
+  const room_list({super.key, required this.num});
 
   @override
   State<room_list> createState() => _roomListState();
 }
 
 class _roomListState extends State<room_list> {
+  final postList = [
+    {
+      "room_title": "자취요리왕",
+      "room_img": "assets/images/cook.jpg",
+    },
+    {
+      "room_title": "오운완",
+      "room_img": "assets/images/turtle_noradius.png",
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
-    String roomName = widget.room_name;
-    String roomImg = widget.room_img;
+    int num = widget.num;
 
     return Column(
       children: [
@@ -34,7 +38,7 @@ class _roomListState extends State<room_list> {
                   height: 100,
                   child: ClipOval(
                     child: Image.asset(
-                      roomImg,
+                      "${postList[num]["room_img"]}",
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -55,7 +59,7 @@ class _roomListState extends State<room_list> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Text(
-                          '$roomName',
+                          "${postList[num]["room_title"]}",
                           style: const TextStyle(
                             fontFamily: "bm",
                             fontSize: 25,
