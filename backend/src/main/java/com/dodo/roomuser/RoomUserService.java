@@ -2,7 +2,9 @@ package com.dodo.roomuser;
 
 import com.dodo.room.domain.Room;
 import com.dodo.roomuser.domain.RoomUser;
+import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
+import com.dodo.user.domain.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,16 +15,24 @@ import org.springframework.stereotype.Service;
 public class RoomUserService {
 
     private final RoomUserRepository roomUserRepository;
+    private final UserRepository userRepository;
 
-    public RoomUser createRoomUser(User user, Room room) {
+    public void createRoomUser(UserContext userContext, Room room) {
+        User user = userRepository.findById(userContext.getUserId()).get();
         RoomUser roomUser = RoomUser.builder()
                 .user(user)
                 .room(room)
                 .build();
 
         roomUserRepository.save(roomUser);
+    }
 
-        return roomUser;
+    public void setManager(UserContext userContext, Room room){
+        User user = userRepository.findById(userContext.getUserId()).get();
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).get();
+
+        roomUser.setIsManager(true);
+        roomUserRepository.save(roomUser);
     }
 
     public void findRoomUsers(Long id){

@@ -6,6 +6,7 @@ import com.dodo.room.domain.Periodicity;
 import com.dodo.room.dto.RoomData;
 import com.dodo.room.dto.UserData;
 import com.dodo.roomuser.RoomUserRepository;
+import com.dodo.roomuser.RoomUserService;
 import com.dodo.roomuser.domain.RoomUser;
 import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
@@ -15,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.*;
 import java.util.List;
 
 @Service
@@ -26,6 +27,7 @@ public class RoomService {
     private final UserRepository userRepository;
     private final RoomUserRepository roomUserRepository;
     private final RoomRepository roomRepository;
+    private final RoomUserService roomUserService;
 
     public List<RoomData> getMyRoomList(UserContext userContext) {
         User user = userRepository.findById(userContext.getUserId())
@@ -118,5 +120,24 @@ public class RoomService {
 
         roomUserRepository.save(roomManager);
         roomUserRepository.save(roomUser);
+    }
+
+    // 목표 날짜가 돼서 인증방 해체
+    public void expired(){
+        List<Room> roomList = roomRepository.findAll();
+
+        for (Room room : roomList){
+
+            log.info("before delete id : {}", room.getId());
+            if (room.getEndDay().toLocalDate().isEqual(LocalDate.now(ZoneId.of("Asia/Seoul")))){
+                List<RoomUser> roomUserList = roomUserRepository.findAllByRoomId(room.getId()).get();
+                log.info("현재시간 : {}, 목표날짜 : {}", LocalDate.now(), room.getEndDay());
+                for (RoomUser ru : roomUserList) {
+                    roomUserService.deleteChatRoomUser(ru.getRoom(), ru.getUser());
+                }
+                deleteRoom(room.getId());
+            }
+            log.info("after delete id : {}", roomRepository.findById(room.getId()).orElse(null));
+        }
     }
 }

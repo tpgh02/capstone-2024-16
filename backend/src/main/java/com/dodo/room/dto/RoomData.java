@@ -49,4 +49,14 @@ public class RoomData {
         this.nowUsers = room.getNowUser();
 
     }
+
+    public static RoomData of(Room room) {
+        RoomData roomData = new RoomData();
+        roomData.roomId = room.getId();
+        roomData.name = room.getName();
+        roomData.maxUsers = room.getMaxUser();
+        roomData.nowUsers = room.getNowUser();
+        roomData.endDay = room.getEndDay();
+        return roomData;
+    }
 }

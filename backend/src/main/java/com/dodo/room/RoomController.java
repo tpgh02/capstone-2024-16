@@ -15,6 +15,7 @@ import com.dodo.user.domain.User;
 import com.dodo.user.domain.UserContext;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -59,14 +60,11 @@ public class RoomController {
                 roomData.getTag(), roomData.getCertificationType(), roomData.getCanChat(),
                 roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
                 roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay());
-        User user = userRepository.findById(userContext.getUserId()).get();
-        RoomUser roomUser = roomUserService.createRoomUser(user, room);
-        roomUser.setIsManager(true);
-        roomUserRepository.save(roomUser);
 
+        roomUserService.createRoomUser(userContext, room);
         log.info("CREATE Chat RoomId: {}", room.getId());
 
-        return roomData;
+        return new RoomData(room);
     }
 
     // 인증방 입장
@@ -85,7 +83,7 @@ public class RoomController {
         // 유저가 채팅방에 처음 입장
         if (roomUser == null) {
             roomService.plusUserCnt(roomId);
-            roomUser = roomUserService.createRoomUser(user, room);
+            roomUserService.createRoomUser(userContext, room);
             roomUser = roomUserRepository.findByUserAndRoom(user, room)
                     .orElse(null);
         }
@@ -185,5 +183,13 @@ public class RoomController {
         roomService.delegate(room, manager, user);
 
         return roomUserRepository.findByUserAndRoom(user, room).get().getIsManager();
+    }
+
+    // 목표 날짜가 돼서 인증방 해체
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+    @GetMapping("/room-expired")
+    public void expired() {
+        roomService.expired();
+
     }
 }
