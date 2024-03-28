@@ -2,7 +2,6 @@ package com.dodo.certification.dto;
 
 import com.dodo.certification.CertificationService;
 import com.dodo.image.domain.Image;
-import com.dodo.roomuser.domain.RoomUser;
 import com.dodo.user.domain.User;
 import lombok.Data;
 
