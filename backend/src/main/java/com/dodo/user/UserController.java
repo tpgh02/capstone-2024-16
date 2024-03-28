@@ -2,10 +2,7 @@ package com.dodo.user;
 
 import com.dodo.config.auth.CustomAuthentication;
 import com.dodo.user.domain.UserContext;
-import com.dodo.user.dto.UserCreateRequestData;
-import com.dodo.user.dto.UserCreateResponseData;
-import com.dodo.user.dto.UserLoginRequestData;
-import com.dodo.user.dto.UserLoginResponseData;
+import com.dodo.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +26,15 @@ public class UserController {
             @RequestBody UserLoginRequestData request) {
         return new UserLoginResponseData(userservice.login(request));
     }
+
+    @CustomAuthentication
+    @GetMapping("me")
+    public UserData getMyData(
+            @RequestAttribute UserContext userContext
+    ) {
+        return userservice.getMyData(userContext);
+    }
+
 
     @CustomAuthentication
     @GetMapping("test")

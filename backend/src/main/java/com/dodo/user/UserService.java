@@ -7,7 +7,9 @@ import com.dodo.token.TokenService;
 import com.dodo.user.domain.AuthenticationType;
 import com.dodo.user.domain.PasswordAuthentication;
 import com.dodo.user.domain.User;
+import com.dodo.user.domain.UserContext;
 import com.dodo.user.dto.UserCreateRequestData;
+import com.dodo.user.dto.UserData;
 import com.dodo.user.dto.UserLoginRequestData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,9 +43,11 @@ public class UserService {
                 .orElse(imageRepository.save(new Image(DEFAULT_IMAGE_URL)));
 
 
+        log.info("{}", request.getType());
         User user = User.builder()
                 .authenticationType(request.getType())
                 .email(request.getEmail())
+                .name(request.getEmail().split("@")[0])
                 .mileage(0)
                 .image(image)
                 .introduceMessage("")
@@ -94,5 +98,12 @@ public class UserService {
 
 
         return 0L;
+    }
+
+    public UserData getMyData(UserContext userContext) {
+        User user = userRepository.findById(userContext.getUserId())
+                .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다"));
+
+        return new UserData(user);
     }
 }

@@ -20,11 +20,22 @@ import lombok.NoArgsConstructor;
 public abstract class UserLoginRequestData {
     private AuthenticationType authenticationType;
 
+    @JsonTypeName("social")
+    @Getter
+    public static class SocialLoginRequestData extends UserLoginRequestData {
+        private String token;
+
+        public SocialLoginRequestData() {
+            super(AuthenticationType.SOCIAL);
+        }
+    }
+
     @JsonTypeName("password")
     @Getter
     public static class PasswordLoginRequestData extends UserLoginRequestData {
         private String email;
         private String password;
+
         public PasswordLoginRequestData() {
             super(AuthenticationType.PASSWORD);
         }
