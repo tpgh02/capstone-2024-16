@@ -140,4 +140,34 @@ public class RoomService {
             log.info("after delete id : {}", roomRepository.findById(room.getId()).orElse(null));
         }
     }
+
+    // 방장의 채팅방 설정 수정
+    public void update(Long roomId, UserContext userContext, RoomData roomData) {
+        User user = userRepository.findById(userContext.getUserId()).get();
+        Room room = roomRepository.findById(roomId).get();
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).get();
+
+        if (!roomUser.getIsManager()) {
+            log.info("not manager");
+        }
+        else {
+            log.info("roomData's maxUser : {}", roomData.getMaxUser());
+            room.update(
+                    roomData.getName(),
+                    roomData.getPwd(),
+                    roomData.getInfo(),
+                    roomData.getEndDay(),
+                    roomData.getMaxUser(),
+                    roomData.getTag(),
+                    roomData.getCanChat(),
+                    roomData.getNumOfVoteSuccess(),
+                    roomData.getNumOfVoteFail(),
+                    roomData.getImage(),
+                    roomData.getPeriodicity(),
+                    roomData.getFrequency(),
+                    roomData.getCertificationType()
+            );
+            log.info("room name : {}", room.getName());
+        }
+    }
 }

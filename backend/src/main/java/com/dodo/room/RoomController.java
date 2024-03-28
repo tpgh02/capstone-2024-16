@@ -56,15 +56,17 @@ public class RoomController {
     @CustomAuthentication
     public RoomData createRoom(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext){
         Room room = roomService.creatChatRoom(roomData.getName(), roomData.getPwd(),
-                roomData.getMaxUsers(), roomData.getCategory(), roomData.getInfo(),
+                roomData.getMaxUser(), roomData.getCategory(), roomData.getInfo(),
                 roomData.getTag(), roomData.getCertificationType(), roomData.getCanChat(),
                 roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
                 roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay());
 
         roomUserService.createRoomUser(userContext, room);
+        roomUserService.setManager(userContext, room);
+
         log.info("CREATE Chat RoomId: {}", room.getId());
 
-        return new RoomData(room);
+        return RoomData.of(room);
     }
 
     // 인증방 입장
@@ -190,6 +192,15 @@ public class RoomController {
     @GetMapping("/room-expired")
     public void expired() {
         roomService.expired();
+    }
 
+    // 방장의 채팅방 설정 수정
+    @CustomAuthentication
+    @PostMapping("/update")
+    @ResponseBody
+    public RoomData update(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext, @RequestParam Long roomId){
+        roomService.update(roomId, userContext, roomData);
+
+        return RoomData.of(roomRepository.findById(roomId).get());
     }
 }
