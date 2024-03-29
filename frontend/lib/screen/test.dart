@@ -65,7 +65,7 @@ class _certificationState extends State<certification> {
 }
 
 //팝업 띄우는 함수
-void statedialog(context, state, Uint8List? image) {
+void statedialog(context, state, Uint8List? _image) {
   _certificationState certificationState = _certificationState();
   bool _isEnabled = true;
   showDialog(
@@ -90,16 +90,26 @@ void statedialog(context, state, Uint8List? image) {
               alignment: Alignment.center,
               child: Stack(
                 children: [
-                  image == null
-                      ? CircleAvatar(
-                          radius: 64,
-                          backgroundImage: AssetImage(
-                            '../assets/images/turtle_noradius.png',
+                  _image == null
+                      ? Container(
+                          width: 128,
+                          height: 128,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
                           ),
+                          child: Image.asset(
+                              '../assets/images/turtle_noradius.png'),
                         )
-                      : CircleAvatar(
-                          radius: 64,
-                          backgroundImage: MemoryImage(image!),
+                      : Container(
+                          width: 128,
+                          height: 128,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                                64), // 반지름을 지정하여 모서리를 둥글게 만듭니다.
+                            image: _image != null
+                                ? DecorationImage(image: MemoryImage(_image!))
+                                : null, // 이미지를 배경으로 설정합니다.
+                          ),
                         ),
                   Positioned(
                     left: 80,
