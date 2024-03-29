@@ -16,7 +16,7 @@ public class RoomData {
     private Long roomId;
     private String name;
     private Image image;
-    private Long maxUsers;
+    private Long maxUser;
     private Long nowUsers;
     private LocalDateTime endDay;
     private Periodicity periodicity;
@@ -37,7 +37,7 @@ public class RoomData {
         this.roomId = room.getId();
         this.name = room.getName();
         // this.image = room.getImage();
-        this.maxUsers = room.getMaxUser();
+        this.maxUser = room.getMaxUser();
         this.nowUsers = room.getNowUser();
         this.certificationType = room.getCertificationType();
 
@@ -45,8 +45,30 @@ public class RoomData {
         // 방 불러올 떄 인증 상태를 같이 불러와야 하는디 아직 좀 더 생각해 봐야 할 것 같다.
         // 일단 대기중으로 고정
         this.status = CertificationStatus.WAIT;
-        this.maxUsers = room.getMaxUser();
+        this.maxUser = room.getMaxUser();
         this.nowUsers = room.getNowUser();
 
+    }
+
+    public static RoomData of(Room room) {
+        RoomData roomData = new RoomData();
+
+        roomData.roomId = room.getId();
+        roomData.name = room.getName();
+        roomData.maxUser = room.getMaxUser();
+        roomData.nowUsers = room.getNowUser();
+        // roomData.endDay = room.getEndDay();
+        roomData.periodicity = room.getPeriodicity();
+        roomData.pwd = room.getPassword();
+        roomData.category = room.getCategory();
+        roomData.info = room.getInfo();
+        roomData.tag = room.getTag();
+        roomData.canChat = room.getCanChat();
+        roomData.numOfVoteSuccess = room.getNumOfVoteSuccess();
+        roomData.numOfVoteFail = room.getNumOfVoteFail();
+        roomData.certificationType = room.getCertificationType();
+        roomData.frequency = room.getFrequency();
+
+        return roomData;
     }
 }

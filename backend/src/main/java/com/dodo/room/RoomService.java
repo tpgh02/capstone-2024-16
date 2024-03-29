@@ -6,6 +6,7 @@ import com.dodo.room.domain.Periodicity;
 import com.dodo.room.dto.RoomData;
 import com.dodo.room.dto.UserData;
 import com.dodo.roomuser.RoomUserRepository;
+import com.dodo.roomuser.RoomUserService;
 import com.dodo.roomuser.domain.RoomUser;
 import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
@@ -13,11 +14,9 @@ import com.dodo.room.domain.Room;
 import com.dodo.user.domain.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.NotFound;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.time.*;
 import java.util.List;
 
 @Service
@@ -28,12 +27,13 @@ public class RoomService {
     private final UserRepository userRepository;
     private final RoomUserRepository roomUserRepository;
     private final RoomRepository roomRepository;
+    private final RoomUserService roomUserService;
 
     public List<RoomData> getMyRoomList(UserContext userContext) {
         User user = userRepository.findById(userContext.getUserId())
-                        .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다"));
+                        .orElseThrow(NotFoundException::new);
         return roomUserRepository.findAllByUser(user)
-                .orElse(new ArrayList<>())
+                .orElseThrow(NotFoundException::new)
                 .stream()
                 .map(RoomUser::getRoom)
                 .map(RoomData::new)
@@ -42,7 +42,7 @@ public class RoomService {
 
     public List<UserData> getUsers(UserContext userContext, Long roomId) {
         return roomUserRepository.findAllByRoomId(roomId)
-                .orElse(new ArrayList<>())
+                .orElseThrow(NotFoundException::new)
                 .stream()
                 .map(UserData::new) //TODO
                 .toList();
@@ -120,5 +120,54 @@ public class RoomService {
 
         roomUserRepository.save(roomManager);
         roomUserRepository.save(roomUser);
+    }
+
+    // 목표 날짜가 돼서 인증방 해체
+    public void expired(){
+        List<Room> roomList = roomRepository.findAll();
+
+        for (Room room : roomList){
+
+            log.info("before delete id : {}", room.getId());
+            if (room.getEndDay().toLocalDate().isEqual(LocalDate.now(ZoneId.of("Asia/Seoul")))){
+                List<RoomUser> roomUserList = roomUserRepository.findAllByRoomId(room.getId()).get();
+                log.info("현재시간 : {}, 목표날짜 : {}", LocalDate.now(), room.getEndDay());
+                for (RoomUser ru : roomUserList) {
+                    roomUserService.deleteChatRoomUser(ru.getRoom(), ru.getUser());
+                }
+                deleteRoom(room.getId());
+            }
+            log.info("after delete id : {}", roomRepository.findById(room.getId()).orElse(null));
+        }
+    }
+
+    // 방장의 채팅방 설정 수정
+    public void update(Long roomId, UserContext userContext, RoomData roomData) {
+        User user = userRepository.findById(userContext.getUserId()).get();
+        Room room = roomRepository.findById(roomId).get();
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).get();
+
+        if (!roomUser.getIsManager()) {
+            log.info("not manager");
+        }
+        else {
+            log.info("roomData's maxUser : {}", roomData.getMaxUser());
+            room.update(
+                    roomData.getName(),
+                    roomData.getPwd(),
+                    roomData.getInfo(),
+                    roomData.getEndDay(),
+                    roomData.getMaxUser(),
+                    roomData.getTag(),
+                    roomData.getCanChat(),
+                    roomData.getNumOfVoteSuccess(),
+                    roomData.getNumOfVoteFail(),
+                    roomData.getImage(),
+                    roomData.getPeriodicity(),
+                    roomData.getFrequency(),
+                    roomData.getCertificationType()
+            );
+            log.info("room name : {}", room.getName());
+        }
     }
 }

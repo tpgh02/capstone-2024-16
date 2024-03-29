@@ -22,7 +22,7 @@ public class ImageService {
         String fullPath = imageProperties.getSavePath() + uuid + ".png";
         Path savePath = Paths.get(fullPath);
         img.transferTo(savePath);
-        String url = imageProperties.getServerUrl() + "/img?url=" + uuid;
+        String url = ImageProperties.serverUrl + "/img?url=" + uuid;
         return imageRepository.save(new Image(url));
     }
 

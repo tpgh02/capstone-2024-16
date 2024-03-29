@@ -46,4 +46,23 @@ public class Room {
     @OneToMany(mappedBy = "room")
     private List<RoomUser> roomUsers;
 
+    // 인증방 기능 설정
+    public void update( String name, String password, String info, LocalDateTime endDay,
+                       Long maxUser, String tag, Boolean canChat, Integer numOfVoteSuccess,
+                       Integer numOfVoteFail, Image image, Periodicity periodicity,
+                       Integer frequency, CertificationType certificationType) {
+        if (name != null){this.name = name;}
+        if (password != null){this.password = password;}
+        if (info != null){this.info = info;}
+        if (endDay != null){this.endDay = endDay;}
+        if (maxUser != null){this.maxUser = maxUser;}
+        if (tag != null){this.tag = tag;}
+        if (canChat != null){this.canChat = canChat;}
+        if (numOfVoteSuccess != null){this.numOfVoteSuccess = numOfVoteSuccess;}
+        if (numOfVoteFail != null){this.numOfVoteFail = numOfVoteFail;}
+        if (image != null){this.image = image;}
+        if (periodicity != null){this.periodicity = periodicity;}
+        if (frequency != null){this.frequency = frequency;}
+        if (certificationType != null){this.certificationType = certificationType;}
+    }
 }

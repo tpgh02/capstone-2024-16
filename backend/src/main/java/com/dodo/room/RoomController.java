@@ -1,20 +1,18 @@
 package com.dodo.room;
 
 import com.dodo.config.auth.CustomAuthentication;
-import com.dodo.room.dto.RoomData;
-import com.dodo.room.dto.UserData;
-import com.dodo.user.domain.UserContext;
-import lombok.RequiredArgsConstructor;
 import com.dodo.room.domain.Room;
 import com.dodo.room.dto.RoomData;
+import com.dodo.room.dto.UserData;
 import com.dodo.roomuser.RoomUserRepository;
 import com.dodo.roomuser.RoomUserService;
 import com.dodo.roomuser.domain.RoomUser;
 import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
 import com.dodo.user.domain.UserContext;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,18 +53,17 @@ public class RoomController {
     @CustomAuthentication
     public RoomData createRoom(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext){
         Room room = roomService.creatChatRoom(roomData.getName(), roomData.getPwd(),
-                roomData.getMaxUsers(), roomData.getCategory(), roomData.getInfo(),
+                roomData.getMaxUser(), roomData.getCategory(), roomData.getInfo(),
                 roomData.getTag(), roomData.getCertificationType(), roomData.getCanChat(),
                 roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
                 roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay());
-        User user = userRepository.findById(userContext.getUserId()).get();
-        RoomUser roomUser = roomUserService.createRoomUser(user, room);
-        roomUser.setIsManager(true);
-        roomUserRepository.save(roomUser);
+
+        roomUserService.createRoomUser(userContext, room);
+        roomUserService.setManager(userContext, room);
 
         log.info("CREATE Chat RoomId: {}", room.getId());
 
-        return roomData;
+        return RoomData.of(room);
     }
 
     // 인증방 입장
@@ -85,7 +82,7 @@ public class RoomController {
         // 유저가 채팅방에 처음 입장
         if (roomUser == null) {
             roomService.plusUserCnt(roomId);
-            roomUser = roomUserService.createRoomUser(user, room);
+            roomUserService.createRoomUser(userContext, room);
             roomUser = roomUserRepository.findByUserAndRoom(user, room)
                     .orElse(null);
         }
@@ -185,5 +182,22 @@ public class RoomController {
         roomService.delegate(room, manager, user);
 
         return roomUserRepository.findByUserAndRoom(user, room).get().getIsManager();
+    }
+
+    // 목표 날짜가 돼서 인증방 해체
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+    @GetMapping("/room-expired")
+    public void expired() {
+        roomService.expired();
+    }
+
+    // 방장의 채팅방 설정 수정
+    @CustomAuthentication
+    @PostMapping("/update")
+    @ResponseBody
+    public RoomData update(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext, @RequestParam Long roomId){
+        roomService.update(roomId, userContext, roomData);
+
+        return RoomData.of(roomRepository.findById(roomId).get());
     }
 }

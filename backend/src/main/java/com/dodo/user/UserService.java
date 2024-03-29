@@ -3,6 +3,7 @@ package com.dodo.user;
 import com.dodo.exception.NotFoundException;
 import com.dodo.image.ImageRepository;
 import com.dodo.image.domain.Image;
+import com.dodo.image.domain.ImageProperties;
 import com.dodo.token.TokenService;
 import com.dodo.user.domain.AuthenticationType;
 import com.dodo.user.domain.PasswordAuthentication;
@@ -28,7 +29,7 @@ public class UserService {
     private final TokenService tokenService;
     private final ImageRepository imageRepository;
 
-    private final String DEFAULT_IMAGE_URL = "http://localhost:8080/img?url=default";
+    private final String DEFAULT_IMAGE_URL = "http://" + ImageProperties.serverUrl + ":8080/img?url=default";
 
     @Transactional
     public User register(UserCreateRequestData request) {
