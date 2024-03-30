@@ -3,7 +3,7 @@
 </div>
 
 <p align="center">
-    ### [Github Page](https://kookmin-sw.github.io/capstone-2024-16/)
+    ### <a href="Github Page">https://kookmin-sw.github.io/capstone-2024-16/</a>
 </p>
 
 ## 프로젝트 소개
