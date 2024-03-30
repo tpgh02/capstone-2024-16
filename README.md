@@ -1,5 +1,7 @@
 # Welcome to GitHub
-
+<div align="center">
+  ![도도](https://github.com/kookmin-sw/capstone-2024-16/assets/65213245/9ba18511-cbb5-4439-83ab-4e99dab86849)
+</div>
 캡스톤 팀 생성을 축하합니다.
 
 ## 팀소개 및 페이지를 꾸며주세요.
