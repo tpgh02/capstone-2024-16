@@ -3,7 +3,7 @@
 </div>
 
 <p align="center">
-    <a href="https://kookmin-sw.github.io/capstone-2024-16"><b>Github Page</b></a>
+    <a href="https://kookmin-sw.github.io/capstone-2024-16"><span style="font-size: larger;"><b>Github Page</b></span></a>
 </p>
 
 ## 프로젝트 소개
