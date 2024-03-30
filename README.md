@@ -6,6 +6,10 @@
     <a href="https://kookmin-sw.github.io/capstone-2024-16"><span style="font-size: larger;"><b>Github Page</b></span></a>
 </p>
 
+<div style="text-align:center;">
+    [Github Page](https://kookmin-sw.github.io/capstone-2024-16)
+</div>
+
 ## 프로젝트 소개
 
 
