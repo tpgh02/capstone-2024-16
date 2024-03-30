@@ -1,8 +1,7 @@
 <p align="center">
   <img src="https://github.com/kookmin-sw/capstone-2024-16/assets/65213245/6b57b41e-19d4-47bf-8bd7-5ff441bcfe99">
+  ### [Github Page](https://kookmin-sw.github.io/capstone-2024-16/)
 </p>
-
-### [Github Page](https://kookmin-sw.github.io/capstone-2024-16/)
 
 
 ## 프로젝트 소개
