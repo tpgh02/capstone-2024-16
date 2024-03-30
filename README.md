@@ -1,78 +1,64 @@
-# Welcome to GitHub
 <p align="center">
   <img src="https://github.com/kookmin-sw/capstone-2024-16/assets/65213245/6b57b41e-19d4-47bf-8bd7-5ff441bcfe99">
 </p>
-캡스톤 팀 생성을 축하합니다.
 
-## 팀소개 및 페이지를 꾸며주세요.
+### [Github Page](https://kookmin-sw.github.io/capstone-2024-16/)
+--- 
+> Frontend  
+>   
+> <img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white">  <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white">
+> 
+> Backend  
+>   
+> <img src="https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">  <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">  <img src="https://img.shields.io/badge/AWS EC2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white">  <img src="https://img.shields.io/badge/AWS S3-569A31?style=for-the-badge&logo=amazons3&logoColor=white">
+> 
+> ML  
+>   
+> <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white">  <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white">
+> 
+> Cooperation  
+>   
+> <img src="https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=github&logoColor=white">  <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white">
 
-- 프로젝트 소개
-  - 프로젝트 설치방법 및 데모, 사용방법, 프리뷰등을 readme.md에 작성.
-  - Api나 사용방법등 내용이 많을경우 wiki에 꾸미고 링크 추가.
-
-- 팀페이지 꾸미기
-  - 프로젝트 소개 및 팀원 소개
-  - index.md 예시보고 수정.
-
-- GitHub Pages 리파지토리 Settings > Options > GitHub Pages 
-  - Source를 marster branch
-  - Theme Chooser에서 태마선택
-  - 수정후 팀페이지 확인하여 점검.
-
-**팀페이지 주소** -> https://kookmin-sw.github.io/ '{{자신의 리파지토리 아이디}}'
-
-**예시)** 2023년 0조  https://kookmin-sw.github.io/capstone-2023-00/
-
-
-## 내용에 아래와 같은 내용들을 추가하세요.
-
-### 1. 프로잭트 소개
-
-프로젝트
-
-### 2. 소개 영상
-
-프로젝트 소개하는 영상을 추가하세요
-
-### 3. 팀 소개
-
-팀을 소개하세요.
-
-팀원정보 및 담당이나 사진 및 SNS를 이용하여 소개하세요.
-
-### 4. 사용법
-
-소스코드제출시 설치법이나 사용법을 작성하세요.
-
-### 5. 기타
-
-추가적인 내용은 자유롭게 작성하세요.
+--- 
+## 1. 프로젝트 소개
 
 
-## Markdown을 사용하여 내용꾸미기
+안녕하세요, AI 기반 챌린지 인증 서비스 **도도**입니다.
 
-Markdown은 작문을 스타일링하기위한 가볍고 사용하기 쉬운 구문입니다. 여기에는 다음을위한 규칙이 포함됩니다.
+기존에 있는 챌린지 및 인증방에서는 사용자가 지속적으로 활동하며 목표를 위해 몰입할 수 있는 수단이 미흡다고 생각하였습니다. 보상과 같은 외적인 동기 뿐만 아니라, 자신과의 약속을 지키고 목표를 달성해 나가는 내적인 동기 또한 제공하여 건강한 챌린지 문화를 만들고자 합니다.
 
-```markdown
-Syntax highlighted code block
+같은 목표를 가진 사람들과 함께 목표를 달성해나가며 유대감과 성취감을 얻고 자기개발을 돕는 서비스입니다.  
 
-# Header 1
-## Header 2
-### Header 3
+  
+##  2. Abstract
 
-- Bulleted
-- List
 
-1. Numbered
-2. List
+Hello, this is Dodo, an AI-based challenge authentication service.
 
-**Bold** and _Italic_ and `Code` text
+In the existing challenges and certification rooms, We thought that there was a lack of means for users to continue to work and immerse themselves in their goals. In addition to external motives such as rewards, we want to create a healthy challenge culture by providing internal motives for keeping our promises and achieving our goals.
 
-[Link](url) and ![Image](src)
-```
+It is a service that achieves goals with people with the same goals, gains a sense of bond and achievement, and helps self-development.  
+     
+  
+## 3. 소개 영상
 
-자세한 내용은 [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
-### Support or Contact
+*(준비중)*
 
-readme 파일 생성에 추가적인 도움이 필요하면 [도움말](https://help.github.com/articles/about-readmes/) 이나 [contact support](https://github.com/contact) 을 이용하세요.
+## 4. 팀 소개
+
+
+| Backend | Backend | frontend | frontend | AI |
+| --- | --- | --- | --- | --- |
+| [<img src="https://avatars.githubusercontent.com/u/65213245?v=4" height=150 width=150> <br/> @tpgh02](https://github.com/tpgh02) | [<img src="https://avatars.githubusercontent.com/u/96351186?v=4" height=150 width=150> <br/> @munhwas1140](https://github.com/munhwas1140) | [<img src="https://avatars.githubusercontent.com/u/66067610?v=4" height=150 width=150> <br/> @gyur2](https://github.com/gyur2) | [<img src="https://avatars.githubusercontent.com/u/119032609?v=4" height=150 width=150> <br/> @kmujsh](https://github.com/kmujsh) | [<img src="https://avatars.githubusercontent.com/u/84137164?v=4" height=150 width=150> <br/> @srcho01](https://github.com/srcho01) |
+| 김세호(****5281) | 노형준(****1362) | 김규리(****3031) | 정수현(****3079) | 조서림(****3085) |
+| API개발, 데이터베이스 관리, 서버 개발 | API개발, 데이터베이스 관리, 서버 개발 | UI 디자인 및 개발, 어플리케이션 개발, 서버 연결 | UI 디자인 및 개발, 어플리케이션 개발, 서버 연결 | 데이터 수집 및 분석, AI 모델 구현 |
+
+## 5. 사용법
+
+
+*(준비중)*
+
+## 6. 기타
+
