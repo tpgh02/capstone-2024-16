@@ -1,6 +1,6 @@
 # Welcome to GitHub
 <p align="center">
-  <img src="https://github.com/kookmin-sw/capstone-2024-16/assets/65213245/d5fb3253-5cf4-4ad3-b203-3e28c8666f0a">
+  <img src="https://github.com/kookmin-sw/capstone-2024-16/assets/65213245/6b57b41e-19d4-47bf-8bd7-5ff441bcfe99">
 </p>
 캡스톤 팀 생성을 축하합니다.
 
