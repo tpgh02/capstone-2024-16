@@ -3,7 +3,7 @@
 </div>
 
 <p align="center">
-    <a href="https://kookmin-sw.github.io/capstone-2024-16" style="font-size: x-large;">Github Page</a>
+    <a href="https://kookmin-sw.github.io/capstone-2024-16" style="font-size: x-large;"><b>Github Page</b></a>
 </p>
 
 <style>
