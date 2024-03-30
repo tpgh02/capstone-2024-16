@@ -4,16 +4,7 @@
 
 ### [Github Page](https://kookmin-sw.github.io/capstone-2024-16/)
 
-## 기술 스택
---- 
-| Role | Technology Stack|
-| --- |---|
-| Frontend | <img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white">  <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white"> |
-| Backend  | <img src="https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">  <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">  <img src="https://img.shields.io/badge/AWS EC2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white">  <img src="https://img.shields.io/badge/AWS S3-569A31?style=for-the-badge&logo=amazons3&logoColor=white"> |
-| ML | <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white">  <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white"> |
-| Cooperation | <img src="https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=github&logoColor=white">  <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white"> |
 
---- 
 ## 프로젝트 소개
 
 
@@ -39,7 +30,7 @@ It is a service that achieves goals with people with the same goals, gains a sen
 
 *(준비중)*
 
-## 4. 팀 소개
+## 팀 소개
 
 
 | Backend | Backend | frontend | frontend | AI |
@@ -48,6 +39,14 @@ It is a service that achieves goals with people with the same goals, gains a sen
 | 김세호(****5281) | 노형준(****1362) | 김규리(****3031) | 정수현(****3079) | 조서림(****3085) |
 | API개발, 데이터베이스 관리, 서버 개발 | API개발, 데이터베이스 관리, 서버 개발 | UI 디자인 및 개발, 어플리케이션 개발, 서버 연결 | UI 디자인 및 개발, 어플리케이션 개발, 서버 연결 | 데이터 수집 및 분석, AI 모델 구현 |
 
+## 기술 스택
+
+| Role | Technology Stack|
+| --- |---|
+| Frontend | <img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white">  <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white"> |
+| Backend  | <img src="https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">  <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">  <img src="https://img.shields.io/badge/AWS EC2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white">  <img src="https://img.shields.io/badge/AWS S3-569A31?style=for-the-badge&logo=amazons3&logoColor=white"> |
+| ML | <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white">  <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white"> |
+| Cooperation | <img src="https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=github&logoColor=white">  <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white"> |
 
 ## 사용법
 
