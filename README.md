@@ -36,7 +36,7 @@ It is a service that achieves goals with people with the same goals, gains a sen
 
 | Backend | Backend | frontend | frontend | AI |
 | --- | --- | --- | --- | --- |
-| [<img src="https://avatars.githubusercontent.com/u/65213245?v=4" height=150 width=150> <br/> @tpgh02](https://github.com/tpgh02) | [<img src="https://avatars.githubusercontent.com/u/96351186?v=4" height=150 width=150> <br/> @munhwas1140](https://github.com/munhwas1140) | [<img src="https://avatars.githubusercontent.com/u/66067610?v=4" height=150 width=150> <br/> @gyur2](https://github.com/gyur2) | [<img src="https://avatars.githubusercontent.com/u/119032609?v=4" height=150 width=150> <br/> @kmujsh](https://github.com/kmujsh) | [<img src="https://avatars.githubusercontent.com/u/84137164?v=4" height=150 width=150> <br/> @srcho01](https://github.com/srcho01) |
+| [<img src="https://avatars.githubusercontent.com/u/65213245?v=4" height=150 width=150> <br/> @tpgh02](https://github.com/tpgh02) | [<img src="https://avatars.githubusercontent.com/u/96351186?v=4" height=150 width=150> <br/> @munhwas1140](https://github.com/munhwas1140) | [<img src="https://avatars.githubusercontent.com/u/66067610?v=4" height=150 width=150> <br/> @gyur2](https://github.com/gyur2) | [<img src="https://avatars.githubusercontent.com/u/119032609?v=4" height=150 width=150> <br/> @kmujsh](https://github.com/kmujsh) | [<img src="https://avatars.githubusercontent.com/u/84137164?v=4" height=150 width=150> <br/> @srcho01](https://github.com/srcho01) |
 | 김세호(****5281) | 노형준(****1362) | 김규리(****3031) | 정수현(****3079) | 조서림(****3085) |
 | API개발, 데이터베이스 관리, 서버 개발 | API개발, 데이터베이스 관리, 서버 개발 | UI 디자인 및 개발, 어플리케이션 개발, 서버 연결 | UI 디자인 및 개발, 어플리케이션 개발, 서버 연결 | 데이터 수집 및 분석, AI 모델 구현 |
 
