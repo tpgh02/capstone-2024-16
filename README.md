@@ -6,12 +6,6 @@
     <a href="https://kookmin-sw.github.io/capstone-2024-16" style="font-size: x-large;"><b>Github Page</b></a>
 </p>
 
-<style>
-  a {
-    font-size: larger;
-  }
-</style>
-
 ## 프로젝트 소개
 
 
