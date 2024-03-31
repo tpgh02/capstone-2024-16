@@ -65,7 +65,7 @@ The project uses AI technology to automatically validate the success of a challe
 
 | 메인 페이지 |
 |---|
-|<img src="https://github.com/tpgh02/capstone-2024-16/assets/65213245/bbc1790f-d35f-44b7-b501-6bfc0c7239e5"|
+|<img src="https://github.com/tpgh02/capstone-2024-16/assets/65213245/bbc1790f-d35f-44b7-b501-6bfc0c7239e5">|
 
 
 ## 기타
