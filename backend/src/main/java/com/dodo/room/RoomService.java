@@ -29,7 +29,6 @@ public class RoomService {
     private final RoomUserRepository roomUserRepository;
     private final RoomRepository roomRepository;
     private final RoomUserService roomUserService;
-    private final RoomService roomService;
 
     public List<RoomData> getMyRoomList(UserContext userContext) {
         User user = userRepository.findById(userContext.getUserId())
@@ -184,7 +183,7 @@ public class RoomService {
             log.info("not manager");
         } else {
             roomUserService.deleteChatRoomUser(room, user);
-            roomService.minusUserCnt(roomId);
+            minusUserCnt(roomId);
         }
 
     }

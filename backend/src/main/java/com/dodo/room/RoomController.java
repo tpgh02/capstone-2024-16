@@ -206,15 +206,15 @@ public class RoomController {
     // 유저 추방
     @CustomAuthentication
     @PostMapping("/repel")
-    public String repel(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext, @RequestParam Long userId) {
-        roomService.repel(roomData.getRoomId(), userContext, userId);
+    public String repel(@RequestParam Long roomId, @RequestAttribute UserContext userContext, @RequestParam Long userId) {
+        roomService.repel(roomId, userContext, userId);
 
-        RoomUser roomUser = roomUserRepository.findByUserAndRoom(userRepository.findById(userId).get(), roomRepository.findById(roomData.getRoomId()).get())
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(userRepository.findById(userId).get(), roomRepository.findById(roomId).get())
                 .orElse(null);
 
         if (roomUser == null) {
             return "해당 유저는 인증방에서 삭제되었습니다." + "\n" +
-                    "nowUser = " + roomRepository.findById(roomData.getRoomId()).get().getNowUser();
+                    "nowUser = " + roomRepository.findById(roomId).get().getNowUser();
         }
         else {
             return "유저가 인증방에서 삭제되지 않았습니다.." ;
