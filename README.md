@@ -24,7 +24,7 @@ The project uses AI technology to automatically validate the success of a challe
 ## 소개 영상
 
 
-[![오늘도도전 중간발표 시연영상](http://img.youtube.com/vi/MZwkqfBD4eQ&ab/0.jpg)](https://youtu.be/MZwkqfBD4eQ&ab_channel=%E2%80%8D정수현%28학부생-소프트웨어전공%29)
+[![오늘도도전 중간발표 시연영상](https://github.com/kookmin-sw/capstone-2024-16/assets/65213245/7852258a-01fd-4c5a-b1cd-c5533e61b5d0)](https://youtu.be/MZwkqfBD4eQ&ab_channel=%E2%80%8D정수현%28학부생-소프트웨어전공%29)
 
 
 ## 팀 소개
