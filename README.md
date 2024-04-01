@@ -24,7 +24,7 @@ The project uses AI technology to automatically validate the success of a challe
 ## 소개 영상
 
 
-*(준비중)*
+[![오늘도도전 중간발표 시연영상](https://github.com/kookmin-sw/capstone-2024-16/assets/65213245/7852258a-01fd-4c5a-b1cd-c5533e61b5d0)](https://youtu.be/MZwkqfBD4eQ&ab_channel=%E2%80%8D정수현%28학부생-소프트웨어전공%29)
 
 
 ## 팀 소개
@@ -66,3 +66,7 @@ The project uses AI technology to automatically validate the success of a challe
 | 회원가입 | 메인 페이지 | 인증방 |
 |---|---|---|
 |<img src="https://github.com/tpgh02/capstone-2024-16/assets/65213245/f060e0b1-903a-4352-9185-dcb8dd2bf46b">|<img src="https://github.com/tpgh02/capstone-2024-16/assets/65213245/9534f1b0-e4ae-4357-8ce1-77d8e87de387">|<img src="https://github.com/tpgh02/capstone-2024-16/assets/65213245/afb654cc-091f-4e4a-969a-f6b1b10dbd89">|
+
+
+## 기타
+
