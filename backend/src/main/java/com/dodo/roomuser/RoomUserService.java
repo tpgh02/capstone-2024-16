@@ -1,5 +1,6 @@
 package com.dodo.roomuser;
 
+import com.dodo.exception.NotFoundException;
 import com.dodo.room.domain.Room;
 import com.dodo.roomuser.domain.RoomUser;
 import com.dodo.user.UserRepository;
@@ -18,7 +19,7 @@ public class RoomUserService {
     private final UserRepository userRepository;
 
     public void createRoomUser(UserContext userContext, Room room) {
-        User user = userRepository.findById(userContext.getUserId()).get();
+        User user = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
         RoomUser roomUser = RoomUser.builder()
                 .user(user)
                 .room(room)
@@ -28,8 +29,8 @@ public class RoomUserService {
     }
 
     public void setManager(UserContext userContext, Room room){
-        User user = userRepository.findById(userContext.getUserId()).get();
-        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).get();
+        User user = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).orElseThrow(NotFoundException::new);
 
         roomUser.setIsManager(true);
         roomUserRepository.save(roomUser);

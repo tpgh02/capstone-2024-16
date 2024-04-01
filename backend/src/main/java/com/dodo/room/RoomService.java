@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.*;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class RoomService {
     private final RoomUserRepository roomUserRepository;
     private final RoomRepository roomRepository;
     private final RoomUserService roomUserService;
+    private final RoomService roomService;
 
     public List<RoomData> getMyRoomList(UserContext userContext) {
         User user = userRepository.findById(userContext.getUserId())
@@ -75,20 +77,20 @@ public class RoomService {
 
     // 인증방 비밀번호 조회
     public Boolean confirmPwd(Long roomId, String roomPwd){
-        return roomPwd.equals(roomRepository.findById(roomId).get().getPassword());
+        return roomPwd.equals(roomRepository.findById(roomId).orElseThrow(NotFoundException::new).getPassword());
     }
 
     // 채팅방 인원 증가
     public void plusUserCnt(Long roomId){
         log.info("plus room Id : {}", roomId);
-        Room room = roomRepository.findById(roomId).get();
+        Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
         room.setNowUser(room.getNowUser()+1);
     }
 
     // 채팅방 인원 감소
     public void minusUserCnt(Long roomId){
         log.info("room Id : {}", roomId);
-        Room room = roomRepository.findById(roomId).get();
+        Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
         room.setNowUser(room.getNowUser()-1);
     }
 
@@ -105,15 +107,15 @@ public class RoomService {
 
     // 채팅방 공지 수정
     public void editInfo(Long roomId, String txt){
-        Room room = roomRepository.findById(roomId).get();
+        Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
         room.setInfo(txt);
         roomRepository.save(room);
     }
 
     // 방장 권한 위임
     public void delegate(Room room, User manager, User user){
-        RoomUser roomManager = roomUserRepository.findByUserAndRoom(manager, room).get();
-        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).get();
+        RoomUser roomManager = roomUserRepository.findByUserAndRoom(manager, room).orElseThrow(NotFoundException::new);
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).orElseThrow(NotFoundException::new);
 
         roomManager.setIsManager(false);
         roomUser.setIsManager(true);
@@ -130,7 +132,7 @@ public class RoomService {
 
             log.info("before delete id : {}", room.getId());
             if (room.getEndDay().toLocalDate().isEqual(LocalDate.now(ZoneId.of("Asia/Seoul")))){
-                List<RoomUser> roomUserList = roomUserRepository.findAllByRoomId(room.getId()).get();
+                List<RoomUser> roomUserList = roomUserRepository.findAllByRoomId(room.getId()).orElseThrow(NotFoundException::new);
                 log.info("현재시간 : {}, 목표날짜 : {}", LocalDate.now(), room.getEndDay());
                 for (RoomUser ru : roomUserList) {
                     roomUserService.deleteChatRoomUser(ru.getRoom(), ru.getUser());
@@ -143,9 +145,9 @@ public class RoomService {
 
     // 방장의 채팅방 설정 수정
     public void update(Long roomId, UserContext userContext, RoomData roomData) {
-        User user = userRepository.findById(userContext.getUserId()).get();
-        Room room = roomRepository.findById(roomId).get();
-        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).get();
+        User user = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
+        Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).orElseThrow(NotFoundException::new);
 
         if (!roomUser.getIsManager()) {
             log.info("not manager");
@@ -169,5 +171,21 @@ public class RoomService {
             );
             log.info("room name : {}", room.getName());
         }
+    }
+
+    // 유저 추방
+    public void repel(Long roomId, UserContext userContext, Long userId){
+        Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
+        User manager = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
+        User user = userRepository.findById(userId).orElseThrow(NotFoundException::new);
+        RoomUser roomManager = roomUserRepository.findByUserAndRoom(manager, room).orElseThrow(NotFoundException::new);
+
+        if (!roomManager.getIsManager()) {
+            log.info("not manager");
+        } else {
+            roomUserService.deleteChatRoomUser(room, user);
+            roomService.minusUserCnt(roomId);
+        }
+
     }
 }
