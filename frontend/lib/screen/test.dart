@@ -1,41 +1,44 @@
 import 'package:dodo/const/colors.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/widgets.dart';
+import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'dart:typed_data';
 
-//main 화면에서 상태 멘트를 날려주는 컴포넌트
-
-class certification extends StatefulWidget {
+class Certification extends StatefulWidget {
   final String state;
-  const certification(this.state);
+  const Certification(this.state);
 
   @override
-  State<certification> createState() => _certificationState();
+  State<Certification> createState() => _CertificationState();
 }
 
-class _certificationState extends State<certification> {
+class _CertificationState extends State<Certification> {
   GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
-  Uint8List? _image;
-  TextEditingController _emailEditingcontroller = TextEditingController();
-  TextEditingController _nameEditingcontroller = TextEditingController();
-  TextEditingController _passwordEditingcontroller = TextEditingController();
+  File? _image;
+  TextEditingController _emailEditingController = TextEditingController();
+  TextEditingController _nameEditingController = TextEditingController();
+  TextEditingController _passwordEditingController = TextEditingController();
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
   bool _isEnabled = true;
-  Future<void> selectImage() async {
-    ImagePicker imagePicker = new ImagePicker();
-    XFile? file = await imagePicker.pickImage(
-      source: ImageSource.gallery,
-      maxHeight: 512,
-      maxWidth: 512,
-    );
 
-    if (file != null) {
-      Uint8List uint8list = await file.readAsBytes();
-      setState(() {
-        _image = uint8list;
-      });
+  Future<void> pickImage() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image, // select only images
+    );
+    if (result != null) {
+      if (result.files.single.path != null) {
+        setState(() {
+          _isEnabled = true;
+          _image = File(result.files.single.path!);
+          print('File Path: ${_image!.path}');
+        });
+      } else {
+        print('File path is null');
+      }
+    } else {
+      // If the user cancels the selection
+      print("No image selected");
     }
   }
 
@@ -43,42 +46,72 @@ class _certificationState extends State<certification> {
   Widget build(BuildContext context) {
     const TextStyle style =
         TextStyle(color: Colors.white, fontFamily: "kcc", fontSize: 30);
-    return Center(
-        child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: PRIMARY_COLOR,
-              minimumSize: Size(100, 100),
-              elevation: 5, //그림자
-            ),
-            onPressed: () {
-              statedialog(context, 70, _image);
-            },
-            child: Container(
-              alignment: Alignment.center,
-              child: Text(
-                "인증하기",
-                //스타일은 위에 지정해둠.
-                style: style,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          const SizedBox(height: 20),
+          Container(
+            width: 180,
+            height: 180,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(180, 180),
+                //backgroundColor: Colors.black,
+                //elevation: 5, //그림자
               ),
-            )));
+              onPressed: () {
+                pickImage(); //이미지 저장
+              },
+              child: Stack(
+                children: [
+                  if (_image != null)
+                    Container(
+                        // width: 50,
+                        // height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.file(_image!)))
+                  else
+                    // _isEnabled
+                    //     ? Container(
+                    //         decoration: BoxDecoration(
+                    //             borderRadius: BorderRadius.circular(20),
+                    //             color: DARKGREY),
+                    //         height: 150,
+                    //       ) //CircularProgressIndicator()
+                    //     : const Text('You have not yet picked an image'),
+                    Container(
+                      alignment: Alignment.center,
+                      child: const Icon(
+                        Icons.camera_alt,
+                        color: PRIMARY_COLOR,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
 //팝업 띄우는 함수
-void statedialog(context, state, Uint8List? _image) {
-  _certificationState certificationState = _certificationState();
-  bool _isEnabled = true;
+void statedialog(context, state, File? _image) {
+  bool _isEnabled = _image != null;
   showDialog(
     context: context,
     builder: (context) {
       return Dialog(
-          child: SizedBox(
-        width: 300,
-        height: 300,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            //오늘의 todo 달성률을 보여주는 팝업
             const Text(
               "인증하기",
               style: TextStyle(fontFamily: "kcc", fontSize: 20),
@@ -87,28 +120,31 @@ void statedialog(context, state, Uint8List? _image) {
               height: 10,
             ),
             Container(
+              color: Colors.red,
               alignment: Alignment.center,
               child: Stack(
                 children: [
                   _image == null
                       ? Container(
-                          width: 128,
-                          height: 128,
+                          // width: 50,
+                          // height: 50,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Image.asset(
-                              '../assets/images/turtle_noradius.png'),
+                            '../assets/images/turtle_noradius.png',
+                          ),
                         )
                       : Container(
-                          width: 128,
-                          height: 128,
+                          // width: 50,
+                          // height: 50,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(
-                                64), // 반지름을 지정하여 모서리를 둥글게 만듭니다.
+                            borderRadius: BorderRadius.circular(20),
                             image: _image != null
-                                ? DecorationImage(image: MemoryImage(_image!))
-                                : null, // 이미지를 배경으로 설정합니다.
+                                ? DecorationImage(
+                                    image: FileImage(_image),
+                                  )
+                                : null,
                           ),
                         ),
                   Positioned(
@@ -117,7 +153,7 @@ void statedialog(context, state, Uint8List? _image) {
                     child: IconButton(
                       onPressed: _isEnabled
                           ? () async {
-                              await certificationState.selectImage();
+                              // Do something
                             }
                           : null,
                       icon: Icon(Icons.add_a_photo),
@@ -137,7 +173,7 @@ void statedialog(context, state, Uint8List? _image) {
             )
           ],
         ),
-      ));
+      );
     },
   );
 }

@@ -1,4 +1,5 @@
 //import 'package:dodo/const/colors.dart';
+import 'package:dodo/screen/test.dart';
 import 'package:flutter/material.dart';
 
 //소유하고 있는 방들의 각각 컴포넌트를 생성
@@ -57,12 +58,13 @@ void tododialog(context) {
       return Dialog(
           child: SizedBox(
         width: 300,
-        height: 300,
+        //height: 300,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //여기는 그 인증하는 곳으로 이어졌으면 함. 밑에는 일단 예시
             const Text("사진 넣으셨는지~"),
+            Certification("test"),
             const SizedBox(
               height: 100,
             ),
