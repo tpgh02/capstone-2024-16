@@ -2,7 +2,8 @@ name: CI
 
 on:
   push:
-    branches: [ backend ]
+    branches:
+      - backend
 
 env:
   AWS_REGION: ap-northeast-2
@@ -10,6 +11,9 @@ env:
 jobs:
   build:
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ./backend
 
     steps:
       - name: Check out source code
