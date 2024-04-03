@@ -2,6 +2,8 @@ package com.dodo.room.domain;
 
 import com.dodo.image.domain.Image;
 import com.dodo.roomuser.domain.RoomUser;
+import com.dodo.tag.domain.RoomTag;
+import com.dodo.tag.domain.Tag;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,7 +26,6 @@ public class Room {
     private LocalDateTime endDay;
     private Long maxUser;
     private Long nowUser;
-    private String tag;
     private Boolean canChat;
     private Integer numOfVoteSuccess;
     private Integer numOfVoteFail;
@@ -49,9 +50,12 @@ public class Room {
     @OneToMany(mappedBy = "room")
     private List<RoomUser> roomUsers;
 
+    @OneToMany(mappedBy = "room")
+    private List<RoomTag> roomTags;
+
     // 인증방 기능 설정
-    public void update( String name, String password, String info, LocalDateTime endDay,
-                       Long maxUser, String tag, Boolean canChat, Integer numOfVoteSuccess,
+    public void update(String name, String password, String info, LocalDateTime endDay,
+                       Long maxUser, Tag tag, Boolean canChat, Integer numOfVoteSuccess,
                        Integer numOfVoteFail, Image image, Periodicity periodicity,
                        Integer frequency, CertificationType certificationType) {
         if (name != null){this.name = name;}
