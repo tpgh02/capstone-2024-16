@@ -3,7 +3,6 @@ package com.dodo.image;
 import com.dodo.image.domain.Image;
 import com.dodo.image.domain.ImageProperties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,7 +22,7 @@ public class ImageService {
         String fullPath = imageProperties.getSavePath() + uuid + ".png";
         Path savePath = Paths.get(fullPath);
         img.transferTo(savePath);
-        String url = imageProperties.getServerUrl() + "/img?url=" + uuid;
+        String url = ImageProperties.serverUrl + "/img?url=" + uuid;
         return imageRepository.save(new Image(url));
     }
 

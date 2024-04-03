@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.*;
 
 @Getter
+@NoArgsConstructor
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         property = "type"
@@ -18,38 +19,28 @@ import lombok.*;
 public abstract class UserCreateRequestData {
 
     @JsonTypeName("social")
-    @ToString
+    @Getter
     public static class SocialUserCreateRequestData extends UserCreateRequestData {
 
         // TODO
         //
 
         String token;
-        public SocialUserCreateRequestData(String id, String name, String token) {
+        public SocialUserCreateRequestData() {
             super(AuthenticationType.SOCIAL);
-            this.token = token;
         }
     }
 
     @JsonTypeName("password")
-    @ToString
+    @Getter
     public static class PasswordUserCreateRequestData extends UserCreateRequestData {
+        private String password1;
+        private String password2;
+        private String username;
 
-        private final String password1;
-        private final String password2;
-        private final String username;
-
-        public PasswordUserCreateRequestData(
-                String password1,
-                String password2,
-                String username
-        ) {
+        public PasswordUserCreateRequestData() {
             super(AuthenticationType.PASSWORD);
-            this.password1 = password1;
-            this.password2 = password2;
-            this.username = username;
         }
-
         public String getPassword() {
             if(password1.equals(password2)) {
                 return password1;

@@ -1,12 +1,16 @@
 package com.dodo.user;
 
+import com.dodo.exception.NotFoundException;
 import com.dodo.image.ImageRepository;
 import com.dodo.image.domain.Image;
+import com.dodo.image.domain.ImageProperties;
 import com.dodo.token.TokenService;
 import com.dodo.user.domain.AuthenticationType;
 import com.dodo.user.domain.PasswordAuthentication;
 import com.dodo.user.domain.User;
+import com.dodo.user.domain.UserContext;
 import com.dodo.user.dto.UserCreateRequestData;
+import com.dodo.user.dto.UserData;
 import com.dodo.user.dto.UserLoginRequestData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +29,13 @@ public class UserService {
     private final TokenService tokenService;
     private final ImageRepository imageRepository;
 
-    private final String DEFAULT_IMAGE_URL = "http://localhost:8080/img?url=default";
+    private final String DEFAULT_IMAGE_URL = "http://" + ImageProperties.serverUrl + ":8080/img?url=default";
 
     @Transactional
     public User register(UserCreateRequestData request) {
+        if(userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("이메일이 이미 존재합니다");
+        }
 
         // TODO
         // 기본 이미지 설정
@@ -37,13 +44,16 @@ public class UserService {
                 .orElse(imageRepository.save(new Image(DEFAULT_IMAGE_URL)));
 
 
+        log.info("{}", request.getType());
         User user = User.builder()
                 .authenticationType(request.getType())
                 .email(request.getEmail())
+                .name(request.getEmail().split("@")[0])
                 .mileage(0)
                 .image(image)
                 .introduceMessage("")
                 .build();
+
 
         userRepository.save(user);
 
@@ -62,6 +72,7 @@ public class UserService {
     }
 
     public String login(UserLoginRequestData request) {
+        log.info("{}", request.getAuthenticationType());
         Long userId = getUserId(request);
         return tokenService.makeToken(userId);
     }
@@ -72,21 +83,28 @@ public class UserService {
             // 비밀번호 로그인
             UserLoginRequestData.PasswordLoginRequestData req = (UserLoginRequestData.PasswordLoginRequestData)request;
             User user = userRepository.findByEmail(req.getEmail())
-                    .orElseThrow(IllegalArgumentException::new);
+                    .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다"));
             PasswordAuthentication passwordAuthentication = passwordAuthenticationRepository.findByUser(user)
-                    .orElseThrow(IllegalArgumentException::new);
+                    .orElseThrow(() -> new NotFoundException("비밀번호 인증 정보를 찾을 수 없습니다"));
             if (passwordEncoder.matches(
                     req.getPassword(),
                     passwordAuthentication.getPassword())
             ) {
                 return user.getId();
             }
-            throw new IllegalArgumentException();
+            throw new NotFoundException();
         } else {
 
         }
 
 
         return 0L;
+    }
+
+    public UserData getMyData(UserContext userContext) {
+        User user = userRepository.findById(userContext.getUserId())
+                .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다"));
+
+        return new UserData(user);
     }
 }

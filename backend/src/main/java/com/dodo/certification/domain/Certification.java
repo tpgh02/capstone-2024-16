@@ -5,8 +5,10 @@ import com.dodo.roomuser.domain.RoomUser;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +16,8 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
+@Data
 public class Certification {
 
     @Id
@@ -30,6 +34,14 @@ public class Certification {
     @CreatedDate
     private LocalDateTime createdTime;
 
-    @OneToOne
-    private Image iamge;
+    @ManyToOne
+    private Image image;
+
+    private Integer voteUp;
+    private Integer voteDown;
+
+    public void addVoteUp() { voteUp++; }
+    public void subVoteUp() { voteUp--; }
+    public void addVoteDown() { voteDown++; }
+    public void subVoteDown() { voteDown--; }
 }
