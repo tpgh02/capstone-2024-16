@@ -55,27 +55,25 @@ class _CertificationState extends State<Certification> {
           Container(
             width: 180,
             height: 180,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(180, 180),
-                //backgroundColor: Colors.black,
-                //elevation: 5, //그림자
-              ),
-              onPressed: () {
+            child: InkWell(
+              onTap: () {
                 pickImage(); //이미지 저장
               },
               child: Stack(
                 children: [
                   if (_image != null)
                     Container(
-                        // width: 50,
-                        // height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.file(_image!)))
+                      // width: 50,
+                      // height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: DARKGREY,
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.file(_image!),
+                      ),
+                    )
                   else
                     // _isEnabled
                     //     ? Container(

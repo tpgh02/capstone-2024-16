@@ -1,5 +1,5 @@
 //import 'package:dodo/const/colors.dart';
-import 'package:dodo/screen/test.dart';
+import 'package:dodo/components/certification.dart';
 import 'package:flutter/material.dart';
 
 //소유하고 있는 방들의 각각 컴포넌트를 생성
