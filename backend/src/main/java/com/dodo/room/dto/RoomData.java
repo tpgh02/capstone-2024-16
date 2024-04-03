@@ -2,6 +2,7 @@ package com.dodo.room.dto;
 
 import com.dodo.certification.domain.CertificationStatus;
 import com.dodo.image.domain.Image;
+import com.dodo.room.domain.Category;
 import com.dodo.room.domain.CertificationType;
 import com.dodo.room.domain.Periodicity;
 import com.dodo.room.domain.Room;
@@ -21,7 +22,7 @@ public class RoomData {
     private LocalDateTime endDay;
     private Periodicity periodicity;
     private String pwd;
-    private String category;
+    private Category category;
     private String info;
     private String tag;
     private Boolean canChat;

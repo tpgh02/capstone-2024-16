@@ -2,6 +2,7 @@ package com.dodo.room;
 
 import com.dodo.config.auth.CustomAuthentication;
 import com.dodo.room.domain.Room;
+import com.dodo.exception.NotFoundException;
 import com.dodo.room.dto.RoomData;
 import com.dodo.room.dto.UserData;
 import com.dodo.roomuser.RoomUserRepository;
@@ -73,8 +74,8 @@ public class RoomController {
         log.info("roomId {}", roomId);
         log.info("userId {}", userContext.getUserId());
 
-        Room room = roomRepository.findById(roomId).get();
-        User user = userRepository.findById(userContext.getUserId()).get();
+        Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
+        User user = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
 
         RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)
                 .orElse(null);
@@ -105,8 +106,8 @@ public class RoomController {
         log.info("del roomId : {}", roomId);
         log.info("del userId : {]", userContext.getUserId());
 
-        Room room = roomRepository.findById(roomId).get();
-        User user = userRepository.findById(userContext.getUserId()).get();
+        Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
+        User user = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
 
         roomService.minusUserCnt(roomId);
         roomUserService.deleteChatRoomUser(room, user);
@@ -129,14 +130,14 @@ public class RoomController {
         log.info("del roomId : {}", roomId);
         log.info("del userId : {}", userContext.getUserId());
 
-        Room room = roomRepository.findById(roomId).get();
-        User user = userRepository.findById(userContext.getUserId()).get();
-        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).get();
+        Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
+        User user = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).orElseThrow(NotFoundException::new);
 
         if (!roomUser.getIsManager()) {
             return "방장이 아닙니다.";
         }
-        List<RoomUser> roomUserList = roomUserRepository.findAllByRoomId(roomId).get();
+        List<RoomUser> roomUserList = roomUserRepository.findAllByRoomId(roomId).orElseThrow(NotFoundException::new);
 
         for (RoomUser ru : roomUserList) {
             roomUserService.deleteChatRoomUser(ru.getRoom(), ru.getUser());
@@ -158,9 +159,9 @@ public class RoomController {
     @CustomAuthentication
     @PostMapping("/edit-info")
     public String editInfo(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext, @RequestParam String txt) {
-        Room room = roomRepository.findById(roomData.getRoomId()).get();
-        User user = userRepository.findById(userContext.getUserId()).get();
-        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).get();
+        Room room = roomRepository.findById(roomData.getRoomId()).orElseThrow(NotFoundException::new);
+        User user = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).orElseThrow(NotFoundException::new);
 
         if (!roomUser.getIsManager()) {
             return "방장이 아닙니다.";
@@ -175,13 +176,13 @@ public class RoomController {
     @CustomAuthentication
     @PostMapping("/delegate")
     public Boolean delegate(@RequestBody RoomData roomData, @RequestParam Long userId, @RequestAttribute UserContext userContext){
-        Room room = roomRepository.findById(roomData.getRoomId()).get();
-        User manager = userRepository.findById(userContext.getUserId()).get();
-        User user = userRepository.findById(userId).get();
+        Room room = roomRepository.findById(roomData.getRoomId()).orElseThrow(NotFoundException::new);
+        User manager = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
+        User user = userRepository.findById(userId).orElseThrow(NotFoundException::new);
 
         roomService.delegate(room, manager, user);
 
-        return roomUserRepository.findByUserAndRoom(user, room).get().getIsManager();
+        return roomUserRepository.findByUserAndRoom(user, room).orElseThrow(NotFoundException::new).getIsManager();
     }
 
     // 목표 날짜가 돼서 인증방 해체
@@ -198,6 +199,24 @@ public class RoomController {
     public RoomData update(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext, @RequestParam Long roomId){
         roomService.update(roomId, userContext, roomData);
 
-        return RoomData.of(roomRepository.findById(roomId).get());
+        return RoomData.of(roomRepository.findById(roomId).orElseThrow(NotFoundException::new));
+    }
+
+    // 유저 추방
+    @CustomAuthentication
+    @PostMapping("/repel")
+    public String repel(@RequestParam Long roomId, @RequestAttribute UserContext userContext, @RequestParam Long userId) {
+        roomService.repel(roomId, userContext, userId);
+
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(userRepository.findById(userId).get(), roomRepository.findById(roomId).get())
+                .orElse(null);
+
+        if (roomUser == null) {
+            return "해당 유저는 인증방에서 삭제되었습니다." + "\n" +
+                    "nowUser = " + roomRepository.findById(roomId).get().getNowUser();
+        }
+        else {
+            return "유저가 인증방에서 삭제되지 않았습니다.." ;
+        }
     }
 }
