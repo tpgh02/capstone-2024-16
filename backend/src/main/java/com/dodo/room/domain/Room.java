@@ -21,7 +21,6 @@ public class Room {
     private String password;
     private String info;
     private String notice;
-    private String category;
     private LocalDateTime endDay;
     private Long maxUser;
     private Long nowUser;
@@ -42,6 +41,10 @@ public class Room {
     //인증 방식 (AI, 직접)
     @Enumerated(EnumType.STRING)
     private CertificationType certificationType;
+
+    // 카테고리
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     @OneToMany(mappedBy = "room")
     private List<RoomUser> roomUsers;

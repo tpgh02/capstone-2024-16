@@ -1,6 +1,7 @@
 package com.dodo.room;
 
 import com.dodo.exception.NotFoundException;
+import com.dodo.room.domain.Category;
 import com.dodo.room.domain.CertificationType;
 import com.dodo.room.domain.Periodicity;
 import com.dodo.room.dto.RoomData;
@@ -50,7 +51,7 @@ public class RoomService {
     }
 
     // 채팅방 생성
-    public Room creatChatRoom(String roomName, String roomPwd, Long maxUserCnt, String category,
+    public Room creatChatRoom(String roomName, String roomPwd, Long maxUserCnt, Category category,
                               String info, String hashtag, CertificationType certificationType,
                               Boolean canChat, Integer numOfVoteSuccess, Integer numOfVoteFail,
                               Integer frequency, Periodicity periodicity, LocalDateTime endDate){
