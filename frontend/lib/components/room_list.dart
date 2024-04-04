@@ -1,3 +1,4 @@
+import 'package:dodo/components/room_main.dart';
 import 'package:flutter/material.dart';
 
 class room_list extends StatefulWidget {
@@ -9,14 +10,24 @@ class room_list extends StatefulWidget {
 }
 
 class _roomListState extends State<room_list> {
-  final postList = [
+  final List<dynamic> postList = [
     {
       "room_title": "자취요리왕",
       "room_img": "assets/images/cook.jpg",
+      "room_mem": 10,
+      "room_maxmem": 20,
     },
     {
       "room_title": "오운완",
       "room_img": "assets/images/turtle_noradius.png",
+      "room_mem": 5,
+      "room_maxmem": 20,
+    },
+    {
+      "room_title": "H.O.T",
+      "room_img": "assets/images/turtle_noradius.png",
+      "room_mem": 10,
+      "room_maxmem": 20,
     },
   ];
 
@@ -48,11 +59,14 @@ class _roomListState extends State<room_list> {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return Dialog(child: Text('히히'));
-                          });
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => room_main(
+                                    room_title: postList[num]["room_title"],
+                                    room_mem: postList[num]["room_mem"],
+                                    room_maxmem: postList[num]["room_maxmem"],
+                                  )));
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +79,13 @@ class _roomListState extends State<room_list> {
                             fontSize: 25,
                           ),
                         ),
-                        Text('방 속성'),
+                        Row(
+                          children: [
+                            const Icon(Icons.people),
+                            Text(
+                                ' ${postList[num]["room_mem"]}/${postList[num]["room_maxmem"]}'),
+                          ],
+                        ),
                       ],
                     ),
                   ),

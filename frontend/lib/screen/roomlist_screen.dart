@@ -42,6 +42,7 @@ class _RoomListState extends State<RoomListPage>
             ),
             room_list(num: 0),
             room_list(num: 1),
+            room_list(num: 2),
           ],
         ),
       ),
