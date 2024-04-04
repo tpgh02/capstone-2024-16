@@ -69,9 +69,16 @@ class _CertificationState extends State<Certification> {
                         borderRadius: BorderRadius.circular(20),
                         color: DARKGREY,
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.file(_image!),
+                      child: Container(
+                        width: 180,
+                        height: 180,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.file(
+                            _image!,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     )
                   else
@@ -83,6 +90,13 @@ class _CertificationState extends State<Certification> {
                     //         height: 150,
                     //       ) //CircularProgressIndicator()
                     //     : const Text('You have not yet picked an image'),
+                    Container(
+                      alignment: Alignment.center,
+                      width: 180,
+                      height: 180,
+                      color: LIGHTGREY,
+                    ),
+                  if (_image == null)
                     Container(
                       alignment: Alignment.center,
                       child: const Icon(
