@@ -1,3 +1,4 @@
+import 'package:dodo/components/certification.dart';
 import 'package:flutter/material.dart';
 import 'package:dodo/const/colors.dart';
 
@@ -193,7 +194,9 @@ class _roomMainState extends State<room_main> {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           padding: const EdgeInsets.all(10),
         ),
-        onPressed: () {},
+        onPressed: () {
+          tododialog(context);
+        },
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -218,4 +221,35 @@ class _roomMainState extends State<room_main> {
       ),
     );
   }
+}
+
+void tododialog(context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+          child: SizedBox(
+        width: 300,
+        //height: 300,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            //여기는 그 인증하는 곳으로 이어졌으면 함. 밑에는 일단 예시
+            const Text("사진 넣으셨는지~"),
+            Certification("test"),
+            const SizedBox(
+              height: 100,
+            ),
+            IconButton(
+              onPressed: () {
+                //팝업 지우기
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.close),
+            )
+          ],
+        ),
+      ));
+    },
+  );
 }
