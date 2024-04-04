@@ -16,9 +16,24 @@ class _seaPageState extends State<seaPage> {
     return Container(
       key: widgetkey,
       child: Stack(children: [
-        Image.asset(
-          "../assets/images/sea.png",
-          //fit: BoxFit.contain,
+        // Image.asset(
+        //   "../assets/images/sea.png",
+        //   //fit: BoxFit.contain,
+        // ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Image.asset(
+            'assets/sea.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: AssetImage('assets/sea.png'), // 배경 이미지
+            ),
+          ),
         ),
         Container(
           // color: Colors.red,
