@@ -7,6 +7,14 @@
 
 <p align="center">
     <a href="https://kookmin-sw.github.io/capstone-2024-16" style="font-size: x-large;"><b>Github Page</b></a>
+</p>  
+
+<p align="center">
+    <a href="https://drive.google.com/file/d/1D0uxyifycxhBjRtZuRIGbo6RNMSQ4kTw/view?usp=drive_link" style="font-size: x-large;"><b>중간 보고서</b></a>
+</p>
+
+<p align="center">  
+    <a href="https://drive.google.com/file/d/1E9_frmK_87SDY9VDubHwXtmRLpOUWvSl/view?usp=drive_link" style="font-size: x-large;"><b>중간 발표자료</b></a>
 </p>
 
 ## 프로젝트 소개
