@@ -3,6 +3,7 @@ package com.dodo.room;
 import com.dodo.config.auth.CustomAuthentication;
 import com.dodo.room.dto.RoomData;
 import com.dodo.room.dto.UserData;
+import com.dodo.tag.RoomTagService;
 import com.dodo.user.domain.UserContext;
 import lombok.RequiredArgsConstructor;
 import com.dodo.room.domain.Room;
@@ -31,6 +32,7 @@ public class RoomController {
     private final RoomUserRepository roomUserRepository;
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
+    private final RoomTagService roomTagService;
 
     @GetMapping("/list")
     public List<RoomData> getMyRoomList(
@@ -56,12 +58,14 @@ public class RoomController {
     public RoomData createRoom(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext){
         Room room = roomService.creatChatRoom(roomData.getName(), roomData.getPwd(),
                 roomData.getMaxUser(), roomData.getCategory(), roomData.getInfo(),
-                roomData.getTag(), roomData.getCertificationType(), roomData.getCanChat(),
+                roomData.getCertificationType(), roomData.getCanChat(),
                 roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
                 roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay());
 
         roomUserService.createRoomUser(userContext, room);
         roomUserService.setManager(userContext, room);
+        roomTagService.saveRoomTag(room, roomData.getTag());
+
 
         log.info("CREATE Chat RoomId: {}", room.getId());
 

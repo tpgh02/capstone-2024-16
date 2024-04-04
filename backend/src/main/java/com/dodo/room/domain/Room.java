@@ -2,6 +2,7 @@ package com.dodo.room.domain;
 
 import com.dodo.image.domain.Image;
 import com.dodo.roomuser.domain.RoomUser;
+import com.dodo.tag.domain.RoomTag;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,7 +25,6 @@ public class Room {
     private LocalDateTime endDay;
     private Long maxUser;
     private Long nowUser;
-    private String tag;
     private Boolean canChat;
     private Integer numOfVoteSuccess;
     private Integer numOfVoteFail;
@@ -49,9 +49,12 @@ public class Room {
     @OneToMany(mappedBy = "room")
     private List<RoomUser> roomUsers;
 
+    @OneToMany(mappedBy = "room")
+    private List<RoomTag> roomTags;
+
     // 인증방 기능 설정
-    public void update( String name, String password, String info, LocalDateTime endDay,
-                       Long maxUser, String tag, Boolean canChat, Integer numOfVoteSuccess,
+    public void update(String name, String password, String info, LocalDateTime endDay,
+                       Long maxUser, Boolean canChat, Integer numOfVoteSuccess,
                        Integer numOfVoteFail, Image image, Periodicity periodicity,
                        Integer frequency, CertificationType certificationType) {
         if (name != null){this.name = name;}
@@ -59,7 +62,6 @@ public class Room {
         if (info != null){this.info = info;}
         if (endDay != null){this.endDay = endDay;}
         if (maxUser != null){this.maxUser = maxUser;}
-        if (tag != null){this.tag = tag;}
         if (canChat != null){this.canChat = canChat;}
         if (numOfVoteSuccess != null){this.numOfVoteSuccess = numOfVoteSuccess;}
         if (numOfVoteFail != null){this.numOfVoteFail = numOfVoteFail;}

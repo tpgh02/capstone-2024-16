@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @RequiredArgsConstructor
@@ -24,7 +25,6 @@ public class RoomData {
     private String pwd;
     private Category category;
     private String info;
-    private String tag;
     private Boolean canChat;
     private Integer numOfVoteSuccess;
     private Integer numOfVoteFail;
@@ -33,6 +33,8 @@ public class RoomData {
 
     private CertificationType certificationType;
     private Integer frequency;
+
+    private List<String> tag;
 
     public RoomData(Room room) {
         this.roomId = room.getId();
@@ -63,7 +65,6 @@ public class RoomData {
         roomData.pwd = room.getPassword();
         roomData.category = room.getCategory();
         roomData.info = room.getInfo();
-        roomData.tag = room.getTag();
         roomData.canChat = room.getCanChat();
         roomData.numOfVoteSuccess = room.getNumOfVoteSuccess();
         roomData.numOfVoteFail = room.getNumOfVoteFail();

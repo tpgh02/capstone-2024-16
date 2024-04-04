@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.*;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +51,7 @@ public class RoomService {
 
     // 채팅방 생성
     public Room creatChatRoom(String roomName, String roomPwd, Long maxUserCnt, Category category,
-                              String info, String hashtag, CertificationType certificationType,
+                              String info, CertificationType certificationType,
                               Boolean canChat, Integer numOfVoteSuccess, Integer numOfVoteFail,
                               Integer frequency, Periodicity periodicity, LocalDateTime endDate){
         Room room = Room.builder()
@@ -62,7 +61,6 @@ public class RoomService {
                 .nowUser(1L)
                 .category(category)
                 .info(info)
-                .tag(hashtag)
                 .certificationType(certificationType)
                 .periodicity(periodicity)
                 .canChat(canChat)
@@ -160,7 +158,6 @@ public class RoomService {
                     roomData.getInfo(),
                     roomData.getEndDay(),
                     roomData.getMaxUser(),
-                    roomData.getTag(),
                     roomData.getCanChat(),
                     roomData.getNumOfVoteSuccess(),
                     roomData.getNumOfVoteFail(),
