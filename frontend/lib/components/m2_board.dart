@@ -18,15 +18,14 @@ class _m2_board extends State<m2_board> {
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20), color: Colors.white),
+            borderRadius: BorderRadius.circular(15), color: Colors.white),
         child: const SingleChildScrollView(
             child: Column(
           children: [
             SizedBox(
-              height: 20,
+              height: 15,
             ),
             m2Tabbar(),
-            //캘린더 추가
           ],
         )));
   }
