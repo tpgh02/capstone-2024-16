@@ -48,7 +48,7 @@ The project uses AI technology to automatically validate the success of a challe
 ## 사용 방법
 
 
-1. 참여하고자하는 챌린지의 인증방에 들어갑니다.
+1. 참여하고자 하는 챌린지의 인증방에 들어갑니다.
 2. 인증방의 목적에 맞는 챌린지 인증 사진을 업로드 합니다.
 3. 서비스는 AI 모델을 사용하여 제출된 인증 사진을 분석하고 성공 여부를 판단합니다.
 4. 사용자에게 결과를 피드백 합니다.
@@ -57,7 +57,7 @@ The project uses AI technology to automatically validate the success of a challe
 ## 주요 기능
 
 - 사용자가 도전한 챌린지의 성공여부를 AI가 판단합니다.
-- 챌린지 인증방내에 채팅 기능을 이용할 수 있습니다.
+- 챌린지 인증방 내에 채팅 기능을 이용할 수 있습니다.
 - 챌린지 인증을 하고 마일리지를 얻어 자신만의 바다를 장식할 수 있습니다.
 - 기간별 리포트 기능을 통해 사용자 스스로의 성취도를 평가합니다.
 
