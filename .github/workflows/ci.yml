@@ -28,6 +28,13 @@ jobs:
       - name: gradlew chmod
         run: chmod +x ./gradlew
 
+      - name: s3 credential setting
+        env:
+          AWS_S3_ACCESS_KEY: ${{secrets.AWS_S3_ACCESS_KEY}}
+          AWS_S3_SECRET_KEY: ${{secrets.AWS_S3_SECRET_KEY}}
+          AWS_S3_BUCKET: ${{secrets.AWS_S3_BUCKET}}
+          JWT_SECRET: ${{secrets.JWT_SECRET}}
+
       - name: Build with Gradle
         run: ./gradlew clean build
 
