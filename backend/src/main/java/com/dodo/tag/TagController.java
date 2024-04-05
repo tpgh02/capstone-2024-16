@@ -4,6 +4,8 @@ import com.dodo.exception.NotFoundException;
 import com.dodo.room.RoomRepository;
 import com.dodo.room.domain.Room;
 import com.dodo.tag.domain.RoomTag;
+import com.dodo.tag.dto.TagResponseDTO;
+import com.dodo.tag.repository.RoomTagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -22,16 +24,17 @@ public class TagController {
 
 
     // room의 tag 이름 가져오기
-    @GetMapping("/get-tags")
+    @GetMapping("/get-tags/{roomId}")
     @ResponseBody
-    public List<String> getTags(@RequestParam Long roomId){
-        Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
+    public TagResponseDTO getTags(@PathVariable Long roomId){
 
-        List<RoomTag> roomTag = roomTagRepository.findByRoom(room).orElseThrow(NotFoundException::new);
+        List<RoomTag> roomTag = roomTagRepository
+                .findByRoom(roomRepository.findById(roomId).orElseThrow(NotFoundException::new))
+                .orElseThrow(NotFoundException::new);
         log.info("roomTag List : {}", roomTag);
 
-        return roomTag.stream()
+        return new TagResponseDTO(roomTag.stream()
                 .map(tagName -> tagName.getTag().getName())
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 }

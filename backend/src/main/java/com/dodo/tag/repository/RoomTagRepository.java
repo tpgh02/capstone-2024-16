@@ -1,4 +1,4 @@
-package com.dodo.tag;
+package com.dodo.tag.repository;
 
 import com.dodo.room.domain.Room;
 import com.dodo.tag.domain.RoomTag;

@@ -100,7 +100,7 @@ public class RoomService {
             System.out.println("room = null");
             return;
         }
-        roomRepository.delete(room);
+        roomRepository.deleteById(roomId);
     }
 
     // 채팅방 공지 수정
@@ -128,16 +128,13 @@ public class RoomService {
 
         for (Room room : roomList){
 
-            log.info("before delete id : {}", room.getId());
             if (room.getEndDay().toLocalDate().isEqual(LocalDate.now(ZoneId.of("Asia/Seoul")))){
-                List<RoomUser> roomUserList = roomUserRepository.findAllByRoomId(room.getId()).orElseThrow(NotFoundException::new);
-                log.info("현재시간 : {}, 목표날짜 : {}", LocalDate.now(), room.getEndDay());
-                for (RoomUser ru : roomUserList) {
-                    roomUserService.deleteChatRoomUser(ru.getRoom(), ru.getUser());
-                }
+
+                roomUserRepository.findAllByRoomId(room.getId()).orElseThrow(NotFoundException::new).
+                        forEach(roomUser -> roomUserService.deleteChatRoomUser(roomUser.getRoom().getId(), roomUser.getUser().getId()));
                 deleteRoom(room.getId());
             }
-            log.info("after delete id : {}", roomRepository.findById(room.getId()).orElse(null));
+
         }
     }
 
@@ -180,7 +177,7 @@ public class RoomService {
         if (!roomManager.getIsManager()) {
             log.info("not manager");
         } else {
-            roomUserService.deleteChatRoomUser(room, user);
+            roomUserService.deleteChatRoomUser(roomId, userContext.getUserId());
             minusUserCnt(roomId);
         }
 

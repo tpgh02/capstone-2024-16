@@ -1,6 +1,7 @@
-package com.dodo.tag;
+package com.dodo.tag.service;
 
 import com.dodo.tag.domain.Tag;
+import com.dodo.tag.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

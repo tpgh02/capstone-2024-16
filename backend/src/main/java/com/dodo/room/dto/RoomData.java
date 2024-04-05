@@ -60,7 +60,7 @@ public class RoomData {
         roomData.name = room.getName();
         roomData.maxUser = room.getMaxUser();
         roomData.nowUsers = room.getNowUser();
-        // roomData.endDay = room.getEndDay();
+        roomData.endDay = room.getEndDay();
         roomData.periodicity = room.getPeriodicity();
         roomData.pwd = room.getPassword();
         roomData.category = room.getCategory();

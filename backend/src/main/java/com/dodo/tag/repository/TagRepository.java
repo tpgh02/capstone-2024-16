@@ -1,4 +1,4 @@
-package com.dodo.tag;
+package com.dodo.tag.repository;
 
 import com.dodo.tag.domain.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
