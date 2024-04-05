@@ -49,7 +49,7 @@ public class CertificationService {
                 .orElseThrow(() -> new NotFoundException("인증방 정보를 찾을 수 없습니다"));
         RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)
                 .orElseThrow(() -> new NotFoundException("인증방에 소속되어 있지 않습니다"));
-        Image image = imageService.saveImage(img);
+        Image image = imageService.save(img);
 
         // 테스트용
 //        RoomUser roomUser = roomUserRepository.save(new RoomUser(user, room));

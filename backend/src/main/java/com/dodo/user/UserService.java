@@ -3,7 +3,6 @@ package com.dodo.user;
 import com.dodo.exception.NotFoundException;
 import com.dodo.image.ImageRepository;
 import com.dodo.image.domain.Image;
-import com.dodo.image.domain.ImageProperties;
 import com.dodo.token.TokenService;
 import com.dodo.user.domain.AuthenticationType;
 import com.dodo.user.domain.PasswordAuthentication;
@@ -29,7 +28,6 @@ public class UserService {
     private final TokenService tokenService;
     private final ImageRepository imageRepository;
 
-    private final String DEFAULT_IMAGE_URL = "http://" + ImageProperties.serverUrl + ":8080/img?url=default";
 
     @Transactional
     public User register(UserCreateRequestData request) {
@@ -40,8 +38,7 @@ public class UserService {
         // TODO
         // 기본 이미지 설정
         // 나중에 바꿔야 함
-        Image image = imageRepository.findById(1L)
-                .orElse(imageRepository.save(new Image(DEFAULT_IMAGE_URL)));
+        Image image = imageRepository.findById(1L).get();
 
 
         log.info("{}", request.getType());

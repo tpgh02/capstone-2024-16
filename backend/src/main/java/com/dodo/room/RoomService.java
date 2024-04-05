@@ -4,6 +4,7 @@ import com.dodo.exception.NotFoundException;
 import com.dodo.room.domain.Category;
 import com.dodo.room.domain.CertificationType;
 import com.dodo.room.domain.Periodicity;
+import com.dodo.room.domain.Room;
 import com.dodo.room.dto.RoomData;
 import com.dodo.room.dto.UserData;
 import com.dodo.roomuser.RoomUserRepository;
@@ -11,13 +12,14 @@ import com.dodo.roomuser.RoomUserService;
 import com.dodo.roomuser.domain.RoomUser;
 import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
-import com.dodo.room.domain.Room;
 import com.dodo.user.domain.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.NoSuchElementException;
 

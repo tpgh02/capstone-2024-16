@@ -21,15 +21,18 @@ spring:
     ansi:
       enabled: always
 
+  profiles:
+    include: private
+
 
 authentication:
   access-token:
     secretKey: "136314nj6134lk6n413kvb"
 
 
-# 실제 이미지 저장 경로
-imagepath : "/Users/nohyeongjun/Documents/dodo/backend/src/main/resources/images/"
+
 
 #server:
 #  error:
 #    include-message: always
+
