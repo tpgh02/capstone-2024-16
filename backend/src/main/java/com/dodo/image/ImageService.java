@@ -53,12 +53,11 @@ public class ImageService {
         String extention = originalFilename.substring(originalFilename.lastIndexOf(".")); //확장자 명
 
         String s3FileName = UUID.randomUUID().toString().substring(0, 10) + originalFilename; //변경된 파일 명
-
         InputStream is = img.getInputStream();
         byte[] bytes = IOUtils.toByteArray(is); //image를 byte[]로 변환
 
         ObjectMetadata metadata = new ObjectMetadata(); //metadata 생성
-        metadata.setContentType("image/" + "jpeg"); // jpeg 이면 바로보기, 다른것들은 바로 다운로드 된다
+        metadata.setContentType("image/" + "jpeg"); // jpeg 이면 바로보기, or extention 다른것들은 바로 다운로드 된다
         metadata.setContentLength(bytes.length);
 
         //S3에 요청할 때 사용할 byteInputStream 생성

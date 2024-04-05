@@ -1,6 +1,5 @@
 package com.dodo.room.dto;
 
-import com.dodo.certification.domain.Certification;
 import com.dodo.certification.domain.CertificationStatus;
 import com.dodo.image.domain.Image;
 import com.dodo.roomuser.domain.RoomUser;
