@@ -1,6 +1,7 @@
 import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({super.key});
@@ -11,6 +12,8 @@ class MyPage extends StatefulWidget {
 
 class _MyPageState extends State<MyPage> {
   @override
+  XFile? _pickedFile;
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: LIGHTGREY,
@@ -49,9 +52,7 @@ class _MyPageState extends State<MyPage> {
               ),
             ),
           ),
-          // const Expanded(
-          //   child: const SizedBox(width: 1),
-          // ),
+
           // 닉네임
           Expanded(
             child: SizedBox(
@@ -78,7 +79,10 @@ class _MyPageState extends State<MyPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // 프로필 수정
-          Expanded(flex: 1, child: MyPageButton(onTap: () {}, label: "프로필 수정")),
+          Expanded(
+              flex: 1,
+              child: MyPageButton(
+                  onTap: () => editProfileDialog(), label: "프로필 수정")),
           const SizedBox(
             width: 15,
           ),
@@ -88,6 +92,214 @@ class _MyPageState extends State<MyPage> {
             child: MyPageButton(onTap: () => logoutDialog(), label: "로그아웃"),
           ),
         ],
+      ),
+    );
+  }
+
+  // 프로필 수정 다이얼로그
+  void editProfileDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: ((context) {
+        return AlertDialog(
+          backgroundColor: LIGHTGREY,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          title: const Text(
+            "프로필 수정",
+            style: TextStyle(fontWeight: FontWeight.bold, color: POINT_COLOR),
+          ),
+          content: Row(
+            children: [
+              // if (_pickedFile == null)
+              // 프로필 사진 및 수정
+              Flexible(
+                child: Stack(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      child: SizedBox(
+                        width: 120,
+                        height: 120,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: const Image(
+                              image: AssetImage(
+                                  'assets/images/Turtle_noradius.png')),
+                        ),
+                      ),
+                    ),
+                    // 카메라 아이콘
+                    Positioned(
+                      bottom: 5,
+                      right: 25,
+                      child: InkWell(
+                        onTap: () => showModalBottomSheet(
+                            context: context,
+                            builder: ((builder) => editProfilePic())),
+                        child: const Icon(
+                          Icons.camera_enhance,
+                          color: PRIMARY_COLOR,
+                          size: 40,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // 닉네임
+              Expanded(
+                child: SizedBox(
+                  width: 200,
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: PRIMARY_COLOR,
+                          width: 5.0,
+                        ),
+                      ),
+                      labelText: ('변경할 닉네임'),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            OutlinedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); //창 닫기
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: POINT_COLOR,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                side: const BorderSide(
+                  color: POINT_COLOR,
+                  width: 1.0,
+                ),
+              ),
+              child: const Text(
+                "수정",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            OutlinedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); //창 닫기
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: POINT_COLOR,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                side: const BorderSide(
+                  color: POINT_COLOR,
+                  width: 1.0,
+                ),
+              ),
+              child: const Text("취소",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
+  // 프로필 사진 수정 팝업
+  Widget editProfilePic() {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+      ),
+      height: 180,
+      width: MediaQuery.of(context).size.width,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const Text(
+              '프로필 사진을 선택해주세요.',
+              style: TextStyle(
+                color: POINT_COLOR,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                TextButton(
+                  onPressed: () {},
+                  child: const Column(
+                    children: [
+                      Icon(
+                        Icons.camera_alt_rounded,
+                        color: POINT_COLOR,
+                        size: 40,
+                      ),
+                      Text(
+                        '카메라',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: POINT_COLOR,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Column(
+                    children: [
+                      Icon(
+                        Icons.photo,
+                        color: POINT_COLOR,
+                        size: 40,
+                      ),
+                      Text(
+                        '앨범',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: POINT_COLOR,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Column(
+                    children: [
+                      Icon(
+                        Icons.cancel,
+                        color: POINT_COLOR,
+                        size: 40,
+                      ),
+                      Text(
+                        '기본 이미지',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: POINT_COLOR,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -203,11 +415,6 @@ class MyPageSetting extends StatelessWidget {
             title: const Text('계정 설정'),
             tiles: [
               SettingsTile.navigation(
-                title: const Text('이메일 변경'),
-                leading: const Icon(Icons.mail_outline),
-                onPressed: ((context) {}),
-              ),
-              SettingsTile.navigation(
                 title: const Text('비밀번호 변경'),
                 leading: const Icon(Icons.key),
                 onPressed: ((context) {}),
@@ -272,7 +479,7 @@ class MyPageSetting extends StatelessWidget {
     );
   }
 
-// 다크 모드 설정
+// 다크 모드 설정 -> 삭제 예정
   void darkModeDialog(BuildContext context) {
     showDialog(
       context: context,
