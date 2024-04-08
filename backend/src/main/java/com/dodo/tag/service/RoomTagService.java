@@ -4,6 +4,7 @@ package com.dodo.tag.service;
 import com.dodo.exception.NotFoundException;
 import com.dodo.room.RoomRepository;
 import com.dodo.room.domain.Room;
+import com.dodo.room.dto.RoomData;
 import com.dodo.tag.domain.Tag;
 import com.dodo.tag.domain.RoomTag;
 import com.dodo.tag.repository.RoomTagRepository;
@@ -40,6 +41,15 @@ public class RoomTagService {
 
     public void deleteRoomTag(RoomTag roomTag) {
         roomTagRepository.delete(roomTag);
+    }
 
+    public List<RoomData> getRoomListByTag(String tagName){
+        Tag tag = tagRepository.findByName(tagName).orElse(null);
+        List<RoomTag> roomTags = roomTagRepository.findAllByTag(tag).orElseThrow(NotFoundException::new);
+
+        return roomTags.stream()
+                .map(RoomTag::getRoom)
+                .map(RoomData::of)
+                .toList();
     }
 }

@@ -2,8 +2,7 @@ package com.dodo.room;
 
 import com.dodo.config.auth.CustomAuthentication;
 import com.dodo.room.dto.RoomData;
-import com.dodo.room.dto.UserData;
-import com.dodo.tag.domain.RoomTag;
+import com.dodo.room.dto.UserData;;
 import com.dodo.tag.repository.RoomTagRepository;
 import com.dodo.tag.service.RoomTagService;
 import com.dodo.user.domain.UserContext;
@@ -19,7 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/v1/room")
@@ -89,7 +91,7 @@ public class RoomController {
     }
 
     // 비공개 인증방 입장시 비밀번호 확인 절차
-    @PostMapping("/confirmPwd/{roomId}")
+    @GetMapping("/confirmPwd/{roomId}")
     @ResponseBody
     public Boolean confirmPwd(@PathVariable Long roomId, @RequestParam String roomPwd){
         return roomService.confirmPwd(roomId, roomPwd);
@@ -217,4 +219,18 @@ public class RoomController {
             return "유저가 인증방에서 삭제되지 않았습니다.." ;
         }
     }
+
+    // 인증방 제목으로 검색
+    @GetMapping("/search-room")
+    @ResponseBody
+    public List<RoomData> getRoomListByNameAndTag(@RequestParam String string) {
+        List<RoomData> roomListByName = roomService.getRoomListByName(string);
+        List<RoomData> roomListByTag = roomTagService.getRoomListByTag(string);
+
+        return Stream.of(roomListByName, roomListByTag)
+                .flatMap(Collection::stream)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
 }

@@ -171,7 +171,6 @@ public class RoomService {
     public void repel(Long roomId, UserContext userContext, Long userId){
         Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
         User manager = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
-        User user = userRepository.findById(userId).orElseThrow(NotFoundException::new);
         RoomUser roomManager = roomUserRepository.findByUserAndRoom(manager, room).orElseThrow(NotFoundException::new);
 
         if (!roomManager.getIsManager()) {
@@ -181,5 +180,13 @@ public class RoomService {
             minusUserCnt(roomId);
         }
 
+    }
+
+    // 인증방 제목으로 검색
+    public List<RoomData> getRoomListByName(String name){
+        return roomRepository.findAllByNameContaining(name).orElseThrow(NotFoundException::new)
+                .stream()
+                .map(RoomData::of)
+                .toList();
     }
 }
