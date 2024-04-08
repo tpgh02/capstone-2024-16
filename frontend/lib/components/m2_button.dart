@@ -1,5 +1,6 @@
 import 'package:dodo/components/m2_tabbar.dart';
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/screen/report_screen.dart';
 import 'package:flutter/material.dart';
 
 class m2_button extends StatefulWidget {
@@ -17,42 +18,91 @@ class _m2_button extends State<m2_button> {
   ];
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12), color: Colors.white),
-        child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: [
-                Text(
-                  "리포트를 받고 싶다면?",
-                  style: TextStyle(fontFamily: "bm", fontSize: 25),
-                ),
-                Icon(
-                  Icons.local_post_office_sharp,
-                  color: Colors.blue,
-                  size: 100,
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Container(
-                    width: double.infinity,
-                    height: 40,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: Text(
-                        "보러가기",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'bm',
-                            fontSize: 20),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: PRIMARY_COLOR,
-                      ),
-                    )),
-              ],
-            )));
+    return Column(
+      children: [
+        Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12), color: Colors.white),
+            child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    Text(
+                      "리포트를 받고 싶다면?",
+                      style: TextStyle(fontFamily: "bm", fontSize: 25),
+                    ),
+                    Icon(
+                      Icons.local_post_office_sharp,
+                      color: POINT_COLOR,
+                      size: 100,
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                        width: double.infinity,
+                        height: 40,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => reportPage()));
+                          },
+                          child: Text(
+                            "보러가기",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'bm',
+                                fontSize: 20),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: PRIMARY_COLOR,
+                          ),
+                        )),
+                  ],
+                ))),
+        SizedBox(
+          height: 10,
+        ),
+        Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12), color: Colors.white),
+            child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    Text(
+                      "사진을 받고 싶다면?",
+                      style: TextStyle(fontFamily: "bm", fontSize: 25),
+                    ),
+                    Icon(
+                      Icons.photo,
+                      color: POINT_COLOR,
+                      size: 100,
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                        width: double.infinity,
+                        height: 40,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          child: Text(
+                            "보러가기",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'bm',
+                                fontSize: 20),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: PRIMARY_COLOR,
+                          ),
+                        )),
+                  ],
+                ))),
+      ],
+    );
   }
 }

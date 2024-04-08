@@ -1,6 +1,7 @@
 import 'package:dodo/screen/findpass_screen.dart';
 import 'package:dodo/screen/login_screen.dart';
 import 'package:dodo/screen/main2_screen.dart';
+import 'package:dodo/screen/report_screen.dart';
 import 'package:dodo/screen/room_join.dart';
 import 'package:dodo/screen/signup_screen.dart';
 import 'package:dodo/components/certification.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: main2Page(), //Certification("hello"),
+      home: mainPage(), //Certification("hello"),
     );
   }
 }
