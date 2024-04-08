@@ -16,18 +16,21 @@ class _roomListState extends State<room_list> {
       "room_img": "assets/images/cook.jpg",
       "room_mem": 10,
       "room_maxmem": 20,
+      "is_manager": true,
     },
     {
       "room_title": "오운완",
       "room_img": "assets/images/turtle_noradius.png",
       "room_mem": 5,
       "room_maxmem": 20,
+      "is_manager": false,
     },
     {
       "room_title": "H.O.T",
       "room_img": "assets/images/turtle_noradius.png",
       "room_mem": 10,
       "room_maxmem": 20,
+      "is_manager": true,
     },
   ];
 
@@ -66,6 +69,7 @@ class _roomListState extends State<room_list> {
                                     room_title: postList[num]["room_title"],
                                     room_mem: postList[num]["room_mem"],
                                     room_maxmem: postList[num]["room_maxmem"],
+                                    is_manager: postList[num]["is_manager"],
                                   )));
                     },
                     child: Column(

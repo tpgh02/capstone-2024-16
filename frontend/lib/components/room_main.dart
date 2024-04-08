@@ -1,4 +1,6 @@
 import 'package:dodo/components/certification.dart';
+import 'package:dodo/components/roomset_basic.dart';
+import 'package:dodo/components/roomset_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:dodo/const/colors.dart';
 
@@ -6,11 +8,13 @@ class room_main extends StatefulWidget {
   final String? room_title;
   final int? room_mem;
   final int? room_maxmem;
+  final bool is_manager;
   const room_main(
       {super.key,
       required this.room_title,
       required this.room_mem,
-      required this.room_maxmem});
+      required this.room_maxmem,
+      required this.is_manager});
 
   @override
   State<room_main> createState() => _roomMainState();
@@ -21,10 +25,11 @@ class _roomMainState extends State<room_main> {
   Widget build(BuildContext context) {
     String? room_title = widget.room_title;
     int? room_mem = widget.room_mem;
+    bool is_manager = widget.is_manager;
     // int? room_maxmem = widget.room_maxmem;
 
     return Scaffold(
-      appBar: _roomMainAppBar(room_title),
+      appBar: _roomMainAppBar(room_title, manager: is_manager),
       backgroundColor: LIGHTGREY,
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -55,7 +60,7 @@ class _roomMainState extends State<room_main> {
     );
   }
 
-  PreferredSizeWidget _roomMainAppBar(String? title) {
+  PreferredSizeWidget _roomMainAppBar(String? title, {bool manager = false}) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(80),
       child: Container(
@@ -97,7 +102,23 @@ class _roomMainState extends State<room_main> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (manager) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RoomSetting_Manager(),
+                        ),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RoomSetting_Basic(),
+                        ),
+                      );
+                    }
+                  },
                   icon: const Icon(
                     Icons.settings_outlined,
                     color: PRIMARY_COLOR,
