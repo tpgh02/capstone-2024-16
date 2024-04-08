@@ -254,6 +254,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "percent_indicator",
+      "rootUri": "file:///C:/Users/happy/AppData/Local/Pub/Cache/hosted/pub.dev/percent_indicator-4.2.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "petitparser",
       "rootUri": "file:///C:/Users/happy/AppData/Local/Pub/Cache/hosted/pub.dev/petitparser-5.4.0",
       "packageUri": "lib/",
@@ -368,7 +374,7 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2024-04-04T01:48:00.505547Z",
+  "generated": "2024-04-08T10:41:54.684777Z",
   "generator": "pub",
   "generatorVersion": "3.3.1"
 }
