@@ -1,4 +1,5 @@
 import 'package:dodo/screen/findpass_screen.dart';
+import 'package:dodo/screen/gallery_screen.dart';
 import 'package:dodo/screen/login_screen.dart';
 import 'package:dodo/screen/main2_screen.dart';
 import 'package:dodo/screen/report_screen.dart';

@@ -1,5 +1,6 @@
 import 'package:dodo/components/m2_tabbar.dart';
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/screen/gallery_screen.dart';
 import 'package:dodo/screen/report_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -88,7 +89,12 @@ class _m2_button extends State<m2_button> {
                         width: double.infinity,
                         height: 40,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => galleryPage()));
+                          },
                           child: Text(
                             "보러가기",
                             style: TextStyle(
