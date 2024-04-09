@@ -31,7 +31,6 @@ public class ImageService {
     private final List<String> allowedExtentionList = Arrays.asList("jpg", "jpeg", "png", "gif");
     private final String DEFAULT_IMAGE_URL = "https://my-dodo-bucket.s3.ap-northeast-2.amazonaws.com/image/default.png";
 
-    @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 
 
@@ -94,6 +93,7 @@ public class ImageService {
 
     @PostConstruct
     private void updateDefaultImage() {
+        bucketName = System.getenv().get("S3_BUCKET");
         imageRepository.save(new Image(DEFAULT_IMAGE_URL));
     }
 
