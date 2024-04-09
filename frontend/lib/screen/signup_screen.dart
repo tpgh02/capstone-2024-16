@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dodo/components/l_title.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/screen/login_screen.dart';
 import 'package:flutter/material.dart';
@@ -82,10 +83,8 @@ class _SignupPageState extends State<SignupPage> {
                 child: ListView(
                   shrinkWrap: true,
                   children: [
-                    const Text(
-                      '회원가입',
-                      style: TextStyle(fontFamily: 'kcc', fontSize: 30),
-                    ),
+                    l_title("회원가입"),
+
                     const SizedBox(
                       height: 20,
                     ),

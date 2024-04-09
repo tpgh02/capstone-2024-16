@@ -1,4 +1,5 @@
 import 'package:dodo/components/m2_board.dart';
+import 'package:dodo/components/m2_button.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -21,31 +22,44 @@ class _main2PageState extends State<main2Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: LIGHTGREY,
+      body: SingleChildScrollView(
+        child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
 
-            children: [
-              Container(
-                margin: const EdgeInsets.all(15),
-                child: Row(
-                  children: [
-                    _roomBtn(),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    const Text(
-                      "에서 나는?",
-                      style: TextStyle(
-                          fontSize: 30, fontFamily: 'kcc', color: POINT_COLOR),
-                    ),
-                  ],
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(15),
+                  child: Row(
+                    children: [
+                      _roomBtn(),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      const Text(
+                        "에서 나는?",
+                        style: TextStyle(
+                            fontSize: 30,
+                            fontFamily: 'kcc',
+                            color: POINT_COLOR),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              m2_board(),
-            ],
-          )),
+                m2_board(),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: double.infinity,
+                  //color: Colors.blue,
+                  child: m2_button(),
+                ),
+              ],
+            )),
+      ),
     );
   }
 
