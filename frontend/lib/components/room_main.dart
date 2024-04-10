@@ -1,13 +1,14 @@
 import 'package:dodo/components/certification.dart';
+import 'package:dodo/components/room_userlist.dart';
 import 'package:dodo/components/roomset_basic.dart';
 import 'package:dodo/components/roomset_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:dodo/const/colors.dart';
 
 class room_main extends StatefulWidget {
-  final String? room_title;
-  final int? room_mem;
-  final int? room_maxmem;
+  final String room_title;
+  final int room_mem;
+  final int room_maxmem;
   final bool is_manager;
   const room_main(
       {super.key,
@@ -34,27 +35,29 @@ class _roomMainState extends State<room_main> {
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 25,
-            ),
-            // 목표 기한
-            _d_day(room_title),
-            Container(
-              margin: const EdgeInsets.all(15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  // 도전 완료 사용자 수
-                  _certificated_person(room_mem),
-                  // 인증하기 버튼
-
-                  _certification_button(),
-                ],
+        child: Container(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 25,
               ),
-            )
-          ],
+              // 목표 기한
+              _d_day(room_title),
+              Container(
+                margin: const EdgeInsets.all(15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    // 도전 완료 사용자 수
+                    _certificated_person(room_mem),
+                    // 인증하기 버튼
+                    _certification_button(),
+                  ],
+                ),
+              ),
+              RoomUserList(),
+            ],
+          ),
         ),
       ),
     );
