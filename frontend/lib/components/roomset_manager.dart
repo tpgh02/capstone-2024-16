@@ -38,10 +38,11 @@ class RoomSetting_Manager extends StatelessWidget {
                       leading: const Icon(Icons.person),
                       onPressed: ((context) {}),
                     ),
-                    SettingsTile.navigation(
+                    SettingsTile.switchTile(
                       title: const Text('채팅 기능 활성화'),
                       leading: const Icon(Icons.chat),
-                      onPressed: ((context) {}),
+                      onToggle: ((context) {}),
+                      initialValue: true,
                     ),
                     SettingsTile.navigation(
                       title: const Text('인증방 해체하기'),
