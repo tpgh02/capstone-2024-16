@@ -1,4 +1,5 @@
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/screen/store_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -16,25 +17,25 @@ class _seaPageState extends State<seaPage> {
     return Container(
       key: widgetkey,
       child: Stack(children: [
-        // Image.asset(
-        //   "../assets/images/sea.png",
-        //   //fit: BoxFit.contain,
+        Image.asset(
+          "../assets/images/sea.png",
+          //fit: BoxFit.contain,
+        ),
+        // ClipRRect(
+        //   borderRadius: BorderRadius.circular(20),
+        //   child: Image.asset(
+        //     '../assets/sea.png',
+        //     fit: BoxFit.cover,
+        //   ),
         // ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Image.asset(
-            'assets/sea.png',
-            fit: BoxFit.cover,
-          ),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: AssetImage('assets/sea.png'), // 배경 이미지
-            ),
-          ),
-        ),
+        // Container(
+        //   decoration: BoxDecoration(
+        //     image: DecorationImage(
+        //       fit: BoxFit.cover,
+        //       image: AssetImage('assets/sea.png'), // 배경 이미지
+        //     ),
+        //   ),
+        // ),
         Container(
           // color: Colors.red,
           padding: EdgeInsets.fromLTRB(150, 300, 150, 200),
@@ -47,27 +48,28 @@ class _seaPageState extends State<seaPage> {
             ),
           ),
         ),
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: Container(
-            width: 70,
-            height: 70,
-            margin: EdgeInsets.all(20),
-            child: FloatingActionButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100)),
-              onPressed: () {},
-              backgroundColor: PRIMARY_COLOR,
-              heroTag: "actionButton",
-              child: Text(
-                "업적",
-                style: TextStyle(
-                    fontFamily: 'bm', fontSize: 20, color: Colors.white),
-              ),
-              elevation: 1,
-            ),
-          ),
-        ),
+        //업적
+        // Align(
+        //   alignment: Alignment.bottomLeft,
+        //   child: Container(
+        //     width: 70,
+        //     height: 70,
+        //     margin: EdgeInsets.all(20),
+        //     child: FloatingActionButton(
+        //       shape: RoundedRectangleBorder(
+        //           borderRadius: BorderRadius.circular(100)),
+        //       onPressed: () {},
+        //       backgroundColor: PRIMARY_COLOR,
+        //       heroTag: "actionButton",
+        //       child: Text(
+        //         "업적",
+        //         style: TextStyle(
+        //             fontFamily: 'bm', fontSize: 20, color: Colors.white),
+        //       ),
+        //       elevation: 1,
+        //     ),
+        //   ),
+        // ),
         Align(
           alignment:
               Alignment(Alignment.bottomRight.x, Alignment.bottomRight.y - 0.3),
@@ -99,7 +101,10 @@ class _seaPageState extends State<seaPage> {
             child: FloatingActionButton(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(100)),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => storePage()));
+              },
               backgroundColor: PRIMARY_COLOR,
               heroTag: "actionButton",
               child: Text(
