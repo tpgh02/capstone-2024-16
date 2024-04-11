@@ -28,6 +28,8 @@ authentication:
   access-token:
     secretKey: ${JWT_SECRET}
 
+ai:
+  server-url: "SDFSDFSDFDS"
 #server:
 #  error:
 #    include-message: always
