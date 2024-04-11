@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface CertificationRepository extends JpaRepository<Certification, Long> {
     List<Certification> findAllByRoomUserIn(List<RoomUser> roomUserList);
+    List<Certification> findAllByRoomUser(RoomUser roomuser);
 }
