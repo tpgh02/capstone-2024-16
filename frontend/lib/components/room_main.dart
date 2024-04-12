@@ -1,5 +1,5 @@
 import 'package:dodo/components/certification.dart';
-import 'package:dodo/components/room_userlist.dart';
+import 'package:dodo/components/roomuser_list.dart';
 import 'package:dodo/components/roomset_basic.dart';
 import 'package:dodo/components/roomset_manager.dart';
 import 'package:flutter/material.dart';
@@ -32,32 +32,29 @@ class _roomMainState extends State<room_main> {
     return Scaffold(
       appBar: _roomMainAppBar(room_title, manager: is_manager),
       backgroundColor: LIGHTGREY,
+      floatingActionButton: chattingRoom(),
       body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Container(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 25,
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 25,
+            ),
+            // 목표 기한
+            _d_day(room_title),
+            Container(
+              margin: const EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  // 도전 완료 사용자 수
+                  _certificated_person(room_mem),
+                  // 인증하기 버튼
+                  _certification_button(),
+                ],
               ),
-              // 목표 기한
-              _d_day(room_title),
-              Container(
-                margin: const EdgeInsets.all(15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    // 도전 완료 사용자 수
-                    _certificated_person(room_mem),
-                    // 인증하기 버튼
-                    _certification_button(),
-                  ],
-                ),
-              ),
-              RoomUserList(),
-            ],
-          ),
+            ),
+            RoomUserList(),
+          ],
         ),
       ),
     );
@@ -143,11 +140,13 @@ class _roomMainState extends State<room_main> {
         color: const Color.fromARGB(199, 193, 208, 214),
       ),
       height: 100,
+      margin: const EdgeInsets.fromLTRB(28, 0, 28, 0),
       padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
       child: Row(
         children: [
           const Icon(
             Icons.lightbulb_outline_rounded,
+            color: POINT_COLOR,
             size: 40,
           ),
           const SizedBox(width: 20),
@@ -158,6 +157,7 @@ class _roomMainState extends State<room_main> {
               Text(
                 "$title의 목표기한",
                 style: const TextStyle(
+                  color: POINT_COLOR,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -165,6 +165,7 @@ class _roomMainState extends State<room_main> {
               Text(
                 "D - 30",
                 style: const TextStyle(
+                  color: POINT_COLOR,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -241,6 +242,30 @@ class _roomMainState extends State<room_main> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Container chattingRoom() {
+    return Container(
+      height: 80,
+      width: 80,
+      margin: const EdgeInsets.all(5),
+      child: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: PRIMARY_COLOR,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(100),
+          side: const BorderSide(
+            color: Color(0xffefefef),
+            width: 3,
+          ),
+        ),
+        child: const Icon(
+          Icons.chat,
+          color: Color(0xffefefef),
+          size: 35,
         ),
       ),
     );

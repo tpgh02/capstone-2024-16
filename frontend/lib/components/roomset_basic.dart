@@ -18,6 +18,11 @@ class RoomSetting_Basic extends StatelessWidget {
                 sections: [
                   SettingsSection(
                     tiles: [
+                      SettingsTile(
+                        title: const Text('방 ID'),
+                        value: const Text('01234567'),
+                        leading: const Icon(Icons.vpn_key),
+                      ),
                       SettingsTile.navigation(
                         title: const Text('인증방 정보'),
                         leading: const Icon(Icons.info_outline),

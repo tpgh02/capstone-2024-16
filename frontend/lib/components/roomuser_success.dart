@@ -1,13 +1,13 @@
 import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 
-class RoomUserDefault extends StatelessWidget {
+class RoomUserSuccess extends StatelessWidget {
   final String user_name;
   final String user_img;
   final int upload_imgs;
   final int required_imgs;
 
-  const RoomUserDefault(
+  const RoomUserSuccess(
       this.user_name, this.user_img, this.upload_imgs, this.required_imgs);
 
   @override
@@ -15,7 +15,7 @@ class RoomUserDefault extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Colors.white70,
+        color: PRIMARY_COLOR,
       ),
       height: 100,
       width: MediaQuery.of(context).size.width,
@@ -46,7 +46,7 @@ class RoomUserDefault extends StatelessWidget {
                   Text(
                     user_name,
                     style: const TextStyle(
-                        color: POINT_COLOR,
+                        color: Color(0xffefefef),
                         fontSize: 24,
                         fontWeight: FontWeight.w500),
                   ),
@@ -55,7 +55,7 @@ class RoomUserDefault extends StatelessWidget {
                       Text(
                         '$upload_imgs / $required_imgs',
                         style: const TextStyle(
-                          color: POINT_COLOR,
+                          color: Color(0xffefefef),
                           fontSize: 15,
                         ),
                       ),
@@ -64,6 +64,11 @@ class RoomUserDefault extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+          const Icon(
+            Icons.check_circle,
+            color: Color(0xffefefef),
+            size: 50,
           ),
         ],
       ),

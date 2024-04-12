@@ -18,6 +18,11 @@ class RoomSetting_Manager extends StatelessWidget {
               sections: [
                 SettingsSection(
                   tiles: [
+                    SettingsTile(
+                      title: const Text('방 ID'),
+                      value: const Text('01234567'),
+                      leading: const Icon(Icons.vpn_key),
+                    ),
                     SettingsTile.navigation(
                       title: const Text('인증방 제목/소개/태그 변경'),
                       leading: const Icon(Icons.edit),
