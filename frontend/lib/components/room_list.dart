@@ -16,6 +16,7 @@ class _roomListState extends State<room_list> {
       "room_img": "assets/images/cook.jpg",
       "room_mem": 10,
       "room_maxmem": 20,
+      "canChat": true,
       "is_manager": true,
     },
     {
@@ -23,6 +24,7 @@ class _roomListState extends State<room_list> {
       "room_img": "assets/images/turtle_noradius.png",
       "room_mem": 5,
       "room_maxmem": 20,
+      "canChat": false,
       "is_manager": false,
     },
     {
@@ -30,6 +32,7 @@ class _roomListState extends State<room_list> {
       "room_img": "assets/images/turtle_noradius.png",
       "room_mem": 10,
       "room_maxmem": 20,
+      "canChat": true,
       "is_manager": true,
     },
   ];
@@ -69,6 +72,7 @@ class _roomListState extends State<room_list> {
                                     room_title: postList[num]["room_title"],
                                     room_mem: postList[num]["room_mem"],
                                     room_maxmem: postList[num]["room_maxmem"],
+                                    canChat: postList[num]["canChat"],
                                     is_manager: postList[num]["is_manager"],
                                   )));
                     },

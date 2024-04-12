@@ -1,4 +1,5 @@
 import 'package:dodo/components/certification.dart';
+import 'package:dodo/components/room_chatscreen.dart';
 import 'package:dodo/components/roomuser_list.dart';
 import 'package:dodo/components/roomset_basic.dart';
 import 'package:dodo/components/roomset_manager.dart';
@@ -9,12 +10,14 @@ class room_main extends StatefulWidget {
   final String room_title;
   final int room_mem;
   final int room_maxmem;
+  final bool canChat;
   final bool is_manager;
   const room_main(
       {super.key,
       required this.room_title,
       required this.room_mem,
       required this.room_maxmem,
+      required this.canChat,
       required this.is_manager});
 
   @override
@@ -24,15 +27,16 @@ class room_main extends StatefulWidget {
 class _roomMainState extends State<room_main> {
   @override
   Widget build(BuildContext context) {
-    String? room_title = widget.room_title;
-    int? room_mem = widget.room_mem;
+    String room_title = widget.room_title;
+    int room_mem = widget.room_mem;
+    bool canChat = widget.canChat;
     bool is_manager = widget.is_manager;
-    // int? room_maxmem = widget.room_maxmem;
 
     return Scaffold(
       appBar: _roomMainAppBar(room_title, manager: is_manager),
       backgroundColor: LIGHTGREY,
-      floatingActionButton: chattingRoom(),
+      floatingActionButton:
+          canChat ? chattingRoom(room_title, is_manager) : null,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -60,7 +64,7 @@ class _roomMainState extends State<room_main> {
     );
   }
 
-  PreferredSizeWidget _roomMainAppBar(String? title, {bool manager = false}) {
+  PreferredSizeWidget _roomMainAppBar(String title, {bool manager = false}) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(80),
       child: Container(
@@ -85,7 +89,7 @@ class _roomMainState extends State<room_main> {
                 color: PRIMARY_COLOR,
               ),
               title: Text(
-                "$title",
+                title,
                 style: const TextStyle(
                   color: PRIMARY_COLOR,
                   fontFamily: "bm",
@@ -247,13 +251,21 @@ class _roomMainState extends State<room_main> {
     );
   }
 
-  Container chattingRoom() {
+  Container chattingRoom(String title, bool manager) {
     return Container(
       height: 80,
       width: 80,
       margin: const EdgeInsets.all(5),
       child: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  RoomChatScreen(room_title: title, is_manager: manager),
+            ),
+          );
+        },
         backgroundColor: PRIMARY_COLOR,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(100),
