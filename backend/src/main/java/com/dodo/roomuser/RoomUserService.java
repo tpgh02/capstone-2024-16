@@ -1,6 +1,7 @@
 package com.dodo.roomuser;
 
 import com.dodo.exception.NotFoundException;
+import com.dodo.room.RoomRepository;
 import com.dodo.room.domain.Room;
 import com.dodo.roomuser.domain.RoomUser;
 import com.dodo.user.UserRepository;
@@ -17,9 +18,13 @@ public class RoomUserService {
 
     private final RoomUserRepository roomUserRepository;
     private final UserRepository userRepository;
+    private final RoomRepository roomRepository;
 
-    public void createRoomUser(UserContext userContext, Room room) {
+    public void createRoomUser(UserContext userContext, Long roomId) {
+        Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
+        log.info("room ok");
         User user = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
+        log.info("user ok");
         RoomUser roomUser = RoomUser.builder()
                 .user(user)
                 .room(room)
@@ -37,7 +42,10 @@ public class RoomUserService {
     }
 
     // 룸유저 연결 엔티티 삭제
-    public void deleteChatRoomUser(Room room, User user){
+    public void deleteChatRoomUser(Long roomId, Long userId){
+        Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
+        User user = userRepository.findById(userId).orElseThrow(NotFoundException::new);
+
         RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)
                 .orElse(null);
         if (roomUser == null) {

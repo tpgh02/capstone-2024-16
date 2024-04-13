@@ -21,7 +21,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -52,9 +51,25 @@ public class RoomService {
                 .toList();
     }
 
+    // 인증방 제목으로 검색
+    public List<RoomData> getRoomListByName(String name){
+        return roomRepository.findAllByNameContaining(name).orElseThrow(NotFoundException::new)
+                .stream()
+                .map(RoomData::of)
+                .toList();
+    }
+
+    // 인증방 아이디로 검색
+    public List<RoomData> getRoomListById(Long roomId){
+        return roomRepository.findAllById(roomId).orElseThrow(NotFoundException::new)
+                .stream()
+                .map(RoomData::of)
+                .toList();
+    }
+
     // 채팅방 생성
     public Room creatChatRoom(String roomName, String roomPwd, Long maxUserCnt, Category category,
-                              String info, String hashtag, CertificationType certificationType,
+                              String info, CertificationType certificationType,
                               Boolean canChat, Integer numOfVoteSuccess, Integer numOfVoteFail,
                               Integer frequency, Periodicity periodicity, LocalDateTime endDate){
         Room room = Room.builder()
@@ -64,7 +79,6 @@ public class RoomService {
                 .nowUser(1L)
                 .category(category)
                 .info(info)
-                .tag(hashtag)
                 .certificationType(certificationType)
                 .periodicity(periodicity)
                 .canChat(canChat)
@@ -104,7 +118,7 @@ public class RoomService {
             System.out.println("room = null");
             return;
         }
-        roomRepository.delete(room);
+        roomRepository.deleteById(roomId);
     }
 
     // 채팅방 공지 수정
@@ -132,16 +146,13 @@ public class RoomService {
 
         for (Room room : roomList){
 
-            log.info("before delete id : {}", room.getId());
             if (room.getEndDay().toLocalDate().isEqual(LocalDate.now(ZoneId.of("Asia/Seoul")))){
-                List<RoomUser> roomUserList = roomUserRepository.findAllByRoomId(room.getId()).orElseThrow(NotFoundException::new);
-                log.info("현재시간 : {}, 목표날짜 : {}", LocalDate.now(), room.getEndDay());
-                for (RoomUser ru : roomUserList) {
-                    roomUserService.deleteChatRoomUser(ru.getRoom(), ru.getUser());
-                }
+
+                roomUserRepository.findAllByRoomId(room.getId()).orElseThrow(NotFoundException::new).
+                        forEach(roomUser -> roomUserService.deleteChatRoomUser(roomUser.getRoom().getId(), roomUser.getUser().getId()));
                 deleteRoom(room.getId());
             }
-            log.info("after delete id : {}", roomRepository.findById(room.getId()).orElse(null));
+
         }
     }
 
@@ -162,7 +173,6 @@ public class RoomService {
                     roomData.getInfo(),
                     roomData.getEndDay(),
                     roomData.getMaxUser(),
-                    roomData.getTag(),
                     roomData.getCanChat(),
                     roomData.getNumOfVoteSuccess(),
                     roomData.getNumOfVoteFail(),
@@ -179,15 +189,15 @@ public class RoomService {
     public void repel(Long roomId, UserContext userContext, Long userId){
         Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
         User manager = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
-        User user = userRepository.findById(userId).orElseThrow(NotFoundException::new);
         RoomUser roomManager = roomUserRepository.findByUserAndRoom(manager, room).orElseThrow(NotFoundException::new);
 
         if (!roomManager.getIsManager()) {
             log.info("not manager");
         } else {
-            roomUserService.deleteChatRoomUser(room, user);
+            roomUserService.deleteChatRoomUser(roomId, userContext.getUserId());
             minusUserCnt(roomId);
         }
 
     }
+
 }
