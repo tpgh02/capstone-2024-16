@@ -49,6 +49,22 @@ public class RoomService {
                 .toList();
     }
 
+    // 인증방 제목으로 검색
+    public List<RoomData> getRoomListByName(String name){
+        return roomRepository.findAllByNameContaining(name).orElseThrow(NotFoundException::new)
+                .stream()
+                .map(RoomData::of)
+                .toList();
+    }
+
+    // 인증방 아이디로 검색
+    public List<RoomData> getRoomListById(Long roomId){
+        return roomRepository.findAllById(roomId).orElseThrow(NotFoundException::new)
+                .stream()
+                .map(RoomData::of)
+                .toList();
+    }
+
     // 채팅방 생성
     public Room creatChatRoom(String roomName, String roomPwd, Long maxUserCnt, Category category,
                               String info, CertificationType certificationType,
@@ -182,11 +198,4 @@ public class RoomService {
 
     }
 
-    // 인증방 제목으로 검색
-    public List<RoomData> getRoomListByName(String name){
-        return roomRepository.findAllByNameContaining(name).orElseThrow(NotFoundException::new)
-                .stream()
-                .map(RoomData::of)
-                .toList();
-    }
 }

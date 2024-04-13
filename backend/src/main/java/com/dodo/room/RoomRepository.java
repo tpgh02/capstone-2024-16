@@ -14,4 +14,6 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     List<Room> findAll();
 
     Optional<List<Room>> findAllByNameContaining(String name);
+
+    Optional<List<Room>> findAllById(Long id);
 }

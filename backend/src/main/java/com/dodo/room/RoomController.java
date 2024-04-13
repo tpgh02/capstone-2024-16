@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -226,11 +227,23 @@ public class RoomController {
     public List<RoomData> getRoomListByNameAndTag(@RequestParam String string) {
         List<RoomData> roomListByName = roomService.getRoomListByName(string);
         List<RoomData> roomListByTag = roomTagService.getRoomListByTag(string);
+        try {
+            List<RoomData> roomListById = roomService.getRoomListById(Long.parseLong(string));
 
-        return Stream.of(roomListByName, roomListByTag)
-                .flatMap(Collection::stream)
-                .distinct()
-                .collect(Collectors.toList());
+            return Stream.of(roomListByName, roomListByTag, roomListById)
+                    .flatMap(Collection::stream)
+                    .distinct()
+                    .collect(Collectors.toList());
+
+        } catch (NumberFormatException e) {
+
+            return Stream.of(roomListByName, roomListByTag)
+                    .flatMap(Collection::stream)
+                    .distinct()
+                    .collect(Collectors.toList());
+        }
+
+
     }
 
 }
