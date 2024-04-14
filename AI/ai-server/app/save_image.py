@@ -5,7 +5,7 @@ import urllib.request
 from urllib.error import URLError
 from fastapi import HTTPException
 
-def save_image(data):
+async def save_image(data):
     """
         request json format
         {
