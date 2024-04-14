@@ -17,13 +17,13 @@ class RoomChatScreen extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              '채팅방입니다.',
-              style: TextStyle(
+              '$room_title 채팅방입니다.',
+              style: const TextStyle(
                 fontSize: 80,
               ),
             ),
           ),
-          _TextInputForm(),
+          const _TextInputForm(),
         ],
       ),
     );
@@ -69,6 +69,7 @@ class RoomChatScreen extends StatelessWidget {
   }
 }
 
+// 하단 입력창
 class _TextInputForm extends StatelessWidget {
   const _TextInputForm({super.key});
 
@@ -77,11 +78,50 @@ class _TextInputForm extends StatelessWidget {
     return SafeArea(
       bottom: true,
       child: Container(
-        color: PRIMARY_COLOR,
+        constraints: const BoxConstraints(minHeight: 50),
+        decoration: ShapeDecoration(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: const BorderSide(
+              color: POINT_COLOR,
+              strokeAlign: BorderSide.strokeAlignInside,
+              width: 2,
+            ),
+          ),
+        ),
         margin: const EdgeInsets.all(10),
-        height: 50,
+        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
         width: MediaQuery.of(context).size.width,
-        child: TextFormField(),
+        child: Stack(
+          children: [
+            const TextField(
+              // focusNode:
+              // onChanged:
+              // controller:
+              maxLength: null,
+              maxLines: null,
+              textAlignVertical: TextAlignVertical.top,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(10),
+                hintText: ('메시지를 입력하세요.'),
+                enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+              ),
+            ),
+            Positioned(
+              bottom: 4,
+              right: -6,
+              child: IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.send,
+                  color: POINT_COLOR,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
