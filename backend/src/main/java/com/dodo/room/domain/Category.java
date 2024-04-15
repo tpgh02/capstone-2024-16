@@ -7,5 +7,4 @@ public enum Category {
     STUDY, // 학습
     DIET, // 식단
     ETC, // 기타
-
 }
