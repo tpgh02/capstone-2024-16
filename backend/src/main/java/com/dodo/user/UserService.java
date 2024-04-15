@@ -3,6 +3,8 @@ package com.dodo.user;
 import com.dodo.exception.NotFoundException;
 import com.dodo.image.ImageRepository;
 import com.dodo.image.domain.Image;
+import com.dodo.sea.service.SeaService;
+import com.dodo.sea.domain.Sea;
 import com.dodo.token.TokenService;
 import com.dodo.user.domain.AuthenticationType;
 import com.dodo.user.domain.PasswordAuthentication;
@@ -27,6 +29,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
     private final ImageRepository imageRepository;
+    private final SeaService seaService;
 
 
     @Transactional
@@ -51,7 +54,8 @@ public class UserService {
                 .introduceMessage("")
                 .build();
 
-
+        Sea sea = seaService.SaveSea(user);
+        user.setSea(sea);
         userRepository.save(user);
 
         if(request instanceof UserCreateRequestData.PasswordUserCreateRequestData) {

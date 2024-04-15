@@ -63,7 +63,6 @@ public class RoomController {
     // 인증방 생성
     @PostMapping("/create-room")
     @ResponseBody
-    @CustomAuthentication
     public RoomData createRoom(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext){
         Room room = roomService.creatChatRoom(roomData.getName(), roomData.getPwd(),
                 roomData.getMaxUser(), roomData.getCategory(), roomData.getInfo(),
