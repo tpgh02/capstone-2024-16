@@ -21,10 +21,11 @@ public class ApiExceptionAdvice {
         return new ErrorResult(HttpStatus.UNAUTHORIZED, e.getMessage());
     }
 
-    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler(Exception.class)
     public ErrorResult DefaultHandler(RuntimeException e) {
         e.printStackTrace();
         return new ErrorResult(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
+
 
 }
