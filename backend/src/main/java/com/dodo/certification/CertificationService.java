@@ -213,7 +213,9 @@ public class CertificationService {
         // -> roomuser와 함께 클래스에 넣어서 리스트를 만든다.
 
 
-        Map<RoomUser, List<Certification>> certificationMap = certificationRepository.findAllByRoomUserIn(roomUserList).stream()
+        Map<RoomUser, List<Certification>> certificationMap = certificationRepository.findAllByRoomUserIn(roomUserList)
+                .orElse(new ArrayList<>())
+                .stream()
                 .filter(c -> c.getCreatedTime()
                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                         .equals(todayString))
