@@ -24,8 +24,11 @@ async def study_result(data: StudyImage, response):
     
     # post result to Backend server
     try:
-        requests.post(f'{server_addr}/api/v1/certification/ai-result', json=json_result)
-    except requests.exceptions.HTTPError as e:
+        r = requests.post(f'{server_addr}/api/v1/certification/ai-result', json=json_result)
+        print("[POST Response]")
+        print("status code: ", r.status_code)
+        print("message: ", r.text)
+    except Exception as e:
         print("POST fail:", e)
     
 # original function
