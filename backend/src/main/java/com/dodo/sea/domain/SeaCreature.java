@@ -1,5 +1,6 @@
 package com.dodo.sea.domain;
 
+import com.dodo.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,7 +22,7 @@ public class SeaCreature {
     private Boolean activate;
 
     @ManyToOne
-    private Sea sea;
+    private User user;
 
     @ManyToOne
     private Creature creature;

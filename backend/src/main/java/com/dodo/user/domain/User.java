@@ -2,7 +2,7 @@ package com.dodo.user.domain;
 
 import com.dodo.image.domain.Image;
 import com.dodo.roomuser.domain.RoomUser;
-import com.dodo.sea.domain.Sea;
+import com.dodo.sea.domain.SeaCreature;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,8 +34,8 @@ public class User {
     private List<RoomUser> roomUsers;
 
     @Setter
-    @OneToOne
-    private Sea sea;
+    @OneToMany
+    private List<SeaCreature> seaCreatures;
 
     @ManyToOne
     private Image image;
