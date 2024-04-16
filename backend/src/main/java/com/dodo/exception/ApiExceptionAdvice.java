@@ -22,7 +22,7 @@ public class ApiExceptionAdvice {
     }
 
     @ExceptionHandler(Exception.class)
-    public ErrorResult DefaultHandler(RuntimeException e) {
+    public ErrorResult DefaultHandler(Exception e) {
         e.printStackTrace();
         return new ErrorResult(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
