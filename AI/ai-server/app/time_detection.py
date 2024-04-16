@@ -49,7 +49,7 @@ async def time_detection(data: StudyImage):
     # make json
     result = {}
     result['code'] = 200
-    result['messeage'] = "OK"
+    result['message'] = "OK"
     result['certification_id'] = id
     result['result'] = []
     
