@@ -1,6 +1,7 @@
 import 'package:dodo/components/items.dart';
 import 'package:dodo/screen/findpass_screen.dart';
 import 'package:dodo/screen/gallery_screen.dart';
+import 'package:dodo/screen/inventory_screen.dart';
 import 'package:dodo/screen/login_screen.dart';
 import 'package:dodo/screen/main2_screen.dart';
 import 'package:dodo/screen/report_screen.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: storePage(), //Certification("hello"),
+      home: invenPage(), //Certification("hello"),
     );
   }
 }

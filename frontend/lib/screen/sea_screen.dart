@@ -1,4 +1,5 @@
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/screen/inventory_screen.dart';
 import 'package:dodo/screen/store_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -80,11 +81,14 @@ class _seaPageState extends State<seaPage> {
             child: FloatingActionButton(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(100)),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => invenPage()));
+              },
               backgroundColor: PRIMARY_COLOR,
               heroTag: "actionButton",
               child: Text(
-                "인벤",
+                "보관함",
                 style: TextStyle(
                     fontFamily: 'bm', fontSize: 20, color: Colors.white),
               ),
