@@ -10,6 +10,8 @@ import com.dodo.exception.UnauthorizedException;
 import com.dodo.image.ImageService;
 import com.dodo.image.domain.Image;
 import com.dodo.room.RoomRepository;
+import com.dodo.room.domain.Category;
+import com.dodo.room.domain.CertificationType;
 import com.dodo.room.domain.Room;
 import com.dodo.roomuser.RoomUserRepository;
 import com.dodo.roomuser.domain.RoomUser;
@@ -20,7 +22,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -35,6 +43,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class CertificationService {
+
+    @Value("${ai.server-url}")
+    private String AI_SERVER_URL;
+
 
     private final CertificationRepository certificationRepository;
     private final UserRepository userRepository;
@@ -56,15 +68,55 @@ public class CertificationService {
 //        Room room = roomRepository.save(new Room());
 //        log.info("{}", image.getUrl());
 
-        Certification saved = certificationRepository.save(Certification.builder()
+        Certification certification = certificationRepository.save(Certification.builder()
                 .status(CertificationStatus.WAIT)
                 .roomUser(roomUser)
                 .image(image)
                 .voteUp(0)
                 .voteDown(0)
                 .build());
-        return new CertificationUploadResponseData(saved);
+
+        // 기상인증인 경우
+        if(room.getCategory() == Category.RISE) {
+            // TODO -> 시간이 잘 나오나?
+
+
+
+
+        }
+
+
+        // AI인증방인 경우 AI에 요청 보내기
+        if(room.getCertificationType() == CertificationType.AI) {
+            transferToAi(room, certification);
+        }
+
+        return new CertificationUploadResponseData(certification);
     }
+
+    // TODO
+    //  AI api URL
+    //  반환형식 확인.
+    //  전달해주면 바로 반환되는지 아니면 컨트롤러로 나중에 보내줄건지
+    private void transferToAi(Room room, Certification certification) {
+        RestTemplate rt = new RestTemplate();
+
+        AiRequestData aiRequestData = AiRequestData.builder()
+                .certificationId(certification.getId())
+                .category(room.getCategory())
+                .image(certification.getImage().getUrl())
+                .build();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+
+        HttpEntity<AiRequestData> entity = new HttpEntity<AiRequestData>(aiRequestData, headers);
+
+        // TODO
+        //  응답을 string 말고 클래스 만들어서 다시 하기
+        ResponseEntity<String> reponse =  rt.exchange(AI_SERVER_URL, HttpMethod.POST, entity, String.class);
+    }
+
 
     public CertificationDetailResponseData getCertificationDetail(
             UserContext userContext,
