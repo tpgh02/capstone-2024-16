@@ -2,6 +2,7 @@ package com.dodo.certification;
 
 import com.dodo.certification.dto.*;
 import com.dodo.config.auth.CustomAuthentication;
+import com.dodo.config.auth.NotAuth;
 import com.dodo.user.domain.UserContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -64,5 +65,14 @@ public class CertificationController {
             @RequestBody ApprovalRequestData requestData
             ) {
         return certificationService.approval(userContext, requestData);
+    }
+
+    // AI 에서 결과값 받아오기
+    @PostMapping("/ai-result")
+    @NotAuth
+    public String aiResult(
+            @RequestBody
+            ) {
+
     }
 }

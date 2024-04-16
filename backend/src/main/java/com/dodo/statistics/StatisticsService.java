@@ -38,8 +38,9 @@ public class StatisticsService {
         List<RoomUser> roomUserList = roomUserRepository.findAllByUser(user)
                 .orElse(new ArrayList<>());
 
+
         // 이번달 저번달 달성률
-        Float roomSize = (float) roomUserList.size();
+        Float roomUserSize = (float) roomUserList.size();
         AtomicReference<Float> lastMonth = new AtomicReference<>(0F);
         AtomicReference<Float> thisMonth = new AtomicReference<>(0F);
 
@@ -50,15 +51,34 @@ public class StatisticsService {
                     thisMonth.updateAndGet(v -> v + data.getThisMonth());
                 });
 
+
         // 가장 열심히 한 분야
         List<Certification> certificationList = certificationRepository.findAllByRoomUserIn(roomUserList)
                 .orElse(new ArrayList<>());
-        Float allCertificationSize = (float) certificationList.size();
-        Map<Category, Float> categoryCollecting = certificationList.stream()
-                .collect(Collectors.groupingBy(c -> c.getRoomUser().getRoom().getCategory(), Collectors.counting()))
+        Integer allCategoryStatus = certificationList.size();
+        Map<Category, Long> categoryStatus = certificationList.stream()
+                .collect(Collectors.groupingBy(c -> c.getRoomUser().getRoom().getCategory(), Collectors.counting()));
 
 
+        // 가장 많이 활동한 방에서 나는?
+        RoomUser maxRoomUser = roomUserRepository.findAllByUser(user)
+                .orElse(new ArrayList<>())
+                .stream()
+                .max((ru1, ru2) -> (int) (certificationRepository.countAllByRoomUser(ru1) - certificationRepository.countAllByRoomUser(ru2)))
+                .get();
 
+        //TODO findAllByRoomUserRoom 이거 작동 하나..?
+        Map<User, Long> CertificationListFromUser = certificationRepository.findAllByRoomUserRoom(maxRoomUser)
+                .orElse(new ArrayList<>())
+                .stream()
+                .collect(Collectors.groupingBy(c -> c.getRoomUser().getUser(), Collectors.counting()));
+
+        List<User> keys = new ArrayList<>(CertificationListFromUser.keySet());
+
+        keys.sort(Comparator.comparing(CertificationListFromUser::get));
+        Float mostActivity = (float) keys.indexOf(maxRoomUser.getUser()) / (float) keys.size();
+
+        return new ReportResponseData(lastMonth.get() / roomUserSize, thisMonth.get() / roomUserSize, categoryStatus, allCategoryStatus, mostActivity);
     }
 
     public SimpleReportResponseData getSimpleReport(UserContext userContext, Long roomId) {

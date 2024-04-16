@@ -42,8 +42,9 @@ public class UserAuthenticationInterceptor implements HandlerInterceptor {
         // CustomAuthentication 어노테이션이 있는지 확인함
         // 아니면 이미 USER_CONTEXT가 들어가 있는 경우를 처리함
         HandlerMethod handlerMethod = (HandlerMethod) handler;
-        if (handlerMethod.getMethodAnnotation(CustomAuthentication.class) == null
-            && handlerMethod.getBeanType().getAnnotation(CustomAuthentication.class) == null) {
+        if ((handlerMethod.getMethodAnnotation(CustomAuthentication.class) == null
+            && handlerMethod.getBeanType().getAnnotation(CustomAuthentication.class) == null)
+        || handlerMethod.getMethodAnnotation(NotAuth.class) != null) {
             return HandlerInterceptor.super.preHandle(request,response,handler);
         }
 

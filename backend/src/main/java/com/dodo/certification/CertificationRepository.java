@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface CertificationRepository extends JpaRepository<Certification, Long> {
     Optional<List<Certification>> findAllByRoomUserIn(List<RoomUser> roomUserList);
     Optional<List<Certification>> findAllByRoomUser(RoomUser roomuser);
+    Optional<List<Certification>> findAllByRoomUserRoom(RoomUser roomUser);
+    Long countAllByRoomUser(RoomUser roomUser);
 }

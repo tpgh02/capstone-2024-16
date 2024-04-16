@@ -68,4 +68,5 @@ public class Room {
         if (frequency != null){this.frequency = frequency;}
         if (certificationType != null){this.certificationType = certificationType;}
     }
+
 }

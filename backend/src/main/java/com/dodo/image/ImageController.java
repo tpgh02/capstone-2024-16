@@ -20,5 +20,4 @@ public class ImageController {
     ) throws IOException {
         return imageService.save(img);
     }
-
 }
