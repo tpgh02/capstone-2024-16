@@ -2,7 +2,7 @@ package com.dodo.room;
 
 import com.dodo.config.auth.CustomAuthentication;
 import com.dodo.room.dto.RoomData;
-import com.dodo.room.dto.UserData;;
+import com.dodo.room.dto.UserData;
 import com.dodo.tag.repository.RoomTagRepository;
 import com.dodo.tag.service.RoomTagService;
 import com.dodo.user.domain.UserContext;
