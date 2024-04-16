@@ -3,7 +3,8 @@ from PIL import Image
 from io import BytesIO
 import urllib.request
 from urllib.error import URLError
-from fastapi import HTTPException
+from fastapi import HTTPException, Response
+import json
 
 async def save_image(data):
     """
@@ -50,4 +51,4 @@ async def save_image(data):
     file_path = f"{img_dir}/{filename}"
     img.save(file_path, extension)
     
-    return {"messeage": "OCR will be processing."}
+    return Response(content=json.dumps({"message": "OCR will be processing."}, indent=4), status_code=200)
