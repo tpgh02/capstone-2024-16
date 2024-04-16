@@ -6,6 +6,7 @@ import com.dodo.image.domain.Image;
 import com.dodo.sea.domain.Creature;
 import com.dodo.sea.domain.SeaCreature;
 import com.dodo.sea.dto.CreatureData;
+import com.dodo.sea.dto.SeaCreatureData;
 import com.dodo.sea.repository.CreatureRepository;
 import com.dodo.sea.repository.SeaCreatureRepository;
 import com.dodo.user.UserRepository;
@@ -47,13 +48,26 @@ public class CreatureService {
         return new CreatureData(creature);
     }
 
-    public void ActivateCreature(SeaCreature seaCreature) {
-        seaCreature.setActivate(true);
-    }
-    public void DeactivateCreature(SeaCreature seaCreature) {
-        seaCreature.setActivate(false);
+    public SeaCreature activateCreature(SeaCreatureData seaCreatureData) {
+        SeaCreature seaCreature = seaCreatureRepository.findById(seaCreatureData.getSeaCreatureId()).orElseThrow(NotFoundException::new);
+
+        seaCreature.activate(seaCreatureData.getIs_activate());
+        seaCreatureRepository.save(seaCreature);
+
+        return seaCreature;
     }
 
+    public SeaCreature moveCreature(SeaCreatureData seaCreatureData) {
+        SeaCreature seaCreature = seaCreatureRepository.findById(seaCreatureData.getSeaCreatureId()).orElseThrow(NotFoundException::new);
+
+        seaCreature.move(seaCreatureData.getCoordinate_x(), seaCreatureData.getCoordinate_y());
+        seaCreatureRepository.save(seaCreature);
+
+        return seaCreature;
+    }
+
+
+    // 바다생물 구매
     public Boolean purchaseCreature(UserContext userContext, CreatureData creatureData) {
 
         User user = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
@@ -69,7 +83,7 @@ public class CreatureService {
         SeaCreature seaCreature = SeaCreature.builder()
                 .creature(creature)
                 .user(user)
-                .activate(false)
+                .is_activate(false)
                 .build();
 
         userRepository.save(user);

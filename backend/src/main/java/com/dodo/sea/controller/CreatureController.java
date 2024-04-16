@@ -6,6 +6,8 @@ import com.dodo.image.ImageService;
 import com.dodo.sea.domain.Creature;
 import com.dodo.sea.domain.SeaCreature;
 import com.dodo.sea.dto.CreatureData;
+import com.dodo.sea.dto.SeaCreatureData;
+import com.dodo.sea.repository.SeaCreatureRepository;
 import com.dodo.sea.service.CreatureService;
 import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
@@ -25,6 +27,7 @@ import java.util.List;
 public class CreatureController {
     private final CreatureService creatureService;
     private final UserRepository userRepository;
+    private final SeaCreatureRepository seaCreatureRepository;
 
 
     // TODO
@@ -62,6 +65,16 @@ public class CreatureController {
     @CustomAuthentication
     public List<CreatureData> getUserInventory(@RequestAttribute UserContext userContext){
         return creatureService.getUserCreature(userContext);
+    }
+
+    @PostMapping("/move")
+    public SeaCreatureData moveCreature(@RequestBody SeaCreatureData seaCreatureData) {
+        return new SeaCreatureData(creatureService.moveCreature(seaCreatureData));
+    }
+
+    @PostMapping("/activate_creature")
+    public SeaCreatureData activateCreature(@RequestBody SeaCreatureData seaCreatureData) {
+        return new SeaCreatureData(creatureService.activateCreature(seaCreatureData));
     }
 
     // 임시 마일리지 얻는 함수

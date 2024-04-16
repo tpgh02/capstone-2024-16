@@ -19,11 +19,19 @@ public class SeaCreature {
     private Long coordinate_y;
 
     @Setter
-    private Boolean activate;
+    private Boolean is_activate;
 
     @ManyToOne
     private User user;
 
     @ManyToOne
     private Creature creature;
+
+    public void move(Long x, Long y) {
+        this.coordinate_x = x;
+        this.coordinate_y = y;
+    }
+    public void activate(Boolean activate) {
+        this.is_activate = activate;
+    }
 }
