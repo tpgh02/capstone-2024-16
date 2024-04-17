@@ -78,6 +78,10 @@ public class CreatureService {
             return false;
         }
 
+        if (seaCreatureRepository.findByUserAndCreature(user, creature).isPresent()) {
+            return false;
+        }
+
         user.updateMileage(user.getMileage() - creature.getPrice()); // 유저의 마일리지 차감
 
         SeaCreature seaCreature = SeaCreature.builder()
