@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:ffi';
+// import 'dart:ffi';
 
 import 'package:dodo/components/items.dart';
 import 'package:dodo/components/s2_hotroom.dart';
@@ -36,8 +36,8 @@ class Inven {
   final int price;
   final String name;
   final String info;
-  final String image;
-  final Long creatureId;
+  final image;
+  final creatureId;
 
   const Inven({
     required this.price,
@@ -119,47 +119,70 @@ class _searchPageState extends State<InvenPage> {
                   ),
                 ),
               ),
-              Container(
-                //color: Colors.yellow,
-                alignment: Alignment.centerRight,
-                padding: const EdgeInsets.all(20),
-                height: 400,
-                child: CustomScrollView(
-                  slivers: <Widget>[
-                    SliverGrid(
-                        delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int idx) {
-                          return postContainer(
-                            postList[idx]['cost'],
-                            postList[idx]['img'],
-                          );
-                        }, childCount: postList.length),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                        ))
-                  ],
-                ),
+              // Container(
+              //   //color: Colors.yellow,
+              //   alignment: Alignment.centerRight,
+              //   padding: const EdgeInsets.all(20),
+              //   height: 400,
+              //   child: CustomScrollView(
+              //     slivers: <Widget>[
+              //       SliverGrid(
+              //           delegate: SliverChildBuilderDelegate(
+              //               (BuildContext context, int idx) {
+              //             return postContainer(
+              //               postList[idx]['cost'],
+              //               postList[idx]['img'],
+              //             );
+              //           }, childCount: postList.length),
+              //           gridDelegate:
+              //               const SliverGridDelegateWithFixedCrossAxisCount(
+              //             crossAxisCount: 3,
+              //           ))
+              //     ],
+              //   ),
+              // ),
+              // Container(
+              //     width: double.infinity,
+              //     height: 50,
+              //     child: ElevatedButton(
+              //       onPressed: () {
+              //         // Navigator.push(
+              //         //     context,
+              //         //     MaterialPageRoute(
+              //         //         builder: (context) => reportPage()));
+              //       },
+              //       child: Text(
+              //         "적용하기",
+              //         style: TextStyle(
+              //             color: Colors.white, fontFamily: 'bm', fontSize: 20),
+              //       ),
+              //       style: ElevatedButton.styleFrom(
+              //         backgroundColor: PRIMARY_COLOR,
+              //       ),
+              //     )),
+              FutureBuilder<Inven>(
+                future: futureInven,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (snapshot.hasData) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Name: ${snapshot.data!.name}'),
+                        Text('Price: ${snapshot.data!.price}'),
+                        Text('Info: ${snapshot.data!.info}'),
+                        Image.network(snapshot.data!.image),
+                        Text('${snapshot.data!.creatureId}'),
+                      ],
+                    );
+                  } else {
+                    return Text('No data available');
+                  }
+                },
               ),
-              Container(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => reportPage()));
-                    },
-                    child: Text(
-                      "적용하기",
-                      style: TextStyle(
-                          color: Colors.white, fontFamily: 'bm', fontSize: 20),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: PRIMARY_COLOR,
-                    ),
-                  )),
             ],
           ),
         ),
