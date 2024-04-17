@@ -5,10 +5,11 @@ import json
 from paddleocr import PaddleOCR
 from app.model.image import StudyImage
 
-def exception_json(code, message, id):
+def exception_json(code, message, cat, id):
     content = {
         "code": code,
         "message": message,
+        "category": cat,
         "certification_id": id
     }
     return json.dumps(content, indent=4)
@@ -25,7 +26,7 @@ async def time_detection(data: StudyImage):
     
     # Check the image
     if not os.path.isfile(img_path):
-        return exception_json(500, "Can't find the downloaded image", id)
+        return exception_json(code=500, message="Can't find the downloaded image", cat=category, id=id)
     
     # Do OCR
     ocr_model = PaddleOCR(lang='en')
@@ -44,12 +45,13 @@ async def time_detection(data: StudyImage):
 
     # Failed to get the OCR result
     if ocr_result is None:
-        return exception_json(500, "Failed to get the OCR result", id)
+        return exception_json(code=500, message="Failed to get the OCR result", cat=category, id=id)
 
     # make json
     result = {}
     result['code'] = 200
     result['message'] = "OK"
+    result['category'] = category
     result['certification_id'] = id
     result['result'] = []
     
