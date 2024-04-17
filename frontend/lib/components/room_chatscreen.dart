@@ -1,5 +1,8 @@
 import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:stomp_dart_client/stomp.dart';
+import 'package:stomp_dart_client/stomp_config.dart';
+import 'package:stomp_dart_client/stomp_frame.dart';
 
 class RoomChatScreen extends StatelessWidget {
   final String room_title;
@@ -16,14 +19,15 @@ class RoomChatScreen extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: Text(
-              '$room_title 채팅방입니다.',
-              style: const TextStyle(
-                fontSize: 80,
+            child: GestureDetector(
+              onTap: () {},
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Text(room_title),
               ),
             ),
           ),
-          const _TextInputForm(),
+          _TextInputForm(),
         ],
       ),
     );
@@ -124,5 +128,23 @@ class _TextInputForm extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class Chatting extends StatefulWidget {
+  final String chat_ID;
+  final String user_ID;
+  const Chatting({super.key, required this.chat_ID, required this.user_ID});
+
+  @override
+  ChattingState createState() => ChattingState();
+}
+
+class ChattingState extends State<Chatting> {
+  List<dynamic> message = List.empty();
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView();
   }
 }
