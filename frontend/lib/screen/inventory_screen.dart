@@ -1,23 +1,72 @@
+import 'dart:convert';
+import 'dart:ffi';
+
 import 'package:dodo/components/items.dart';
 import 'package:dodo/components/s2_hotroom.dart';
 import 'package:dodo/components/s2_tag.dart';
 import 'package:dodo/components/s_list.dart';
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/const/server.dart';
 import 'package:dodo/screen/main2_screen.dart';
 import 'package:dodo/screen/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:http/http.dart' as http;
 
-class invenPage extends StatefulWidget {
-  const invenPage({super.key});
+class InvenPage extends StatefulWidget {
+  const InvenPage({super.key});
 
   @override
-  State<invenPage> createState() => _searchPageState();
+  State<InvenPage> createState() => _searchPageState();
 }
 
-class _searchPageState extends State<invenPage> {
+Future<Inven> fetchInven() async {
+  final response =
+      await http.get(Uri.parse(serverUrl + '/api/v1/creature/Inventory'));
+
+  if (response.statusCode == 200) {
+    return Inven.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Failed to load album');
+  }
+}
+
+class Inven {
+  final int price;
+  final String name;
+  final String info;
+  final String image;
+  final Long creatureId;
+
+  const Inven({
+    required this.price,
+    required this.name,
+    required this.info,
+    required this.image,
+    required this.creatureId,
+  });
+
+  factory Inven.fromJson(Map<String, dynamic> json) {
+    return Inven(
+      price: json['price'],
+      name: json['name'],
+      info: json['info'],
+      image: json['image'],
+      creatureId: json['creatureId'],
+    );
+  }
+}
+
+class _searchPageState extends State<InvenPage> {
   final widgetkey = GlobalKey();
+  late Future<Inven> futureInven;
+  @override
+  void initState() {
+    super.initState();
+    futureInven = fetchInven();
+  }
+
   @override
   Widget build(BuildContext context) {
     final postList = [
@@ -31,7 +80,7 @@ class _searchPageState extends State<invenPage> {
       {"name": "돌", "cost": "10", "img": "assets/images/turtle_noradius.png"},
       {"name": "개불", "cost": "10", "img": "assets/images/turtle_noradius.png"},
     ];
-    int idx = 0;
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -75,11 +124,7 @@ class _searchPageState extends State<invenPage> {
                 alignment: Alignment.centerRight,
                 padding: const EdgeInsets.all(20),
                 height: 400,
-                //height: double.maxFinite,
-                //color: Colors.amber,
-                child:
-                    //오늘도 도전의 스크롤하는 부분
-                    CustomScrollView(
+                child: CustomScrollView(
                   slivers: <Widget>[
                     SliverGrid(
                         delegate: SliverChildBuilderDelegate(
