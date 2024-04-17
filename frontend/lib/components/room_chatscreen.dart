@@ -142,6 +142,34 @@ class Chatting extends StatefulWidget {
 
 class ChattingState extends State<Chatting> {
   List<dynamic> message = List.empty();
+  late StompClient _client;
+  final String webSocketUrl = 'http://43.200.176.111:8080/';
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _client = StompClient(
+        config: StompConfig.sockJS(
+            url: webSocketUrl,
+            onConnect: onConnect,
+            // webSocketConnectHeaders:
+            beforeConnect: () async {
+              print('waiting to connect...');
+              await Future.delayed(const Duration(milliseconds: 200));
+              print('connecting...');
+            },
+            onWebSocketError: (dynamic error) => print(error.toString())));
+    _client.activate();
+  }
+
+  void onConnect(StompFrame frame) {
+    // setState(() {});
+    _client.subscribe(
+      destination: '/topic/chatting/${widget.chat_ID}',
+      callback: (frame) {},
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
