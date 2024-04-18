@@ -190,11 +190,11 @@ class _searchPageState extends State<InvenPage> {
     );
   }
 
-  Container postContainer(title, _root) {
+  Container postContainer(title, _root, name, info) {
     return Container(
       margin: const EdgeInsets.all(5),
       alignment: Alignment.center,
-      child: items(title, _root),
+      child: items(title, _root, name, info),
     );
   }
 }

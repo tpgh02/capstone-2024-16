@@ -21,15 +21,60 @@ class _searchPageState extends State<storePage> {
   @override
   Widget build(BuildContext context) {
     final postList = [
-      {"name": "미역", "cost": "10", "img": "assets/images/cook.jpg"},
-      {"name": "돌", "cost": "10", "img": "assets/images/turtle_noradius.png"},
-      {"name": "개불", "cost": "10", "img": "assets/images/turtle_noradius.png"},
-      {"name": "미역", "cost": "10", "img": "assets/images/cook.jpg"},
-      {"name": "돌", "cost": "10", "img": "assets/images/turtle_noradius.png"},
-      {"name": "개불", "cost": "10", "img": "assets/images/turtle_noradius.png"},
-      {"name": "미역", "cost": "10", "img": "assets/images/cook.jpg"},
-      {"name": "돌", "cost": "10", "img": "assets/images/turtle_noradius.png"},
-      {"name": "개불", "cost": "10", "img": "assets/images/turtle_noradius.png"},
+      {
+        "name": "미역",
+        "cost": "10",
+        "img": "assets/images/cook.jpg",
+        "info": "누군가는 먹겠죠,,,"
+      },
+      {
+        "name": "돌",
+        "cost": "10",
+        "img": "assets/images/turtle_noradius.png",
+        "info": "누군가는 먹겠죠,,,"
+      },
+      {
+        "name": "개불",
+        "cost": "10",
+        "img": "assets/images/turtle_noradius.png",
+        "info": "누군가는 먹겠죠,,,"
+      },
+      {
+        "name": "미역",
+        "cost": "10",
+        "img": "assets/images/cook.jpg",
+        "info": "누군가는 먹겠죠,,,"
+      },
+      {
+        "name": "돌",
+        "cost": "10",
+        "img": "assets/images/turtle_noradius.png",
+        "info": "누군가는 먹겠죠,,,"
+      },
+      {
+        "name": "개불",
+        "cost": "10",
+        "img": "assets/images/turtle_noradius.png",
+        "info": "누군가는 먹겠죠,,,"
+      },
+      {
+        "name": "미역",
+        "cost": "10",
+        "img": "assets/images/cook.jpg",
+        "info": "누군가는 먹겠죠,,,"
+      },
+      {
+        "name": "돌",
+        "cost": "10",
+        "img": "assets/images/turtle_noradius.png",
+        "info": "누군가는 먹겠죠,,,"
+      },
+      {
+        "name": "개불",
+        "cost": "10",
+        "img": "assets/images/turtle_noradius.png",
+        "info": "누군가는 먹겠죠,,,"
+      },
     ];
     int idx = 0;
     return Scaffold(
@@ -64,9 +109,7 @@ class _searchPageState extends State<storePage> {
                 height: 900,
                 //height: double.maxFinite,
                 //color: Colors.amber,
-                child:
-                    //오늘도 도전의 스크롤하는 부분
-                    CustomScrollView(
+                child: CustomScrollView(
                   slivers: <Widget>[
                     SliverGrid(
                         delegate: SliverChildBuilderDelegate(
@@ -74,6 +117,8 @@ class _searchPageState extends State<storePage> {
                           return postContainer(
                             postList[idx]['cost'],
                             postList[idx]['img'],
+                            postList[idx]['name'],
+                            postList[idx]['info'],
                           );
                         }, childCount: postList.length),
                         gridDelegate:
@@ -90,11 +135,11 @@ class _searchPageState extends State<storePage> {
     );
   }
 
-  Container postContainer(title, _root) {
+  Container postContainer(title, _root, name, info) {
     return Container(
       margin: const EdgeInsets.all(5),
       alignment: Alignment.center,
-      child: items(title, _root),
+      child: items(title, _root, name, info),
     );
   }
 }

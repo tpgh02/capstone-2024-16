@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: mainPage(), //Certification("hello"),
+      home: storePage(), //Certification("hello"),
     );
   }
 }
