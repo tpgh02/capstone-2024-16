@@ -1,5 +1,6 @@
 import 'package:dodo/components/l_title.dart';
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/const/server.dart';
 import 'package:dodo/screen/findpass_screen.dart';
 import 'package:dodo/screen/main_screen.dart';
 import 'package:dodo/screen/signup_screen.dart';
@@ -17,7 +18,7 @@ class loginPage extends StatefulWidget {
 }
 
 Future<String> fetchInfo(Map<String, String> form) async {
-  var url = 'http://43.203.195.126:8080/api/v1/users/login';
+  var url = serverUrl + '/api/v1/users/login';
   final response = await http.post(
     Uri.parse(url),
     headers: <String, String>{

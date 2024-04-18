@@ -1,6 +1,7 @@
 //import 'package:dodo/const/colors.dart';
 //import 'package:dodo/components/certification.dart';
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/screen/buy_screen.dart';
 import 'package:flutter/material.dart';
 
 //소유하고 있는 방들의 각각 컴포넌트를 생성
@@ -168,7 +169,12 @@ void itemsdialog(context, String cost, String img, String name, info) {
                   width: 30,
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => buyPage(img, name)));
+                  },
                   child: Text(
                     "구매",
                     style: TextStyle(
@@ -183,12 +189,6 @@ void itemsdialog(context, String cost, String img, String name, info) {
                 )
               ],
             ),
-            // IconButton(
-            //   onPressed: () {
-            //     Navigator.of(context).pop();
-            //   },
-            //   icon: const Icon(Icons.close),
-            // )
           ],
         ),
       ));

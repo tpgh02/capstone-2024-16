@@ -1,4 +1,5 @@
 import 'package:dodo/components/items.dart';
+import 'package:dodo/screen/buy_screen.dart';
 import 'package:dodo/screen/findpass_screen.dart';
 import 'package:dodo/screen/gallery_screen.dart';
 import 'package:dodo/screen/inventory_screen.dart';
