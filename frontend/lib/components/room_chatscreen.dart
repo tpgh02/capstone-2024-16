@@ -1,38 +1,128 @@
 import 'package:dodo/const/colors.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'dart:convert';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
-class RoomChatScreen extends StatelessWidget {
+class RoomChatScreen extends StatefulWidget {
   final String room_title;
   final bool is_manager;
+  final int roomID;
+  final int userID;
   const RoomChatScreen(
-      {super.key, required this.room_title, required this.is_manager});
+      {super.key,
+      required this.room_title,
+      required this.is_manager,
+      required this.roomID,
+      required this.userID});
+
+  @override
+  State<RoomChatScreen> createState() => _RoomChatScreenState();
+}
+
+class _RoomChatScreenState extends State<RoomChatScreen> {
+  late StompClient stompClient;
+  final TextEditingController textEditingController = TextEditingController();
+  List<dynamic> messages = List.empty();
+  final String webSocketUrl = 'http://43.200.176.111:8080/';
+
+  @override
+  void initState() {
+    super.initState();
+    stompClient = StompClient(
+        config: StompConfig.sockJS(
+            url: webSocketUrl,
+            onConnect: onConnectCallback,
+            beforeConnect: () async {
+              print('waiting to connect...');
+              await Future.delayed(const Duration(milliseconds: 200));
+              print('connecting...');
+            },
+            onWebSocketError: (dynamic error) => print(error.toString())));
+    stompClient.activate();
+  }
+
+  void onConnectCallback(StompFrame frame) {
+    // setState(() {});
+    stompClient.subscribe(
+      destination: '/topic/chatting/${widget.roomID}',
+      headers: {},
+      callback: (frame) {
+        print(frame.body);
+        messages = jsonDecode(frame.body!).reversed.toList();
+      },
+    );
+  }
+
+  void sendMessage() {
+    final sendMsg = textEditingController.text;
+    if (sendMsg.isNotEmpty) {
+      stompClient.send(
+        destination: '/app/chatting/${widget.roomID}',
+        // 수정 필요
+        body: json.encode({'data': sendMsg, 'userId': widget.userID}),
+      );
+      textEditingController.clear();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _roomMainAppBar(room_title, manager: is_manager),
+      appBar: _roomMainAppBar(widget.room_title, manager: widget.is_manager),
       backgroundColor: LIGHTGREY,
       resizeToAvoidBottomInset: true,
-      body: Column(
-        children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () {},
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Text(room_title),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            // 채팅 스크린
+            SingleChildScrollView(
+              child: Container(
+                height: MediaQuery.of(context).size.height - 160,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    Map<String, dynamic> item = messages[index];
+                    return ListTile(
+                      title: Text(item['data']),
+                    );
+                    // Map<String, dynamic> item = messages[index];
+                    // return GestureDetector(
+                    //   child: Card(
+                    //     child: Text(
+                    //       item[index].content,
+                    //       textAlign: item[index].uuid =
+                    //           myUuid ? TextAlign.right : TextAlign.left,
+                    //     ),
+                    //   ),
+                    // );
+                  },
+                ),
               ),
+              //
             ),
-          ),
-          _TextInputForm(),
-        ],
+            // Expanded(
+            //   child: GestureDetector(
+            //     onTap: () {},
+            //     child: Align(
+            //       alignment: Alignment.topCenter,
+            //       child: Text(room_title),
+            //     ),
+            //   ),
+            // ),
+            _TextInputForm(),
+          ],
+        ),
       ),
     );
   }
 
+  // AppBAr
   PreferredSizeWidget _roomMainAppBar(String title, {bool manager = false}) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(80),
@@ -71,14 +161,9 @@ class RoomChatScreen extends StatelessWidget {
       ),
     );
   }
-}
 
-// 하단 입력창
-class _TextInputForm extends StatelessWidget {
-  const _TextInputForm({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  // 하단 입력창
+  Widget _TextInputForm() {
     return SafeArea(
       bottom: true,
       child: Container(
@@ -98,14 +183,12 @@ class _TextInputForm extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         child: Stack(
           children: [
-            const TextField(
-              // focusNode:
-              // onChanged:
-              // controller:
+            TextField(
+              controller: textEditingController,
               maxLength: null,
               maxLines: null,
               textAlignVertical: TextAlignVertical.top,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.all(10),
                 hintText: ('메시지를 입력하세요.'),
@@ -117,7 +200,9 @@ class _TextInputForm extends StatelessWidget {
               bottom: 4,
               right: -6,
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  sendMessage();
+                },
                 icon: const Icon(
                   Icons.send,
                   color: POINT_COLOR,
@@ -128,51 +213,5 @@ class _TextInputForm extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class Chatting extends StatefulWidget {
-  final String chat_ID;
-  final String user_ID;
-  const Chatting({super.key, required this.chat_ID, required this.user_ID});
-
-  @override
-  ChattingState createState() => ChattingState();
-}
-
-class ChattingState extends State<Chatting> {
-  List<dynamic> message = List.empty();
-  late StompClient _client;
-  final String webSocketUrl = 'http://43.200.176.111:8080/';
-  final TextEditingController _controller = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _client = StompClient(
-        config: StompConfig.sockJS(
-            url: webSocketUrl,
-            onConnect: onConnect,
-            // webSocketConnectHeaders:
-            beforeConnect: () async {
-              print('waiting to connect...');
-              await Future.delayed(const Duration(milliseconds: 200));
-              print('connecting...');
-            },
-            onWebSocketError: (dynamic error) => print(error.toString())));
-    _client.activate();
-  }
-
-  void onConnect(StompFrame frame) {
-    // setState(() {});
-    _client.subscribe(
-      destination: '/topic/chatting/${widget.chat_ID}',
-      callback: (frame) {},
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView();
   }
 }

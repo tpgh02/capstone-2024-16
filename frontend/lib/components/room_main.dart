@@ -8,6 +8,7 @@ import 'package:dodo/const/colors.dart';
 
 class room_main extends StatefulWidget {
   final String room_title;
+  final int room_id;
   final int room_mem;
   final int room_maxmem;
   final bool canChat;
@@ -15,6 +16,7 @@ class room_main extends StatefulWidget {
   const room_main(
       {super.key,
       required this.room_title,
+      required this.room_id,
       required this.room_mem,
       required this.room_maxmem,
       required this.canChat,
@@ -25,9 +27,67 @@ class room_main extends StatefulWidget {
 }
 
 class _roomMainState extends State<room_main> {
+  final userList = [
+    {
+      "user_name": "User1",
+      "user_id": 1,
+      "user_img": "assets/images/cook.jpg",
+      "success": 0,
+      "wait": 1,
+      "max": 3,
+      "certification": false,
+    },
+    {
+      "user_name": "User2",
+      "user_id": 2,
+      "user_img": "assets/images/cook.jpg",
+      "success": 0,
+      "wait": 2,
+      "max": 3,
+      "certification": false,
+    },
+    {
+      "user_name": "User3",
+      "user_id": 3,
+      "user_img": "assets/images/cook.jpg",
+      "success": 1,
+      "wait": 1,
+      "max": 3,
+      "certification": false,
+    },
+    {
+      "user_name": "User4",
+      "user_id": 4,
+      "user_img": "assets/images/cook.jpg",
+      "success": 3,
+      "wait": 0,
+      "max": 3,
+      "certification": true,
+    },
+    {
+      "user_name": "User5",
+      "user_id": 5,
+      "user_img": "assets/images/cook.jpg",
+      "success": 0,
+      "wait": 3,
+      "max": 3,
+      "certification": false,
+    },
+    {
+      "user_name": "User6",
+      "user_id": 6,
+      "user_img": "assets/images/cook.jpg",
+      "success": 3,
+      "wait": 0,
+      "max": 3,
+      "certification": true,
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     String room_title = widget.room_title;
+    int room_id = widget.room_id;
     int room_mem = widget.room_mem;
     bool canChat = widget.canChat;
     bool is_manager = widget.is_manager;
@@ -36,7 +96,7 @@ class _roomMainState extends State<room_main> {
       appBar: _roomMainAppBar(room_title, manager: is_manager),
       backgroundColor: LIGHTGREY,
       floatingActionButton:
-          canChat ? chattingRoom(room_title, is_manager) : null,
+          canChat ? chattingRoom(room_title, is_manager, room_id, 1) : null,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -251,7 +311,7 @@ class _roomMainState extends State<room_main> {
     );
   }
 
-  Container chattingRoom(String title, bool manager) {
+  Container chattingRoom(String title, bool manager, int roomID, int userID) {
     return Container(
       height: 80,
       width: 80,
@@ -261,8 +321,12 @@ class _roomMainState extends State<room_main> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  RoomChatScreen(room_title: title, is_manager: manager),
+              builder: (context) => RoomChatScreen(
+                room_title: title,
+                is_manager: manager,
+                roomID: roomID,
+                userID: userID,
+              ),
             ),
           );
         },

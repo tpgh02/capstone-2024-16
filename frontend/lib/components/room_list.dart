@@ -13,6 +13,7 @@ class _roomListState extends State<room_list> {
   final List<dynamic> postList = [
     {
       "room_title": "자취요리왕",
+      "room_id": 1,
       "room_img": "assets/images/cook.jpg",
       "room_mem": 10,
       "room_maxmem": 20,
@@ -21,6 +22,7 @@ class _roomListState extends State<room_list> {
     },
     {
       "room_title": "오운완",
+      "room_id": 2,
       "room_img": "assets/images/turtle_noradius.png",
       "room_mem": 5,
       "room_maxmem": 20,
@@ -29,6 +31,7 @@ class _roomListState extends State<room_list> {
     },
     {
       "room_title": "H.O.T",
+      "room_id": 3,
       "room_img": "assets/images/turtle_noradius.png",
       "room_mem": 10,
       "room_maxmem": 20,
@@ -70,6 +73,7 @@ class _roomListState extends State<room_list> {
                           MaterialPageRoute(
                               builder: (context) => room_main(
                                     room_title: postList[num]["room_title"],
+                                    room_id: postList[num]["room_id"],
                                     room_mem: postList[num]["room_mem"],
                                     room_maxmem: postList[num]["room_maxmem"],
                                     canChat: postList[num]["canChat"],
