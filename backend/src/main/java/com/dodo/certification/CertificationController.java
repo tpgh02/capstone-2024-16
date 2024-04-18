@@ -75,7 +75,7 @@ public class CertificationController {
     public String aiResult(
             @RequestBody AiResponseData aiResponseData
             ) {
-        log.info("{}", aiResponseData);
+        certificationService.analyze(aiResponseData);
         return "OK";
     }
 }
