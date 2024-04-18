@@ -48,7 +48,7 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
   void onConnectCallback(StompFrame frame) {
     // setState(() {});
     stompClient.subscribe(
-      destination: '/topic/chatting/${widget.roomID}',
+      destination: '/sub/chatting/${widget.roomID}',
       headers: {},
       callback: (frame) {
         print(frame.body);
@@ -61,9 +61,13 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
     final sendMsg = textEditingController.text;
     if (sendMsg.isNotEmpty) {
       stompClient.send(
-        destination: '/app/chatting/${widget.roomID}',
+        destination: '/pub/chatting/${widget.roomID}',
         // 수정 필요
-        body: json.encode({'data': sendMsg, 'userId': widget.userID}),
+        body: json.encode({
+          'roomId': widget.roomID,
+          'userId': widget.userID,
+          'message': sendMsg,
+        }),
       );
       textEditingController.clear();
     }
