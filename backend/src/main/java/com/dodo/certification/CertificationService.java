@@ -80,9 +80,6 @@ public class CertificationService {
         if(room.getCategory() == Category.RISE) {
             // TODO -> 시간이 잘 나오나?
 
-
-
-
         }
 
 
@@ -239,6 +236,16 @@ public class CertificationService {
         return groupList.stream()
                 .map(CertificationListResponseData::new)
                 .toList();
+    }
+
+    public void analyze(AiResponseData aiResponseData) {
+        Category category = aiResponseData.getCategory();
+        Certification certification = certificationRepository.findById(aiResponseData.getCertificationId())
+                .orElseThrow(() -> new NotFoundException("인증 정보를 찾을 수 없습니다"));
+        if(category == Category.STUDY) {
+
+        }
+
     }
 
     @Data
