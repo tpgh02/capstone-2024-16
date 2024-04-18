@@ -35,8 +35,7 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
     super.initState();
     stompClient = StompClient(
         config: StompConfig(
-            url:
-                "ws://43.200.176.111:8080/domainname/ws-stomp/sub/chat/room/${widget.roomID}",
+            url: "ws://43.200.176.111:8080/domainname/ws-stomp",
             onConnect: onConnectCallback,
             beforeConnect: () async {
               print('waiting to connect...');
@@ -50,7 +49,7 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
   void onConnectCallback(StompFrame frame) {
     // setState(() {});
     stompClient.subscribe(
-      destination: '/sub/chatting/${widget.roomID}',
+      destination: '/sub/chat/room/${widget.roomID}',
       headers: {},
       callback: (frame) {
         print(frame.body);
@@ -63,8 +62,7 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
     final sendMsg = textEditingController.text;
     if (sendMsg.isNotEmpty) {
       stompClient.send(
-        destination: '/pub/chatting/${widget.roomID}',
-        // 수정 필요
+        destination: '/pub',
         body: json.encode({
           'roomId': widget.roomID,
           'userId': widget.userID,
