@@ -83,7 +83,7 @@ class _seaPageState extends State<seaPage> {
                   borderRadius: BorderRadius.circular(100)),
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => invenPage()));
+                    MaterialPageRoute(builder: (context) => InvenPage()));
               },
               backgroundColor: PRIMARY_COLOR,
               heroTag: "actionButton",

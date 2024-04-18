@@ -78,32 +78,50 @@ class m_state extends StatelessWidget {
   }
 }
 
-//팝업 띄우는 함수
+//방 가입시 나오는 팝업창(테스트 용도로 제작)
 void statedialog(context, state) {
   showDialog(
     context: context,
     builder: (context) {
       return Dialog(
-          child: SizedBox(
-        width: 300,
-        height: 300,
+          child: Container(
+        margin: EdgeInsets.all(8),
+        width: 400,
+        height: 400,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            //오늘의 todo 달성률을 보여주는 팝업
+            const SizedBox(
+              height: 15,
+            ),
             const Text(
-              "오늘의 달성률",
-              style: TextStyle(fontFamily: "kcc", fontSize: 20),
+              "가입이 승인되었습니다",
+              style: TextStyle(fontFamily: "bm", fontSize: 30),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            // Text(
+            //   "$state%",
+            //   style: const TextStyle(fontFamily: 'kcc', fontSize: 80),
+            // ),
+            Image.asset(
+              "../assets/images/turtle.png",
+              scale: 2,
             ),
             const SizedBox(
               height: 10,
             ),
-            Text(
-              "$state%",
-              style: const TextStyle(fontFamily: 'kcc', fontSize: 80),
+            const Text(
+              "대단해요!",
+              style: TextStyle(fontFamily: "bma", fontSize: 25),
+            ),
+            const Text(
+              "앞으로도 멋진 모습 기대할게요!",
+              style: TextStyle(fontFamily: "bma", fontSize: 25),
             ),
             const SizedBox(
-              height: 10,
+              height: 15,
             ),
             IconButton(
               onPressed: () {
