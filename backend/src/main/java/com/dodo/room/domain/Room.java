@@ -13,18 +13,18 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter @Getter
+@Getter
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String password;
-    private String info;
+    @Setter private String info;
     private String notice;
     private LocalDateTime endDay;
     private Long maxUser;
-    private Long nowUser;
+    @Setter private Long nowUser;
     private Boolean canChat;
     private Integer numOfVoteSuccess;
     private Integer numOfVoteFail;
