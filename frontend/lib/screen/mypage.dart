@@ -1,7 +1,7 @@
 import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({super.key});
@@ -12,8 +12,6 @@ class MyPage extends StatefulWidget {
 
 class _MyPageState extends State<MyPage> {
   @override
-  XFile? _pickedFile;
-
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: LIGHTGREY,
