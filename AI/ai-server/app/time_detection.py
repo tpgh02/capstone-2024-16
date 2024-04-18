@@ -14,23 +14,18 @@ def exception_json(code, message, cat, id):
     }
     return json.dumps(content, indent=4)
 
-async def time_detection(data: StudyImage):
+async def time_detection(image, data: StudyImage):
     # get info
     id = data.certificationId
     category = data.category
-    extension = data.image.split('.')[-1]
-    
-    # image path
-    img_dir = "app/uploads"
-    img_path = f"{img_dir}/{category}_{id}.{extension}"
     
     # Check the image
-    if not os.path.isfile(img_path):
+    if image is None:
         return exception_json(code=500, message="Can't find the downloaded image", cat=category, id=id)
     
     # Do OCR
     ocr_model = PaddleOCR(lang='en')
-    ocr_result = ocr_model.ocr(img_path)[0]
+    ocr_result = ocr_model.ocr(image)[0]
     
     """ ocr_result example
         [

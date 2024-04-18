@@ -14,13 +14,13 @@ with open("config.json", "r") as f:
 study_router = APIRouter(prefix="/ai")
 
 # background function
-async def study_result(data: StudyImage, response):
+async def study_result(image, data: StudyImage, response):
     # if status code is not 200, do not execute post-processing function
     if response.status_code != 200:
         return
     
     # get OCR result in json
-    json_result = await time_detection(data)
+    json_result = await time_detection(image, data)
     
     # post result to Backend server
     try:
@@ -35,9 +35,9 @@ async def study_result(data: StudyImage, response):
 @study_router.post("/study")
 async def study_upload(data: StudyImage, background: BackgroundTasks):
     # Upload and save the image
-    response = await save_image(data)
+    image, response = await save_image(data)
     
     # add background task
-    background.add_task(study_result, data, response)
+    background.add_task(study_result, image, data, response)
     
     return response
