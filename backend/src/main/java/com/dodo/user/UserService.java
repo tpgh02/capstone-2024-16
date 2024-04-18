@@ -51,7 +51,6 @@ public class UserService {
                 .introduceMessage("")
                 .build();
 
-
         userRepository.save(user);
 
         if(request instanceof UserCreateRequestData.PasswordUserCreateRequestData) {

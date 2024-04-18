@@ -2,11 +2,9 @@ package com.dodo.user.domain;
 
 import com.dodo.image.domain.Image;
 import com.dodo.roomuser.domain.RoomUser;
+import com.dodo.sea.domain.SeaCreature;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -35,6 +33,14 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<RoomUser> roomUsers;
 
+    @Setter
+    @OneToMany
+    private List<SeaCreature> seaCreatures;
+
     @ManyToOne
     private Image image;
+
+    public void updateMileage(Integer mileage) {
+        this.mileage = mileage;
+    }
 }
