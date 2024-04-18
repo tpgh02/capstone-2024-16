@@ -27,14 +27,16 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
   late StompClient stompClient;
   final TextEditingController textEditingController = TextEditingController();
   List<dynamic> messages = List.empty();
-  final String webSocketUrl = 'http://43.200.176.111:8080/';
-
+  // final String webSocketUrl =
+  //  "ws://43.200.176.111:8080/domainname/ws-stomp/sub/chat/room/${widget.roomID}";
+  // "ws://domainname/ws-stomp/pub",
   @override
   void initState() {
     super.initState();
     stompClient = StompClient(
-        config: StompConfig.sockJS(
-            url: webSocketUrl,
+        config: StompConfig(
+            url:
+                "ws://43.200.176.111:8080/domainname/ws-stomp/sub/chat/room/${widget.roomID}",
             onConnect: onConnectCallback,
             beforeConnect: () async {
               print('waiting to connect...');
@@ -67,6 +69,7 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
           'roomId': widget.roomID,
           'userId': widget.userID,
           'message': sendMsg,
+          'time': '12:30',
         }),
       );
       textEditingController.clear();
