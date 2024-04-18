@@ -37,14 +37,12 @@ public class CreatureController {
     @ResponseBody
     //@CustomAuthentication
     public CreatureData createCreature(//@RequestAttribute UserContext userContext,
-                                       //@RequestParam MultipartFile img,
+                                       @RequestParam MultipartFile img,
                                        @RequestParam String name,
                                        @RequestParam String info,
                                        @RequestParam Integer price) throws IOException {
 
-        return creatureService.createCreature(name, info, price
-                //, img
-                );
+        return creatureService.createCreature(name, info, price, img);
     }
 
     @PostMapping("/purchase")
@@ -77,6 +75,7 @@ public class CreatureController {
         return new SeaCreatureData(creatureService.activateCreature(seaCreatureData));
     }
 
+    // TODO
     // 임시 마일리지 얻는 함수
     @PostMapping("/user-get-mileage")
     @CustomAuthentication

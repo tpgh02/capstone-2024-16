@@ -31,16 +31,16 @@ public class CreatureService {
 
 
     public CreatureData createCreature(String name, String info, Integer price
-                                       //,MultipartFile img
+                                       ,MultipartFile img
                                        ) throws IOException {
 
-        //Image image = imageService.save(img);
+        Image image = imageService.save(img);
 
         Creature creature = Creature.builder()
                 .name(name)
                 .info(info)
                 .price(price)
-                //.image(image)
+                .image(image)
                 .build();
 
         creatureRepository.save(creature);
