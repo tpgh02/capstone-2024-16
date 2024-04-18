@@ -20,14 +20,14 @@ class _m2TabbarState extends State<m2Tabbar>
     animationDuration: const Duration(milliseconds: 200),
   );
 
-  List dayoff = ['1month', '3month', '6month'];
-  String month = '1month';
+  List dayoff = ['지난 달', '이번 달'];
+  String month = '지난 달';
   DateTime selectedDate = DateTime.utc(
     DateTime.now().year,
     DateTime.now().month,
     DateTime.now().day,
   );
-  int state = 40;
+  int state = 10;
 
   @override
   void dispose() {
@@ -48,23 +48,40 @@ class _m2TabbarState extends State<m2Tabbar>
             return isSameDay(selectedDate, day);
           },
           focusedDay: selectedDate,
-          firstDay: DateTime(2024),
-          lastDay: DateTime(2025),
+          firstDay: DateTime.utc(2024, 03, 01),
+          lastDay: DateTime.utc(2024, 04, 30),
           headerStyle: const HeaderStyle(
               titleCentered: true,
               formatButtonVisible: false,
               titleTextStyle: TextStyle(fontFamily: 'bm', fontSize: 20)),
         ),
-        Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          const Text(
-            "이번 달성률 : ",
-            style: TextStyle(fontFamily: "bm", fontSize: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            children: [
+              Row(children: [
+                const Text(
+                  "이번 달성률 : ",
+                  style: TextStyle(fontFamily: "bm", fontSize: 20),
+                ),
+                Text(
+                  "$state%",
+                  style: const TextStyle(fontFamily: "bm", fontSize: 30),
+                )
+              ]),
+              Row(children: [
+                const Text(
+                  "지난 달성률 : ",
+                  style: TextStyle(fontFamily: "bm", fontSize: 20),
+                ),
+                Text(
+                  "$state%",
+                  style: const TextStyle(fontFamily: "bm", fontSize: 30),
+                )
+              ]),
+            ],
           ),
-          Text(
-            "$state%",
-            style: const TextStyle(fontFamily: "bm", fontSize: 30),
-          )
-        ])
+        )
       ],
     );
   }

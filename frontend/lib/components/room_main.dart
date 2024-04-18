@@ -226,7 +226,7 @@ class _roomMainState extends State<room_main> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Text(
+              const Text(
                 "D - 30",
                 style: const TextStyle(
                   color: POINT_COLOR,

@@ -41,6 +41,7 @@ dependencies:
   http: ^1.2.1
   settings_ui: ^2.0.2
   stomp_dart_client: 1.0.0
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   flutter_test:

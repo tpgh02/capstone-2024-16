@@ -25,6 +25,7 @@ class _mainPageState extends State<mainPage>
   int _selectedIndex = 0;
   String? user_name = '거북이도도';
   int _main_idx = 0;
+  final state = [0, 0, 1, 1, 0, 0, 0];
 
   @override
   void initState() {
@@ -106,7 +107,7 @@ class _mainPageState extends State<mainPage>
                 child: Column(
                   children: [
                     m_title('$user_name'),
-                    const m_state("목표까지 얼마 안남았어요!"),
+                    m_state(state),
                     const SizedBox(
                       height: 20,
                     ),
