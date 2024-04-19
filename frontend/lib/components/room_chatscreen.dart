@@ -85,13 +85,24 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
   void sendMessage() {
     final sendMsg = textEditingController.text;
     if (sendMsg.isNotEmpty) {
+      // time indication
+      DateTime dt = DateTime.now();
+      String hour = '${dt.hour}';
+      String minute = '${dt.minute}';
+      if (hour.length == 1) {
+        hour = '0$hour';
+      }
+      if (minute.length == 1) {
+        minute = '0$minute';
+      }
+      // send
       stompClient.send(
         destination: '/pub',
         body: json.encode({
           'roomId': widget.roomId,
           'userId': widget.userId,
           'message': sendMsg,
-          'time': '12:30',
+          'time': '$hour:$minute',
         }),
       );
       textEditingController.clear();
@@ -99,7 +110,7 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
         'roomId': widget.roomId,
         'userId': widget.userId,
         'message': sendMsg,
-        'time': '12:30',
+        'time': '$hour:$minute',
       });
       print("send message");
       print(messageList);
@@ -138,8 +149,35 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('${widget.userId}'),
-                              Text(messageList[index]['message']),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      '${widget.userId} :',
+                                      style: const TextStyle(
+                                        color: POINT_COLOR,
+                                        fontFamily: 'bm',
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    messageList[index]['time'],
+                                    style: const TextStyle(
+                                      color: POINT_COLOR,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const Divider(),
+                              Text(
+                                messageList[index]['message'],
+                                style: const TextStyle(
+                                  color: POINT_COLOR,
+                                  // fontFamily: 'bma',
+                                  fontSize: 20,
+                                ),
+                              ),
                             ],
                           )),
                     );

@@ -324,8 +324,8 @@ class _roomMainState extends State<room_main> {
               builder: (context) => RoomChatScreen(
                 room_title: title,
                 is_manager: manager,
-                roomID: roomID,
-                userID: userID,
+                roomId: roomID,
+                userId: userID,
               ),
             ),
           );
