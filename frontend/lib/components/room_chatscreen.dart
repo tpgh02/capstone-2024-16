@@ -7,17 +7,33 @@ import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
+class Msg {
+  int roomId;
+  int userId;
+  String message;
+  String time;
+
+  Msg({
+    required this.roomId,
+    required this.userId,
+    required this.message,
+    required this.time,
+  });
+}
+
+List<dynamic> messageList = [];
+
 class RoomChatScreen extends StatefulWidget {
   final String room_title;
   final bool is_manager;
-  final int roomID;
-  final int userID;
+  final int roomId;
+  final int userId;
   const RoomChatScreen(
       {super.key,
       required this.room_title,
       required this.is_manager,
-      required this.roomID,
-      required this.userID});
+      required this.roomId,
+      required this.userId});
 
   @override
   State<RoomChatScreen> createState() => _RoomChatScreenState();
@@ -46,9 +62,20 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
 
   void onConnectCallback(StompFrame frame) {
     stompClient.subscribe(
-      destination: '/sub/chat/room/${widget.roomID}',
+      destination: '/sub/chat/room/${widget.roomId}',
       headers: {},
       callback: (frame) {
+        Map<String, dynamic> obj = json.decode(frame.body!);
+        Msg msg = Msg(
+          roomId: obj['roomId'],
+          userId: obj['userId'],
+          message: obj['message'],
+          time: obj['time'],
+        );
+        setState(() {
+          messageList.add(msg);
+        });
+        print(msg);
         print(frame.body);
         messages = jsonDecode(frame.body!).reversed.toList();
       },
@@ -61,15 +88,21 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
       stompClient.send(
         destination: '/pub',
         body: json.encode({
-          'roomId': widget.roomID,
-          'userId': widget.userID,
+          'roomId': widget.roomId,
+          'userId': widget.userId,
           'message': sendMsg,
           'time': '12:30',
         }),
       );
       textEditingController.clear();
+      messageList.add({
+        'roomId': widget.roomId,
+        'userId': widget.userId,
+        'message': sendMsg,
+        'time': '12:30',
+      });
       print("send message");
-      print(messages);
+      print(messageList);
     }
   }
 
@@ -87,13 +120,28 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
             SingleChildScrollView(
               child: Container(
                 height: MediaQuery.of(context).size.height - 160,
+                padding: const EdgeInsets.fromLTRB(6, 20, 0, 20),
                 child: ListView.builder(
                   shrinkWrap: true,
-                  itemCount: messages.length,
+                  itemCount: messageList.length,
                   itemBuilder: (context, index) {
-                    Map<String, dynamic> item = messages[index];
+                    // Map<String, dynamic> item = messageList[index];
                     return ListTile(
-                      title: Text(item['data']),
+                      title: Container(
+                          margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                          padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('${widget.userId}'),
+                              Text(messageList[index]['message']),
+                            ],
+                          )),
                     );
                   },
                 ),
@@ -197,5 +245,12 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    stompClient.deactivate();
+    textEditingController.dispose();
+    super.dispose();
   }
 }
