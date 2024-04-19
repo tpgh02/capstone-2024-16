@@ -24,18 +24,16 @@ class RoomChatScreen extends StatefulWidget {
 }
 
 class _RoomChatScreenState extends State<RoomChatScreen> {
+  final String wsURL = "ws://43.200.176.111:8080/ws-stomp";
   late StompClient stompClient;
   final TextEditingController textEditingController = TextEditingController();
   List<dynamic> messages = List.empty();
-  // final String webSocketUrl =
-  //  "ws://43.200.176.111:8080/domainname/ws-stomp/sub/chat/room/${widget.roomID}";
-  // "ws://domainname/ws-stomp/pub",
   @override
   void initState() {
     super.initState();
     stompClient = StompClient(
         config: StompConfig(
-            url: "ws://43.200.176.111:8080/domainname/ws-stomp",
+            url: wsURL,
             onConnect: onConnectCallback,
             beforeConnect: () async {
               print('waiting to connect...');
@@ -47,7 +45,6 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
   }
 
   void onConnectCallback(StompFrame frame) {
-    // setState(() {});
     stompClient.subscribe(
       destination: '/sub/chat/room/${widget.roomID}',
       headers: {},
@@ -71,6 +68,8 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
         }),
       );
       textEditingController.clear();
+      print("send message");
+      print(messages);
     }
   }
 
@@ -96,30 +95,10 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
                     return ListTile(
                       title: Text(item['data']),
                     );
-                    // Map<String, dynamic> item = messages[index];
-                    // return GestureDetector(
-                    //   child: Card(
-                    //     child: Text(
-                    //       item[index].content,
-                    //       textAlign: item[index].uuid =
-                    //           myUuid ? TextAlign.right : TextAlign.left,
-                    //     ),
-                    //   ),
-                    // );
                   },
                 ),
               ),
-              //
             ),
-            // Expanded(
-            //   child: GestureDetector(
-            //     onTap: () {},
-            //     child: Align(
-            //       alignment: Alignment.topCenter,
-            //       child: Text(room_title),
-            //     ),
-            //   ),
-            // ),
             _TextInputForm(),
           ],
         ),
@@ -191,7 +170,7 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
             TextField(
               controller: textEditingController,
               maxLength: null,
-              maxLines: null,
+              // maxLines: null,
               textAlignVertical: TextAlignVertical.top,
               decoration: const InputDecoration(
                 border: InputBorder.none,
