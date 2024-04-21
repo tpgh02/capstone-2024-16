@@ -6,14 +6,14 @@ import 'package:dodo/components/roomset_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:dodo/const/colors.dart';
 
-class room_main extends StatefulWidget {
+class room_group extends StatefulWidget {
   final String room_title;
   final int room_id;
   final int room_mem;
   final int room_maxmem;
   final bool canChat;
   final bool is_manager;
-  const room_main(
+  const room_group(
       {super.key,
       required this.room_title,
       required this.room_id,
@@ -23,10 +23,10 @@ class room_main extends StatefulWidget {
       required this.is_manager});
 
   @override
-  State<room_main> createState() => _roomMainState();
+  State<room_group> createState() => _roomMainState();
 }
 
-class _roomMainState extends State<room_main> {
+class _roomMainState extends State<room_group> {
   final userList = [
     {
       "user_name": "User1",
@@ -104,7 +104,7 @@ class _roomMainState extends State<room_main> {
               height: 25,
             ),
             // 목표 기한
-            _d_day(room_title),
+            _progressBar(),
             Container(
               margin: const EdgeInsets.all(20),
               child: Row(
@@ -197,7 +197,7 @@ class _roomMainState extends State<room_main> {
     );
   }
 
-  Container _d_day(String? title) {
+  Container _progressBar() {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -216,22 +216,67 @@ class _roomMainState extends State<room_main> {
           const SizedBox(width: 20),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const Row(
+                children: [
+                  Text(
+                    "목표를 ",
+                    style: TextStyle(
+                      color: POINT_COLOR,
+                      fontFamily: 'bm',
+                      fontSize: 21,
+                    ),
+                  ),
+                  Text(
+                    "70%",
+                    style: TextStyle(
+                      color: PRIMARY_COLOR,
+                      fontFamily: 'bm',
+                      fontSize: 25,
+                    ),
+                  ),
+                  Text(
+                    " 달성했어요!",
+                    style: TextStyle(
+                      color: POINT_COLOR,
+                      fontFamily: 'bm',
+                      fontSize: 21,
+                    ),
+                  ),
+                ],
+              ),
+              // progress bar
+              Stack(
+                children: [
+                  Container(
+                    height: 15,
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
+                    ),
+                  ),
+                  Container(
+                    height: 15,
+                    width: MediaQuery.of(context).size.width * 0.42,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: PRIMARY_COLOR,
+                    ),
+                  ),
+                ],
+              ),
+              // D-day
+              const SizedBox(
+                height: 2,
+              ),
               Text(
-                "$title의 목표기한",
+                "목표까지 D-30",
                 style: const TextStyle(
                   color: POINT_COLOR,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Text(
-                "D - 30",
-                style: TextStyle(
-                  color: POINT_COLOR,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                  fontFamily: 'bm',
+                  fontSize: 18,
                 ),
               ),
             ],
@@ -245,7 +290,7 @@ class _roomMainState extends State<room_main> {
     return Column(
       children: [
         const Text(
-          "오늘도 도전을\n완료한 사람은?",
+          "목표를 위해\n도전한 사람은?",
           textAlign: TextAlign.center,
           style: TextStyle(
               color: POINT_COLOR, fontSize: 21, fontWeight: FontWeight.bold),

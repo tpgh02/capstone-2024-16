@@ -1,3 +1,4 @@
+import 'package:dodo/components/room_group.dart';
 import 'package:dodo/components/room_main.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,7 @@ class _roomListState extends State<room_list> {
     {
       "room_title": "자취요리왕",
       "room_id": 1,
+      "room_type": "default",
       "room_img": "assets/images/cook.jpg",
       "room_mem": 10,
       "room_maxmem": 20,
@@ -23,6 +25,7 @@ class _roomListState extends State<room_list> {
     {
       "room_title": "오운완",
       "room_id": 2,
+      "room_type": "default",
       "room_img": "assets/images/turtle_noradius.png",
       "room_mem": 5,
       "room_maxmem": 20,
@@ -32,6 +35,7 @@ class _roomListState extends State<room_list> {
     {
       "room_title": "H.O.T",
       "room_id": 3,
+      "room_type": "group",
       "room_img": "assets/images/turtle_noradius.png",
       "room_mem": 10,
       "room_maxmem": 20,
@@ -68,17 +72,28 @@ class _roomListState extends State<room_list> {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => room_main(
-                                    room_title: postList[num]["room_title"],
-                                    room_id: postList[num]["room_id"],
-                                    room_mem: postList[num]["room_mem"],
-                                    room_maxmem: postList[num]["room_maxmem"],
-                                    canChat: postList[num]["canChat"],
-                                    is_manager: postList[num]["is_manager"],
-                                  )));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        if (postList[num]["room_type"] == "default") {
+                          return room_main(
+                            room_title: postList[num]["room_title"],
+                            room_id: postList[num]["room_id"],
+                            room_mem: postList[num]["room_mem"],
+                            room_maxmem: postList[num]["room_maxmem"],
+                            canChat: postList[num]["canChat"],
+                            is_manager: postList[num]["is_manager"],
+                          );
+                        } else {
+                          return room_group(
+                            room_title: postList[num]["room_title"],
+                            room_id: postList[num]["room_id"],
+                            room_mem: postList[num]["room_mem"],
+                            room_maxmem: postList[num]["room_maxmem"],
+                            canChat: postList[num]["canChat"],
+                            is_manager: postList[num]["is_manager"],
+                          );
+                        }
+                      }));
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
