@@ -1,6 +1,7 @@
 package com.dodo.room;
 
 import com.dodo.config.auth.CustomAuthentication;
+import com.dodo.room.domain.Category;
 import com.dodo.room.dto.RoomData;
 import com.dodo.room.dto.UserData;;
 import com.dodo.tag.repository.RoomTagRepository;
@@ -58,6 +59,12 @@ public class RoomController {
             @RequestAttribute UserContext userContext,
             @RequestParam Long roomId) {
         return roomService.getUsers(userContext, roomId);
+    }
+
+    // 카테고리로 방 찾기
+    @GetMapping("/get-rooms-by-category")
+    public List<RoomData> getRoomsByCategory(@RequestParam Category category) {
+        return roomService.getRoomListByCategory(category);
     }
 
     // 인증방 생성

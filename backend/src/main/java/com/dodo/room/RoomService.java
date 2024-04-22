@@ -51,6 +51,15 @@ public class RoomService {
                 .toList();
     }
 
+    public List<RoomData> getRoomListByCategory(Category category) {
+        return roomRepository.findAllByCategory(category)
+                .orElseThrow(NotFoundException::new)
+                .stream()
+                .map(RoomData::of)
+                .toList();
+
+    }
+
     // 인증방 제목으로 검색
     public List<RoomData> getRoomListByName(String name){
         return roomRepository.findAllByNameContaining(name).orElseThrow(NotFoundException::new)
