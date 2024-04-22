@@ -117,7 +117,9 @@ class _roomMainState extends State<room_group> {
                 ],
               ),
             ),
-            RoomUserList(),
+            RoomUserList(
+              is_manager: is_manager,
+            ),
           ],
         ),
       ),
