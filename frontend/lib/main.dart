@@ -7,6 +7,8 @@ import 'package:dodo/screen/login_screen.dart';
 import 'package:dodo/screen/main2_screen.dart';
 import 'package:dodo/screen/report_screen.dart';
 import 'package:dodo/screen/room_join.dart';
+import 'package:dodo/screen/sea_screen.dart';
+import 'package:dodo/screen/search2_screen.dart';
 import 'package:dodo/screen/signup_screen.dart';
 import 'package:dodo/components/certification.dart';
 import 'package:dodo/screen/store_screen.dart';
@@ -23,7 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: storePage(), //Certification("hello"),
+      home: seaPage(), //Certification("hello"),
     );
   }
 }

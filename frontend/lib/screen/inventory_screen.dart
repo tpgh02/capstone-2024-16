@@ -1,5 +1,4 @@
 import 'dart:convert';
-// import 'dart:ffi';
 
 import 'package:dodo/components/items.dart';
 import 'package:dodo/components/s2_hotroom.dart';
@@ -23,7 +22,7 @@ class InvenPage extends StatefulWidget {
 
 Future<Inven> fetchInven() async {
   final response =
-      await http.get(Uri.parse(serverUrl + '/api/v1/creature/Inventory'));
+      await http.get(Uri.parse(serverUrl + '/api/v1/creature/inventory'));
 
   if (response.statusCode == 200) {
     return Inven.fromJson(jsonDecode(response.body));
@@ -36,8 +35,8 @@ class Inven {
   final int price;
   final String name;
   final String info;
-  final image;
-  final creatureId;
+  final String image;
+  final String creatureId;
 
   const Inven({
     required this.price,
@@ -107,15 +106,13 @@ class _searchPageState extends State<InvenPage> {
                 ],
               ),
               Container(
-                // color: Colors.red,
-                //padding: EdgeInsets.fromLTRB(150, 300, 150, 200),
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     width: 120,
                     height: 200,
-                    child: Image.asset(
-                        "../assets/images/sea.png"), //서버에서 받은 이미지로 부르기
+                    child:
+                        Image.asset("assets/images/sea.png"), //서버에서 받은 이미지로 부르기
                   ),
                 ),
               ),
