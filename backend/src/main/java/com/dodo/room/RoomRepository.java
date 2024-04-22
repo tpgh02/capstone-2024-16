@@ -1,5 +1,6 @@
 package com.dodo.room;
 
+import com.dodo.room.domain.Category;
 import com.dodo.room.domain.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -16,4 +17,5 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     Optional<List<Room>> findAllByNameContaining(String name);
 
     Optional<List<Room>> findAllById(Long id);
+    Optional<List<Room>> findAllByCategory(Category category);
 }

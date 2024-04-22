@@ -29,7 +29,7 @@ public class TagController {
     public TagResponseDTO getTags(@PathVariable Long roomId){
 
         List<RoomTag> roomTag = roomTagRepository
-                .findByRoom(roomRepository.findById(roomId).orElseThrow(NotFoundException::new))
+                .findAllByRoom(roomRepository.findById(roomId).orElseThrow(NotFoundException::new))
                 .orElseThrow(NotFoundException::new);
         log.info("roomTag List : {}", roomTag);
 

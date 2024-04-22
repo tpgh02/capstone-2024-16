@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface RoomTagRepository extends JpaRepository<RoomTag, Long> {
 
-    Optional<List<RoomTag>> findByRoom(Room room);
+    Optional<List<RoomTag>> findAllByRoom(Room room);
 
     Optional<List<RoomTag>> findAllByTag(Tag tag);
 }

@@ -1,6 +1,7 @@
 package com.dodo.room;
 
 import com.dodo.config.auth.CustomAuthentication;
+import com.dodo.room.domain.Category;
 import com.dodo.room.dto.RoomData;
 import com.dodo.room.dto.UserData;
 import com.dodo.tag.repository.RoomTagRepository;
@@ -58,6 +59,12 @@ public class RoomController {
             @RequestAttribute UserContext userContext,
             @RequestParam Long roomId) {
         return roomService.getUsers(userContext, roomId);
+    }
+
+    // 카테고리로 방 찾기
+    @GetMapping("/get-rooms-by-category")
+    public List<RoomData> getRoomsByCategory(@RequestParam Category category) {
+        return roomService.getRoomListByCategory(category);
     }
 
     // 인증방 생성
@@ -137,13 +144,9 @@ public class RoomController {
             return "방장이 아닙니다.";
         }
 
-        roomUserRepository.findAllByRoomId(roomId).orElseThrow(NotFoundException::new).
-                forEach(roomUser -> roomUserService.deleteChatRoomUser(roomUser.getRoom().getId(), roomUser.getUser().getId()));
-        roomTagRepository.findByRoom(roomRepository.findById(roomId).orElseThrow(NotFoundException::new))
-                .orElseThrow(NotFoundException::new)
-                .forEach(roomTagRepository::delete);
-
-        roomService.deleteRoom(roomId);
+        roomUserRepository.deleteAllInBatch(roomUserRepository.findAllByRoomId(roomId).orElseThrow(NotFoundException::new));
+        roomTagRepository.deleteAllInBatch(roomTagRepository.findAllByRoom(roomRepository.findById(roomId).orElseThrow(NotFoundException::new)).orElseThrow(NotFoundException::new));
+        roomRepository.deleteById(roomId);
 
         log.info("삭제 완료");
         // 확인
@@ -198,8 +201,8 @@ public class RoomController {
     @CustomAuthentication
     @PostMapping("/update")
     @ResponseBody
-    public RoomData update(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext, @RequestParam Long roomId){
-        roomService.update(roomId, userContext, roomData);
+    public RoomData update(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext, @RequestParam Long roomId, @RequestParam List<String> tags){
+        roomService.update(roomId, userContext, roomData, tags);
 
         return RoomData.of(roomRepository.findById(roomId).orElseThrow(NotFoundException::new));
     }

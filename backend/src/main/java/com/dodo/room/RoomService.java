@@ -10,6 +10,9 @@ import com.dodo.room.dto.UserData;
 import com.dodo.roomuser.RoomUserRepository;
 import com.dodo.roomuser.RoomUserService;
 import com.dodo.roomuser.domain.RoomUser;
+import com.dodo.tag.domain.RoomTag;
+import com.dodo.tag.repository.RoomTagRepository;
+import com.dodo.tag.service.RoomTagService;
 import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
 import com.dodo.user.domain.UserContext;
@@ -31,6 +34,8 @@ public class RoomService {
     private final RoomUserRepository roomUserRepository;
     private final RoomRepository roomRepository;
     private final RoomUserService roomUserService;
+    private final RoomTagRepository roomTagRepository;
+    private final RoomTagService roomTagService;
 
     public List<RoomData> getMyRoomList(UserContext userContext) {
         User user = userRepository.findById(userContext.getUserId())
@@ -49,6 +54,15 @@ public class RoomService {
                 .stream()
                 .map(UserData::new) //TODO
                 .toList();
+    }
+
+    public List<RoomData> getRoomListByCategory(Category category) {
+        return roomRepository.findAllByCategory(category)
+                .orElseThrow(NotFoundException::new)
+                .stream()
+                .map(RoomData::of)
+                .toList();
+
     }
 
     // 인증방 제목으로 검색
@@ -157,13 +171,14 @@ public class RoomService {
     }
 
     // 방장의 채팅방 설정 수정
-    public void update(Long roomId, UserContext userContext, RoomData roomData) {
+    public void update(Long roomId, UserContext userContext, RoomData roomData, List<String> tags) {
         User user = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
         Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
         RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).orElseThrow(NotFoundException::new);
+        List<RoomTag> roomTags = roomTagRepository.findAllByRoom(room).orElseThrow(NotFoundException::new);
 
         if (!roomUser.getIsManager()) {
-            log.info("not manager");
+            log.info("you are not manager");
         }
         else {
             log.info("roomData's maxUser : {}", roomData.getMaxUser());
@@ -181,6 +196,9 @@ public class RoomService {
                     roomData.getFrequency(),
                     roomData.getCertificationType()
             );
+            roomTagRepository.deleteAllInBatch(roomTags);
+            roomTagService.saveRoomTag(room, tags);
+
             log.info("room name : {}", room.getName());
         }
     }
