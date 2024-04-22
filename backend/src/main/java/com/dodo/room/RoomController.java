@@ -144,13 +144,9 @@ public class RoomController {
             return "방장이 아닙니다.";
         }
 
-        roomUserRepository.findAllByRoomId(roomId).orElseThrow(NotFoundException::new).
-                forEach(roomUser -> roomUserService.deleteChatRoomUser(roomUser.getRoom().getId(), roomUser.getUser().getId()));
-        roomTagRepository.findByRoom(roomRepository.findById(roomId).orElseThrow(NotFoundException::new))
-                .orElseThrow(NotFoundException::new)
-                .forEach(roomTagRepository::delete);
-
-        roomService.deleteRoom(roomId);
+        roomUserRepository.deleteAllInBatch(roomUserRepository.findAllByRoomId(roomId).orElseThrow(NotFoundException::new));
+        roomTagRepository.deleteAllInBatch(roomTagRepository.findAllByRoom(roomRepository.findById(roomId).orElseThrow(NotFoundException::new)).orElseThrow(NotFoundException::new));
+        roomRepository.deleteById(roomId);
 
         log.info("삭제 완료");
         // 확인
@@ -205,8 +201,8 @@ public class RoomController {
     @CustomAuthentication
     @PostMapping("/update")
     @ResponseBody
-    public RoomData update(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext, @RequestParam Long roomId){
-        roomService.update(roomId, userContext, roomData);
+    public RoomData update(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext, @RequestParam Long roomId, @RequestParam List<String> tags){
+        roomService.update(roomId, userContext, roomData, tags);
 
         return RoomData.of(roomRepository.findById(roomId).orElseThrow(NotFoundException::new));
     }
