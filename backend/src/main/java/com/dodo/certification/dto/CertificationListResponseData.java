@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 public class CertificationListResponseData {
     private Long userId;
+    private Long roomUserId;
     private String userName;
     private Image userImage;
     private Integer max;
@@ -18,6 +19,7 @@ public class CertificationListResponseData {
     public CertificationListResponseData(CertificationService.CertificationGroup group) {
         User user = group.getRoomUser().getUser();
         this.userId = user.getId();
+        this.roomUserId = group.getRoomUser().getId();
         this.userName = user.getName();
         this.userImage = user.getImage();
         this.max = group.getRoomUser().getRoom().getFrequency();

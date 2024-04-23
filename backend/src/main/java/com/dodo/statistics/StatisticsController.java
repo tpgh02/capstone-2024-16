@@ -17,10 +17,10 @@ import java.util.List;
 public class StatisticsController {
     private final StatisticsService statisticsService;
 
-    @GetMapping("/simple")
+    @GetMapping("/simple/{roomId}")
     public SimpleReportResponseData getSimpleReport(
             @RequestAttribute UserContext userContext,
-            @RequestParam Long roomId
+            @PathVariable Long roomId
     ) {
         return statisticsService.getSimpleReport(userContext, roomId);
     }
@@ -32,7 +32,7 @@ public class StatisticsController {
         return statisticsService.getReport(userContext);
     }
 
-    @GetMapping("/weekly")
+    @GetMapping("/weeklyGoal")
     public List<WeeklyGoalResponseData> getWeeklyGoal(
             @RequestAttribute UserContext userContext
     ) {

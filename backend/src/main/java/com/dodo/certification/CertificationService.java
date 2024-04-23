@@ -12,12 +12,14 @@ import com.dodo.image.domain.Image;
 import com.dodo.room.RoomRepository;
 import com.dodo.room.domain.Category;
 import com.dodo.room.domain.CertificationType;
+import com.dodo.room.domain.Periodicity;
 import com.dodo.room.domain.Room;
 import com.dodo.roomuser.RoomUserRepository;
 import com.dodo.roomuser.domain.RoomUser;
 import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
 import com.dodo.user.domain.UserContext;
+import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +34,12 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -79,7 +84,7 @@ public class CertificationService {
         // 기상인증인 경우
         if(room.getCategory() == Category.RISE) {
             // TODO -> 시간이 잘 나오나?
-
+            // 인증방을 만들 때 설정한 시간대가 맞는지 체크하고 CertificationStatus를 수정
         }
 
 
@@ -127,6 +132,7 @@ public class CertificationService {
         return new CertificationDetailResponseData(certification, vote, room);
     }
 
+    @Transactional
     public CertificationDetailResponseData voting(UserContext userContext, VoteRequestData requestData) {
         User user = getUser(userContext);
         Certification certification = certificationRepository.findById(requestData.getCertificationId())
@@ -195,29 +201,51 @@ public class CertificationService {
                 .orElseThrow(() -> new NotFoundException("인증방의 회원을 찾을 수 엇습니다"));
 
 
-        // 날짜비교
-        // TODO
-        // 일일 인증일 경우만 따진다 일단
-        // periodicity를 이용하여 나중에 수정해야 함.
         LocalDateTime today = LocalDateTime.now();
-        String todayString = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         List<CertificationGroup> groupList = new ArrayList<>();
 
         // -> 인증 기록들 중에 오늘인것 찾는다.
+        // -> 주간 인증의 경우 이번주의 인증 기록들을 찾는다.
         // -> 같은 유저것들로 묶는다.
-        // -> 맵의 리스트를 돌며 wait, success 개수를 센다.
-        // -> roomuser와 함께 클래스에 넣어서 리스트를 만든다.
+        if(room.getPeriodicity() == Periodicity.DAILY) {
 
+            String todayString = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            Map<RoomUser, List<Certification>> certificationMap = certificationRepository.findAllByRoomUserIn(roomUserList)
+                    .orElse(new ArrayList<>())
+                    .stream()
+                    .filter(c -> c.getCreatedTime()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                            .equals(todayString))
+                    .collect(Collectors.groupingBy(Certification::getRoomUser));
 
-        Map<RoomUser, List<Certification>> certificationMap = certificationRepository.findAllByRoomUserIn(roomUserList)
-                .orElse(new ArrayList<>())
-                .stream()
-                .filter(c -> c.getCreatedTime()
-                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-                        .equals(todayString))
-                .collect(Collectors.groupingBy(Certification::getRoomUser));
+            grouping(roomUserList, groupList, certificationMap);
 
+        } else if(room.getPeriodicity() == Periodicity.WEEKLY){
+
+            List<LocalDateTime> thisWeek = getThisWeek();
+            Map<RoomUser, List<Certification>> certificationMap = certificationRepository.findAllByRoomUserIn(roomUserList)
+                    .orElse(new ArrayList<>())
+                    .stream()
+                    .filter(c -> {
+                        LocalDateTime ctime = c.getCreatedTime();
+                        return ctime.isAfter(thisWeek.get(0)) && ctime.isBefore(thisWeek.get(1));
+                    })
+                    .collect(Collectors.groupingBy(Certification::getRoomUser));
+
+            grouping(roomUserList, groupList, certificationMap);
+
+        }
+
+        return groupList.stream()
+                .map(CertificationListResponseData::new)
+                .toList();
+    }
+
+    // 일단위, 주단위로 모인 인증들을 토대로 인증방에서 어떻게 보여줄지 그룹핑함
+    // -> 맵의 리스트를 돌며 wait, success 개수를 센다.
+    // -> roomuser와 함께 클래스에 넣어서 리스트를 만든다.
+    private void grouping(List<RoomUser> roomUserList, List<CertificationGroup> groupList, Map<RoomUser, List<Certification>> certificationMap) {
         roomUserList.forEach(
                 roomUser -> {
                     CertificationGroup group = new CertificationGroup(roomUser);
@@ -232,12 +260,9 @@ public class CertificationService {
                     groupList.add(group);
                 }
         );
-
-        return groupList.stream()
-                .map(CertificationListResponseData::new)
-                .toList();
     }
 
+    // AI로부터 정보를 받아와 인증 여부를 파악함.
     public void analyze(AiResponseData aiResponseData) {
         Category category = aiResponseData.getCategory();
         Certification certification = certificationRepository.findById(aiResponseData.getCertificationId())
@@ -245,7 +270,6 @@ public class CertificationService {
         if(category == Category.STUDY) {
 
         }
-
     }
 
     @Data
@@ -266,5 +290,13 @@ public class CertificationService {
     private User getUser(UserContext userContext) {
         return userRepository.findById(userContext.getUserId())
                 .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다"));
+    }
+
+    private List<LocalDateTime> getThisWeek() {
+        LocalDateTime now = LocalDateTime.now();
+        DayOfWeek dayOfWeek = now.getDayOfWeek();
+        LocalDateTime sunday = now.plusDays(7 - dayOfWeek.getValue()).with(LocalTime.MAX);
+        LocalDateTime monday = now.minusDays(6).with(LocalTime.MIN);
+        return Arrays.asList(monday, sunday);
     }
 }

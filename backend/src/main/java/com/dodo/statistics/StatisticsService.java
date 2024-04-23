@@ -168,7 +168,7 @@ public class StatisticsService {
         List<Certification> certificationList = certificationRepository.findAllByRoomUserIn(roomUser)
                 .orElse(new ArrayList<>());
         List<LocalDateTime> thisWeek = getThisWeek();
-        List<WeeklyGoalResponseData> result = getResultList(thisWeek.get(0));
+        List<WeeklyGoalResponseData> result = getEmptyWeek(thisWeek.get(0));
 
         certificationList.stream()
                 // 인증 기록중에 이번주 필터
@@ -196,10 +196,9 @@ public class StatisticsService {
         return Arrays.asList(monday, sunday);
     }
 
-    private List<WeeklyGoalResponseData> getResultList(LocalDateTime thisWeekStart) {
+    private List<WeeklyGoalResponseData> getEmptyWeek(LocalDateTime thisWeekStart) {
         List<WeeklyGoalResponseData> result = new ArrayList<>();
-
-        // 일주일 만들기
+        // flag false 인 일주일 만들기
         for(int i = 0; i < 7; i++) {
             result.add(new WeeklyGoalResponseData(thisWeekStart.plusDays(i)));
         }
