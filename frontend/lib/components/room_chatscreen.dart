@@ -1,7 +1,6 @@
+import 'package:dodo/components/room_notice.dart';
 import 'package:dodo/const/colors.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'dart:convert';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
@@ -127,9 +126,14 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            _Notice(),
-            // 채팅 스크린
+            // 공지
+            RoomNotice(
+              room_title: widget.room_title,
+              room_notice: "${widget.room_title}의 채팅방 공지사항",
+              is_manager: widget.is_manager,
+            ),
 
+            // 채팅 스크린
             Expanded(
               child: Container(
                 padding: const EdgeInsets.fromLTRB(6, 20, 0, 20),
@@ -229,73 +233,6 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  // 공지
-  Container _Notice() {
-    return Container(
-      height: 80,
-      width: MediaQuery.of(context).size.width,
-      constraints: const BoxConstraints(minHeight: 50),
-      decoration: ShapeDecoration(
-        color: Colors.white70,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: const BorderSide(
-            color: POINT_COLOR,
-            strokeAlign: BorderSide.strokeAlignInside,
-            width: 2,
-          ),
-        ),
-      ),
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.all(10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          // 공지 아이콘
-          ClipOval(
-            child: Container(
-              color: PRIMARY_COLOR,
-              padding: const EdgeInsets.all(10),
-              child: const Icon(
-                Icons.announcement_outlined,
-                color: Color.fromARGB(235, 255, 255, 255),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.02,
-          ),
-
-          // 공지 텍스트
-          SizedBox(
-              width: MediaQuery.of(context).size.width * 0.72,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Flexible(
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: RichText(
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        text: TextSpan(
-                          text:
-                              '${widget.room_title}의 공지사항 ${widget.room_title}의 공지사항 ${widget.room_title}의 공지사항 ${widget.room_title}의 공지사항 ${widget.room_title}의 공지사항',
-                          style: const TextStyle(
-                            color: POINT_COLOR,
-                            fontSize: 16.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ))
-        ],
       ),
     );
   }
