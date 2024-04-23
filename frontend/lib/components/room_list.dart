@@ -1,5 +1,6 @@
 import 'package:dodo/components/room_group.dart';
 import 'package:dodo/components/room_main.dart';
+import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 
 class room_list extends StatefulWidget {
@@ -38,13 +39,22 @@ class _roomListState extends State<room_list> {
             child: Row(
               children: [
                 // 인증방 썸네일 이미지
-                SizedBox(
-                  width: 100,
-                  height: 100,
-                  child: ClipOval(
-                    child: Image.asset(
-                      widget.room_img,
-                      fit: BoxFit.cover,
+                GestureDetector(
+                  onTap: () {
+                    widget.is_manager
+                        ? showModalBottomSheet(
+                            context: context,
+                            builder: ((builder) => editRoomImg()))
+                        : null;
+                  },
+                  child: SizedBox(
+                    width: 100,
+                    height: 100,
+                    child: ClipOval(
+                      child: Image.asset(
+                        widget.room_img,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
@@ -108,28 +118,96 @@ class _roomListState extends State<room_list> {
     );
   }
 
-//   Widget roomList() {
-//     return const Padding(
-//       padding: EdgeInsets.all(20),
-//       child: SizedBox(
-//         height: 80,
-//         child: Row(
-//           children: [
-//             Text('이미지'),
-//             SizedBox(width: 15),
-//             Expanded(
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   Text('$room_name'),
-//                   Text('방 설명'),
-//                 ],
-//               ),
-//             ),
-//             Text('도장'),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
+  // 그룹 이미지 수정 팝업
+  Widget editRoomImg() {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+      ),
+      height: 180,
+      width: MediaQuery.of(context).size.width,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const Text(
+              '프로필 사진을 선택해주세요.',
+              style: TextStyle(
+                color: POINT_COLOR,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                TextButton(
+                  onPressed: () {},
+                  child: const Column(
+                    children: [
+                      Icon(
+                        Icons.camera_alt_rounded,
+                        color: POINT_COLOR,
+                        size: 40,
+                      ),
+                      Text(
+                        '카메라',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: POINT_COLOR,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Column(
+                    children: [
+                      Icon(
+                        Icons.photo,
+                        color: POINT_COLOR,
+                        size: 40,
+                      ),
+                      Text(
+                        '앨범',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: POINT_COLOR,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Column(
+                    children: [
+                      Icon(
+                        Icons.cancel,
+                        color: POINT_COLOR,
+                        size: 40,
+                      ),
+                      Text(
+                        '기본 이미지',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: POINT_COLOR,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
