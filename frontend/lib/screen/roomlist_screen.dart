@@ -14,6 +14,7 @@ class _RoomListState extends State<RoomListPage> {
     {
       "room_title": "자취요리왕",
       "room_id": 1,
+      "room_pwd": null,
       "room_type": "default",
       "room_img": "assets/images/cook.jpg",
       "room_mem": 10,
@@ -24,6 +25,7 @@ class _RoomListState extends State<RoomListPage> {
     {
       "room_title": "오운완",
       "room_id": 2,
+      "room_pwd": "1234",
       "room_type": "default",
       "room_img": "assets/images/turtle_noradius.png",
       "room_mem": 5,
@@ -34,6 +36,7 @@ class _RoomListState extends State<RoomListPage> {
     {
       "room_title": "H.O.T",
       "room_id": 3,
+      "room_pwd": null,
       "room_type": "group",
       "room_img": "assets/images/turtle_noradius.png",
       "room_mem": 10,
@@ -62,6 +65,7 @@ class _RoomListState extends State<RoomListPage> {
                       return room_list(
                         room_title: roomList[index]["room_title"],
                         room_id: roomList[index]["room_id"],
+                        room_pwd: roomList[index]["room_pwd"],
                         room_type: roomList[index]["room_type"],
                         room_img: roomList[index]["room_img"],
                         room_mem: roomList[index]["room_mem"],
