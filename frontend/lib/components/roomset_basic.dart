@@ -26,40 +26,227 @@ class RoomSetting_Basic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: _roomSetAppBar(),
-        backgroundColor: LIGHTGREY,
-        body: Column(
-          children: [
-            Flexible(
-              child: SettingsList(
-                contentPadding: const EdgeInsets.all(15),
-                sections: [
-                  SettingsSection(
-                    tiles: [
-                      SettingsTile(
-                        title: const Text('방 ID'),
-                        value: Text('$room_id'),
-                        leading: const Icon(Icons.vpn_key),
-                      ),
-                      SettingsTile.navigation(
-                        title: const Text('인증방 정보'),
-                        leading: const Icon(Icons.info_outline),
-                        onPressed: ((context) {}),
-                      ),
-                      SettingsTile.navigation(
-                        title: const Text('인증방 나가기'),
-                        leading: const Icon(Icons.exit_to_app),
-                        onPressed: ((context) {}),
-                      ),
-                    ],
-                  )
-                ],
-              ),
+      appBar: _roomSetAppBar(),
+      backgroundColor: LIGHTGREY,
+      body: Column(
+        children: [
+          Flexible(
+            child: SettingsList(
+              contentPadding: const EdgeInsets.all(15),
+              sections: [
+                SettingsSection(
+                  tiles: [
+                    SettingsTile(
+                      title: const Text('방 ID'),
+                      value: Text('$room_id'),
+                      leading: const Icon(Icons.vpn_key),
+                    ),
+                    SettingsTile.navigation(
+                      title: const Text('인증방 정보'),
+                      leading: const Icon(Icons.info_outline),
+                      onPressed: ((context) => roomInfoDialog(context)),
+                    ),
+                    SettingsTile.navigation(
+                      title: const Text('인증방 나가기'),
+                      leading: const Icon(Icons.exit_to_app),
+                      onPressed: ((context) => roomExitDialog(context)),
+                    ),
+                  ],
+                )
+              ],
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
+  // 인증방 정보
+  void roomInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: ((context) {
+        return AlertDialog(
+          backgroundColor: LIGHTGREY,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          title: Text(
+            room_title,
+            style: const TextStyle(
+              color: POINT_COLOR,
+              fontSize: 20,
+            ),
+          ),
+          content: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        "인증 방식",
+                        style: TextStyle(
+                            color: POINT_COLOR,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    Text(
+                      room_type,
+                      style: const TextStyle(
+                        color: POINT_COLOR,
+                        fontSize: 15,
+                      ),
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.15),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        "최대 인원 수",
+                        style: TextStyle(
+                            color: POINT_COLOR,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    Text(
+                      "$room_maxmem",
+                      style: const TextStyle(
+                        color: POINT_COLOR,
+                        fontSize: 15,
+                      ),
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.15),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        "채팅 가능 여부",
+                        style: TextStyle(
+                            color: POINT_COLOR,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    Text(
+                      "$canChat",
+                      style: const TextStyle(
+                        color: POINT_COLOR,
+                        fontSize: 15,
+                      ),
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.15),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            OutlinedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: POINT_COLOR,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                side: const BorderSide(
+                  color: POINT_COLOR,
+                  width: 1.0,
+                ),
+              ),
+              child: const Text("닫기",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
+  // 인증방 나가기
+  void roomExitDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: ((context) {
+        return AlertDialog(
+          backgroundColor: LIGHTGREY,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          title: const Text(
+            '정말 인증방에서 나가시겠습니까?',
+            style: TextStyle(
+              color: POINT_COLOR,
+              fontSize: 20,
+            ),
+          ),
+          content: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: const Text(
+              '※ 인증방에서 퇴장할 경우, 해당 인증방에서의 데이터는 복구할 수 없습니다.',
+              style: TextStyle(
+                color: POINT_COLOR,
+                fontSize: 15,
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); //창 닫기
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: POINT_COLOR,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                side: const BorderSide(
+                  color: POINT_COLOR,
+                  width: 1.0,
+                ),
+              ),
+              child: const Text(
+                "예",
+                style: TextStyle(
+                    color: Color.fromARGB(226, 255, 255, 255),
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            OutlinedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); //창 닫기
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: POINT_COLOR,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                side: const BorderSide(
+                  color: POINT_COLOR,
+                  width: 1.0,
+                ),
+              ),
+              child: const Text("아니오",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
+  // Appbar
   PreferredSizeWidget _roomSetAppBar() {
     return PreferredSize(
       preferredSize: const Size.fromHeight(80),
