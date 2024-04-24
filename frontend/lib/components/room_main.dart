@@ -9,6 +9,9 @@ import 'package:dodo/const/colors.dart';
 class room_main extends StatefulWidget {
   final String room_title;
   final int room_id;
+  final String? room_pwd;
+  final String room_type;
+  // final String room_img;
   final int room_mem;
   final int room_maxmem;
   final bool canChat;
@@ -17,6 +20,8 @@ class room_main extends StatefulWidget {
       {super.key,
       required this.room_title,
       required this.room_id,
+      this.room_pwd,
+      required this.room_type,
       required this.room_mem,
       required this.room_maxmem,
       required this.canChat,
@@ -173,14 +178,30 @@ class _roomMainState extends State<room_main> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => RoomSetting_Manager(),
+                          builder: (context) => RoomSetting_Manager(
+                            room_title: widget.room_title,
+                            room_id: widget.room_id,
+                            room_pwd: widget.room_pwd,
+                            room_type: widget.room_type,
+                            room_mem: widget.room_mem,
+                            room_maxmem: widget.room_maxmem,
+                            canChat: widget.canChat,
+                          ),
                         ),
                       );
                     } else {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => RoomSetting_Basic(),
+                          builder: (context) => RoomSetting_Basic(
+                            room_title: widget.room_title,
+                            room_id: widget.room_id,
+                            room_pwd: widget.room_pwd,
+                            room_type: widget.room_type,
+                            room_mem: widget.room_mem,
+                            room_maxmem: widget.room_maxmem,
+                            canChat: widget.canChat,
+                          ),
                         ),
                       );
                     }

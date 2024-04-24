@@ -3,7 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 class RoomSetting_Basic extends StatelessWidget {
-  const RoomSetting_Basic({super.key});
+  final String room_title;
+  final int room_id;
+  final String? room_pwd;
+  final String room_type;
+  // final String room_img;
+  final int room_mem;
+  final int room_maxmem;
+  final bool canChat;
+  // final bool is_manager;
+  const RoomSetting_Basic({
+    super.key,
+    required this.room_title,
+    required this.room_id,
+    this.room_pwd,
+    required this.room_type,
+    required this.room_mem,
+    required this.room_maxmem,
+    required this.canChat,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +38,7 @@ class RoomSetting_Basic extends StatelessWidget {
                     tiles: [
                       SettingsTile(
                         title: const Text('방 ID'),
-                        value: const Text('01234567'),
+                        value: Text('$room_id'),
                         leading: const Icon(Icons.vpn_key),
                       ),
                       SettingsTile.navigation(

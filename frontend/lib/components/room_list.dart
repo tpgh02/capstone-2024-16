@@ -74,6 +74,8 @@ class _roomListState extends State<room_list> {
                               return room_main(
                                 room_title: widget.room_title,
                                 room_id: widget.room_id,
+                                room_pwd: widget.room_pwd,
+                                room_type: widget.room_type,
                                 room_mem: widget.room_mem,
                                 room_maxmem: widget.room_maxmem,
                                 canChat: widget.canChat,
@@ -83,6 +85,8 @@ class _roomListState extends State<room_list> {
                               return room_group(
                                 room_title: widget.room_title,
                                 room_id: widget.room_id,
+                                room_pwd: widget.room_pwd,
+                                room_type: widget.room_type,
                                 room_mem: widget.room_mem,
                                 room_maxmem: widget.room_maxmem,
                                 canChat: widget.canChat,
@@ -109,8 +113,34 @@ class _roomListState extends State<room_list> {
                         Row(
                           children: [
                             // 인원 수
-                            const Icon(Icons.people),
+                            const Icon(Icons.person),
                             Text(' ${widget.room_mem}/${widget.room_maxmem}'),
+
+                            // 인증방 타입
+                            widget.room_type == "group"
+                                ? const Padding(
+                                    padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                    child: Icon(
+                                      Icons.group,
+                                      size: 24,
+                                    ),
+                                  )
+                                : const SizedBox(
+                                    width: 0.1,
+                                  ),
+
+                            widget.room_type == "AI"
+                                ? const Padding(
+                                    padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                    child: Icon(
+                                      Icons.podcasts,
+                                      size: 24,
+                                    ),
+                                  )
+                                : const SizedBox(
+                                    width: 0.1,
+                                  ),
+
                             // 비밀방 여부
                             widget.room_pwd != null
                                 ? const Padding(
@@ -123,7 +153,6 @@ class _roomListState extends State<room_list> {
                                 : const SizedBox(
                                     width: 0.1,
                                   ),
-                            // 인증방 타입
                           ],
                         ),
                       ],
@@ -131,12 +160,19 @@ class _roomListState extends State<room_list> {
                   ),
                 ),
                 // 도장
-                Text('도장'),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.black26, width: 1.5),
+                  ),
+                  width: 100,
+                  height: 100,
+                ),
               ],
             ),
           ),
         ),
-        const Divider(),
+        const Divider(color: Colors.black38),
       ],
     );
   }
