@@ -19,9 +19,17 @@ class RoomNotice extends StatefulWidget {
 class _roomNoticeState extends State<RoomNotice> {
   @override
   Widget build(BuildContext context) {
+    // 공지 수정용
+    late String notice = '';
+    if (widget.room_notice != null) {
+      notice = widget.room_notice!;
+    }
+    TextEditingController textController = TextEditingController(text: notice);
+
+    // 채팅방 상단 공지
     return GestureDetector(
       onTap: () {
-        showEntireNotice();
+        showEntireNotice(textController);
       },
       child: Container(
         height: 80,
@@ -87,7 +95,7 @@ class _roomNoticeState extends State<RoomNotice> {
   }
 
   // 상단 공지사항 전체 보기
-  void showEntireNotice() {
+  void showEntireNotice(TextEditingController textController) {
     showDialog(
       context: context,
       builder: ((context) {
@@ -122,7 +130,9 @@ class _roomNoticeState extends State<RoomNotice> {
           actions: <Widget>[
             widget.is_manager
                 ? ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      editnotice(textController);
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: POINT_COLOR,
                       shape: RoundedRectangleBorder(
@@ -158,6 +168,97 @@ class _roomNoticeState extends State<RoomNotice> {
                 ),
               ),
               child: const Text("닫기",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
+  void editnotice(TextEditingController textController) {
+    showDialog(
+      context: context,
+      builder: ((context) {
+        return AlertDialog(
+          backgroundColor: LIGHTGREY,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          title: const Text(
+            "공지사항 수정",
+            style: TextStyle(fontWeight: FontWeight.bold, color: POINT_COLOR),
+          ),
+          // 공지 내용
+          content: SingleChildScrollView(
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: TextField(
+                autofocus: true,
+                controller: textController,
+                style: const TextStyle(
+                  color: Color(0xff4f4f4f),
+                  fontSize: 15,
+                ),
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: POINT_COLOR),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: POINT_COLOR),
+                    ),
+                    hintText: '공지를 입력하세요.',
+                    labelStyle:
+                        const TextStyle(color: Color(0xff4f4f4f), fontSize: 18),
+                    filled: true,
+                    fillColor: const Color(0xffEDEDED)),
+              ),
+            ),
+          ),
+
+          // 하단 버튼
+          actions: <Widget>[
+            widget.is_manager
+                ? ElevatedButton(
+                    onPressed: () {
+                      setState(() {});
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: POINT_COLOR,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      side: const BorderSide(
+                        color: POINT_COLOR,
+                        width: 1.0,
+                      ),
+                    ),
+                    child: const Text(
+                      "수정",
+                      style: TextStyle(
+                          color: Color.fromARGB(226, 255, 255, 255),
+                          fontWeight: FontWeight.bold),
+                    ),
+                  )
+                : const SizedBox(height: 0.1),
+
+            // 창 닫기
+            OutlinedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: POINT_COLOR,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                side: const BorderSide(
+                  color: POINT_COLOR,
+                  width: 1.0,
+                ),
+              ),
+              child: const Text("취소",
                   style: TextStyle(fontWeight: FontWeight.bold)),
             ),
           ],
