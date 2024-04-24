@@ -26,7 +26,7 @@ class _RoomListState extends State<RoomListPage> {
       "room_title": "오운완",
       "room_id": 2,
       "room_pwd": "1234",
-      "room_type": "default",
+      "room_type": "AI",
       "room_img": "assets/images/turtle_noradius.png",
       "room_mem": 5,
       "room_maxmem": 20,
