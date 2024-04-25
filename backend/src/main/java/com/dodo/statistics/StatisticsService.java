@@ -11,6 +11,7 @@ import com.dodo.room.domain.Room;
 import com.dodo.roomuser.RoomUserRepository;
 import com.dodo.roomuser.domain.RoomUser;
 import com.dodo.statistics.dto.ReportResponseData;
+import com.dodo.statistics.dto.RoomProfileData;
 import com.dodo.statistics.dto.SimpleReportResponseData;
 import com.dodo.statistics.dto.WeeklyGoalResponseData;
 import com.dodo.user.UserRepository;
@@ -20,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -188,6 +191,38 @@ public class StatisticsService {
 
 
     // 이번주의 시작과 끝을 반환
+    public RoomProfileData getRoomProfile(UserContext userContext, Long roomUserId) {
+        RoomUser roomUser = roomUserRepository.findById(roomUserId)
+                .orElseThrow(() -> new NotFoundException("회원을 찾을 수 없습니다"));
+
+
+        String since = roomUser.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy. MM. dd."));
+        List<Certification> certificationList = certificationRepository.findAllByRoomUser(roomUser)
+                .orElse(new ArrayList<Certification>());
+
+        List<LocalDateTime> thisWeek = getThisWeek();
+        Long latelySuccess = certificationList.stream()
+                // 인증 기록중에 이번주 필터
+                .filter(certification -> {
+                    LocalDateTime time = certification.getCreatedTime();
+                    return certification.getStatus() == CertificationStatus.SUCCESS &&
+                            time.isAfter(thisWeek.get(0)) &&
+                            time.isBefore(getThisWeek().get(1));
+                }).count();
+
+        return RoomProfileData.builder()
+                .roomUserId(roomUserId)
+                .userName(roomUser.getUser().getName())
+                .since(since)
+                .image(roomUser.getUser().getImage())
+                .success((long) certificationList.size())
+                .allSuccess(ChronoUnit.DAYS.between(roomUser.getCreatedTime(), LocalDateTime.now()))
+                .lately(latelySuccess)
+                .allLately(7L)
+                .build();
+
+    }
+
     private List<LocalDateTime> getThisWeek() {
         LocalDateTime now = LocalDateTime.now();
         DayOfWeek dayOfWeek = now.getDayOfWeek();

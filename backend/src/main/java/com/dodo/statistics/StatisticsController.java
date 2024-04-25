@@ -2,6 +2,7 @@ package com.dodo.statistics;
 
 import com.dodo.config.auth.CustomAuthentication;
 import com.dodo.statistics.dto.ReportResponseData;
+import com.dodo.statistics.dto.RoomProfileData;
 import com.dodo.statistics.dto.SimpleReportResponseData;
 import com.dodo.statistics.dto.WeeklyGoalResponseData;
 import com.dodo.user.domain.UserContext;
@@ -32,12 +33,18 @@ public class StatisticsController {
         return statisticsService.getReport(userContext);
     }
 
-    @GetMapping("/weeklyGoal")
+    @GetMapping("/weekly-goal")
     public List<WeeklyGoalResponseData> getWeeklyGoal(
             @RequestAttribute UserContext userContext
     ) {
         return statisticsService.getWeeklyGoal(userContext);
     }
 
-
+    @GetMapping("/room-profile/{roomUserId}")
+    public RoomProfileData getRoomProfile(
+            @RequestAttribute UserContext userContext,
+            @PathVariable Long roomUserId
+    ) {
+        return statisticsService.getRoomProfile(userContext, roomUserId);
+    }
 }
