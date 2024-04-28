@@ -68,18 +68,6 @@ class _searchPageState extends State<InvenPage> {
 
   @override
   Widget build(BuildContext context) {
-    final postList = [
-      {"name": "미역", "cost": "10", "img": "assets/images/cook.jpg"},
-      {"name": "돌", "cost": "10", "img": "assets/images/turtle_noradius.png"},
-      {"name": "개불", "cost": "10", "img": "assets/images/turtle_noradius.png"},
-      {"name": "미역", "cost": "10", "img": "assets/images/cook.jpg"},
-      {"name": "돌", "cost": "10", "img": "assets/images/turtle_noradius.png"},
-      {"name": "개불", "cost": "10", "img": "assets/images/turtle_noradius.png"},
-      {"name": "미역", "cost": "10", "img": "assets/images/cook.jpg"},
-      {"name": "돌", "cost": "10", "img": "assets/images/turtle_noradius.png"},
-      {"name": "개불", "cost": "10", "img": "assets/images/turtle_noradius.png"},
-    ];
-
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -116,47 +104,26 @@ class _searchPageState extends State<InvenPage> {
                   ),
                 ),
               ),
-              // Container(
-              //   //color: Colors.yellow,
-              //   alignment: Alignment.centerRight,
-              //   padding: const EdgeInsets.all(20),
-              //   height: 400,
-              //   child: CustomScrollView(
-              //     slivers: <Widget>[
-              //       SliverGrid(
-              //           delegate: SliverChildBuilderDelegate(
-              //               (BuildContext context, int idx) {
-              //             return postContainer(
-              //               postList[idx]['cost'],
-              //               postList[idx]['img'],
-              //             );
-              //           }, childCount: postList.length),
-              //           gridDelegate:
-              //               const SliverGridDelegateWithFixedCrossAxisCount(
-              //             crossAxisCount: 3,
-              //           ))
-              //     ],
-              //   ),
-              // ),
-              // Container(
-              //     width: double.infinity,
-              //     height: 50,
-              //     child: ElevatedButton(
-              //       onPressed: () {
-              //         // Navigator.push(
-              //         //     context,
-              //         //     MaterialPageRoute(
-              //         //         builder: (context) => reportPage()));
-              //       },
-              //       child: Text(
-              //         "적용하기",
-              //         style: TextStyle(
-              //             color: Colors.white, fontFamily: 'bm', fontSize: 20),
-              //       ),
-              //       style: ElevatedButton.styleFrom(
-              //         backgroundColor: PRIMARY_COLOR,
-              //       ),
-              //     )),
+
+              Container(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => reportPage()));
+                    },
+                    child: Text(
+                      "적용하기",
+                      style: TextStyle(
+                          color: Colors.white, fontFamily: 'bm', fontSize: 20),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: PRIMARY_COLOR,
+                    ),
+                  )),
               FutureBuilder<Inven>(
                 future: futureInven,
                 builder: (context, snapshot) {
@@ -187,11 +154,11 @@ class _searchPageState extends State<InvenPage> {
     );
   }
 
-  Container postContainer(title, _root, name, info) {
+  Container postContainer(title, _root, name, info, c_id) {
     return Container(
       margin: const EdgeInsets.all(5),
       alignment: Alignment.center,
-      child: items(title, _root, name, info),
+      child: items(title, _root, name, info, c_id),
     );
   }
 }
