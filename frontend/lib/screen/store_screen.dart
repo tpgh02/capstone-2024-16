@@ -37,7 +37,7 @@ class Store {
   final String name;
   final String info;
   final image;
-  final creatureId;
+  final int creatureId;
 
   const Store({
     required this.price,
@@ -128,11 +128,11 @@ class _searchPageState extends State<storePage> {
                                       delegate: SliverChildBuilderDelegate(
                                         (BuildContext context, int idx) {
                                           return postContainer(
-                                            store.price,
-                                            imageurl,
-                                            store.name,
-                                            store.info,
-                                          );
+                                              store.price,
+                                              imageurl,
+                                              store.name,
+                                              store.info,
+                                              store.creatureId);
                                         },
                                         childCount: snapshot.data!.length,
                                       ),
@@ -157,11 +157,11 @@ class _searchPageState extends State<storePage> {
     );
   }
 
-  Container postContainer(price, _root, name, info) {
+  Container postContainer(price, _root, name, info, c_id) {
     return Container(
       margin: const EdgeInsets.all(5),
       alignment: Alignment.center,
-      child: items(price, _root, name, info),
+      child: items(price, _root, name, info, c_id),
     );
   }
 }
