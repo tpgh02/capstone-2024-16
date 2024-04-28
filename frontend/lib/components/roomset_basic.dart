@@ -84,6 +84,22 @@ class RoomSetting_Basic extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // 인증방 소개
+                Row(
+                  children: [
+                    Text(
+                      "인증방 소개",
+                      style: const TextStyle(
+                        color: POINT_COLOR,
+                        fontSize: 15,
+                      ),
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.15),
+                  ],
+                ),
+                const Divider(),
+
+                // 인증 방식
                 Row(
                   children: [
                     const Expanded(
@@ -105,6 +121,8 @@ class RoomSetting_Basic extends StatelessWidget {
                     SizedBox(width: MediaQuery.of(context).size.width * 0.15),
                   ],
                 ),
+
+                // 최대 인원 수
                 Row(
                   children: [
                     const Expanded(
@@ -126,6 +144,8 @@ class RoomSetting_Basic extends StatelessWidget {
                     SizedBox(width: MediaQuery.of(context).size.width * 0.15),
                   ],
                 ),
+
+                // 채팅 가능 여부
                 Row(
                   children: [
                     const Expanded(
@@ -137,13 +157,21 @@ class RoomSetting_Basic extends StatelessWidget {
                             fontWeight: FontWeight.w600),
                       ),
                     ),
-                    Text(
-                      "$canChat",
-                      style: const TextStyle(
-                        color: POINT_COLOR,
-                        fontSize: 15,
-                      ),
-                    ),
+                    canChat
+                        ? const Text(
+                            "O",
+                            style: TextStyle(
+                              color: POINT_COLOR,
+                              fontSize: 15,
+                            ),
+                          )
+                        : const Text(
+                            "X",
+                            style: TextStyle(
+                              color: POINT_COLOR,
+                              fontSize: 15,
+                            ),
+                          ),
                     SizedBox(width: MediaQuery.of(context).size.width * 0.15),
                   ],
                 ),
