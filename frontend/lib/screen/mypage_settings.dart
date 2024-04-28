@@ -22,7 +22,7 @@ class MyPageSetting extends StatelessWidget {
               SettingsTile.navigation(
                 title: const Text('계정 비활성화'),
                 leading: const Icon(Icons.person_remove),
-                onPressed: ((context) {}),
+                onPressed: ((context) => deactivateAccountDialog(context)),
               ),
             ],
           ),
@@ -79,11 +79,11 @@ class MyPageSetting extends StatelessWidget {
     );
   }
 
-// 비밀번호 변경
+  // 비밀번호 변경
   void resetPassword(BuildContext context) {
     showDialog(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: false,
       builder: ((context) {
         return AlertDialog(
           backgroundColor: LIGHTGREY,
@@ -246,6 +246,180 @@ class MyPageSetting extends StatelessWidget {
                 "취소",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
+  // 계정 비활성화하기
+  void deactivateAccountDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: ((context) {
+        return AlertDialog(
+          backgroundColor: LIGHTGREY,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          title: const Text(
+            '정말 계정을 비활성화하시겠습니까?',
+            style: TextStyle(
+              color: POINT_COLOR,
+              fontSize: 20,
+            ),
+          ),
+          content: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: const Text(
+              '※ 계정을 비활성화할 경우, 데이터는 복구할 수 없습니다.',
+              style: TextStyle(
+                color: POINT_COLOR,
+                fontSize: 15,
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                // 계정 비활성화 전 비밀번호 확인
+                Navigator.of(context).pop();
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: ((context) {
+                    return AlertDialog(
+                      backgroundColor: LIGHTGREY,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      content: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text(
+                              "계정을 비활성화하려면 비밀번호를 입력하세요.",
+                              style: TextStyle(
+                                color: POINT_COLOR,
+                                fontSize: 15,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
+                              child: TextFormField(
+                                obscureText: true,
+                                style: const TextStyle(
+                                  color: Color(0xff4f4f4f),
+                                  fontSize: 15,
+                                ),
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide:
+                                          const BorderSide(color: POINT_COLOR),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide:
+                                          const BorderSide(color: POINT_COLOR),
+                                    ),
+                                    hintText: '비밀번호를 입력하세요.',
+                                    labelStyle: const TextStyle(
+                                        color: Color(0xff4f4f4f), fontSize: 18),
+                                    filled: true,
+                                    fillColor: const Color(0xffEDEDED)),
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return '비밀번호를 입력하세요.';
+                                  }
+                                  // if (value != room_pwd) {
+                                  //   return '비밀번호가 틀립니다.';
+                                  // }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); //창 닫기
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: POINT_COLOR,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            side: const BorderSide(
+                              color: POINT_COLOR,
+                              width: 1.0,
+                            ),
+                          ),
+                          child: const Text(
+                            "해체",
+                            style: TextStyle(
+                                color: Color.fromARGB(226, 255, 255, 255),
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        OutlinedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); //창 닫기
+                          },
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: POINT_COLOR,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            side: const BorderSide(
+                              color: POINT_COLOR,
+                              width: 1.0,
+                            ),
+                          ),
+                          child: const Text("취소",
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                      ],
+                    );
+                  }),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: POINT_COLOR,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                side: const BorderSide(
+                  color: POINT_COLOR,
+                  width: 1.0,
+                ),
+              ),
+              child: const Text(
+                "예",
+                style: TextStyle(
+                    color: Color.fromARGB(226, 255, 255, 255),
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            OutlinedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); //창 닫기
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: POINT_COLOR,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                side: const BorderSide(
+                  color: POINT_COLOR,
+                  width: 1.0,
+                ),
+              ),
+              child: const Text("아니오",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
             ),
           ],
         );

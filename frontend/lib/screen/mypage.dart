@@ -96,6 +96,8 @@ class _MyPageState extends State<MyPage> {
 
   // 프로필 수정 다이얼로그
   void editProfileDialog() {
+    TextEditingController nicknameController =
+        TextEditingController(text: 'Username');
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -156,6 +158,7 @@ class _MyPageState extends State<MyPage> {
                       color: Color(0xff4f4f4f),
                       fontSize: 15,
                     ),
+                    controller: nicknameController,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -165,7 +168,7 @@ class _MyPageState extends State<MyPage> {
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(color: POINT_COLOR),
                         ),
-                        labelText: '변경할 닉네임',
+                        hintText: '닉네임',
                         labelStyle: const TextStyle(
                             color: Color(0xff4f4f4f), fontSize: 18),
                         filled: true,
