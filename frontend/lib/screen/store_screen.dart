@@ -37,7 +37,7 @@ class Store {
   final String name;
   final String info;
   final image;
-  final int creatureId;
+  final creatureId;
 
   const Store({
     required this.price,
@@ -117,36 +117,34 @@ class _searchPageState extends State<storePage> {
                           children: snapshot.data!.map((store) {
                             String imageurl = store.image['url'];
                             print(imageurl);
-                            return Column(
-                              children: [
-                                Text('${store.info}'),
-                                Text('${store.creatureId}'),
-                                Text('Name: ${store.name}'),
-                                Text('Price: ${store.price}'),
-                                // Image 위젯 사용 시 network 또는 asset 메서드를 사용
-                                // Network 이미지일 경우
-                                Image.network('${imageurl}'),
-                                // Asset 이미지일 경우
-                                // Image.asset(store.image),
-                                // 추가적으로 필요한 정보 출력
-                              ],
+                            return Container(
+                              //color: Colors.yellow,
+                              alignment: Alignment.centerRight,
+                              padding: const EdgeInsets.all(20),
+                              height: 400,
+                              child: CustomScrollView(
+                                slivers: <Widget>[
+                                  SliverGrid(
+                                      delegate: SliverChildBuilderDelegate(
+                                        (BuildContext context, int idx) {
+                                          return postContainer(
+                                            store.price,
+                                            imageurl,
+                                            store.name,
+                                            store.info,
+                                          );
+                                        },
+                                        childCount: snapshot.data!.length,
+                                      ),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3,
+                                      ))
+                                ],
+                              ),
                             );
                           }).toList(),
                         );
-                        // var imageroot = snapshot.data!.image;
-                        // int imageid = imageroot['id'];
-                        // String imageurl = imageroot['url'];
-                        // return Column(
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        //   children: [
-                        //     Text('Name: ${snapshot.data!.name}'),
-                        //     Text('Price: ${snapshot.data!.price}'),
-                        //     Text('Info: ${snapshot.data!.info}'),
-                        //     Text('Image: ${imageid}'),
-                        //     Image.asset(imageurl),
-                        //     Text('${snapshot.data!.creatureId}'),
-                        //   ],
-                        // );
                       } else {
                         return Text('No data available');
                       }
@@ -159,11 +157,11 @@ class _searchPageState extends State<storePage> {
     );
   }
 
-  Container postContainer(title, _root, name, info) {
+  Container postContainer(price, _root, name, info) {
     return Container(
       margin: const EdgeInsets.all(5),
       alignment: Alignment.center,
-      child: items(title, _root, name, info),
+      child: items(price, _root, name, info),
     );
   }
 }

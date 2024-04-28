@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 //소유하고 있는 방들의 각각 컴포넌트를 생성
 class items extends StatelessWidget {
-  final String cost;
+  final int cost;
   final String img;
   final String name;
   final String info;
@@ -44,7 +44,7 @@ class items extends StatelessWidget {
                   //color: Colors.red,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: Image.asset(
+                    child: Image.network(
                       img,
                       fit: BoxFit.cover,
                     ),
@@ -82,7 +82,7 @@ class items extends StatelessWidget {
 }
 
 //팝업 생성하는 함수 - 다이얼로그
-void itemsdialog(context, String cost, String img, String name, info) {
+void itemsdialog(context, int cost, String img, String name, info) {
   showDialog(
     context: context,
     builder: (context) {
@@ -97,15 +97,10 @@ void itemsdialog(context, String cost, String img, String name, info) {
             const SizedBox(
               height: 15,
             ),
-            // const Text(
-            //   name,
-            //   style: TextStyle(fontFamily: "bm", fontSize: 30),
-            // ),
             const SizedBox(
               height: 15,
             ),
-
-            Image.asset(
+            Image.network(
               img,
               scale: 4,
             ),
@@ -134,7 +129,7 @@ void itemsdialog(context, String cost, String img, String name, info) {
                   color: Colors.amber,
                 ),
                 Text(
-                  cost,
+                  '$cost',
                   style: TextStyle(fontFamily: "bma", fontSize: 25),
                 ),
               ],
@@ -142,6 +137,7 @@ void itemsdialog(context, String cost, String img, String name, info) {
             const SizedBox(
               height: 15,
             ),
+            //버튼존
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
