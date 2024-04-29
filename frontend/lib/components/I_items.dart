@@ -45,7 +45,7 @@ class _itemsState extends State<i_items> {
               //alignment: Alignment.center,
               margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
               width: 70,
-              height: 90,
+              height: 80,
               //color: Colors.red,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),

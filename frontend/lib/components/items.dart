@@ -66,7 +66,7 @@ class _itemsState extends State<items> {
             //height: double.infinity,
 
             //width: 80,
-            height: 1000,
+            // height: 1000,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: Colors.white,
@@ -77,7 +77,7 @@ class _itemsState extends State<items> {
                   //alignment: Alignment.center,
                   margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
                   width: 70,
-                  height: 90,
+                  height: 80,
                   //color: Colors.red,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
