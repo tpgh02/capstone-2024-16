@@ -7,7 +7,7 @@ import 'package:dodo/screen/buy_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-Future<int> fetchBuy(Map<String, int> userData) async {
+Future<Map> fetchBuy(Map<String, int> userData) async {
   var headers = {
     'Authorization':
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
@@ -18,11 +18,10 @@ Future<int> fetchBuy(Map<String, int> userData) async {
   try {
     if (response.statusCode == 200) {
       print('연결 성공!');
-      Map<String, dynamic> responseData = json.decode(response.body);
-      //int c_Id = responseData['creatureId'];
-      int c_Id = responseData['creatureId'] ?? -1; // 일단 마일리지 무시
-      print('$c_Id'); //log 찍는 걸로 차후에 변경하기
-      return c_Id;
+
+      Map responseData = json.decode(response.body);
+      print('$responseData'); //log 찍는 걸로 차후에 변경하기
+      return responseData;
     } else {
       // 에러가 있는 경우 처리
       throw Exception('구매 요청이 실패했습니다. 마일리지가 부족합니다');

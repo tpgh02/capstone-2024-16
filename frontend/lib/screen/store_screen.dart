@@ -22,6 +22,7 @@ Future<List<Store>> fetchStore() async {
   response.headers.addAll(headers);
   if (response.statusCode == 200) {
     // return Store.fromJson(jsonDecode(response.body)); //한국어 깨짐
+    //print(response.headers);
     Iterable storeList =
         jsonDecode(utf8.decode(response.bodyBytes)); //한국어 깨지는 걸 방지하기 위함
     List<Store> stores =
@@ -77,7 +78,6 @@ class _searchPageState extends State<storePage> {
 
   @override
   Widget build(BuildContext context) {
-    int idx = 0;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(10.0),
