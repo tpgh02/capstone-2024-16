@@ -130,7 +130,7 @@ void statedialog(context, state, File? _image) {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Image.asset(
-                            '../assets/images/turtle_noradius.png',
+                            'assets/images/turtle_noradius.png',
                           ),
                         )
                       : Container(
