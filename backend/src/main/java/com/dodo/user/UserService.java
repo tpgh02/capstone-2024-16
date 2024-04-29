@@ -112,7 +112,7 @@ public class UserService {
                 .authenticationType(AuthenticationType.PASSWORD)
                 .email("hello@hello.com")
                 .name("hello")
-                .mileage(0)
+                .mileage(999999999)
                 .image(image)
                 .introduceMessage("")
                 .build();
