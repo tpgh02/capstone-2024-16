@@ -20,12 +20,21 @@ class InvenPage extends StatefulWidget {
   State<InvenPage> createState() => _searchPageState();
 }
 
-Future<Inven> fetchInven() async {
+Future<List<Inven>> fetchInven() async {
+  var headers = {
+    'Authorization':
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+  };
   final response =
       await http.get(Uri.parse(serverUrl + '/api/v1/creature/inventory'));
-
+  response.headers.addAll(headers);
   if (response.statusCode == 200) {
-    return Inven.fromJson(jsonDecode(response.body));
+    // return Store.fromJson(jsonDecode(response.body)); //한국어 깨짐
+    Iterable storeList =
+        jsonDecode(utf8.decode(response.bodyBytes)); //한국어 깨지는 걸 방지하기 위함
+    List<Inven> stores =
+        storeList.map((storeJson) => Inven.fromJson(storeJson)).toList();
+    return stores;
   } else {
     throw Exception('Failed to load album');
   }
@@ -35,7 +44,7 @@ class Inven {
   final int price;
   final String name;
   final String info;
-  final String image;
+  final image;
   final String creatureId;
 
   const Inven({
@@ -59,7 +68,7 @@ class Inven {
 
 class _searchPageState extends State<InvenPage> {
   final widgetkey = GlobalKey();
-  late Future<Inven> futureInven;
+  late Future<List<Inven>> futureInven;
   @override
   void initState() {
     super.initState();
@@ -104,7 +113,51 @@ class _searchPageState extends State<InvenPage> {
                   ),
                 ),
               ),
-
+              Container(
+                child: FutureBuilder<List<Inven>>(
+                    future: futureInven,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else if (snapshot.hasData) {
+                        return Column(
+                          children: snapshot.data!.map((Inven) {
+                            String imageurl = Inven.image['url'];
+                            print(imageurl);
+                            return Container(
+                              alignment: Alignment.centerRight,
+                              padding: const EdgeInsets.all(20),
+                              height: 400,
+                              child: CustomScrollView(
+                                slivers: <Widget>[
+                                  SliverGrid(
+                                      delegate: SliverChildBuilderDelegate(
+                                        (BuildContext context, int idx) {
+                                          return postContainer(
+                                              Inven.price,
+                                              imageurl,
+                                              Inven.name,
+                                              Inven.info,
+                                              Inven.creatureId);
+                                        },
+                                        childCount: snapshot.data!.length,
+                                      ),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3,
+                                      ))
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      } else {
+                        return Text('No data available');
+                      }
+                    }),
+              ),
               Container(
                   width: double.infinity,
                   height: 50,
@@ -124,29 +177,29 @@ class _searchPageState extends State<InvenPage> {
                       backgroundColor: PRIMARY_COLOR,
                     ),
                   )),
-              FutureBuilder<Inven>(
-                future: futureInven,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else if (snapshot.hasData) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Name: ${snapshot.data!.name}'),
-                        Text('Price: ${snapshot.data!.price}'),
-                        Text('Info: ${snapshot.data!.info}'),
-                        Image.network(snapshot.data!.image),
-                        Text('${snapshot.data!.creatureId}'),
-                      ],
-                    );
-                  } else {
-                    return Text('No data available');
-                  }
-                },
-              ),
+              // FutureBuilder<Inven>(
+              //   future: futureInven,
+              //   builder: (context, snapshot) {
+              //     if (snapshot.connectionState == ConnectionState.waiting) {
+              //       return CircularProgressIndicator();
+              //     } else if (snapshot.hasError) {
+              //       return Text('Error: ${snapshot.error}');
+              //     } else if (snapshot.hasData) {
+              //       return Column(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         children: [
+              //           Text('Name: ${snapshot.data!.name}'),
+              //           Text('Price: ${snapshot.data!.price}'),
+              //           Text('Info: ${snapshot.data!.info}'),
+              //           Image.network(snapshot.data!.image),
+              //           Text('${snapshot.data!.creatureId}'),
+              //         ],
+              //       );
+              //     } else {
+              //       return Text('No data available');
+              //     }
+              //   },
+              // ),
             ],
           ),
         ),

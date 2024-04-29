@@ -17,14 +17,15 @@ Future<int> fetchBuy(Map<String, int> userData) async {
   response.headers.addAll(headers);
   try {
     if (response.statusCode == 200) {
-      print('구매 성공!');
+      print('연결 성공!');
       Map<String, dynamic> responseData = json.decode(response.body);
-      int c_Id = responseData['creatureId'] ?? -1;
+      //int c_Id = responseData['creatureId'];
+      int c_Id = responseData['creatureId'] ?? -1; // 일단 마일리지 무시
       print('$c_Id'); //log 찍는 걸로 차후에 변경하기
       return c_Id;
     } else {
       // 에러가 있는 경우 처리
-      throw Exception('구매 요청이 실패했습니다.');
+      throw Exception('구매 요청이 실패했습니다. 마일리지가 부족합니다');
     }
   } catch (e) {
     print('네트워크 오류: $e');
