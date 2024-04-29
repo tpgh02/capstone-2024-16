@@ -1,32 +1,25 @@
 import 'dart:convert';
-// import 'dart:ffi';
 
+import 'package:dodo/components/I_items.dart';
 import 'package:dodo/components/items.dart';
-import 'package:dodo/components/s2_hotroom.dart';
-import 'package:dodo/components/s2_tag.dart';
-import 'package:dodo/components/s_list.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
-import 'package:dodo/screen/main2_screen.dart';
-import 'package:dodo/screen/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
-class InvenPage extends StatefulWidget {
-  const InvenPage({super.key});
-
-  @override
-  State<InvenPage> createState() => _searchPageState();
-}
-
-Future<Inven> fetchInven() async {
-  final response =
-      await http.get(Uri.parse(serverUrl + '/api/v1/creature/Inventory'));
-
+Future<List<Inven>> fetchInven() async {
+  final response = await http
+      .get(Uri.parse(serverUrl + '/api/v1/creature/inventory'), headers: {
+    'Authorization':
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+  });
   if (response.statusCode == 200) {
-    return Inven.fromJson(jsonDecode(response.body));
+    final List<dynamic> jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+
+    List<Inven> Invens = jsonData.map((json) => Inven.fromJson(json)).toList();
+    return Invens;
   } else {
     throw Exception('Failed to load album');
   }
@@ -37,7 +30,7 @@ class Inven {
   final String name;
   final String info;
   final image;
-  final creatureId;
+  final int creatureId;
 
   const Inven({
     required this.price,
@@ -47,7 +40,7 @@ class Inven {
     required this.creatureId,
   });
 
-  factory Inven.fromJson(Map<String, dynamic> json) {
+  factory Inven.fromJson(dynamic json) {
     return Inven(
       price: json['price'],
       name: json['name'],
@@ -58,9 +51,17 @@ class Inven {
   }
 }
 
+class InvenPage extends StatefulWidget {
+  const InvenPage({Key? key}) : super(key: key);
+
+  @override
+  State<InvenPage> createState() => _searchPageState();
+}
+
 class _searchPageState extends State<InvenPage> {
   final widgetkey = GlobalKey();
-  late Future<Inven> futureInven;
+  late Future<List<Inven>>? futureInven;
+
   @override
   void initState() {
     super.initState();
@@ -69,18 +70,6 @@ class _searchPageState extends State<InvenPage> {
 
   @override
   Widget build(BuildContext context) {
-    final postList = [
-      {"name": "미역", "cost": "10", "img": "assets/images/cook.jpg"},
-      {"name": "돌", "cost": "10", "img": "assets/images/turtle_noradius.png"},
-      {"name": "개불", "cost": "10", "img": "assets/images/turtle_noradius.png"},
-      {"name": "미역", "cost": "10", "img": "assets/images/cook.jpg"},
-      {"name": "돌", "cost": "10", "img": "assets/images/turtle_noradius.png"},
-      {"name": "개불", "cost": "10", "img": "assets/images/turtle_noradius.png"},
-      {"name": "미역", "cost": "10", "img": "assets/images/cook.jpg"},
-      {"name": "돌", "cost": "10", "img": "assets/images/turtle_noradius.png"},
-      {"name": "개불", "cost": "10", "img": "assets/images/turtle_noradius.png"},
-    ];
-
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -107,82 +96,81 @@ class _searchPageState extends State<InvenPage> {
                 ],
               ),
               Container(
-                // color: Colors.red,
-                //padding: EdgeInsets.fromLTRB(150, 300, 150, 200),
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     width: 120,
                     height: 200,
-                    child: Image.asset(
-                        "../assets/images/sea.png"), //서버에서 받은 이미지로 부르기
+                    child:
+                        Image.asset("assets/images/sea.png"), //서버에서 받은 이미지로 부르기
                   ),
                 ),
               ),
-              // Container(
-              //   //color: Colors.yellow,
-              //   alignment: Alignment.centerRight,
-              //   padding: const EdgeInsets.all(20),
-              //   height: 400,
-              //   child: CustomScrollView(
-              //     slivers: <Widget>[
-              //       SliverGrid(
-              //           delegate: SliverChildBuilderDelegate(
-              //               (BuildContext context, int idx) {
-              //             return postContainer(
-              //               postList[idx]['cost'],
-              //               postList[idx]['img'],
-              //             );
-              //           }, childCount: postList.length),
-              //           gridDelegate:
-              //               const SliverGridDelegateWithFixedCrossAxisCount(
-              //             crossAxisCount: 3,
-              //           ))
-              //     ],
-              //   ),
-              // ),
-              // Container(
-              //     width: double.infinity,
-              //     height: 50,
-              //     child: ElevatedButton(
-              //       onPressed: () {
-              //         // Navigator.push(
-              //         //     context,
-              //         //     MaterialPageRoute(
-              //         //         builder: (context) => reportPage()));
-              //       },
-              //       child: Text(
-              //         "적용하기",
-              //         style: TextStyle(
-              //             color: Colors.white, fontFamily: 'bm', fontSize: 20),
-              //       ),
-              //       style: ElevatedButton.styleFrom(
-              //         backgroundColor: PRIMARY_COLOR,
-              //       ),
-              //     )),
-              FutureBuilder<Inven>(
-                future: futureInven,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else if (snapshot.hasData) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Name: ${snapshot.data!.name}'),
-                        Text('Price: ${snapshot.data!.price}'),
-                        Text('Info: ${snapshot.data!.info}'),
-                        Image.network(snapshot.data!.image),
-                        Text('${snapshot.data!.creatureId}'),
-                      ],
-                    );
-                  } else {
-                    return Text('No data available');
-                  }
-                },
+              Container(
+                child: FutureBuilder<List<Inven>>(
+                    future: futureInven,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        print("?" + snapshot.data.toString());
+                        return Text('Error: ${snapshot.error}');
+                      } else if (snapshot.hasData) {
+                        return Column(
+                          children: snapshot.data!.map((Inven) {
+                            String imageurl = Inven.image['url'];
+                            print(imageurl);
+                            return Container(
+                              alignment: Alignment.centerRight,
+                              padding: const EdgeInsets.all(20),
+                              height: 400,
+                              child: CustomScrollView(
+                                slivers: <Widget>[
+                                  SliverGrid(
+                                      delegate: SliverChildBuilderDelegate(
+                                        (BuildContext context, int idx) {
+                                          return postContainer(
+                                              Inven.price,
+                                              imageurl,
+                                              Inven.name,
+                                              Inven.info,
+                                              Inven.creatureId);
+                                        },
+                                        childCount: snapshot.data!.length,
+                                      ),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3,
+                                      ))
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      } else {
+                        return const Text('No data available');
+                      }
+                    }),
               ),
+              Container(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => reportPage()));
+                    },
+                    child: Text(
+                      "적용하기",
+                      style: TextStyle(
+                          color: Colors.white, fontFamily: 'bm', fontSize: 20),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: PRIMARY_COLOR,
+                    ),
+                  )),
             ],
           ),
         ),
@@ -190,11 +178,11 @@ class _searchPageState extends State<InvenPage> {
     );
   }
 
-  Container postContainer(title, _root) {
+  Container postContainer(title, _root, name, info, c_id) {
     return Container(
       margin: const EdgeInsets.all(5),
       alignment: Alignment.center,
-      child: items(title, _root),
+      child: i_items(title, _root, name, info, c_id),
     );
   }
 }
