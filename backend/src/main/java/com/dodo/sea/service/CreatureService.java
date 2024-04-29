@@ -78,9 +78,10 @@ public class CreatureService {
             return false;
         }
 
-        if (seaCreatureRepository.findByUserAndCreature(user, creature).isPresent()) {
-            return false;
-        }
+        // 기존에 있는 생물을 구매하지 못하게
+//        if (seaCreatureRepository.findByUserAndCreature(user, creature).isPresent()) {
+//            return false;
+//        }
 
         user.updateMileage(user.getMileage() - creature.getPrice()); // 유저의 마일리지 차감
 
