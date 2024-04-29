@@ -74,8 +74,6 @@ class _roomListState extends State<room_list> {
                               return room_main(
                                 room_title: widget.room_title,
                                 room_id: widget.room_id,
-                                room_pwd: widget.room_pwd,
-                                room_type: widget.room_type,
                                 room_mem: widget.room_mem,
                                 room_maxmem: widget.room_maxmem,
                                 canChat: widget.canChat,
@@ -85,8 +83,6 @@ class _roomListState extends State<room_list> {
                               return room_group(
                                 room_title: widget.room_title,
                                 room_id: widget.room_id,
-                                room_pwd: widget.room_pwd,
-                                room_type: widget.room_type,
                                 room_mem: widget.room_mem,
                                 room_maxmem: widget.room_maxmem,
                                 canChat: widget.canChat,
@@ -113,34 +109,8 @@ class _roomListState extends State<room_list> {
                         Row(
                           children: [
                             // 인원 수
-                            const Icon(Icons.person),
+                            const Icon(Icons.people),
                             Text(' ${widget.room_mem}/${widget.room_maxmem}'),
-
-                            // 인증방 타입
-                            widget.room_type == "group"
-                                ? const Padding(
-                                    padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
-                                    child: Icon(
-                                      Icons.group,
-                                      size: 24,
-                                    ),
-                                  )
-                                : const SizedBox(
-                                    width: 0.1,
-                                  ),
-
-                            widget.room_type == "AI"
-                                ? const Padding(
-                                    padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
-                                    child: Icon(
-                                      Icons.podcasts,
-                                      size: 24,
-                                    ),
-                                  )
-                                : const SizedBox(
-                                    width: 0.1,
-                                  ),
-
                             // 비밀방 여부
                             widget.room_pwd != null
                                 ? const Padding(
@@ -153,6 +123,7 @@ class _roomListState extends State<room_list> {
                                 : const SizedBox(
                                     width: 0.1,
                                   ),
+                            // 인증방 타입
                           ],
                         ),
                       ],

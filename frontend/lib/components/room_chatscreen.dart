@@ -1,7 +1,6 @@
+import 'package:dodo/components/room_notice.dart';
 import 'package:dodo/const/colors.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'dart:convert';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
@@ -127,10 +126,16 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            // 공지
+            RoomNotice(
+              room_title: widget.room_title,
+              room_notice: "${widget.room_title}의 채팅방 공지사항",
+              is_manager: widget.is_manager,
+            ),
+
             // 채팅 스크린
-            SingleChildScrollView(
+            Expanded(
               child: Container(
-                height: MediaQuery.of(context).size.height - 160,
                 padding: const EdgeInsets.fromLTRB(6, 20, 0, 20),
                 child: ListView.builder(
                   shrinkWrap: true,
@@ -239,6 +244,7 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
       child: Container(
         constraints: const BoxConstraints(minHeight: 50),
         decoration: ShapeDecoration(
+          color: Colors.white70,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
             side: const BorderSide(
@@ -256,7 +262,6 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
             TextField(
               controller: textEditingController,
               maxLength: null,
-              // maxLines: null,
               textAlignVertical: TextAlignVertical.top,
               decoration: const InputDecoration(
                 border: InputBorder.none,
@@ -275,7 +280,7 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
                 },
                 icon: const Icon(
                   Icons.send,
-                  color: POINT_COLOR,
+                  color: PRIMARY_COLOR,
                 ),
               ),
             ),
