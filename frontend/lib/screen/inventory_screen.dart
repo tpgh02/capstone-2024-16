@@ -1,40 +1,25 @@
 import 'dart:convert';
 
+import 'package:dodo/components/I_items.dart';
 import 'package:dodo/components/items.dart';
-import 'package:dodo/components/s2_hotroom.dart';
-import 'package:dodo/components/s2_tag.dart';
-import 'package:dodo/components/s_list.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
-import 'package:dodo/screen/main2_screen.dart';
-import 'package:dodo/screen/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
-class InvenPage extends StatefulWidget {
-  const InvenPage({super.key});
-
-  @override
-  State<InvenPage> createState() => _searchPageState();
-}
-
 Future<List<Inven>> fetchInven() async {
-  var headers = {
+  final response = await http
+      .get(Uri.parse(serverUrl + '/api/v1/creature/inventory'), headers: {
     'Authorization':
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
-  };
-  final response =
-      await http.get(Uri.parse(serverUrl + '/api/v1/creature/inventory'));
-  response.headers.addAll(headers);
+  });
   if (response.statusCode == 200) {
-    // return Store.fromJson(jsonDecode(response.body)); //한국어 깨짐
-    Iterable storeList =
-        jsonDecode(utf8.decode(response.bodyBytes)); //한국어 깨지는 걸 방지하기 위함
-    List<Inven> stores =
-        storeList.map((storeJson) => Inven.fromJson(storeJson)).toList();
-    return stores;
+    final List<dynamic> jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+
+    List<Inven> Invens = jsonData.map((json) => Inven.fromJson(json)).toList();
+    return Invens;
   } else {
     throw Exception('Failed to load album');
   }
@@ -45,7 +30,7 @@ class Inven {
   final String name;
   final String info;
   final image;
-  final String creatureId;
+  final int creatureId;
 
   const Inven({
     required this.price,
@@ -55,7 +40,7 @@ class Inven {
     required this.creatureId,
   });
 
-  factory Inven.fromJson(Map<String, dynamic> json) {
+  factory Inven.fromJson(dynamic json) {
     return Inven(
       price: json['price'],
       name: json['name'],
@@ -66,9 +51,17 @@ class Inven {
   }
 }
 
+class InvenPage extends StatefulWidget {
+  const InvenPage({Key? key}) : super(key: key);
+
+  @override
+  State<InvenPage> createState() => _searchPageState();
+}
+
 class _searchPageState extends State<InvenPage> {
   final widgetkey = GlobalKey();
-  late Future<List<Inven>> futureInven;
+  late Future<List<Inven>>? futureInven;
+
   @override
   void initState() {
     super.initState();
@@ -120,6 +113,7 @@ class _searchPageState extends State<InvenPage> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();
                       } else if (snapshot.hasError) {
+                        print("?" + snapshot.data.toString());
                         return Text('Error: ${snapshot.error}');
                       } else if (snapshot.hasData) {
                         return Column(
@@ -154,7 +148,7 @@ class _searchPageState extends State<InvenPage> {
                           }).toList(),
                         );
                       } else {
-                        return Text('No data available');
+                        return const Text('No data available');
                       }
                     }),
               ),
@@ -177,29 +171,6 @@ class _searchPageState extends State<InvenPage> {
                       backgroundColor: PRIMARY_COLOR,
                     ),
                   )),
-              // FutureBuilder<Inven>(
-              //   future: futureInven,
-              //   builder: (context, snapshot) {
-              //     if (snapshot.connectionState == ConnectionState.waiting) {
-              //       return CircularProgressIndicator();
-              //     } else if (snapshot.hasError) {
-              //       return Text('Error: ${snapshot.error}');
-              //     } else if (snapshot.hasData) {
-              //       return Column(
-              //         mainAxisAlignment: MainAxisAlignment.center,
-              //         children: [
-              //           Text('Name: ${snapshot.data!.name}'),
-              //           Text('Price: ${snapshot.data!.price}'),
-              //           Text('Info: ${snapshot.data!.info}'),
-              //           Image.network(snapshot.data!.image),
-              //           Text('${snapshot.data!.creatureId}'),
-              //         ],
-              //       );
-              //     } else {
-              //       return Text('No data available');
-              //     }
-              //   },
-              // ),
             ],
           ),
         ),
@@ -211,7 +182,7 @@ class _searchPageState extends State<InvenPage> {
     return Container(
       margin: const EdgeInsets.all(5),
       alignment: Alignment.center,
-      child: items(title, _root, name, info, c_id),
+      child: i_items(title, _root, name, info, c_id),
     );
   }
 }
