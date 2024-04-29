@@ -38,6 +38,12 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "crypto",
+      "rootUri": "file:///C:/Users/happy/AppData/Local/Pub/Cache/hosted/pub.dev/crypto-3.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "cupertino_icons",
       "rootUri": "file:///C:/Users/happy/AppData/Local/Pub/Cache/hosted/pub.dev/cupertino_icons-1.0.6",
       "packageUri": "lib/",
@@ -302,6 +308,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "stomp_dart_client",
+      "rootUri": "file:///C:/Users/happy/AppData/Local/Pub/Cache/hosted/pub.dev/stomp_dart_client-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "stream_channel",
       "rootUri": "file:///C:/Users/happy/AppData/Local/Pub/Cache/hosted/pub.dev/stream_channel-2.1.2",
       "packageUri": "lib/",
@@ -356,6 +368,12 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "web_socket_channel",
+      "rootUri": "file:///C:/Users/happy/AppData/Local/Pub/Cache/hosted/pub.dev/web_socket_channel-2.4.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
       "name": "win32",
       "rootUri": "file:///C:/Users/happy/AppData/Local/Pub/Cache/hosted/pub.dev/win32-2.6.1",
       "packageUri": "lib/",
@@ -374,7 +392,7 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2024-04-29T14:29:23.945203Z",
+  "generated": "2024-04-29T14:42:13.018224Z",
   "generator": "pub",
   "generatorVersion": "3.3.1"
 }

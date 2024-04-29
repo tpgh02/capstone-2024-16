@@ -1,6 +1,7 @@
 //import 'package:dodo/const/colors.dart';
 import 'package:dodo/components/certification.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 //소유하고 있는 방들의 각각 컴포넌트를 생성
 class todo extends StatelessWidget {
@@ -57,24 +58,38 @@ void tododialog(context) {
     builder: (context) {
       return Dialog(
           child: SizedBox(
-        width: 300,
-        //height: 300,
+        // width: 300,
+        height: 500,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //여기는 그 인증하는 곳으로 이어졌으면 함. 밑에는 일단 예시
-            const Text("사진 넣으셨는지~"),
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "오늘의 도전을\n아직 완료하지 않았어요",
+                    style: TextStyle(fontFamily: 'bm', fontSize: 25),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      //팝업 지우기
+                      Navigator.of(context).pop();
+                    },
+                    icon: const Icon(
+                      Icons.close,
+                      //size: 30,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Certification("test"),
             const SizedBox(
               height: 100,
             ),
-            IconButton(
-              onPressed: () {
-                //팝업 지우기
-                Navigator.of(context).pop();
-              },
-              icon: const Icon(Icons.close),
-            )
           ],
         ),
       ));
