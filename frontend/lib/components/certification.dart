@@ -46,95 +46,91 @@ class _CertificationState extends State<Certification> {
   Widget build(BuildContext context) {
     const TextStyle style =
         TextStyle(color: Colors.white, fontFamily: "kcc", fontSize: 30);
-    int c_length = 4; //인증개수
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const SizedBox(height: 20),
-          c_length == 1
-              ? Container(
-                  width: 180,
-                  height: 180,
-                  child: InkWell(
-                    onTap: () {
-                      pickImage(); //이미지 저장
-                    },
-                    child: Stack(
-                      children: [
-                        if (_image != null)
-                          Container(
-                            // width: 50,
-                            // height: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: DARKGREY,
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.file(
-                                _image!,
-                              ),
-                            ),
-                          )
-                        else
-                          Container(
-                            alignment: Alignment.center,
-                            child: const Icon(
-                              Icons.camera_alt,
-                              color: PRIMARY_COLOR,
+    int c_length = 3; //인증개수
+    return Flexible(
+        child: c_length == 1
+            ? Container(
+                width: 180,
+                height: 180,
+                child: InkWell(
+                  onTap: () {
+                    pickImage(); //이미지 저장
+                  },
+                  child: Stack(
+                    children: [
+                      if (_image != null)
+                        Container(
+                          // width: 50,
+                          // height: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: DARKGREY,
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.file(
+                              _image!,
                             ),
                           ),
-                      ],
-                    ),
-                  ),
-                )
-              : SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Column(
-                    children: List.generate(
-                      c_length,
-                      (index) => Container(
-                        width: 180,
-                        height: 180,
-                        child: InkWell(
-                          onTap: () {
-                            pickImage(); //이미지 저장
-                          },
-                          child: Stack(
-                            children: [
-                              if (_image != null)
-                                Container(
-                                  // width: 50,
-                                  // height: 50,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: DARKGREY,
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.file(
-                                      _image!,
-                                    ),
-                                  ),
-                                )
-                              else
-                                Container(
-                                  alignment: Alignment.center,
-                                  child: const Icon(
-                                    Icons.camera_alt,
-                                    color: PRIMARY_COLOR,
-                                  ),
-                                ),
-                            ],
+                        )
+                      else
+                        Container(
+                          alignment: Alignment.center,
+                          child: const Icon(
+                            Icons.camera_alt,
+                            color: PRIMARY_COLOR,
                           ),
                         ),
-                      ),
+                    ],
+                  ),
+                ),
+              )
+            : SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  children: List.generate(c_length, (index) {
+                    return select();
+                  }),
+                ),
+              ));
+  }
+
+  Container select() {
+    return Container(
+      width: 180,
+      height: 180,
+      margin: EdgeInsets.symmetric(vertical: 10), // 각 컨테이너 사이에 간격 추가
+      child: Flexible(
+        child: InkWell(
+          onTap: () {
+            pickImage(); // 이미지 저장
+          },
+          child: Stack(
+            children: [
+              if (_image != null)
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: DARKGREY,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.file(
+                      _image!,
                     ),
                   ),
                 )
-        ],
+              else
+                Container(
+                  alignment: Alignment.center,
+                  child: const Icon(
+                    Icons.camera_alt,
+                    color: PRIMARY_COLOR,
+                  ),
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }
