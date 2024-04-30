@@ -16,16 +16,19 @@ class room_main extends StatefulWidget {
   final int room_maxmem;
   final bool canChat;
   final bool is_manager;
-  const room_main(
-      {super.key,
-      required this.room_title,
-      required this.room_id,
-      this.room_pwd,
-      required this.room_type,
-      required this.room_mem,
-      required this.room_maxmem,
-      required this.canChat,
-      required this.is_manager});
+  final String certificationType;
+  const room_main({
+    super.key,
+    required this.room_title,
+    required this.room_id,
+    this.room_pwd,
+    required this.room_type,
+    required this.room_mem,
+    required this.room_maxmem,
+    required this.canChat,
+    required this.is_manager,
+    required this.certificationType,
+  });
 
   @override
   State<room_main> createState() => _roomMainState();
@@ -124,6 +127,7 @@ class _roomMainState extends State<room_main> {
             ),
             RoomUserList(
               is_manager: is_manager,
+              certificationType: widget.certificationType,
             ),
           ],
         ),

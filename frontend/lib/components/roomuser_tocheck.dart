@@ -1,3 +1,5 @@
+import 'package:dodo/components/roomcerti_approve.dart';
+import 'package:dodo/components/roomcerti_vote.dart';
 import 'package:dodo/components/roomuser_profile.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +10,10 @@ class RoomUserToCheck extends StatelessWidget {
   final int upload_imgs;
   final int required_imgs;
   final bool is_manager;
+  final String certificationType;
 
   const RoomUserToCheck(this.user_name, this.user_img, this.upload_imgs,
-      this.required_imgs, this.is_manager);
+      this.required_imgs, this.is_manager, this.certificationType);
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +55,19 @@ class RoomUserToCheck extends StatelessWidget {
           // 유저 이름 및 속성
           Expanded(
             child: GestureDetector(
-              onTap: () {},
+              onTap: () {
+                if (certificationType == "VOTE") {
+                  showDialog(
+                    context: context,
+                    builder: (context) => RoomCertiVote(),
+                  );
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (context) => RoomCertiApprove(),
+                  );
+                }
+              },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

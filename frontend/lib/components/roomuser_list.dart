@@ -5,7 +5,12 @@ import 'package:dodo/components/roomuser_tocheck.dart';
 
 class RoomUserList extends StatefulWidget {
   final bool is_manager;
-  const RoomUserList({super.key, required this.is_manager});
+  final String certificationType;
+  const RoomUserList({
+    super.key,
+    required this.is_manager,
+    required this.certificationType,
+  });
 
   @override
   State<RoomUserList> createState() => _roomUserState();
@@ -120,24 +125,24 @@ class _roomUserState extends State<RoomUserList> {
   Container userContainer_default(name, img_root, upload, required) {
     return Container(
       alignment: Alignment.center,
-      child:
-          RoomUserDefault(name, img_root, upload, required, widget.is_manager),
+      child: RoomUserDefault(name, img_root, upload, required,
+          widget.is_manager, widget.certificationType),
     );
   }
 
   Container userContainer_tocheck(name, img_root, upload, required) {
     return Container(
       alignment: Alignment.center,
-      child:
-          RoomUserToCheck(name, img_root, upload, required, widget.is_manager),
+      child: RoomUserToCheck(name, img_root, upload, required,
+          widget.is_manager, widget.certificationType),
     );
   }
 
   Container userContainer_success(name, img_root, upload, required) {
     return Container(
       alignment: Alignment.center,
-      child:
-          RoomUserSuccess(name, img_root, upload, required, widget.is_manager),
+      child: RoomUserSuccess(name, img_root, upload, required,
+          widget.is_manager, widget.certificationType),
     );
   }
 }
