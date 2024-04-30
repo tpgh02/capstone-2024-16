@@ -8,9 +8,10 @@ class RoomUserDefault extends StatelessWidget {
   final int upload_imgs;
   final int required_imgs;
   final bool is_manager;
+  final String certificationType;
 
   const RoomUserDefault(this.user_name, this.user_img, this.upload_imgs,
-      this.required_imgs, this.is_manager);
+      this.required_imgs, this.is_manager, this.certificationType);
 
   @override
   Widget build(BuildContext context) {

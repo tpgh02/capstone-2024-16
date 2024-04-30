@@ -13,6 +13,7 @@ class room_list extends StatefulWidget {
   final int room_maxmem;
   final bool canChat;
   final bool is_manager;
+  final String certificationType;
   const room_list({
     super.key,
     required this.room_title,
@@ -24,6 +25,7 @@ class room_list extends StatefulWidget {
     required this.room_maxmem,
     required this.canChat,
     required this.is_manager,
+    required this.certificationType,
   });
 
   @override
@@ -80,6 +82,7 @@ class _roomListState extends State<room_list> {
                                 room_maxmem: widget.room_maxmem,
                                 canChat: widget.canChat,
                                 is_manager: widget.is_manager,
+                                certificationType: widget.certificationType,
                               );
                             } else {
                               return room_group(
@@ -91,6 +94,7 @@ class _roomListState extends State<room_list> {
                                 room_maxmem: widget.room_maxmem,
                                 canChat: widget.canChat,
                                 is_manager: widget.is_manager,
+                                certificationType: widget.certificationType,
                               );
                             }
                           },
