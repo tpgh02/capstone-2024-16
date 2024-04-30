@@ -21,6 +21,7 @@ class _RoomListState extends State<RoomListPage> {
       "room_maxmem": 20,
       "canChat": true,
       "is_manager": true,
+      "certificationType": "VOTE",
     },
     {
       "room_title": "오운완",
@@ -32,6 +33,7 @@ class _RoomListState extends State<RoomListPage> {
       "room_maxmem": 20,
       "canChat": false,
       "is_manager": false,
+      "certificationType": "AI",
     },
     {
       "room_title": "H.O.T",
@@ -43,6 +45,7 @@ class _RoomListState extends State<RoomListPage> {
       "room_maxmem": 20,
       "canChat": true,
       "is_manager": true,
+      "certificationType": "APPROVE",
     },
   ];
 
@@ -72,6 +75,7 @@ class _RoomListState extends State<RoomListPage> {
                         room_maxmem: roomList[index]["room_maxmem"],
                         canChat: roomList[index]["canChat"],
                         is_manager: roomList[index]["is_manager"],
+                        certificationType: roomList[index]["certificationType"],
                       );
                     },
                   ),
