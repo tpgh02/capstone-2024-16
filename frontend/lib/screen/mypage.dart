@@ -1,7 +1,56 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/const/server.dart';
 import 'package:dodo/screen/mypage_settings.dart';
 import 'package:flutter/material.dart';
 // import 'package:image_picker/image_picker.dart';
+
+Future<MyInfo> fetchMyInfo() async {
+  final response =
+      await http.get(Uri.parse(serverUrl + '/api/v1/users/me'), headers: {
+    'Authorization':
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjR9.eHgurhGH1zPWmWxZdZZzMo_9PJaZKk5XrSpz0IA83ZM'
+  });
+
+  if (response.statusCode == 200) {
+    print('Mypage: Connected!');
+    print(json.decode(response.body));
+    return MyInfo.fromJson(json.decode(response.body));
+  } else {
+    throw Exception('Mypage: fail to connect');
+  }
+}
+
+class MyInfo {
+  final int userId;
+  final String authenticationType;
+  final String email;
+  final String name;
+  final int mileage;
+  final String introduceMessage;
+  final image;
+
+  MyInfo(
+      {required this.userId,
+      required this.authenticationType,
+      required this.email,
+      required this.name,
+      required this.mileage,
+      required this.introduceMessage,
+      required this.image});
+
+  factory MyInfo.fromJson(dynamic json) {
+    return MyInfo(
+        userId: json["userId"],
+        authenticationType: json["authenticationType"],
+        email: json["email"],
+        name: json["name"],
+        mileage: json["mileage"],
+        introduceMessage: json["introduceMessage"],
+        image: json["image"]);
+  }
+}
 
 class MyPage extends StatefulWidget {
   const MyPage({super.key});
@@ -11,6 +60,14 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+  Future<MyInfo>? myInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    myInfo = fetchMyInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,11 +98,25 @@ class _MyPageState extends State<MyPage> {
               child: SizedBox(
                 width: 120,
                 height: 120,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: const Image(
-                    image: AssetImage('assets/images/Turtle_noradius.png'),
-                  ),
+                child: FutureBuilder<MyInfo>(
+                  future: myInfo,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      print("Mypage: Error " + snapshot.data.toString());
+                      return Text('Error: ${snapshot.error}');
+                    } else if (snapshot.hasData) {
+                      // image url
+                      String imageurl = snapshot.data!.image['url'].toString();
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.network(imageurl),
+                      );
+                    } else {
+                      return const Text('No data available');
+                    }
+                  },
                 ),
               ),
             ),
@@ -55,13 +126,28 @@ class _MyPageState extends State<MyPage> {
           Expanded(
             child: SizedBox(
               width: 150,
-              child: Text(
-                'Username',
-                style: const TextStyle(
-                    color: PRIMARY_COLOR,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold),
-                // softWrap: false,
+              child: FutureBuilder<MyInfo>(
+                future: myInfo,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    print("Mypage: Error " + snapshot.data.toString());
+                    return Text('Error: ${snapshot.error}');
+                  } else if (snapshot.hasData) {
+                    // image url
+                    String nickname = snapshot.data!.name.toString();
+                    return Text(
+                      nickname,
+                      style: const TextStyle(
+                          color: PRIMARY_COLOR,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold),
+                    );
+                  } else {
+                    return const Text('No data available');
+                  }
+                },
               ),
             ),
           ),
