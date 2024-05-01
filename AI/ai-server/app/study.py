@@ -22,6 +22,10 @@ async def study_result(image, data: StudyImage, response):
     # get OCR result in json
     json_result = await time_detection(image, data)
     
+    # Check the result of time_detection as json
+    # with open("result.json", 'w') as f:
+    #     f.write(json_result)
+    
     # post result to Backend server
     try:
         r = requests.post(f'{server_addr}/api/v1/certification/ai-result', json=json_result)
@@ -36,6 +40,10 @@ async def study_result(image, data: StudyImage, response):
 async def study_upload(data: StudyImage, background: BackgroundTasks):
     # Upload and save the image
     image, response = await save_image(data)
+    
+    # for test background task
+    # from fastapi import Response
+    # response = Response(content=json.dumps({"message": "OCR will be processing."}, indent=4), status_code=200)
     
     # add background task
     background.add_task(study_result, image, data, response)
