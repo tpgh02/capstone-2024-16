@@ -1,5 +1,3 @@
-import os
-from fastapi import HTTPException
 import json
 
 from paddleocr import PaddleOCR
