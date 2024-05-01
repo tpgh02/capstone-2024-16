@@ -1,10 +1,7 @@
 package com.dodo.room;
 
 import com.dodo.exception.NotFoundException;
-import com.dodo.room.domain.Category;
-import com.dodo.room.domain.CertificationType;
-import com.dodo.room.domain.Periodicity;
-import com.dodo.room.domain.Room;
+import com.dodo.room.domain.*;
 import com.dodo.room.dto.RoomData;
 import com.dodo.room.dto.UserData;
 import com.dodo.roomuser.RoomUserRepository;
@@ -81,8 +78,8 @@ public class RoomService {
                 .toList();
     }
 
-    // 채팅방 생성
-    public Room creatChatRoom(String roomName, String roomPwd, Long maxUserCnt, Category category,
+    // 일반 인증방 생성
+    public Room createNormalRoom(String roomName, String roomPwd, Long maxUserCnt, Category category,
                               String info, CertificationType certificationType,
                               Boolean canChat, Integer numOfVoteSuccess, Integer numOfVoteFail,
                               Integer frequency, Periodicity periodicity, LocalDateTime endDate){
@@ -99,6 +96,59 @@ public class RoomService {
                 .endDay(endDate)
                 .frequency(frequency)
                 .numOfVoteSuccess(numOfVoteSuccess).numOfVoteFail(numOfVoteFail)
+                .roomType(RoomType.NORMAL)
+                .build();
+
+        roomRepository.save(room);
+        return room;
+    }
+
+    // AI 인증방 생성
+    public Room createAIRoom(String roomName, String roomPwd, Long maxUserCnt, Category category,
+                                 String info, CertificationType certificationType,
+                                 Boolean canChat, Integer numOfVoteSuccess, Integer numOfVoteFail,
+                                 Integer frequency, Periodicity periodicity, LocalDateTime endDate){
+        Room room = Room.builder()
+                .name(roomName)
+                .password(roomPwd)
+                .maxUser(maxUserCnt)
+                .nowUser(1L)
+                .category(category)
+                .info(info)
+                .certificationType(certificationType)
+                .periodicity(periodicity)
+                .canChat(canChat)
+                .endDay(endDate)
+                .frequency(frequency)
+                .numOfVoteSuccess(numOfVoteSuccess).numOfVoteFail(numOfVoteFail)
+                .roomType(RoomType.AI)
+                .build();
+
+        roomRepository.save(room);
+        return room;
+    }
+
+    // 일반 인증방 생성
+    public Room createGroupRoom(String roomName, String roomPwd, Long maxUserCnt, Category category,
+                                 String info, CertificationType certificationType, Integer numOfGoal, List<Long> goal,
+                                 Boolean canChat, Integer numOfVoteSuccess, Integer numOfVoteFail,
+                                 Integer frequency, Periodicity periodicity, LocalDateTime endDate){
+        Room room = Room.builder()
+                .name(roomName)
+                .password(roomPwd)
+                .maxUser(maxUserCnt)
+                .nowUser(1L)
+                .category(category)
+                .info(info)
+                .certificationType(certificationType)
+                .periodicity(periodicity)
+                .canChat(canChat)
+                .endDay(endDate)
+                .frequency(frequency)
+                .numOfVoteSuccess(numOfVoteSuccess).numOfVoteFail(numOfVoteFail)
+                .roomType(RoomType.GROUP)
+                .numOfGoal(numOfGoal)
+                .goal(goal)
                 .build();
 
         roomRepository.save(room);

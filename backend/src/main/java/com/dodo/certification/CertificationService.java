@@ -13,6 +13,7 @@ import com.dodo.room.RoomRepository;
 import com.dodo.room.domain.Category;
 import com.dodo.room.domain.CertificationType;
 import com.dodo.room.domain.Room;
+import com.dodo.room.domain.RoomType;
 import com.dodo.roomuser.RoomUserRepository;
 import com.dodo.roomuser.domain.RoomUser;
 import com.dodo.user.UserRepository;
@@ -84,7 +85,7 @@ public class CertificationService {
 
 
         // AI인증방인 경우 AI에 요청 보내기
-        if(room.getCertificationType() == CertificationType.AI) {
+        if(room.getRoomType() == RoomType.AI) {
             transferToAi(room, certification);
         }
 

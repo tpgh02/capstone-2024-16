@@ -67,13 +67,53 @@ public class RoomController {
         return roomService.getRoomListByCategory(category);
     }
 
-    // 인증방 생성
-    @PostMapping("/create-room")
+    // 일반 인증방 생성
+    @PostMapping("/create-normal-room")
     @ResponseBody
-    public RoomData createRoom(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext){
-        Room room = roomService.creatChatRoom(roomData.getName(), roomData.getPwd(),
+    public RoomData createNormalRoom(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext){
+        Room room = roomService.createNormalRoom(roomData.getName(), roomData.getPwd(),
                 roomData.getMaxUser(), roomData.getCategory(), roomData.getInfo(),
                 roomData.getCertificationType(), roomData.getCanChat(),
+                roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
+                roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay());
+
+        roomUserService.createRoomUser(userContext, room.getId());
+        roomUserService.setManager(userContext, room);
+        roomTagService.saveRoomTag(room, roomData.getTag());
+
+
+        log.info("CREATE Chat RoomId: {}", room.getId());
+
+        return RoomData.of(room);
+    }
+
+    // ai 인증방 생성
+    @PostMapping("/create-ai-room")
+    @ResponseBody
+    public RoomData createAIRoom(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext){
+        Room room = roomService.createAIRoom(roomData.getName(), roomData.getPwd(),
+                roomData.getMaxUser(), roomData.getCategory(), roomData.getInfo(),
+                roomData.getCertificationType(), roomData.getCanChat(),
+                roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
+                roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay());
+
+        roomUserService.createRoomUser(userContext, room.getId());
+        roomUserService.setManager(userContext, room);
+        roomTagService.saveRoomTag(room, roomData.getTag());
+
+
+        log.info("CREATE Chat RoomId: {}", room.getId());
+
+        return RoomData.of(room);
+    }
+
+    // 그룹 인증방 생성
+    @PostMapping("/create-group-room")
+    @ResponseBody
+    public RoomData createGroupRoom(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext){
+        Room room = roomService.createGroupRoom(roomData.getName(), roomData.getPwd(),
+                roomData.getMaxUser(), roomData.getCategory(), roomData.getInfo(),
+                roomData.getCertificationType(), roomData.getNumOfGoal(), roomData.getGoal(), roomData.getCanChat(),
                 roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
                 roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay());
 

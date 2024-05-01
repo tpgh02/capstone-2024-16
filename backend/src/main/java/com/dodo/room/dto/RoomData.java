@@ -2,10 +2,7 @@ package com.dodo.room.dto;
 
 import com.dodo.certification.domain.CertificationStatus;
 import com.dodo.image.domain.Image;
-import com.dodo.room.domain.Category;
-import com.dodo.room.domain.CertificationType;
-import com.dodo.room.domain.Periodicity;
-import com.dodo.room.domain.Room;
+import com.dodo.room.domain.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -28,9 +25,12 @@ public class RoomData {
     private Boolean canChat;
     private Integer numOfVoteSuccess;
     private Integer numOfVoteFail;
+    private Integer numOfGoal;
+    private List<Long> goal;
 
     public CertificationStatus status;
 
+    private RoomType roomType;
     private CertificationType certificationType;
     private Integer frequency;
 

@@ -29,6 +29,11 @@ public class Room {
     private Integer numOfVoteSuccess;
     private Integer numOfVoteFail;
 
+    // 그룹일 때
+    private Integer numOfGoal;
+    @ElementCollection
+    private List<Long> goal;
+
     @ManyToOne
     private Image image;
 
@@ -38,9 +43,13 @@ public class Room {
     private Periodicity periodicity;
     private Integer frequency;
 
-    //인증 방식 (AI, 직접)
+    //인증 방식 (투표, 방장 승인)
     @Enumerated(EnumType.STRING)
     private CertificationType certificationType;
+
+    // 방 타입 (ai, 일반, 그룹)
+    @Enumerated(EnumType.STRING)
+    private RoomType roomType;
 
     // 카테고리
     @Enumerated(EnumType.STRING)
