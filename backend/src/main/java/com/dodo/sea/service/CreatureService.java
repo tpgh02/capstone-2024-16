@@ -123,13 +123,12 @@ public class CreatureService {
     }
 
     // 유저가 바다를 클릭했을 때 보여줄 함수
-    public List<CreatureData> getCreatures(UserContext userContext){
+    public List<SeaCreatureData> getSeaCreatures(UserContext userContext){
         User user = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
 
         return seaCreatureRepository.findAllByUser(user).orElseThrow(NotFoundException::new).stream()
                 .filter(SeaCreature::getIsActivate)
-                .map(SeaCreature::getCreature)
-                .map(CreatureData::new)
+                .map(SeaCreatureData::new)
                 .toList();
     }
 
