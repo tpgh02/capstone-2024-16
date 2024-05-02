@@ -1,4 +1,5 @@
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/screen/mypage_appinfo.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 
@@ -65,12 +66,22 @@ class MyPageSetting extends StatelessWidget {
               SettingsTile.navigation(
                 title: const Text('서비스 이용 약관'),
                 leading: const Icon(Icons.help_outline_outlined),
-                onPressed: ((context) {}),
+                onPressed: ((context) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const TermsOfService()));
+                }),
               ),
               SettingsTile.navigation(
                 title: const Text('오픈소스 라이선스'),
                 leading: const Icon(Icons.code),
-                onPressed: ((context) {}),
+                onPressed: ((context) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const OpenSourceLicense()));
+                }),
               ),
             ],
           ),
