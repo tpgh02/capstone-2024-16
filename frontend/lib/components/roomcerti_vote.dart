@@ -1,11 +1,11 @@
-//import 'package:dodo/components/certification.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 
 class RoomCertiVote extends StatefulWidget {
-  const RoomCertiVote({
-    super.key,
-  });
+  final int room_id;
+  final String user_name;
+  const RoomCertiVote(
+      {super.key, required this.room_id, required this.user_name});
 
   @override
   State<RoomCertiVote> createState() => _RoomCertiVoteState();
@@ -18,12 +18,54 @@ class _RoomCertiVoteState extends State<RoomCertiVote> {
       backgroundColor: LIGHTGREY,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       content: SizedBox(
+        height: 500,
         width: MediaQuery.of(context).size.width,
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            //Certification("test"),
+
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.user_name,
+                    style: const TextStyle(fontFamily: 'bm', fontSize: 25),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: const Icon(
+                      Icons.close,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Flexible(
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    Column(
+                      children: List.generate(
+                        3,
+                        (index) {
+                          return Container(
+                              margin: const EdgeInsets.only(bottom: 5),
+                              color: PRIMARY_COLOR,
+                              width: 180,
+                              height: 180,
+                              child: Text("${index + 1}"));
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             const SizedBox(height: 30),
 
             // 찬성
@@ -51,7 +93,7 @@ class _RoomCertiVoteState extends State<RoomCertiVote> {
                     ),
                     Container(
                       height: 25,
-                      width: MediaQuery.of(context).size.width * 0.4,
+                      width: MediaQuery.of(context).size.width * 0.4 * (3 / 5),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color: PRIMARY_COLOR,

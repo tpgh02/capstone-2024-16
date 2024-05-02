@@ -5,6 +5,7 @@ import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 
 class RoomUserToCheck extends StatelessWidget {
+  final int room_id;
   final String user_name;
   final String user_img;
   final int upload_imgs;
@@ -12,8 +13,14 @@ class RoomUserToCheck extends StatelessWidget {
   final bool is_manager;
   final String certificationType;
 
-  const RoomUserToCheck(this.user_name, this.user_img, this.upload_imgs,
-      this.required_imgs, this.is_manager, this.certificationType);
+  const RoomUserToCheck(
+      this.room_id,
+      this.user_name,
+      this.user_img,
+      this.upload_imgs,
+      this.required_imgs,
+      this.is_manager,
+      this.certificationType);
 
   @override
   Widget build(BuildContext context) {
@@ -59,12 +66,18 @@ class RoomUserToCheck extends StatelessWidget {
                 if (certificationType == "VOTE") {
                   showDialog(
                     context: context,
-                    builder: (context) => RoomCertiVote(),
+                    builder: (context) => RoomCertiVote(
+                      room_id: room_id,
+                      user_name: user_name,
+                    ),
                   );
                 } else {
                   showDialog(
                     context: context,
-                    builder: (context) => RoomCertiApprove(),
+                    builder: (context) => RoomCertiApprove(
+                      room_id: room_id,
+                      user_name: user_name,
+                    ),
                   );
                 }
               },

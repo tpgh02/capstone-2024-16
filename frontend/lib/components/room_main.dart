@@ -126,6 +126,7 @@ class _roomMainState extends State<room_main> {
               ),
             ),
             RoomUserList(
+              room_id: room_id,
               is_manager: is_manager,
               certificationType: widget.certificationType,
             ),
