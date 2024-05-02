@@ -5,24 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class room_join extends StatefulWidget {
-  const room_join({super.key}); //테스트용
-
-  // final Map room;
-  // const room_join(this.room);
+  const room_join({super.key});
 
   @override
   State<room_join> createState() => _room_joinState();
 }
 
 class _room_joinState extends State<room_join> {
-  // late Map room;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   room = widget.room;
-  // }
-
   Map room = {
     "room_title": "자취요리왕",
     "room_cap": "거북이도도",
@@ -258,12 +247,7 @@ class _room_joinState extends State<room_join> {
                             value: _ischeck1,
                             trackColor: DARKGREY,
                             activeColor: PRIMARY_COLOR,
-                            onChanged: (bool? value) {
-                              //비활성화
-                              // setState(() {
-                              //   _ischeck = value ?? false;
-                              // });
-                            },
+                            onChanged: (bool? value) {},
                           ),
                         ),
                       ],
