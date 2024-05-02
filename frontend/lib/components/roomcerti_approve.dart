@@ -23,6 +23,7 @@ class _RoomCertiApproveState extends State<RoomCertiApprove> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+
             Padding(
               padding: EdgeInsets.all(20),
               child: Row(
@@ -66,7 +67,6 @@ class _RoomCertiApproveState extends State<RoomCertiApprove> {
               ),
             ),
             const SizedBox(height: 20),
-
             // 승인 버튼
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,

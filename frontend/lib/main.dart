@@ -1,4 +1,7 @@
 import 'package:dodo/components/items.dart';
+import 'package:dodo/screen/AIroom_cr.dart';
+import 'package:dodo/screen/AIroom_cr2.dart';
+import 'package:dodo/screen/AIroom_cr3.dart';
 import 'package:dodo/screen/buy_screen.dart';
 import 'package:dodo/screen/findpass_screen.dart';
 import 'package:dodo/screen/gallery_screen.dart';
@@ -23,8 +26,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: mainPage() //seaPage(), //Certification("hello"),
-        );
+      debugShowCheckedModeBanner: false,
+      home: AIroom_cr3(),
+    );
   }
 }

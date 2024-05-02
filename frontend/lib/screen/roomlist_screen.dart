@@ -1,5 +1,6 @@
 import 'package:dodo/components/room_list.dart';
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/screen/AIroom_cr.dart';
 import 'package:flutter/material.dart';
 
 class RoomListPage extends StatefulWidget {
@@ -137,7 +138,10 @@ class _RoomListState extends State<RoomListPage> {
       height: 70,
       margin: const EdgeInsets.all(20),
       child: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AIroom_cr()));
+        },
         backgroundColor: PRIMARY_COLOR,
         elevation: 1,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
