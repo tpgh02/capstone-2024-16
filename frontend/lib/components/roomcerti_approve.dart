@@ -1,4 +1,4 @@
-import 'package:dodo/components/certification.dart';
+//import 'package:dodo/components/certification.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +23,7 @@ class _RoomCertiApproveState extends State<RoomCertiApprove> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Certification("test"),
+            //Certification("test"),
             const SizedBox(height: 30),
             // 승인 버튼
             Row(
