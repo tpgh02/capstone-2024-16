@@ -125,17 +125,19 @@ class _MyPageState extends State<MyPage> {
           // 닉네임
           Expanded(
             child: SizedBox(
-              width: 150,
+              width: 200,
               child: FutureBuilder<MyInfo>(
                 future: myInfo,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
+                    return const SizedBox(
+                        height: 100,
+                        width: 100,
+                        child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     print("Mypage: Error " + snapshot.data.toString());
                     return Text('Error: ${snapshot.error}');
                   } else if (snapshot.hasData) {
-                    // image url
                     String nickname = snapshot.data!.name.toString();
                     return Text(
                       nickname,
@@ -182,8 +184,7 @@ class _MyPageState extends State<MyPage> {
 
   // 프로필 수정 다이얼로그
   void editProfileDialog() {
-    TextEditingController nicknameController =
-        TextEditingController(text: 'Username');
+    TextEditingController nicknameController = TextEditingController();
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -196,87 +197,107 @@ class _MyPageState extends State<MyPage> {
             "프로필 수정",
             style: TextStyle(fontWeight: FontWeight.bold, color: POINT_COLOR),
           ),
-          content: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: Row(
-              children: [
-                // if (_pickedFile == null)
-                // 프로필 사진 및 수정
-                Flexible(
-                  child: Stack(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 0, 30, 0),
-                        child: SizedBox(
-                          width: 120,
-                          height: 120,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: const Image(
-                                image: AssetImage(
-                                    'assets/images/Turtle_noradius.png')),
-                          ),
+          content: FutureBuilder<MyInfo>(
+            future: myInfo,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                print("Mypage: Error " + snapshot.data.toString());
+                return Text('Error: ${snapshot.error}');
+              } else if (snapshot.hasData) {
+                // 닉네임 확인 시 controller 내부에 닉네임 삽입
+                nicknameController =
+                    TextEditingController(text: snapshot.data!.name.toString());
+                // image url
+                String imageurl = snapshot.data!.image['url'].toString();
+
+                return SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                    children: [
+                      // if (_pickedFile == null)
+                      // 프로필 사진 및 수정
+                      Flexible(
+                        child: Stack(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 0, 30, 0),
+                              child: SizedBox(
+                                width: 120,
+                                height: 120,
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: Image.network(imageurl)),
+                              ),
+                            ),
+                            // 카메라 아이콘
+                            Positioned(
+                              bottom: 5,
+                              right: 35,
+                              child: InkWell(
+                                onTap: () => showModalBottomSheet(
+                                    context: context,
+                                    builder: ((builder) => editProfilePic())),
+                                child: const Icon(
+                                  Icons.camera_enhance,
+                                  color: PRIMARY_COLOR,
+                                  size: 40,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      // 카메라 아이콘
-                      Positioned(
-                        bottom: 5,
-                        right: 35,
-                        child: InkWell(
-                          onTap: () => showModalBottomSheet(
-                              context: context,
-                              builder: ((builder) => editProfilePic())),
-                          child: const Icon(
-                            Icons.camera_enhance,
-                            color: PRIMARY_COLOR,
-                            size: 40,
+
+                      // 닉네임
+                      Expanded(
+                        child: TextFormField(
+                          style: const TextStyle(
+                            color: Color(0xff4f4f4f),
+                            fontSize: 15,
                           ),
+                          controller: nicknameController,
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide:
+                                    const BorderSide(color: POINT_COLOR),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide:
+                                    const BorderSide(color: POINT_COLOR),
+                              ),
+                              hintText: '닉네임',
+                              labelStyle: const TextStyle(
+                                  color: Color(0xff4f4f4f), fontSize: 18),
+                              filled: true,
+                              fillColor: const Color(0xffEDEDED)),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return '닉네임을 입력해주세요.';
+                            }
+                            if (value.length < 2) {
+                              return '2글자 이상 입력해주세요.';
+                            }
+                            return null;
+                          },
                         ),
                       ),
                     ],
                   ),
-                ),
-
-                // 닉네임
-                Expanded(
-                  child: TextFormField(
-                    style: const TextStyle(
-                      color: Color(0xff4f4f4f),
-                      fontSize: 15,
-                    ),
-                    controller: nicknameController,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: POINT_COLOR),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: POINT_COLOR),
-                        ),
-                        hintText: '닉네임',
-                        labelStyle: const TextStyle(
-                            color: Color(0xff4f4f4f), fontSize: 18),
-                        filled: true,
-                        fillColor: const Color(0xffEDEDED)),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return '닉네임을 입력해주세요.';
-                      }
-                      if (value.length < 2) {
-                        return '2글자 이상 입력해주세요.';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-              ],
-            ),
+                );
+              } else {
+                return const Text('No data available');
+              }
+            },
           ),
           actions: <Widget>[
+            // 수정 버튼
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop(); //창 닫기
+                Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: POINT_COLOR,
@@ -295,9 +316,11 @@ class _MyPageState extends State<MyPage> {
                     fontWeight: FontWeight.bold),
               ),
             ),
+
+            // 닫기 버튼
             OutlinedButton(
               onPressed: () {
-                Navigator.of(context).pop(); //창 닫기
+                Navigator.of(context).pop();
               },
               style: OutlinedButton.styleFrom(
                 foregroundColor: POINT_COLOR,
