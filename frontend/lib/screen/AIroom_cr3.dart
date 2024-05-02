@@ -216,7 +216,7 @@ class _AIroom_cr3State extends State<AIroom_cr3>
                 ),
               ),
               const SizedBox(
-                height: 10,
+                height: 20,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -247,7 +247,7 @@ class _AIroom_cr3State extends State<AIroom_cr3>
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -267,7 +267,7 @@ class _AIroom_cr3State extends State<AIroom_cr3>
                   ),
                 ],
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 15),
               //이전, 다음 버튼
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,

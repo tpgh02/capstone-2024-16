@@ -23,6 +23,7 @@ class _RoomCertiVoteState extends State<RoomCertiVote> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+
             Padding(
               padding: EdgeInsets.all(20),
               child: Row(
@@ -65,7 +66,6 @@ class _RoomCertiVoteState extends State<RoomCertiVote> {
                 ),
               ),
             ),
-
             const SizedBox(height: 30),
 
             // 찬성
