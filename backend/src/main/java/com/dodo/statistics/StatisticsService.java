@@ -13,7 +13,7 @@ import com.dodo.roomuser.domain.RoomUser;
 import com.dodo.statistics.dto.ReportResponseData;
 import com.dodo.statistics.dto.RoomProfileData;
 import com.dodo.statistics.dto.SimpleReportResponseData;
-import com.dodo.statistics.dto.WeeklyGoalResponseData;
+import com.dodo.statistics.dto.DailyGoalResponseData;
 import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
 import com.dodo.user.domain.UserContext;
@@ -95,6 +95,7 @@ public class StatisticsService {
         List<Certification> certificationList = certificationRepository.findAllByRoomUser(roomuser)
                 .orElse(new ArrayList<>());
 
+        List<DailyGoalResponseData> calender = getEmptyMonth();
         LocalDateTime now = LocalDateTime.now();
 
 
@@ -112,8 +113,9 @@ public class StatisticsService {
             LocalDateTime end = YearMonth.now().atDay(now.getDayOfMonth()).atTime(LocalTime.MAX);
             long thisMonthCount = getCertificationSuccessCount(certificationList, start, end);
             long thisMonthSize = lastEnd.getDayOfMonth();
+            getCalender(certificationList, calender, start, end);
 
-            return new SimpleReportResponseData(lastMonthCount, lastMonthSize, thisMonthCount, thisMonthSize);
+            return new SimpleReportResponseData(calender, lastMonthCount, lastMonthSize, thisMonthCount, thisMonthSize);
         } else {
             // 주간 인증
 
@@ -145,7 +147,10 @@ public class StatisticsService {
                 start = start.plusDays(7);
             }
 
-            return new SimpleReportResponseData(lastMonthCount, lastMonthSize, thisMonthCount, thisMonthSize);
+            LocalDateTime monthStart = YearMonth.now().atDay(1).atTime(LocalTime.MIN);
+            LocalDateTime monthEnd = YearMonth.now().atDay(now.getDayOfMonth()).atTime(LocalTime.MAX);
+            getCalender(certificationList, calender, monthStart, monthEnd);
+            return new SimpleReportResponseData(calender, lastMonthCount, lastMonthSize, thisMonthCount, thisMonthSize);
         }
     }
 
@@ -160,10 +165,23 @@ public class StatisticsService {
                 }).count();
     }
 
+    private void getCalender(List<Certification> certificationList, List<DailyGoalResponseData> calender, LocalDateTime start, LocalDateTime end) {
+        certificationList
+                .forEach(certification -> {
+                    if(certification.getStatus() == CertificationStatus.SUCCESS) {
+                        LocalDateTime time = certification.getCreatedTime();
+                        if(time.isAfter(start) && time.isBefore(end)) {
+                            calender.get(time.getDayOfMonth()).setFlag(true);
+                        }
+                    }
+                });
+    }
+
+
 
     // TODO
     // 테스트 필요함
-    public List<WeeklyGoalResponseData> getWeeklyGoal(UserContext userContext) {
+    public List<DailyGoalResponseData> getWeeklyGoal(UserContext userContext) {
         User user = userRepository.findById(userContext.getUserId())
                 .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다"));
         List<RoomUser> roomUser = roomUserRepository.findAllByUser(user)
@@ -171,7 +189,7 @@ public class StatisticsService {
         List<Certification> certificationList = certificationRepository.findAllByRoomUserIn(roomUser)
                 .orElse(new ArrayList<>());
         List<LocalDateTime> thisWeek = getThisWeek();
-        List<WeeklyGoalResponseData> result = getEmptyWeek(thisWeek.get(0));
+        List<DailyGoalResponseData> result = getEmptyWeek(thisWeek.get(0));
 
         certificationList.stream()
                 // 인증 기록중에 이번주 필터
@@ -231,12 +249,22 @@ public class StatisticsService {
         return Arrays.asList(monday, sunday);
     }
 
-    private List<WeeklyGoalResponseData> getEmptyWeek(LocalDateTime thisWeekStart) {
-        List<WeeklyGoalResponseData> result = new ArrayList<>();
+    private List<DailyGoalResponseData> getEmptyWeek(LocalDateTime thisWeekStart) {
+        List<DailyGoalResponseData> result = new ArrayList<>();
         // flag false 인 일주일 만들기
         for(int i = 0; i < 7; i++) {
-            result.add(new WeeklyGoalResponseData(thisWeekStart.plusDays(i)));
+            result.add(new DailyGoalResponseData(thisWeekStart.plusDays(i)));
         }
         return result;
     }
+    private List<DailyGoalResponseData> getEmptyMonth() {
+        YearMonth now = YearMonth.now();
+        List<DailyGoalResponseData> result = new ArrayList<>();
+        // flag false 인 일주일 만들기
+        for(int i = 1; i <= now.atEndOfMonth().getMonthValue(); i++) {
+            result.add(new DailyGoalResponseData(i));
+        }
+        return result;
+    }
+
 }

@@ -5,12 +5,17 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class WeeklyGoalResponseData {
+public class DailyGoalResponseData {
     String date;
     Boolean flag;
 
-    public WeeklyGoalResponseData(LocalDateTime time) {
+    public DailyGoalResponseData(LocalDateTime time) {
         this.date = String.valueOf(time.getDayOfMonth());
+        this.flag = Boolean.FALSE;
+    }
+
+    public DailyGoalResponseData(int date) {
+        this.date = String.valueOf(date);
         this.flag = Boolean.FALSE;
     }
 }
