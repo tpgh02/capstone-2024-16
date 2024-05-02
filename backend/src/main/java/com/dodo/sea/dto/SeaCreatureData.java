@@ -10,13 +10,13 @@ public class SeaCreatureData {
     private Long seaCreatureId;
     private Long coordinate_x;
     private Long coordinate_y;
-    private Boolean is_activate;
+    private Boolean isActivate;
 
     public SeaCreatureData(SeaCreature seaCreature) {
         this.seaCreatureId = seaCreature.getId();
         this.coordinate_x = seaCreature.getCoordinate_x();
         this.coordinate_y = seaCreature.getCoordinate_y();
-        this.is_activate = seaCreature.getIs_activate();
+        this.isActivate = seaCreature.getIsActivate();
     }
 
 }

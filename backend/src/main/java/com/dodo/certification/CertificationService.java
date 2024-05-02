@@ -11,7 +11,6 @@ import com.dodo.image.ImageService;
 import com.dodo.image.domain.Image;
 import com.dodo.room.RoomRepository;
 import com.dodo.room.domain.Category;
-import com.dodo.room.domain.CertificationType;
 import com.dodo.room.domain.Room;
 import com.dodo.room.domain.RoomType;
 import com.dodo.roomuser.RoomUserRepository;
@@ -78,7 +77,7 @@ public class CertificationService {
                 .build());
 
         // 기상인증인 경우
-        if(room.getCategory() == Category.RISE) {
+        if(room.getCategory() == Category.WAKEUP) {
             // TODO -> 시간이 잘 나오나?
 
         }

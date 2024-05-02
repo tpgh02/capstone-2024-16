@@ -1,6 +1,7 @@
 package com.dodo.sea.service;
 
 import com.dodo.exception.NotFoundException;
+import com.dodo.image.ImageRepository;
 import com.dodo.image.ImageService;
 import com.dodo.image.domain.Image;
 import com.dodo.sea.domain.Creature;
@@ -14,6 +15,8 @@ import com.dodo.user.domain.User;
 import com.dodo.user.domain.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,13 +31,16 @@ public class CreatureService {
     private final ImageService imageService;
     private final SeaCreatureRepository seaCreatureRepository;
     private final UserRepository userRepository;
+    private final ImageRepository imageRepository;
 
 
     public CreatureData createCreature(String name, String info, Integer price
                                        ,MultipartFile img
                                        ) throws IOException {
 
-        Image image = imageService.save(img);
+        // Image image = imageService.save(img);
+
+        Image image = imageRepository.findById(1L).get();
 
         Creature creature = Creature.builder()
                 .name(name)
@@ -48,15 +54,17 @@ public class CreatureService {
         return new CreatureData(creature);
     }
 
+    // 바다생물 활성화
     public SeaCreature activateCreature(SeaCreatureData seaCreatureData) {
         SeaCreature seaCreature = seaCreatureRepository.findById(seaCreatureData.getSeaCreatureId()).orElseThrow(NotFoundException::new);
 
-        seaCreature.activate(seaCreatureData.getIs_activate());
+        seaCreature.activate(seaCreatureData.getIsActivate());
         seaCreatureRepository.save(seaCreature);
 
         return seaCreature;
     }
 
+    // 바다생물 이동
     public SeaCreature moveCreature(SeaCreatureData seaCreatureData) {
         SeaCreature seaCreature = seaCreatureRepository.findById(seaCreatureData.getSeaCreatureId()).orElseThrow(NotFoundException::new);
 
@@ -88,7 +96,7 @@ public class CreatureService {
         SeaCreature seaCreature = SeaCreature.builder()
                 .creature(creature)
                 .user(user)
-                .is_activate(false)
+                .isActivate(false)
                 .build();
 
         userRepository.save(user);
@@ -99,12 +107,12 @@ public class CreatureService {
 
     // 상점에서 모든 생물을 보여주기 위한 함수
     public List<CreatureData> getAllCreature() {
-        return creatureRepository.findAll().stream()
+        return creatureRepository.findAll(sortByPrice()).stream()
                 .map(CreatureData::new)
                 .toList();
     }
 
-    // 유저의 생물을 보여주기 위한 함수
+    // 유저가 보유한 생물을 보여주기 위한 함수
     public List<CreatureData> getUserCreature(UserContext userContext) {
         User user = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
 
@@ -112,5 +120,23 @@ public class CreatureService {
                 .map(SeaCreature::getCreature)
                 .map(CreatureData::new)
                 .toList();
+    }
+
+    // 유저가 바다를 클릭했을 때 보여줄 함수
+    public List<CreatureData> getCreatures(UserContext userContext){
+        User user = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
+
+        return seaCreatureRepository.findAllByUser(user).orElseThrow(NotFoundException::new).stream()
+                .filter(SeaCreature::getIsActivate)
+                .map(SeaCreature::getCreature)
+                .map(CreatureData::new)
+                .toList();
+    }
+
+    private Sort sortByPrice(){
+        return Sort.by(
+                Order.desc("price"),
+                Order.desc("id")
+        );
     }
 }

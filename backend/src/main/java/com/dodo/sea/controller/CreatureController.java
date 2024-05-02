@@ -75,6 +75,13 @@ public class CreatureController {
         return new SeaCreatureData(creatureService.activateCreature(seaCreatureData));
     }
 
+    // 유저가 바다를 클릭했을 때 보여줄 함수
+    @GetMapping("/sea")
+    @CustomAuthentication
+    public List<CreatureData> displaySea(@RequestAttribute UserContext userContext){
+        return creatureService.getCreatures(userContext);
+    }
+
     // TODO
     // 임시 마일리지 얻는 함수
     @PostMapping("/user-get-mileage")

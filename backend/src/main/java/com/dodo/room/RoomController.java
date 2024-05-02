@@ -2,6 +2,7 @@ package com.dodo.room;
 
 import com.dodo.config.auth.CustomAuthentication;
 import com.dodo.room.domain.Category;
+import com.dodo.room.domain.RoomType;
 import com.dodo.room.dto.RoomData;
 import com.dodo.room.dto.UserData;
 import com.dodo.tag.repository.RoomTagRepository;
@@ -10,21 +11,17 @@ import com.dodo.user.domain.UserContext;
 import lombok.RequiredArgsConstructor;
 import com.dodo.room.domain.Room;
 import com.dodo.exception.NotFoundException;
-import com.dodo.room.dto.RoomData;
-import com.dodo.room.dto.UserData;
 import com.dodo.roomuser.RoomUserRepository;
 import com.dodo.roomuser.RoomUserService;
 import com.dodo.roomuser.domain.RoomUser;
 import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
-import com.dodo.user.domain.UserContext;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -71,11 +68,11 @@ public class RoomController {
     @PostMapping("/create-normal-room")
     @ResponseBody
     public RoomData createNormalRoom(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext){
-        Room room = roomService.createNormalRoom(roomData.getName(), roomData.getPwd(),
+        Room room = roomService.createRoom(roomData.getName(), roomData.getPwd(),
                 roomData.getMaxUser(), roomData.getCategory(), roomData.getInfo(),
                 roomData.getCertificationType(), roomData.getCanChat(),
                 roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
-                roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay());
+                roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay(), RoomType.NORMAL);
 
         roomUserService.createRoomUser(userContext, room.getId());
         roomUserService.setManager(userContext, room);
@@ -91,11 +88,11 @@ public class RoomController {
     @PostMapping("/create-ai-room")
     @ResponseBody
     public RoomData createAIRoom(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext){
-        Room room = roomService.createAIRoom(roomData.getName(), roomData.getPwd(),
+        Room room = roomService.createRoom(roomData.getName(), roomData.getPwd(),
                 roomData.getMaxUser(), roomData.getCategory(), roomData.getInfo(),
                 roomData.getCertificationType(), roomData.getCanChat(),
                 roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
-                roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay());
+                roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay(), RoomType.AI);
 
         roomUserService.createRoomUser(userContext, room.getId());
         roomUserService.setManager(userContext, room);
@@ -138,7 +135,7 @@ public class RoomController {
         log.info("createRoomUser");
         Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
 
-        return "number of user : " + RoomData.of(room).getNowUsers();
+        return "number of user : " + RoomData.of(room).getNowUser();
     }
 
     // 비공개 인증방 입장시 비밀번호 확인 절차
@@ -278,6 +275,8 @@ public class RoomController {
 
             return Stream.of(roomListByName, roomListByTag, roomListById)
                     .flatMap(Collection::stream)
+                    .sorted(Comparator.comparing(RoomData::getIsFull).reversed()
+                            .thenComparing(RoomData::getNowUser).reversed())
                     .distinct()
                     .collect(Collectors.toList());
 
@@ -285,6 +284,8 @@ public class RoomController {
 
             return Stream.of(roomListByName, roomListByTag)
                     .flatMap(Collection::stream)
+                    .sorted(Comparator.comparing(RoomData::getIsFull).reversed()
+                            .thenComparing(RoomData::getNowUser).reversed())
                     .distinct()
                     .collect(Collectors.toList());
         }
