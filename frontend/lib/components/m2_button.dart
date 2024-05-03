@@ -23,7 +23,16 @@ class _m2_button extends State<m2_button> {
       children: [
         Container(
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12), color: Colors.white),
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    //spreadRadius: 1,
+                    blurRadius: 2,
+                    offset: Offset(0, 3)),
+              ],
+            ),
             child: Padding(
                 padding: EdgeInsets.all(10),
                 child: Column(
@@ -68,7 +77,16 @@ class _m2_button extends State<m2_button> {
         ),
         Container(
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12), color: Colors.white),
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    //spreadRadius: 1,
+                    blurRadius: 2,
+                    offset: Offset(0, 3)),
+              ],
+            ),
             child: Padding(
                 padding: EdgeInsets.all(10),
                 child: Column(
