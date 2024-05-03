@@ -12,7 +12,7 @@ public class CreatureData {
     private Integer price;
     private String name;
     private String info;
-    private Image image;
+    private String imageUrl;
 
 
     public CreatureData(Creature creature) {
@@ -20,6 +20,6 @@ public class CreatureData {
         this.price = creature.getPrice();
         this.name = creature.getName();
         this.info = creature.getInfo();
-        this.image = creature.getImage();
+        this.imageUrl = creature.getImage().getUrl();
     }
 }

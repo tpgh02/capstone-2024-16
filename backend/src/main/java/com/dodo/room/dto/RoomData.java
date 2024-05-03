@@ -72,6 +72,8 @@ public class RoomData {
         roomData.certificationType = room.getCertificationType();
         roomData.frequency = room.getFrequency();
         roomData.isFull = room.getIsFull();
+        roomData.goal = room.getGoal();
+        roomData.numOfGoal = room.getNumOfGoal();
 
         return roomData;
     }
