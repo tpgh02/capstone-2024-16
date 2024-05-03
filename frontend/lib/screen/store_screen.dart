@@ -1,12 +1,7 @@
 import 'dart:convert';
 import 'package:dodo/components/items.dart';
-import 'package:dodo/components/s2_hotroom.dart';
-import 'package:dodo/components/s2_tag.dart';
-import 'package:dodo/components/s_list.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
-import 'package:dodo/screen/main2_screen.dart';
-import 'package:dodo/screen/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -79,6 +74,7 @@ class _searchPageState extends State<storePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: LIGHTGREY,
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
@@ -146,7 +142,11 @@ class _searchPageState extends State<storePage> {
                           }).toList(),
                         );
                       } else {
-                        return Text('No data available');
+                        return Text(
+                          '데이터가 존재하지 않습니다. 잠시 후 시도해주십시오',
+                          style: TextStyle(
+                              fontFamily: "bm", fontSize: 20, color: DARKGREY),
+                        );
                       }
                     }),
               ),
