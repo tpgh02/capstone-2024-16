@@ -31,9 +31,20 @@ class _main2PageState extends State<main2Page> {
 
               children: [
                 Container(
-                  margin: const EdgeInsets.all(15),
+                  margin: const EdgeInsets.all(5),
                   child: Row(
                     children: [
+                      IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(
+                            Icons.arrow_back_ios_new_rounded,
+                            color: POINT_COLOR,
+                          )),
+                      const SizedBox(
+                        width: 10,
+                      ),
                       _roomBtn(),
                       const SizedBox(
                         width: 5,

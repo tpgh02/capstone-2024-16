@@ -50,14 +50,14 @@ class _AIroom_crState extends State<AIroom_cr> {
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            Text(
+            const Text(
               "- AI가 생성할 수 있는 인증방 종류는 다음과 같습니다 ",
               style: TextStyle(fontFamily: "bma", fontSize: 18),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Container(width: double.infinity, child: _roomBtn()),
