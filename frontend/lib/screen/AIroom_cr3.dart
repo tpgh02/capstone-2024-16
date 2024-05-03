@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:dodo/const/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

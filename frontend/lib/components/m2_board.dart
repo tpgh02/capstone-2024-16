@@ -18,7 +18,16 @@ class _m2_board extends State<m2_board> {
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15), color: Colors.white),
+          borderRadius: BorderRadius.circular(15),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                //spreadRadius: 1,
+                blurRadius: 2,
+                offset: Offset(0, 3)),
+          ],
+        ),
         child: const SingleChildScrollView(
             child: Column(
           children: [
