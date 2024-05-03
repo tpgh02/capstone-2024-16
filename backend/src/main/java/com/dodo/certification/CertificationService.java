@@ -253,7 +253,7 @@ public class CertificationService {
     // 일단위, 주단위로 모인 인증들을 토대로 인증방에서 어떻게 보여줄지 그룹핑함
     // -> 맵의 리스트를 돌며 wait, success 개수를 센다.
     // -> roomuser와 함께 클래스에 넣어서 리스트를 만든다.
-    private void grouping(List<RoomUser> roomUserList, List<CertificationGroup> groupList, Map<RoomUser, List<Certification>> certificationMap) {
+    private List<CertificationListResponseData> grouping(List<RoomUser> roomUserList, List<CertificationGroup> groupList, Map<RoomUser, List<Certification>> certificationMap) {
         roomUserList.forEach(
                 roomUser -> {
                     CertificationGroup group = new CertificationGroup(roomUser);

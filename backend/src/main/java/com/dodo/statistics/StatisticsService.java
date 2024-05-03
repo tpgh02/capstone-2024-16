@@ -241,7 +241,6 @@ public class StatisticsService {
 
     }
 
-    private List<LocalDateTime> getThisWeek() {
     public List<LocalDateTime> getThisWeek() {
         LocalDateTime now = LocalDateTime.now();
         DayOfWeek dayOfWeek = now.getDayOfWeek();
