@@ -370,7 +370,7 @@ class MyPageSetting extends StatelessWidget {
                             ),
                           ),
                           child: const Text(
-                            "해체",
+                            "비활성화",
                             style: TextStyle(
                                 color: Color.fromARGB(226, 255, 255, 255),
                                 fontWeight: FontWeight.bold),
