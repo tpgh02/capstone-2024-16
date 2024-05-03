@@ -43,6 +43,14 @@ dependencies:
   stomp_dart_client: 1.0.0
   percent_indicator: ^4.2.3
   dio: ^4.0.0
+  path_provider: 2.0.1
+  vector_math: ^2.1.0
+  matrix_gesture_detector: ^0.2.0-nullsafety.1
+  provider: ^5.0.0
+  shared_preferences: ^2.0.0
+
+
+
 
 dev_dependencies:
   flutter_test:
