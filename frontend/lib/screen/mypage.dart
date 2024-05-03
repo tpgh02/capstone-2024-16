@@ -10,7 +10,7 @@ Future<MyInfo> fetchMyInfo() async {
   final response =
       await http.get(Uri.parse(serverUrl + '/api/v1/users/me'), headers: {
     'Authorization':
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjR9.eHgurhGH1zPWmWxZdZZzMo_9PJaZKk5XrSpz0IA83ZM'
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
   });
 
   if (response.statusCode == 200) {
@@ -72,21 +72,53 @@ class _MyPageState extends State<MyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: LIGHTGREY,
-      body: Column(
-        children: [
-          _info(),
-          _button(),
-          const SizedBox(
-            height: 8,
-          ),
-          const MyPageSetting(),
-        ],
+      body: FutureBuilder<MyInfo>(
+        future: myInfo,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(child: CircularProgressIndicator()),
+              ],
+            );
+          } else if (snapshot.hasError) {
+            print("Mypage: Error " + snapshot.data.toString());
+            return const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Text(
+                    '계정을 확인할 수 없습니다.',
+                  ),
+                ),
+              ],
+            );
+          } else if (snapshot.hasData) {
+            // image url, 닉네임
+            String imageurl = snapshot.data!.image['url'].toString();
+            String nickname = snapshot.data!.name.toString();
+
+            return Column(
+              children: [
+                _info(imageurl, nickname),
+                _button(imageurl, nickname),
+                const SizedBox(
+                  height: 8,
+                ),
+                const MyPageSetting(),
+              ],
+            );
+          } else {
+            return const Text('No data available');
+          }
+        },
       ),
     );
   }
 
   // 상단 프로필
-  Widget _info() {
+  Widget _info(String imageurl, String nickname) {
     return Padding(
       padding: const EdgeInsets.all(30),
       child: Row(
@@ -98,25 +130,9 @@ class _MyPageState extends State<MyPage> {
               child: SizedBox(
                 width: 120,
                 height: 120,
-                child: FutureBuilder<MyInfo>(
-                  future: myInfo,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      print("Mypage: Error " + snapshot.data.toString());
-                      return Text('Error: ${snapshot.error}');
-                    } else if (snapshot.hasData) {
-                      // image url
-                      String imageurl = snapshot.data!.image['url'].toString();
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.network(imageurl),
-                      );
-                    } else {
-                      return const Text('No data available');
-                    }
-                  },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.network(imageurl),
                 ),
               ),
             ),
@@ -126,30 +142,12 @@ class _MyPageState extends State<MyPage> {
           Expanded(
             child: SizedBox(
               width: 200,
-              child: FutureBuilder<MyInfo>(
-                future: myInfo,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const SizedBox(
-                        height: 100,
-                        width: 100,
-                        child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    print("Mypage: Error " + snapshot.data.toString());
-                    return Text('Error: ${snapshot.error}');
-                  } else if (snapshot.hasData) {
-                    String nickname = snapshot.data!.name.toString();
-                    return Text(
-                      nickname,
-                      style: const TextStyle(
-                          color: PRIMARY_COLOR,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold),
-                    );
-                  } else {
-                    return const Text('No data available');
-                  }
-                },
+              child: Text(
+                nickname,
+                style: const TextStyle(
+                    color: PRIMARY_COLOR,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -158,7 +156,7 @@ class _MyPageState extends State<MyPage> {
     );
   }
 
-  Widget _button() {
+  Widget _button(String imageurl, String nickname) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
       child: Row(
@@ -168,7 +166,8 @@ class _MyPageState extends State<MyPage> {
           Expanded(
               flex: 1,
               child: MyPageButton(
-                  onTap: () => editProfileDialog(), label: "프로필 수정")),
+                  onTap: () => editProfileDialog(imageurl, nickname),
+                  label: "프로필 수정")),
           const SizedBox(
             width: 15,
           ),
@@ -183,8 +182,9 @@ class _MyPageState extends State<MyPage> {
   }
 
   // 프로필 수정 다이얼로그
-  void editProfileDialog() {
-    TextEditingController nicknameController = TextEditingController();
+  void editProfileDialog(String imageurl, String nickname) {
+    TextEditingController nicknameController =
+        TextEditingController(text: nickname);
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -197,101 +197,79 @@ class _MyPageState extends State<MyPage> {
             "프로필 수정",
             style: TextStyle(fontWeight: FontWeight.bold, color: POINT_COLOR),
           ),
-          content: FutureBuilder<MyInfo>(
-            future: myInfo,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                print("Mypage: Error " + snapshot.data.toString());
-                return Text('Error: ${snapshot.error}');
-              } else if (snapshot.hasData) {
-                // 닉네임 확인 시 controller 내부에 닉네임 삽입
-                nicknameController =
-                    TextEditingController(text: snapshot.data!.name.toString());
-                // image url
-                String imageurl = snapshot.data!.image['url'].toString();
-
-                return SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Row(
-                    children: [
-                      // if (_pickedFile == null)
-                      // 프로필 사진 및 수정
-                      Flexible(
-                        child: Stack(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 0, 30, 0),
-                              child: SizedBox(
-                                width: 120,
-                                height: 120,
-                                child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: Image.network(imageurl)),
-                              ),
-                            ),
-                            // 카메라 아이콘
-                            Positioned(
-                              bottom: 5,
-                              right: 35,
-                              child: InkWell(
-                                onTap: () => showModalBottomSheet(
-                                    context: context,
-                                    builder: ((builder) => editProfilePic())),
-                                child: const Icon(
-                                  Icons.camera_enhance,
-                                  color: PRIMARY_COLOR,
-                                  size: 40,
-                                ),
-                              ),
-                            ),
-                          ],
+          content: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              children: [
+                // if (_pickedFile == null)
+                // 프로필 사진 및 수정
+                Flexible(
+                  child: Stack(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 30, 0),
+                        child: SizedBox(
+                          width: 120,
+                          height: 120,
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.network(imageurl)),
                         ),
                       ),
-
-                      // 닉네임
-                      Expanded(
-                        child: TextFormField(
-                          style: const TextStyle(
-                            color: Color(0xff4f4f4f),
-                            fontSize: 15,
+                      // 카메라 아이콘
+                      Positioned(
+                        bottom: 5,
+                        right: 35,
+                        child: InkWell(
+                          onTap: () => showModalBottomSheet(
+                              context: context,
+                              builder: ((builder) => editProfilePic())),
+                          child: const Icon(
+                            Icons.camera_enhance,
+                            color: PRIMARY_COLOR,
+                            size: 40,
                           ),
-                          controller: nicknameController,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide:
-                                    const BorderSide(color: POINT_COLOR),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide:
-                                    const BorderSide(color: POINT_COLOR),
-                              ),
-                              hintText: '닉네임',
-                              labelStyle: const TextStyle(
-                                  color: Color(0xff4f4f4f), fontSize: 18),
-                              filled: true,
-                              fillColor: const Color(0xffEDEDED)),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return '닉네임을 입력해주세요.';
-                            }
-                            if (value.length < 2) {
-                              return '2글자 이상 입력해주세요.';
-                            }
-                            return null;
-                          },
                         ),
                       ),
                     ],
                   ),
-                );
-              } else {
-                return const Text('No data available');
-              }
-            },
+                ),
+
+                // 닉네임
+                Expanded(
+                  child: TextFormField(
+                    style: const TextStyle(
+                      color: Color(0xff4f4f4f),
+                      fontSize: 15,
+                    ),
+                    controller: nicknameController,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: POINT_COLOR),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: POINT_COLOR),
+                        ),
+                        hintText: '닉네임',
+                        labelStyle: const TextStyle(
+                            color: Color(0xff4f4f4f), fontSize: 18),
+                        filled: true,
+                        fillColor: const Color(0xffEDEDED)),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return '닉네임을 입력해주세요.';
+                      }
+                      if (value.length < 2) {
+                        return '2글자 이상 입력해주세요.';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
           actions: <Widget>[
             // 수정 버튼
