@@ -188,7 +188,7 @@ public class StatisticsService {
 
 
     // 이번주의 시작과 끝을 반환
-    private List<LocalDateTime> getThisWeek() {
+    public List<LocalDateTime> getThisWeek() {
         LocalDateTime now = LocalDateTime.now();
         DayOfWeek dayOfWeek = now.getDayOfWeek();
         LocalDateTime sunday = now.plusDays(7 - dayOfWeek.getValue()).with(LocalTime.MAX);

@@ -12,9 +12,11 @@ import com.dodo.image.domain.Image;
 import com.dodo.room.RoomRepository;
 import com.dodo.room.domain.Category;
 import com.dodo.room.domain.CertificationType;
+import com.dodo.room.domain.Periodicity;
 import com.dodo.room.domain.Room;
 import com.dodo.roomuser.RoomUserRepository;
 import com.dodo.roomuser.domain.RoomUser;
+import com.dodo.statistics.StatisticsService;
 import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
 import com.dodo.user.domain.UserContext;
@@ -37,6 +39,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,6 +57,10 @@ public class CertificationService {
     private final RoomUserRepository roomUserRepository;
     private final VoteRepository voteRepository;
     private final ImageService imageService;
+    private final StatisticsService statisticsService;
+
+    private static final int DAILY_SUCCESS_UPDATE_MILEAGE = 10;
+    private static final int WEEKLY_SUCCESS_UPDATE_MILEAGE = 50;
 
     public CertificationUploadResponseData makeCertification(UserContext userContext, Long roomId, MultipartFile img) throws IOException {
         User user = getUser(userContext);
@@ -154,11 +161,10 @@ public class CertificationService {
 
 
         // TODO
-        // 투표 수 다 차면 어떻게 할지
-        // 인증 상태 변경
-        // (알림 어떻게함)
+        // 인증 완료, 실패시 알림 제공
         if(certification.getVoteUp().equals(room.getNumOfVoteSuccess())) {
             certification.setStatus(CertificationStatus.SUCCESS);
+            successCertificationToUpdateMileage(certification);
         }
 
         if(certification.getVoteDown().equals(room.getNumOfVoteFail())) {
@@ -178,6 +184,9 @@ public class CertificationService {
                 .orElseThrow(() -> new NotFoundException("인증방에 소속되어 있지 않습니다"));
         if(roomUser.getIsManager()) {
             certification.setStatus(requestData.getStatus());
+            if(certification.getStatus() == CertificationStatus.SUCCESS) {
+                successCertificationToUpdateMileage(certification);
+            }
         } else {
             throw new UnauthorizedException("방장이 아닙니다");
         }
@@ -244,6 +253,8 @@ public class CertificationService {
                 .orElseThrow(() -> new NotFoundException("인증 정보를 찾을 수 없습니다"));
         if(category == Category.STUDY) {
 
+        } else if(category == Category.GYM) {
+
         }
 
     }
@@ -267,4 +278,35 @@ public class CertificationService {
         return userRepository.findById(userContext.getUserId())
                 .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다"));
     }
+
+    // 성공한 인증에 대해서
+    // 일간인증인지 주간인증인지 파악하고
+    // 조건을 만족한다면 마일리지를 제공
+    private void successCertificationToUpdateMileage(Certification certification) {
+        User successUser = certification.getRoomUser().getUser();
+        Room room = certification.getRoomUser().getRoom();
+
+        if(room.getPeriodicity() == Periodicity.DAILY) {
+            // 일간
+
+            successUser.updateMileage(successUser.getMileage() + DAILY_SUCCESS_UPDATE_MILEAGE);
+        } else {
+            // 주간
+            // 주간 인증횟수 -> 주 n회 인증방이라면 n번쨰 인증 성공 시 50웑을 준다.
+
+            RoomUser roomUser = certification.getRoomUser();
+            List<LocalDateTime> thisWeek = statisticsService.getThisWeek();
+            List<Certification> certificationList = certificationRepository.findAllByRoomUser(roomUser)
+                    .orElse(new ArrayList<>());
+            long count = certificationList.stream()
+                    .filter(ct -> ct.getStatus() == CertificationStatus.SUCCESS
+                   && ct.getCreatedTime().isAfter(thisWeek.get(0))
+                   && ct.getCreatedTime().isBefore(thisWeek.get(1))
+                    ).count();
+            if(count == room.getFrequency()) {
+                successUser.updateMileage(successUser.getMileage() + WEEKLY_SUCCESS_UPDATE_MILEAGE);
+            }
+        }
+    }
+
 }

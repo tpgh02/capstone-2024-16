@@ -43,4 +43,5 @@ public class User {
     public void updateMileage(Integer mileage) {
         this.mileage = mileage;
     }
+
 }
