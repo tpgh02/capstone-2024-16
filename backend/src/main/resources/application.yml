@@ -29,7 +29,7 @@ authentication:
     secretKey: ${JWT_SECRET}
 
 ai:
-  server-url: "http://3.37.129.34:8080/ai/study"
+  server-url: "http://3.34.179.78:8080/ai/study"
 #server:
 #  error:
 #    include-message: always
