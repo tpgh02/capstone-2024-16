@@ -84,15 +84,21 @@ class _MyPageState extends State<MyPage> {
             );
           } else if (snapshot.hasError) {
             print("Mypage: Error " + snapshot.data.toString());
-            return const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: Text(
-                    '계정을 확인할 수 없습니다.',
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '서버 연결에 실패하였습니다.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black45,
+                      fontFamily: 'bm',
+                      fontSize: 20,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           } else if (snapshot.hasData) {
             // image url, 닉네임

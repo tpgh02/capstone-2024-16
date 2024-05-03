@@ -61,7 +61,6 @@ class MyPageSetting extends StatelessWidget {
                 title: const Text('앱 버전'),
                 value: const Text('1.0.0'),
                 leading: const Icon(Icons.info_outline),
-                // onPressed: ((context) {}),
               ),
               SettingsTile.navigation(
                 title: const Text('서비스 이용 약관'),
