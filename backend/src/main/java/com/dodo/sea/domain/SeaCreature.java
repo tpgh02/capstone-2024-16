@@ -19,7 +19,7 @@ public class SeaCreature {
     private Long coordinate_y;
 
     @Setter
-    private Boolean is_activate;
+    private Boolean isActivate;
 
     @ManyToOne
     private User user;
@@ -32,6 +32,6 @@ public class SeaCreature {
         this.coordinate_y = y;
     }
     public void activate(Boolean activate) {
-        this.is_activate = activate;
+        this.isActivate = activate;
     }
 }

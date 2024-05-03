@@ -28,6 +28,12 @@ public class Room {
     private Boolean canChat;
     private Integer numOfVoteSuccess;
     private Integer numOfVoteFail;
+    private Boolean isFull;
+
+    // 그룹일 때
+    private Integer numOfGoal;
+    @ElementCollection
+    private List<String> goal;
 
     @ManyToOne
     private Image image;
@@ -38,9 +44,13 @@ public class Room {
     private Periodicity periodicity;
     private Integer frequency;
 
-    //인증 방식 (AI, 직접)
+    //인증 방식 (투표, 방장 승인)
     @Enumerated(EnumType.STRING)
     private CertificationType certificationType;
+
+    // 방 타입 (ai, 일반, 그룹)
+    @Enumerated(EnumType.STRING)
+    private RoomType roomType;
 
     // 카테고리
     @Enumerated(EnumType.STRING)
@@ -61,7 +71,6 @@ public class Room {
         if (password != null){this.password = password;}
         if (info != null){this.info = info;}
         if (endDay != null){this.endDay = endDay;}
-        if (maxUser != null){this.maxUser = maxUser;}
         if (canChat != null){this.canChat = canChat;}
         if (numOfVoteSuccess != null){this.numOfVoteSuccess = numOfVoteSuccess;}
         if (numOfVoteFail != null){this.numOfVoteFail = numOfVoteFail;}
@@ -69,6 +78,10 @@ public class Room {
         if (periodicity != null){this.periodicity = periodicity;}
         if (frequency != null){this.frequency = frequency;}
         if (certificationType != null){this.certificationType = certificationType;}
+        if (maxUser != null){
+            this.maxUser = maxUser;
+            this.isFull = maxUser.equals(this.nowUser);
+        }
     }
 
 }

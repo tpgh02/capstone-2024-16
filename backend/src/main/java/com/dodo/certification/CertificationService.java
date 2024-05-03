@@ -14,6 +14,7 @@ import com.dodo.room.domain.Category;
 import com.dodo.room.domain.CertificationType;
 import com.dodo.room.domain.Periodicity;
 import com.dodo.room.domain.Room;
+import com.dodo.room.domain.RoomType;
 import com.dodo.roomuser.RoomUserRepository;
 import com.dodo.roomuser.domain.RoomUser;
 import com.dodo.statistics.StatisticsService;
@@ -39,7 +40,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -84,14 +84,14 @@ public class CertificationService {
                 .build());
 
         // 기상인증인 경우
-        if(room.getCategory() == Category.RISE) {
+        if(room.getCategory() == Category.WAKEUP) {
             // TODO -> 시간이 잘 나오나?
 
         }
 
 
         // AI인증방인 경우 AI에 요청 보내기
-        if(room.getCertificationType() == CertificationType.AI) {
+        if(room.getRoomType() == RoomType.AI) {
             transferToAi(room, certification);
         }
 

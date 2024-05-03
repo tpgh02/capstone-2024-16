@@ -2,10 +2,7 @@ package com.dodo.room.dto;
 
 import com.dodo.certification.domain.CertificationStatus;
 import com.dodo.image.domain.Image;
-import com.dodo.room.domain.Category;
-import com.dodo.room.domain.CertificationType;
-import com.dodo.room.domain.Periodicity;
-import com.dodo.room.domain.Room;
+import com.dodo.room.domain.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +16,7 @@ public class RoomData {
     private String name;
     private Image image;
     private Long maxUser;
-    private Long nowUsers;
+    private Long nowUser;
     private LocalDateTime endDay;
     private Periodicity periodicity;
     private String pwd;
@@ -28,9 +25,13 @@ public class RoomData {
     private Boolean canChat;
     private Integer numOfVoteSuccess;
     private Integer numOfVoteFail;
+    private Integer numOfGoal;
+    private List<String> goal;
+    private Boolean isFull;
 
     public CertificationStatus status;
 
+    private RoomType roomType;
     private CertificationType certificationType;
     private Integer frequency;
 
@@ -41,7 +42,7 @@ public class RoomData {
         this.name = room.getName();
         // this.image = room.getImage();
         this.maxUser = room.getMaxUser();
-        this.nowUsers = room.getNowUser();
+        this.nowUser = room.getNowUser();
         this.certificationType = room.getCertificationType();
 
         // TODO
@@ -49,7 +50,7 @@ public class RoomData {
         // 일단 대기중으로 고정
         this.status = CertificationStatus.WAIT;
         this.maxUser = room.getMaxUser();
-        this.nowUsers = room.getNowUser();
+        this.nowUser = room.getNowUser();
 
     }
 
@@ -59,7 +60,7 @@ public class RoomData {
         roomData.roomId = room.getId();
         roomData.name = room.getName();
         roomData.maxUser = room.getMaxUser();
-        roomData.nowUsers = room.getNowUser();
+        roomData.nowUser = room.getNowUser();
         roomData.endDay = room.getEndDay();
         roomData.periodicity = room.getPeriodicity();
         roomData.pwd = room.getPassword();
@@ -70,6 +71,7 @@ public class RoomData {
         roomData.numOfVoteFail = room.getNumOfVoteFail();
         roomData.certificationType = room.getCertificationType();
         roomData.frequency = room.getFrequency();
+        roomData.isFull = room.getIsFull();
 
         return roomData;
     }

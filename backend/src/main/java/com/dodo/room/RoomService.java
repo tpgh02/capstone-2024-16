@@ -1,10 +1,7 @@
 package com.dodo.room;
 
 import com.dodo.exception.NotFoundException;
-import com.dodo.room.domain.Category;
-import com.dodo.room.domain.CertificationType;
-import com.dodo.room.domain.Periodicity;
-import com.dodo.room.domain.Room;
+import com.dodo.room.domain.*;
 import com.dodo.room.dto.RoomData;
 import com.dodo.room.dto.UserData;
 import com.dodo.roomuser.RoomUserRepository;
@@ -18,11 +15,13 @@ import com.dodo.user.domain.User;
 import com.dodo.user.domain.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -61,6 +60,8 @@ public class RoomService {
                 .orElseThrow(NotFoundException::new)
                 .stream()
                 .map(RoomData::of)
+                .sorted(Comparator.comparing(RoomData::getIsFull).reversed()
+                        .thenComparing(RoomData::getNowUser).reversed())
                 .toList();
 
     }
@@ -81,15 +82,16 @@ public class RoomService {
                 .toList();
     }
 
-    // 채팅방 생성
-    public Room creatChatRoom(String roomName, String roomPwd, Long maxUserCnt, Category category,
-                              String info, CertificationType certificationType,
-                              Boolean canChat, Integer numOfVoteSuccess, Integer numOfVoteFail,
-                              Integer frequency, Periodicity periodicity, LocalDateTime endDate){
+    // 인증방 생성
+    public Room createRoom(String roomName, String roomPwd, Long maxUser, Category category,
+                                 String info, CertificationType certificationType,
+                                 Boolean canChat, Integer numOfVoteSuccess, Integer numOfVoteFail,
+                                 Integer frequency, Periodicity periodicity, LocalDateTime endDate, RoomType roomType){
+        Boolean isFull = maxUser == 1;
         Room room = Room.builder()
                 .name(roomName)
                 .password(roomPwd)
-                .maxUser(maxUserCnt)
+                .maxUser(maxUser)
                 .nowUser(1L)
                 .category(category)
                 .info(info)
@@ -99,6 +101,37 @@ public class RoomService {
                 .endDay(endDate)
                 .frequency(frequency)
                 .numOfVoteSuccess(numOfVoteSuccess).numOfVoteFail(numOfVoteFail)
+                .roomType(roomType)
+                .isFull(isFull)
+                .build();
+
+        roomRepository.save(room);
+        return room;
+    }
+
+    // 그룹 인증방 생성
+    public Room createGroupRoom(String roomName, String roomPwd, Long maxUser, Category category,
+                                 String info, CertificationType certificationType, Integer numOfGoal, List<String> goal,
+                                 Boolean canChat, Integer numOfVoteSuccess, Integer numOfVoteFail,
+                                 Integer frequency, Periodicity periodicity, LocalDateTime endDate){
+        Boolean isFull = maxUser == 1;
+        Room room = Room.builder()
+                .name(roomName)
+                .password(roomPwd)
+                .maxUser(maxUser)
+                .nowUser(1L)
+                .category(category)
+                .info(info)
+                .certificationType(certificationType)
+                .periodicity(periodicity)
+                .canChat(canChat)
+                .endDay(endDate)
+                .frequency(frequency)
+                .numOfVoteSuccess(numOfVoteSuccess).numOfVoteFail(numOfVoteFail)
+                .roomType(RoomType.GROUP)
+                .numOfGoal(numOfGoal)
+                .goal(goal)
+                .isFull(isFull)
                 .build();
 
         roomRepository.save(room);
