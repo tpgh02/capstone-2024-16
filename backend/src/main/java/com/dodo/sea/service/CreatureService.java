@@ -7,6 +7,7 @@ import com.dodo.image.domain.Image;
 import com.dodo.sea.domain.Creature;
 import com.dodo.sea.domain.SeaCreature;
 import com.dodo.sea.dto.CreatureData;
+import com.dodo.sea.dto.InventoryCreatureData;
 import com.dodo.sea.dto.SeaCreatureData;
 import com.dodo.sea.repository.CreatureRepository;
 import com.dodo.sea.repository.SeaCreatureRepository;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -54,24 +56,15 @@ public class CreatureService {
         return new CreatureData(creature);
     }
 
-    // 바다생물 활성화
-    public SeaCreature activateCreature(SeaCreatureData seaCreatureData) {
-        SeaCreature seaCreature = seaCreatureRepository.findById(seaCreatureData.getSeaCreatureId()).orElseThrow(NotFoundException::new);
+    // 바다생물 배치 (이동 및 활성/비활성화)
+    public void updateCreature(List<SeaCreatureData> seaCreatureData) {
 
-        seaCreature.activate(seaCreatureData.getIsActivate());
-        seaCreatureRepository.save(seaCreature);
-
-        return seaCreature;
-    }
-
-    // 바다생물 이동
-    public SeaCreature moveCreature(SeaCreatureData seaCreatureData) {
-        SeaCreature seaCreature = seaCreatureRepository.findById(seaCreatureData.getSeaCreatureId()).orElseThrow(NotFoundException::new);
-
-        seaCreature.move(seaCreatureData.getCoordinate_x(), seaCreatureData.getCoordinate_y());
-        seaCreatureRepository.save(seaCreature);
-
-        return seaCreature;
+        for (SeaCreatureData seaCreatureDatum : seaCreatureData) {
+            SeaCreature seaCreature = seaCreatureRepository.findById(seaCreatureDatum.getSeaCreatureId()).orElseThrow(NotFoundException::new);
+            seaCreature.move(seaCreatureDatum.getCoordinate_x(), seaCreatureDatum.getCoordinate_y());
+            seaCreature.activate(seaCreatureDatum.getIsActivate());
+            seaCreatureRepository.save(seaCreature);
+        }
     }
 
 
@@ -113,13 +106,17 @@ public class CreatureService {
     }
 
     // 유저가 보유한 생물을 보여주기 위한 함수
-    public List<CreatureData> getUserCreature(UserContext userContext) {
+    public List<InventoryCreatureData> getUserCreature(UserContext userContext) {
         User user = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
 
-        return seaCreatureRepository.findAllByUser(user).orElseThrow(NotFoundException::new).stream()
-                .map(SeaCreature::getCreature)
-                .map(CreatureData::new)
-                .toList();
+        List<InventoryCreatureData> inventoryCreatureDataList = new ArrayList<>();
+        for (SeaCreature seaCreature : seaCreatureRepository.findAllByUser(user).orElseThrow(NotFoundException::new)){
+            Creature creature = seaCreature.getCreature();
+            InventoryCreatureData inventoryCreatureData = new InventoryCreatureData(creature, seaCreature);
+
+            inventoryCreatureDataList.add(inventoryCreatureData);
+        }
+        return inventoryCreatureDataList;
     }
 
     // 유저가 바다를 클릭했을 때 보여줄 함수

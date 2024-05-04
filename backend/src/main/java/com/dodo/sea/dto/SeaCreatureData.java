@@ -6,6 +6,8 @@ import com.dodo.sea.domain.SeaCreature;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 public class SeaCreatureData {
@@ -15,6 +17,8 @@ public class SeaCreatureData {
     private Boolean isActivate;
 
     private String imageUrl;
+
+    private List<SeaCreatureData> seaCreatureDataList;
 
     public SeaCreatureData(SeaCreature seaCreature) {
         this.seaCreatureId = seaCreature.getId();
