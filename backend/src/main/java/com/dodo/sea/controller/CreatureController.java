@@ -6,6 +6,7 @@ import com.dodo.image.ImageService;
 import com.dodo.sea.domain.Creature;
 import com.dodo.sea.domain.SeaCreature;
 import com.dodo.sea.dto.CreatureData;
+import com.dodo.sea.dto.InventoryCreatureData;
 import com.dodo.sea.dto.SeaCreatureData;
 import com.dodo.sea.repository.SeaCreatureRepository;
 import com.dodo.sea.service.CreatureService;
@@ -61,18 +62,16 @@ public class CreatureController {
 
     @GetMapping("/inventory")
     @CustomAuthentication
-    public List<CreatureData> getUserInventory(@RequestAttribute UserContext userContext){
+    public List<InventoryCreatureData> getUserInventory(@RequestAttribute UserContext userContext){
         return creatureService.getUserCreature(userContext);
     }
 
-    @PostMapping("/move")
-    public SeaCreatureData moveCreature(@RequestBody SeaCreatureData seaCreatureData) {
-        return new SeaCreatureData(creatureService.moveCreature(seaCreatureData));
-    }
+    // 바다 미리보기에서 저장버튼으로 유저의 바다를 업데이트 하는 postmapping
+    @PostMapping("/update-sea")
+    public String moveCreature(@RequestBody SeaCreatureData seaCreatureData) {
+        creatureService.updateCreature(seaCreatureData.getSeaCreatureDataList());
 
-    @PostMapping("/activate_creature")
-    public SeaCreatureData activateCreature(@RequestBody SeaCreatureData seaCreatureData) {
-        return new SeaCreatureData(creatureService.activateCreature(seaCreatureData));
+        return "200 OK";
     }
 
     // 유저가 바다를 클릭했을 때 보여줄 함수
