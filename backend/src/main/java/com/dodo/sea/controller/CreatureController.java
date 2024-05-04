@@ -69,7 +69,7 @@ public class CreatureController {
     // 바다 미리보기에서 저장버튼으로 유저의 바다를 업데이트 하는 postmapping
     @PostMapping("/update-sea")
     public String moveCreature(@RequestBody SeaCreatureData seaCreatureData) {
-        creatureService.updateCreature(seaCreatureData.getSeaCreatureDataList());
+        creatureService.updateCreature(seaCreatureData);
 
         return "200 OK";
     }

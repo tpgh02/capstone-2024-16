@@ -57,14 +57,15 @@ public class CreatureService {
     }
 
     // 바다생물 배치 (이동 및 활성/비활성화)
-    public void updateCreature(List<SeaCreatureData> seaCreatureData) {
+    public void updateCreature(SeaCreatureData seaCreatureData) {
 
-        for (SeaCreatureData seaCreatureDatum : seaCreatureData) {
-            SeaCreature seaCreature = seaCreatureRepository.findById(seaCreatureDatum.getSeaCreatureId()).orElseThrow(NotFoundException::new);
-            seaCreature.move(seaCreatureDatum.getCoordinate_x(), seaCreatureDatum.getCoordinate_y());
-            seaCreature.activate(seaCreatureDatum.getIsActivate());
-            seaCreatureRepository.save(seaCreature);
-        }
+        SeaCreature seaCreature = seaCreatureRepository.findById(seaCreatureData.getSeaCreatureId()).orElseThrow(NotFoundException::new);
+
+        seaCreature.move(seaCreatureData.getCoordinate_x(), seaCreatureData.getCoordinate_y());
+        seaCreature.activate(seaCreatureData.getIsActivate());
+
+        seaCreatureRepository.save(seaCreature);
+
     }
 
 

@@ -18,8 +18,6 @@ public class SeaCreatureData {
 
     private String imageUrl;
 
-    private List<SeaCreatureData> seaCreatureDataList;
-
     public SeaCreatureData(SeaCreature seaCreature) {
         this.seaCreatureId = seaCreature.getId();
         this.coordinate_x = seaCreature.getCoordinate_x();
