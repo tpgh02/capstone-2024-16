@@ -110,12 +110,12 @@ class _roomMainState extends State<room_group> {
         child: Column(
           children: [
             const SizedBox(
-              height: 25,
+              height: 10,
             ),
             // 목표 기한
             _progressBar(),
             Container(
-              margin: const EdgeInsets.all(20),
+              margin: const EdgeInsets.fromLTRB(20, 17, 20, 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -226,32 +226,27 @@ class _roomMainState extends State<room_group> {
     );
   }
 
-  Container _progressBar() {
-    return Container(
-      height: 100,
-      child: const Column(
+  SizedBox _progressBar() {
+    return const SizedBox(
+      height: 118,
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "지금 목표는? ",
-                style: TextStyle(
-                  color: POINT_COLOR,
-                  fontFamily: 'bm',
-                  fontSize: 18,
-                ),
-              ),
-              Text(
-                "기부 총액 5만원 달성하기",
-                style: TextStyle(
-                  color: PRIMARY_COLOR,
-                  fontFamily: 'bm',
-                  fontSize: 22,
-                ),
-              ),
-            ],
+          Text(
+            "지금 목표는? ",
+            style: TextStyle(
+              color: POINT_COLOR,
+              fontFamily: 'bm',
+              fontSize: 18,
+            ),
+          ),
+          Text(
+            "기부 총액 5만원 달성하기",
+            style: TextStyle(
+              color: PRIMARY_COLOR,
+              fontFamily: 'bm',
+              fontSize: 22,
+            ),
           ),
           // progress bar
           Padding(
@@ -264,9 +259,6 @@ class _roomMainState extends State<room_group> {
             ),
           ),
           // D-day
-          SizedBox(
-            height: 2,
-          ),
           Text(
             "2024-05-10까지 도전",
             style: TextStyle(
