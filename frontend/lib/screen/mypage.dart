@@ -1,16 +1,18 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
 import 'package:dodo/screen/mypage_settings.dart';
 import 'package:flutter/material.dart';
-// import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:dio/dio.dart';
 
-Future<MyInfo> fetchMyInfo() async {
+Future<MyInfo> fetchMyInfo_GET() async {
   final response =
       await http.get(Uri.parse(serverUrl + '/api/v1/users/me'), headers: {
     'Authorization':
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjJ9.WrM3msDSet3X24r8Kf79dsQ52UuuxbpXU_L8JR5daUU'
   });
 
   if (response.statusCode == 200) {
@@ -19,6 +21,34 @@ Future<MyInfo> fetchMyInfo() async {
     return MyInfo.fromJson(json.decode(response.body));
   } else {
     throw Exception('Mypage: fail to connect');
+  }
+}
+
+Future<MyInfo> fetchMyInfo_POST(Map<String, dynamic> form) async {
+  var mypagePostUrl = serverUrl + '/api/v1/users/user-update';
+  final mypagePostresponse = await http.post(
+    Uri.parse(mypagePostUrl),
+    headers: {
+      'Authorization':
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjJ9.WrM3msDSet3X24r8Kf79dsQ52UuuxbpXU_L8JR5daUU',
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(form),
+  );
+  try {
+    if (mypagePostresponse.statusCode == 200) {
+      print('닉네임 변경 성공');
+      Map<String, dynamic> responseData = json.decode(mypagePostresponse.body);
+      print(responseData['name']);
+      return responseData['name'];
+    } else {
+      print('닉네임 변경 실패: ${mypagePostresponse.body}');
+      throw Exception('닉네임 변경에 실패했습니다');
+    }
+  } catch (e) {
+    print(mypagePostresponse.body);
+    print('$e');
+    throw Exception('네트워크 오류가 발생했습니다');
   }
 }
 
@@ -61,11 +91,29 @@ class MyPage extends StatefulWidget {
 
 class _MyPageState extends State<MyPage> {
   Future<MyInfo>? myInfo;
+  final ImagePicker _picker = ImagePicker();
+  var _pickedImage = '';
 
   @override
   void initState() {
     super.initState();
-    myInfo = fetchMyInfo();
+    myInfo = fetchMyInfo_GET();
+  }
+
+  void getNewImage(ImageSource source) async {
+    final XFile? selectedImage = await _picker.pickImage(
+      source: source,
+      // maxHeight: 120,
+      // maxWidth: 120,
+      // imageQuality: 30,
+    );
+    if (selectedImage != null) {
+      dynamic sendData = selectedImage.path;
+      setState(() {
+        _pickedImage = sendData;
+      });
+      print("이미지 선택함: $_pickedImage");
+    }
   }
 
   @override
@@ -157,6 +205,11 @@ class _MyPageState extends State<MyPage> {
               ),
             ),
           ),
+          IconButton(
+            onPressed: () => editNicknameDialog(imageurl, nickname),
+            icon: Icon(Icons.edit),
+            color: PRIMARY_COLOR,
+          ),
         ],
       ),
     );
@@ -173,7 +226,7 @@ class _MyPageState extends State<MyPage> {
               flex: 1,
               child: MyPageButton(
                   onTap: () => editProfileDialog(imageurl, nickname),
-                  label: "프로필 수정")),
+                  label: "프로필 사진 수정")),
           const SizedBox(
             width: 15,
           ),
@@ -187,10 +240,114 @@ class _MyPageState extends State<MyPage> {
     );
   }
 
-  // 프로필 수정 다이얼로그
-  void editProfileDialog(String imageurl, String nickname) {
+  void editNicknameDialog(String imageurl, String nickname) {
     TextEditingController nicknameController =
         TextEditingController(text: nickname);
+
+    showDialog(
+      context: context,
+      builder: ((context) {
+        return AlertDialog(
+          backgroundColor: LIGHTGREY,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          title: const Text(
+            "닉네임 수정",
+            style: TextStyle(fontWeight: FontWeight.bold, color: POINT_COLOR),
+          ),
+          content: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: TextFormField(
+              style: const TextStyle(
+                color: Color(0xff4f4f4f),
+                fontSize: 15,
+              ),
+              controller: nicknameController,
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: POINT_COLOR),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: POINT_COLOR),
+                  ),
+                  hintText: '닉네임',
+                  labelStyle:
+                      const TextStyle(color: Color(0xff4f4f4f), fontSize: 18),
+                  filled: true,
+                  fillColor: const Color(0xffEDEDED)),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return '닉네임을 입력해주세요.';
+                }
+                if (value.length < 2) {
+                  return '2글자 이상 입력해주세요.';
+                }
+                return null;
+              },
+            ),
+          ),
+          actions: <Widget>[
+            // 수정 버튼
+            ElevatedButton(
+              onPressed: () async {
+                Map<String, dynamic> nicknameData = {
+                  "name": nicknameController.text,
+                  "introduceMessage": " ",
+                  'image': {'id': 1, 'url': imageurl}
+                };
+                fetchMyInfo_POST(nicknameData).then((data) {
+                  print("닉네임 변경 성공");
+                }).catchError((e) {
+                  print("닉네임 변경 에러: $e");
+                });
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: POINT_COLOR,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                side: const BorderSide(
+                  color: POINT_COLOR,
+                  width: 1.0,
+                ),
+              ),
+              child: const Text(
+                "수정",
+                style: TextStyle(
+                    color: Color.fromARGB(226, 255, 255, 255),
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+
+            // 닫기 버튼
+            OutlinedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: POINT_COLOR,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                side: const BorderSide(
+                  color: POINT_COLOR,
+                  width: 1.0,
+                ),
+              ),
+              child: const Text("취소",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
+  // 프로필 수정 다이얼로그
+  void editProfileDialog(String imageurl, String nickname) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -206,81 +363,90 @@ class _MyPageState extends State<MyPage> {
           content: SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // if (_pickedFile == null)
-                // 프로필 사진 및 수정
-                Flexible(
-                  child: Stack(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 0, 30, 0),
-                        child: SizedBox(
-                          width: 120,
-                          height: 120,
-                          child: ClipRRect(
+                if (_pickedImage != '')
+                  Flexible(
+                    child: Stack(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 30, 0),
+                          child: SizedBox(
+                            width: 120,
+                            height: 120,
+                            child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
-                              child: Image.network(imageurl)),
-                        ),
-                      ),
-                      // 카메라 아이콘
-                      Positioned(
-                        bottom: 5,
-                        right: 35,
-                        child: InkWell(
-                          onTap: () => showModalBottomSheet(
-                              context: context,
-                              builder: ((builder) => editProfilePic())),
-                          child: const Icon(
-                            Icons.camera_enhance,
-                            color: PRIMARY_COLOR,
-                            size: 40,
+                              child: Image.file(
+                                File(_pickedImage),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        // 카메라 아이콘
+                        Positioned(
+                          bottom: 5,
+                          right: 35,
+                          child: InkWell(
+                            onTap: () => showModalBottomSheet(
+                                context: context,
+                                builder: ((builder) =>
+                                    editProfilePic(nickname))),
+                            child: const Icon(
+                              Icons.camera_enhance,
+                              color: PRIMARY_COLOR,
+                              size: 40,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  Flexible(
+                    child: Stack(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 30, 0),
+                          child: SizedBox(
+                            width: 120,
+                            height: 120,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.network(imageurl),
+                            ),
+                          ),
+                        ),
+                        // 카메라 아이콘
+                        Positioned(
+                          bottom: 5,
+                          right: 35,
+                          child: InkWell(
+                            onTap: () => showModalBottomSheet(
+                                context: context,
+                                builder: ((builder) =>
+                                    editProfilePic(nickname))),
+                            child: const Icon(
+                              Icons.camera_enhance,
+                              color: PRIMARY_COLOR,
+                              size: 40,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
 
                 // 닉네임
-                Expanded(
-                  child: TextFormField(
-                    style: const TextStyle(
-                      color: Color(0xff4f4f4f),
-                      fontSize: 15,
-                    ),
-                    controller: nicknameController,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: POINT_COLOR),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: POINT_COLOR),
-                        ),
-                        hintText: '닉네임',
-                        labelStyle: const TextStyle(
-                            color: Color(0xff4f4f4f), fontSize: 18),
-                        filled: true,
-                        fillColor: const Color(0xffEDEDED)),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return '닉네임을 입력해주세요.';
-                      }
-                      if (value.length < 2) {
-                        return '2글자 이상 입력해주세요.';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
               ],
             ),
           ),
           actions: <Widget>[
             // 수정 버튼
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                if (_pickedImage != '')
+                  await patchProfilePic(_pickedImage, nickname);
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
@@ -326,7 +492,7 @@ class _MyPageState extends State<MyPage> {
   }
 
   // 프로필 사진 수정 팝업
-  Widget editProfilePic() {
+  Widget editProfilePic(String nickname) {
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -350,28 +516,33 @@ class _MyPageState extends State<MyPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
+                // TextButton(
+                //   onPressed: () {
+                //     getNewImage(ImageSource.camera);
+                //   },
+                //   child: const Column(
+                //     children: [
+                //       Icon(
+                //         Icons.camera_alt_rounded,
+                //         color: POINT_COLOR,
+                //         size: 40,
+                //       ),
+                //       Text(
+                //         '카메라',
+                //         style: TextStyle(
+                //           fontSize: 20,
+                //           fontWeight: FontWeight.bold,
+                //           color: POINT_COLOR,
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 TextButton(
-                  onPressed: () {},
-                  child: const Column(
-                    children: [
-                      Icon(
-                        Icons.camera_alt_rounded,
-                        color: POINT_COLOR,
-                        size: 40,
-                      ),
-                      Text(
-                        '카메라',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: POINT_COLOR,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    getNewImage(ImageSource.gallery);
+                    Navigator.of(context).pop();
+                  },
                   child: const Column(
                     children: [
                       Icon(
@@ -391,7 +562,10 @@ class _MyPageState extends State<MyPage> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    patchBasicPic(_pickedImage, nickname);
+                    Navigator.of(context).pop();
+                  },
                   child: const Column(
                     children: [
                       Icon(
@@ -416,6 +590,85 @@ class _MyPageState extends State<MyPage> {
         ),
       ),
     );
+  }
+
+  Future<dynamic> patchProfilePic(dynamic input, String nickname) async {
+    print('프로필 사진 수정: $input');
+    var dio = Dio();
+    var imageUrl = serverUrl + '/api/v1/users/user-update';
+
+    try {
+      dio.options.contentType = 'multipart/form-data';
+      dio.options.maxRedirects.isFinite;
+
+      dio.options.headers = {
+        'Authorization':
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjJ9.WrM3msDSet3X24r8Kf79dsQ52UuuxbpXU_L8JR5daUU'
+      };
+
+      FormData formData = FormData.fromMap({
+        'name': nickname,
+        'introduceMessage': '',
+        'image': {'id': 1, 'url': await MultipartFile.fromFile(input)}
+      });
+
+      final imageEditResponse = await dio.post(imageUrl, data: formData);
+
+      if (imageEditResponse.statusCode == 200) {
+        // final responseData = response.data;
+        // final imageUrl = responseData["image"]["url"];
+        print('성공적으로 업로드했습니다: $imageEditResponse');
+        //return imageUrl;
+      } else {
+        print('서버로부터 잘못된 응답이 도착했습니다. 상태 코드: ${imageEditResponse.statusCode}');
+        //return null;
+      }
+    } catch (e) {
+      print("프사 변경 에러 발생: $e");
+      return null;
+    }
+  }
+
+  Future<dynamic> patchBasicPic(dynamic input, String nickname) async {
+    print('프로필 사진 수정: $input');
+    var dio = Dio();
+    var imageUrl = serverUrl + '/api/v1/users/user-update';
+    _pickedImage = '';
+
+    try {
+      dio.options.contentType = 'multipart/form-data';
+      dio.options.maxRedirects.isFinite;
+
+      dio.options.headers = {
+        'Authorization':
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjJ9.WrM3msDSet3X24r8Kf79dsQ52UuuxbpXU_L8JR5daUU'
+      };
+
+      FormData formData = FormData.fromMap({
+        'name': nickname,
+        'introduceMessage': '',
+        'image': {
+          'id': 1,
+          'url':
+              'https://my-dodo-bucket.s3.ap-northeast-2.amazonaws.com/image/default.png'
+        }
+      });
+
+      final response = await dio.post(imageUrl, data: formData);
+
+      if (response.statusCode == 200) {
+        // final responseData = response.data;
+        // final imageUrl = responseData["image"]["url"];
+        print('성공적으로 업로드했습니다');
+        //return imageUrl;
+      } else {
+        print('서버로부터 잘못된 응답이 도착했습니다. 상태 코드: ${response.statusCode}');
+        //return null;
+      }
+    } catch (e) {
+      print("프사 변경 에러 발생: $e");
+      return null;
+    }
   }
 
   // 로그아웃 팝업 창
