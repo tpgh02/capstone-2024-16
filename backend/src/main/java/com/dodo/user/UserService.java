@@ -105,6 +105,14 @@ public class UserService {
         return new UserData(user);
     }
 
+    public void update(UserContext userContext, UserData userData) {
+        User user = userRepository.findById(userContext.getUserId())
+                .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다"));
+
+        user.update(userData.getName(), userData.getImage(), userData.getIntroduceMessage());
+        userRepository.save(user);
+    }
+
     @PostConstruct
     public void makeInitialData() {
         Image image = imageRepository.findById(1L).get();

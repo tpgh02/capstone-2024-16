@@ -44,4 +44,9 @@ public class User {
         this.mileage = mileage;
     }
 
+    public void update(String name, Image image, String introduceMessage) {
+        this.name = name;
+        this.image = image;
+        this.introduceMessage = introduceMessage;
+    }
 }

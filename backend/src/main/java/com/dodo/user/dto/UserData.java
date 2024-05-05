@@ -4,8 +4,10 @@ import com.dodo.image.domain.Image;
 import com.dodo.user.domain.AuthenticationType;
 import com.dodo.user.domain.User;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Data
+@RequiredArgsConstructor
 public class UserData {
     private Long userId;
     private AuthenticationType authenticationType;
