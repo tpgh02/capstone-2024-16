@@ -3,6 +3,7 @@ package com.dodo.room;
 import com.dodo.exception.NotFoundException;
 import com.dodo.room.domain.*;
 import com.dodo.room.dto.RoomData;
+import com.dodo.room.dto.RoomListData;
 import com.dodo.room.dto.UserData;
 import com.dodo.roomuser.RoomUserRepository;
 import com.dodo.roomuser.RoomUserService;
@@ -24,6 +25,8 @@ import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
 
+import static com.dodo.room.dto.RoomListData.updateStatus;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -36,14 +39,15 @@ public class RoomService {
     private final RoomTagRepository roomTagRepository;
     private final RoomTagService roomTagService;
 
-    public List<RoomData> getMyRoomList(UserContext userContext) {
-        User user = userRepository.findById(userContext.getUserId())
-                        .orElseThrow(NotFoundException::new);
+    public List<RoomListData> getMyRoomList(UserContext userContext) {
+        User user = getUser(userContext);
+
         return roomUserRepository.findAllByUser(user)
                 .orElseThrow(NotFoundException::new)
                 .stream()
                 .map(RoomUser::getRoom)
-                .map(RoomData::new)
+                .map(RoomListData::new)
+                .map(RoomListData -> updateStatus(RoomListData, roomUserService.getCertificationStatus(userContext, RoomListData)))
                 .toList();
     }
 
@@ -249,6 +253,10 @@ public class RoomService {
             minusUserCnt(roomId);
         }
 
+    }
+
+    public User getUser(UserContext userContext) {
+        return userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
     }
 
 }

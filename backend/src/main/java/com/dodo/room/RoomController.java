@@ -4,6 +4,7 @@ import com.dodo.config.auth.CustomAuthentication;
 import com.dodo.room.domain.Category;
 import com.dodo.room.domain.RoomType;
 import com.dodo.room.dto.RoomData;
+import com.dodo.room.dto.RoomListData;
 import com.dodo.room.dto.UserData;
 import com.dodo.tag.repository.RoomTagRepository;
 import com.dodo.tag.service.RoomTagService;
@@ -42,7 +43,7 @@ public class RoomController {
     private final RoomTagRepository roomTagRepository;
 
     @GetMapping("/list")
-    public List<RoomData> getMyRoomList(
+    public List<RoomListData> getMyRoomList(
             @RequestAttribute UserContext userContext
     ) {
         return roomService.getMyRoomList(userContext);
