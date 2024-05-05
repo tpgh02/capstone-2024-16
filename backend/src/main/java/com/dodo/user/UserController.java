@@ -35,6 +35,16 @@ public class UserController {
         return userservice.getMyData(userContext);
     }
 
+    @CustomAuthentication
+    @PostMapping("user-update")
+    public String update(
+            @RequestAttribute UserContext userContext,
+            @RequestBody UserData userData) {
+        userservice.update(userContext, userData);
+
+        return "200 OK";
+    }
+
 
     @CustomAuthentication
     @GetMapping("test")
