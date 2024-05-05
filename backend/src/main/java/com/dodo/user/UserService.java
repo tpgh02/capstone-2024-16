@@ -2,18 +2,20 @@ package com.dodo.user;
 
 import com.dodo.exception.NotFoundException;
 import com.dodo.image.ImageRepository;
+import com.dodo.image.ImageService;
 import com.dodo.image.domain.Image;
 import com.dodo.token.TokenService;
 import com.dodo.user.domain.*;
-import com.dodo.user.dto.UserCreateRequestData;
-import com.dodo.user.dto.UserData;
-import com.dodo.user.dto.UserLoginRequestData;
+import com.dodo.user.dto.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @Service
@@ -25,6 +27,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
     private final ImageRepository imageRepository;
+    private final ImageService imageService;
 
 
     @Transactional
@@ -154,7 +157,35 @@ public class UserService {
         return true;
     }
 
-    private User getUser(UserContext userContext) {
+
+    @Transactional
+    public ProfileChangeResponseData changeProfile(UserContext userContext, MultipartFile img, String name, String introduceMessage) throws IOException {
+        User user = getUser(userContext);
+        if(img != null) {
+            Image image = imageService.save(img);
+            user.setImage(image);
+        }
+        if(name != null) {
+            user.setName(name);
+        }
+        if(introduceMessage != null) {
+            user.setIntroduceMessage(introduceMessage);
+        }
+        return new ProfileChangeResponseData(user);
+    }
+
+    public ProfileRequestData getProfile(UserContext userContext) {
+        User user = getUser(userContext);
+        return new ProfileRequestData(user);
+    }
+
+    public Image getImage(UserContext userContext) {
+        User user = getUser(userContext);
+        return user.getImage();
+    }
+
+    @Transactional
+    public User getUser(UserContext userContext) {
         return userRepository.findById(userContext.getUserId())
                 .orElseThrow(() -> new NotFoundException("유저정보가 올바르지 않습니다."));
     }

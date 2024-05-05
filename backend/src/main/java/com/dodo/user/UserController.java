@@ -1,12 +1,16 @@
 package com.dodo.user;
 
 import com.dodo.config.auth.CustomAuthentication;
-import com.dodo.user.domain.PasswordChangeRequestData;
+import com.dodo.image.domain.Image;
+import com.dodo.user.dto.PasswordChangeRequestData;
 import com.dodo.user.domain.UserContext;
 import com.dodo.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("api/v1/users/")
@@ -14,18 +18,18 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class UserController {
 
-    private final UserService userservice;
+    private final UserService userService;
 
     @PostMapping("register")
     public UserCreateResponseData register(
           @RequestBody  UserCreateRequestData request) {
-        return new UserCreateResponseData(userservice.register(request));
+        return new UserCreateResponseData(userService.register(request));
     }
 
     @PostMapping("login")
     public UserLoginResponseData login(
             @RequestBody UserLoginRequestData request) {
-        return new UserLoginResponseData(userservice.login(request));
+        return new UserLoginResponseData(userService.login(request));
     }
 
     @CustomAuthentication
@@ -33,19 +37,8 @@ public class UserController {
     public UserData getMyData(
             @RequestAttribute UserContext userContext
     ) {
-        return userservice.getMyData(userContext);
+        return userService.getMyData(userContext);
     }
-
-    @CustomAuthentication
-    @PostMapping("user-update")
-    public String update(
-            @RequestAttribute UserContext userContext,
-            @RequestBody UserData userData) {
-        userservice.update(userContext, userData);
-
-        return "200 OK";
-    }
-
 
     @CustomAuthentication
     @GetMapping("test")
@@ -61,7 +54,7 @@ public class UserController {
             @RequestAttribute UserContext userContext,
             @RequestParam String password
     ) {
-        return userservice.checkPassword(userContext, password);
+        return userService.checkPassword(userContext, password);
     }
 
     @CustomAuthentication
@@ -70,6 +63,33 @@ public class UserController {
             @RequestAttribute UserContext userContext,
             @RequestBody PasswordChangeRequestData passwordChangeRequestData
     ) {
-        return userservice.changePassword(userContext, passwordChangeRequestData);
+        return userService.changePassword(userContext, passwordChangeRequestData);
+    }
+
+    @CustomAuthentication
+    @PostMapping("user-update")
+    public ProfileChangeResponseData changeProfile(
+            @RequestAttribute UserContext userContext,
+            @RequestParam(required = false) MultipartFile img,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String introduceMessage
+    ) throws IOException {
+        return userService.changeProfile(userContext, img, name, introduceMessage);
+    }
+
+    @CustomAuthentication
+    @GetMapping("simple-profile")
+    public ProfileRequestData getProfile(
+            @RequestAttribute UserContext userContext
+    ) {
+        return userService.getProfile(userContext);
+    }
+
+    @CustomAuthentication
+    @GetMapping("image")
+    public Image getImage(
+            @RequestAttribute UserContext userContext
+    ) {
+        return userService.getImage(userContext);
     }
 }

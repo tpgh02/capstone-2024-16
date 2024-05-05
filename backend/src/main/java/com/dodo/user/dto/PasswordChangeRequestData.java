@@ -1,4 +1,4 @@
-package com.dodo.user.domain;
+package com.dodo.user.dto;
 
 import lombok.Data;
 
