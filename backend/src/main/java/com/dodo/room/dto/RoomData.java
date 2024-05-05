@@ -74,6 +74,7 @@ public class RoomData {
         roomData.isFull = room.getIsFull();
         roomData.goal = room.getGoal();
         roomData.numOfGoal = room.getNumOfGoal();
+        roomData.roomType = room.getRoomType();
 
         return roomData;
     }
