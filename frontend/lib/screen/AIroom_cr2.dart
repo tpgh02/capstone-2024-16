@@ -17,6 +17,12 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
   TextEditingController _comments = TextEditingController();
   TextEditingController _peoplenum = TextEditingController();
   TextEditingController _password = TextEditingController();
+  bool _isAI = false;
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -212,24 +218,24 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
                   ),
                   OutlinedButton(
                     onPressed: () {
-                      print(_select);
-                      print(_select == '학습');
-                      print(_title.text);
-                      print(_tag.text);
-                      print(_comments.text);
-                      print(_peoplenum.text);
-                      print(_password.text);
-
+                      if (_select == '학습' || _select == '기상') {
+                        _isAI = true;
+                        print(_select);
+                        print(_isAI);
+                      } else {
+                        _isAI = false;
+                      }
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => AIroom_cr3(
                                   _title.text,
-                                  _select.toString(),
                                   _tag.text,
+                                  _select.toString(),
                                   _comments.text,
                                   _peoplenum.text,
-                                  _password.text)));
+                                  _password.text,
+                                  _isAI)));
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: PRIMARY_COLOR,

@@ -2,24 +2,26 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
+import 'package:dodo/screen/roomlist_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' hide VoidCallback;
 import 'package:http/http.dart' as http;
 
-Future<Map> fetchBuy(Map<String, dynamic> userData) async {
-  var headers = {
-    'Authorization':
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
-  };
-  final response =
-      await http.post(Uri.parse(serverUrl + '/api/v1/room/create-ai-room'));
-  response.headers.addAll(headers);
+Future<Map> fetchCreate(Map<String, dynamic> formData) async {
+  final response = await http.post(
+    Uri.parse(serverUrl + '/api/v1/room/create-ai-room'),
+    headers: {
+      'Authorization':
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU',
+      'Content-Type': 'application/json',
+    },
+    body: jsonEncode(formData),
+  );
   try {
     if (response.statusCode == 200) {
       print('연결 성공!');
 
-      Map responseData = json.decode(response.body);
+      Map responseData = jsonDecode(utf8.decode(response.bodyBytes));
       print('$responseData'); //log 찍는 걸로 차후에 변경하기
       return responseData;
     } else {
@@ -39,10 +41,18 @@ class AIroom_cr3 extends StatefulWidget {
   final String comments;
   final String peoplesnum;
   final String password;
+  final bool _isAI;
 
-  const AIroom_cr3(this.title, this.tag, this.category, this.comments,
-      this.peoplesnum, this.password,
-      {super.key});
+  const AIroom_cr3(
+    this.title,
+    this.tag,
+    this.category,
+    this.comments,
+    this.peoplesnum,
+    this.password,
+    this._isAI, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<AIroom_cr3> createState() => _AIroom_cr3State();
@@ -61,14 +71,15 @@ class _AIroom_cr3State extends State<AIroom_cr3>
   ];
   List method = ['매일', '매주'];
   List votes = ['1표', '2표', '3표', '4표', '5표', '6표', '7표', '8표', '9표', '10표'];
-  Object? _selectcount = '1회';
-  Object? _selectgoodvote = '1표';
-  Object? _selectfailvote = '1표';
+  String _selectcount = '1회';
+  String _selectgoodvote = '1표';
+  String _selectfailvote = '1표';
   bool _peoplevote = false;
   bool _ischat = false;
-  // Object? _method = '매일';
+  bool _ispick = false;
   List<String> checkList = [];
   TimeOfDay _selectedTime = TimeOfDay.now();
+  String? _selectedPeriod;
 
   late TabController tabController = TabController(
     length: 2,
@@ -78,6 +89,29 @@ class _AIroom_cr3State extends State<AIroom_cr3>
     /// 탭 변경 애니메이션 시간
     animationDuration: const Duration(milliseconds: 200),
   );
+  int changeNum(String input) {
+    String numbersString = input.toString().replaceAll(RegExp(r'[^0-9]'), '');
+    return int.tryParse(numbersString) ?? 0;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    tabController = TabController(length: method.length, vsync: this);
+    tabController.addListener(_handleTabSelection);
+  }
+
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
+  }
+
+  void _handleTabSelection() {
+    setState(() {
+      _selectedPeriod = method[tabController.index];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -205,6 +239,7 @@ class _AIroom_cr3State extends State<AIroom_cr3>
                             onChanged: (value) {
                               setState(() {
                                 _peoplevote = value!;
+                                print(_peoplevote);
                               });
                             },
                             activeColor: PRIMARY_COLOR,
@@ -306,10 +341,10 @@ class _AIroom_cr3State extends State<AIroom_cr3>
                   ],
                 ),
                 const SizedBox(height: 15),
-                if (widget.category == "학습")
+                if (widget._isAI)
                   SizedBox(
                     width: double.infinity,
-                    height: 100,
+                    height: 70,
                     child: OutlinedButton(
                       onPressed: () async {
                         final TimeOfDay? pickedTime = await showTimePicker(
@@ -317,8 +352,9 @@ class _AIroom_cr3State extends State<AIroom_cr3>
                           context: context,
                           initialTime: _selectedTime,
                         );
-                        if (pickedTime != null && pickedTime != _selectedTime) {
+                        if (pickedTime != null) {
                           setState(() {
+                            _ispick = true;
                             _selectedTime = pickedTime;
                           });
                         }
@@ -329,13 +365,21 @@ class _AIroom_cr3State extends State<AIroom_cr3>
                           side: const BorderSide(color: PRIMARY_COLOR),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10))),
-                      child: const Text(
-                        '인증 시간 설정',
-                        style: TextStyle(fontFamily: "bm", fontSize: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.access_time),
+                          SizedBox(width: 8), // 아이콘과 텍스트 사이의 간격 조절
+                          Text(
+                            _ispick
+                                ? _selectedTime.format(context)
+                                : '인증 시간 설정',
+                            style: TextStyle(fontFamily: "bm", fontSize: 20),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-
                 const SizedBox(height: 15),
                 //이전, 다음 버튼
                 Row(
@@ -365,38 +409,49 @@ class _AIroom_cr3State extends State<AIroom_cr3>
                         Map<String, String> categoryMap = {
                           "운동": "EXERCISE",
                           "헬스": "GYM",
-                          "기상": "RISE",
+                          "기상": "WAKEUP",
                           "학습": "STUDY",
                           "식단": "DIET",
                           "기타": "ETC"
                         };
-
+                        Map<String, String> periodMap = {
+                          "매일": "DAILY",
+                          "매주": "WEEKLY",
+                        };
                         String _category =
                             categoryMap[widget.category] ?? "ETC";
+                        String _period = periodMap[_selectedPeriod] ?? "DAILY";
+                        String certificationType =
+                            _peoplevote ? "BOTH" : "ADMIN";
+                        print(certificationType);
                         Map<String, dynamic> formData = {
-                          "name": widget.title,
+                          "name": widget.title.toString(),
                           "category": _category,
-                          "info": widget.comments,
-                          "certificationType": _peoplevote ? "VOTE" : null,
-                          "canChat": _ischat,
-                          "numOfVoteSuccess": _selectgoodvote
-                              .toString()
-                              .replaceAll(RegExp(r'[^0-9]'), ''),
-                          "numOfVoteFail": _selectfailvote
-                              .toString()
-                              .replaceAll(RegExp(r'[^0-9]'), ''),
-                          "frequency": "7",
-                          "endDay": _selectedDate.toString() + "T00:00:00",
-                          "periodicity": "daily",
+                          "info": widget.comments.toString(),
+                          "certificationType": certificationType,
+                          "canChat": _ischat.toString(),
+                          "numOfVoteSuccess": _selectgoodvote.replaceAll(
+                              RegExp(r'[^0-9]'),
+                              ''), //changeNum(_selectgoodvote).toString(),
+                          "numOfVoteFail": _selectfailvote.replaceAll(
+                              RegExp(r'[^0-9]'),
+                              ''), //changeNum(_selectfailvote),
+                          "frequency": _selectcount.replaceAll(
+                              RegExp(r'[^0-9]'), ''), //changeNum(_selectcount),
+                          "periodicity": _period,
+                          "endDay": _selectedDate.toString().split(" ")[0] +
+                              "T00:00:00",
                           "tag": widget.tag.toString().split(" "),
-                          "maxUser": widget.peoplesnum //숫자로 변환하기
+                          "maxUser":
+                              widget.peoplesnum, //changeNum(widget.peoplesnum),
+                          "pwd": widget.password
                         };
-                        fetchBuy(formData).then((data) {
+                        fetchCreate(formData).then((data) {
                           print("오케이");
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => buyPage(img, name)));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RoomListPage()));
                         }).catchError((error) {
                           print("에러$error");
                           print("$formData");
@@ -478,7 +533,7 @@ class _AIroom_cr3State extends State<AIroom_cr3>
           ).toList(),
           onChanged: (value) {
             setState(() {
-              _selectcount = value;
+              _selectcount = value.toString();
             });
           },
         ),
@@ -515,7 +570,7 @@ class _AIroom_cr3State extends State<AIroom_cr3>
           ).toList(),
           onChanged: (value) {
             setState(() {
-              _selectgoodvote = value;
+              _selectgoodvote = value.toString();
             });
           },
         ),
@@ -552,7 +607,7 @@ class _AIroom_cr3State extends State<AIroom_cr3>
           ).toList(),
           onChanged: (value) {
             setState(() {
-              _selectfailvote = value;
+              _selectfailvote = value.toString();
             });
           },
         ),
