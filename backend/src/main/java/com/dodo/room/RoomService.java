@@ -3,7 +3,6 @@ package com.dodo.room;
 import com.dodo.exception.NotFoundException;
 import com.dodo.room.domain.*;
 import com.dodo.room.dto.RoomData;
-import com.dodo.room.dto.UserData;
 import com.dodo.roomuser.RoomUserRepository;
 import com.dodo.roomuser.RoomUserService;
 import com.dodo.roomuser.domain.RoomUser;
@@ -15,7 +14,6 @@ import com.dodo.user.domain.User;
 import com.dodo.user.domain.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -45,14 +43,6 @@ public class RoomService {
                 .stream()
                 .map(RoomUser::getRoom)
                 .map(RoomData::of)
-                .toList();
-    }
-
-    public List<UserData> getUsers(UserContext userContext, Long roomId) {
-        return roomUserRepository.findAllByRoomId(roomId)
-                .orElseThrow(NotFoundException::new)
-                .stream()
-                .map(UserData::new) //TODO
                 .toList();
     }
 

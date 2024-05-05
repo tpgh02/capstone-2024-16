@@ -11,7 +11,6 @@ import com.dodo.image.ImageService;
 import com.dodo.image.domain.Image;
 import com.dodo.room.RoomRepository;
 import com.dodo.room.domain.Category;
-import com.dodo.room.domain.CertificationType;
 import com.dodo.room.domain.Periodicity;
 import com.dodo.room.domain.Room;
 import com.dodo.room.domain.RoomType;

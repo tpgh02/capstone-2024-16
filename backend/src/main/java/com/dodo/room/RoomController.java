@@ -1,21 +1,20 @@
 package com.dodo.room;
 
 import com.dodo.config.auth.CustomAuthentication;
+import com.dodo.exception.NotFoundException;
 import com.dodo.room.domain.Category;
+import com.dodo.room.domain.Room;
 import com.dodo.room.domain.RoomType;
 import com.dodo.room.dto.RoomData;
-import com.dodo.room.dto.UserData;
-import com.dodo.tag.repository.RoomTagRepository;
-import com.dodo.tag.service.RoomTagService;
-import com.dodo.user.domain.UserContext;
-import lombok.RequiredArgsConstructor;
-import com.dodo.room.domain.Room;
-import com.dodo.exception.NotFoundException;
 import com.dodo.roomuser.RoomUserRepository;
 import com.dodo.roomuser.RoomUserService;
 import com.dodo.roomuser.domain.RoomUser;
+import com.dodo.tag.repository.RoomTagRepository;
+import com.dodo.tag.service.RoomTagService;
 import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
+import com.dodo.user.domain.UserContext;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
@@ -46,16 +45,6 @@ public class RoomController {
             @RequestAttribute UserContext userContext
     ) {
         return roomService.getMyRoomList(userContext);
-    }
-
-
-    // TODO
-    // UserData 라는 이름으로 괜찮을지,,
-    @GetMapping("/users")
-    public List<UserData> getUsersInTheRoom(
-            @RequestAttribute UserContext userContext,
-            @RequestParam Long roomId) {
-        return roomService.getUsers(userContext, roomId);
     }
 
     // 카테고리로 방 찾기

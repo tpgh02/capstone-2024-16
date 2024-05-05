@@ -1,12 +1,8 @@
 package com.dodo.sea.dto;
 
-import com.dodo.image.domain.Image;
-import com.dodo.sea.domain.Creature;
 import com.dodo.sea.domain.SeaCreature;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor

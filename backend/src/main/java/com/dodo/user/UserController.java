@@ -2,7 +2,6 @@ package com.dodo.user;
 
 import com.dodo.config.auth.CustomAuthentication;
 import com.dodo.image.domain.Image;
-import com.dodo.user.dto.PasswordChangeRequestData;
 import com.dodo.user.domain.UserContext;
 import com.dodo.user.dto.*;
 import lombok.RequiredArgsConstructor;

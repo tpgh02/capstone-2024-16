@@ -2,9 +2,6 @@ package com.dodo.sea.controller;
 
 import com.dodo.config.auth.CustomAuthentication;
 import com.dodo.exception.NotFoundException;
-import com.dodo.image.ImageService;
-import com.dodo.sea.domain.Creature;
-import com.dodo.sea.domain.SeaCreature;
 import com.dodo.sea.dto.CreatureData;
 import com.dodo.sea.dto.InventoryCreatureData;
 import com.dodo.sea.dto.SeaCreatureData;
