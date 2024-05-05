@@ -61,21 +61,21 @@ class _AIroom_crState extends State<AIroom_cr> {
               height: 10,
             ),
             Container(width: double.infinity, child: _roomBtn()),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            Text(
+            const Text(
               "- 만약 상단의 카테고리에 속하지 않는 인증방을 생성하고 싶을 경우, AI인증방이 아닌 일반 인증방을 생성하시는 것을 권장합니다.",
               style: TextStyle(fontFamily: "bma", fontSize: 18),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            Text(
+            const Text(
               "- AI인증은 정확하지 않을 수 있습니다.",
               style: TextStyle(fontFamily: "bma", fontSize: 18),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Row(
@@ -91,7 +91,7 @@ class _AIroom_crState extends State<AIroom_cr> {
                       foregroundColor: Colors.black,
                       shadowColor: Colors.black,
                       side: BorderSide(color: PRIMARY_COLOR),
-                      shape: RoundedRectangleBorder(
+                      shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)))),
                   child:
                       const Text("이전", style: TextStyle(color: PRIMARY_COLOR)),
@@ -110,7 +110,7 @@ class _AIroom_crState extends State<AIroom_cr> {
                       foregroundColor: Colors.black,
                       shadowColor: Colors.black,
                       side: BorderSide(color: PRIMARY_COLOR),
-                      shape: RoundedRectangleBorder(
+                      shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)))),
                   child: const Text(
                     "다음",
@@ -143,10 +143,10 @@ class _AIroom_crState extends State<AIroom_cr> {
               return DropdownMenuItem(
                 value: value,
                 child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
                     value,
-                    style: TextStyle(fontFamily: 'bm', fontSize: 20),
+                    style: const TextStyle(fontFamily: 'bm', fontSize: 20),
                   ),
                 ),
               );

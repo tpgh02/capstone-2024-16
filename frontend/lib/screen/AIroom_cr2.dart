@@ -10,12 +10,12 @@ class AIroom_cr2 extends StatefulWidget {
 }
 
 class _AIroom_cr2State extends State<AIroom_cr2> {
-  List _roomname = ['운동', '기상', '공부'];
+  List _roomname = ['운동', '기상', '학습'];
   Object? _select = '운동';
   TextEditingController _title = TextEditingController();
   TextEditingController _tag = TextEditingController();
   TextEditingController _comments = TextEditingController();
-  TextEditingController _peoples = TextEditingController();
+  TextEditingController _peoplenum = TextEditingController();
   TextEditingController _password = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -137,7 +137,7 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
               SizedBox(
                 height: 48,
                 child: TextField(
-                  controller: _peoples,
+                  controller: _peoplenum,
                   keyboardType: TextInputType.emailAddress,
                   style: const TextStyle(
                     fontSize: 20,
@@ -166,9 +166,8 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
               SizedBox(
                 height: 48,
                 child: TextField(
-                  obscureText: true,
                   controller: _password,
-                  keyboardType: TextInputType.emailAddress,
+                  keyboardType: TextInputType.visiblePassword,
                   style: const TextStyle(fontSize: 20, fontFamily: 'bma'),
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
@@ -213,17 +212,31 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
                   ),
                   OutlinedButton(
                     onPressed: () {
+                      print(_select);
+                      print(_select == '학습');
+                      print(_title.text);
+                      print(_tag.text);
+                      print(_comments.text);
+                      print(_peoplenum.text);
+                      print(_password.text);
+
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => AIroom_cr3()));
+                              builder: (context) => AIroom_cr3(
+                                  _title.text,
+                                  _select.toString(),
+                                  _tag.text,
+                                  _comments.text,
+                                  _peoplenum.text,
+                                  _password.text)));
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: PRIMARY_COLOR,
                         elevation: 2,
                         foregroundColor: Colors.black,
                         shadowColor: Colors.black,
-                        side: BorderSide(color: PRIMARY_COLOR),
+                        side: const BorderSide(color: PRIMARY_COLOR),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
                     child: const Text(
@@ -256,10 +269,10 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
               return DropdownMenuItem(
                 value: value,
                 child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
                     value,
-                    style: TextStyle(fontFamily: 'bm', fontSize: 20),
+                    style: const TextStyle(fontFamily: 'bm', fontSize: 20),
                   ),
                 ),
               );
@@ -267,7 +280,7 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
           ).toList(),
           onChanged: (value) {
             setState(() {
-              _select = value;
+              _select = value.toString();
             });
           },
         ),
