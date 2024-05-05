@@ -1,4 +1,5 @@
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/screen/Room_cr2.dart';
 import 'package:flutter/material.dart';
 
 class Room_cr extends StatefulWidget {
@@ -9,13 +10,14 @@ class Room_cr extends StatefulWidget {
 }
 
 class _Room_crState extends State<Room_cr> {
-  List _roomname = ['운동', '기상', '공부'];
-  Object? _select = '운동';
+  List _roomname = ['헬스', '운동', '기상', '학습', '식단', '기타'];
+  late String _select;
   TextEditingController _title = TextEditingController();
   TextEditingController _tag = TextEditingController();
   TextEditingController _comments = TextEditingController();
-  TextEditingController _peoples = TextEditingController();
+  TextEditingController _peoplenum = TextEditingController();
   TextEditingController _password = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,8 +62,8 @@ class _Room_crState extends State<Room_cr> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide.none),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: const BorderSide(color: PRIMARY_COLOR),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: PRIMARY_COLOR),
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     labelText: '인증방 제목',
@@ -91,8 +93,8 @@ class _Room_crState extends State<Room_cr> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide.none),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: const BorderSide(color: PRIMARY_COLOR),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: PRIMARY_COLOR),
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     labelText: '해시태그 ( 선택 )',
@@ -117,8 +119,8 @@ class _Room_crState extends State<Room_cr> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide.none),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: const BorderSide(color: PRIMARY_COLOR),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: PRIMARY_COLOR),
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     labelText: '인증방 소개 (200자 미만)',
@@ -136,8 +138,9 @@ class _Room_crState extends State<Room_cr> {
               SizedBox(
                 height: 48,
                 child: TextField(
-                  controller: _peoples,
+                  controller: _peoplenum,
                   keyboardType: TextInputType.emailAddress,
+                  scrollPadding: const EdgeInsets.all(8),
                   style: const TextStyle(
                     fontSize: 20,
                     fontFamily: "bma",
@@ -146,8 +149,8 @@ class _Room_crState extends State<Room_cr> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide.none),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: const BorderSide(color: PRIMARY_COLOR),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: PRIMARY_COLOR),
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     labelText: '최대 인원 수 (숫자만 입력)',
@@ -165,10 +168,11 @@ class _Room_crState extends State<Room_cr> {
               SizedBox(
                 height: 48,
                 child: TextField(
-                  obscureText: true,
                   controller: _password,
-                  keyboardType: TextInputType.emailAddress,
-                  style: const TextStyle(fontSize: 20, fontFamily: 'bma'),
+                  keyboardType: TextInputType.visiblePassword,
+                  scrollPadding: EdgeInsets.zero,
+                  style: const TextStyle(
+                      fontSize: 20, fontFamily: 'bma', color: POINT_COLOR),
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -201,7 +205,7 @@ class _Room_crState extends State<Room_cr> {
                         elevation: 2,
                         foregroundColor: Colors.black,
                         shadowColor: Colors.black,
-                        side: BorderSide(color: PRIMARY_COLOR),
+                        side: const BorderSide(color: PRIMARY_COLOR),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
                     child: const Text("이전",
@@ -212,17 +216,29 @@ class _Room_crState extends State<Room_cr> {
                   ),
                   OutlinedButton(
                     onPressed: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => ));
+                      print(_select);
+                      print(_title.text +
+                          _tag.text +
+                          _comments.text +
+                          _peoplenum.text +
+                          _password.text);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Room_cr2(
+                                  _title.text,
+                                  _select,
+                                  _tag.text,
+                                  _comments.text,
+                                  _peoplenum.text,
+                                  _password.text)));
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: PRIMARY_COLOR,
                         elevation: 2,
                         foregroundColor: Colors.black,
                         shadowColor: Colors.black,
-                        side: BorderSide(color: PRIMARY_COLOR),
+                        side: const BorderSide(color: PRIMARY_COLOR),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
                     child: const Text(
@@ -266,7 +282,7 @@ class _Room_crState extends State<Room_cr> {
           ).toList(),
           onChanged: (value) {
             setState(() {
-              _select = value;
+              _select = value.toString();
             });
           },
         ),
