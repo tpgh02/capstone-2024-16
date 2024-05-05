@@ -71,7 +71,7 @@ public class StatisticsService {
                 .get();
 
         //TODO findAllByRoomUserRoom 이거 작동 하나..?
-        Map<User, Long> CertificationListFromUser = certificationRepository.findAllByRoomUserRoom(maxRoomUser)
+        Map<User, Long> CertificationListFromUser = certificationRepository.findAllByRoomUserRoom(maxRoomUser.getRoom())
                 .orElse(new ArrayList<>())
                 .stream()
                 .collect(Collectors.groupingBy(c -> c.getRoomUser().getUser(), Collectors.counting()));

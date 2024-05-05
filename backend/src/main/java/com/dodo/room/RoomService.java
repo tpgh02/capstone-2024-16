@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -38,12 +39,12 @@ public class RoomService {
 
     public List<RoomData> getMyRoomList(UserContext userContext) {
         User user = userRepository.findById(userContext.getUserId())
-                        .orElseThrow(NotFoundException::new);
+                        .orElseThrow(() -> new NotFoundException("유저을 찾을 수 없습니다"));
         return roomUserRepository.findAllByUser(user)
-                .orElseThrow(NotFoundException::new)
+                .orElse(new ArrayList<>())
                 .stream()
                 .map(RoomUser::getRoom)
-                .map(RoomData::new)
+                .map(RoomData::of)
                 .toList();
     }
 

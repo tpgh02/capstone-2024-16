@@ -1,6 +1,7 @@
 package com.dodo.user;
 
 import com.dodo.config.auth.CustomAuthentication;
+import com.dodo.user.domain.PasswordChangeRequestData;
 import com.dodo.user.domain.UserContext;
 import com.dodo.user.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -52,5 +53,23 @@ public class UserController {
             @RequestAttribute UserContext userContext) {
         log.info("in testHandler : userId = {}", userContext.getUserId());
         return "OK";
+    }
+
+    @CustomAuthentication
+    @GetMapping("check-password")
+    public boolean checkPassword(
+            @RequestAttribute UserContext userContext,
+            @RequestParam String password
+    ) {
+        return userservice.checkPassword(userContext, password);
+    }
+
+    @CustomAuthentication
+    @PostMapping("change-password")
+    public boolean changePassword(
+            @RequestAttribute UserContext userContext,
+            @RequestBody PasswordChangeRequestData passwordChangeRequestData
+    ) {
+        return userservice.changePassword(userContext, passwordChangeRequestData);
     }
 }

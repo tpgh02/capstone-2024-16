@@ -15,10 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -91,7 +88,7 @@ public class ImageService {
     }
 
     @PostConstruct
-    private void updateDefaultImage() {
+    public void setBucketName() {
         bucketName = System.getenv().get("S3_BUCKET");
         imageRepository.save(new Image(DEFAULT_IMAGE_URL));
     }
