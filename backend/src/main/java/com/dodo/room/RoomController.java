@@ -4,10 +4,12 @@ import com.dodo.config.auth.CustomAuthentication;
 import com.dodo.room.domain.Category;
 import com.dodo.room.domain.RoomType;
 import com.dodo.room.dto.RoomData;
+import com.dodo.room.dto.RoomListData;
 import com.dodo.room.dto.UserData;
 import com.dodo.tag.repository.RoomTagRepository;
 import com.dodo.tag.service.RoomTagService;
 import com.dodo.user.domain.UserContext;
+import com.dodo.user.dto.PasswordChangeRequestData;
 import lombok.RequiredArgsConstructor;
 import com.dodo.room.domain.Room;
 import com.dodo.exception.NotFoundException;
@@ -42,7 +44,7 @@ public class RoomController {
     private final RoomTagRepository roomTagRepository;
 
     @GetMapping("/list")
-    public List<RoomData> getMyRoomList(
+    public List<RoomListData> getMyRoomList(
             @RequestAttribute UserContext userContext
     ) {
         return roomService.getMyRoomList(userContext);
@@ -74,14 +76,7 @@ public class RoomController {
                 roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
                 roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay(), RoomType.NORMAL);
 
-        roomUserService.createRoomUser(userContext, room.getId());
-        roomUserService.setManager(userContext, room);
-        roomTagService.saveRoomTag(room, roomData.getTag());
-
-
-        log.info("CREATE Chat RoomId: {}", room.getId());
-
-        return RoomData.of(room);
+        return roomService.getRoomData(roomData, userContext, room);
     }
 
     // ai 인증방 생성
@@ -94,14 +89,7 @@ public class RoomController {
                 roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
                 roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay(), RoomType.AI);
 
-        roomUserService.createRoomUser(userContext, room.getId());
-        roomUserService.setManager(userContext, room);
-        roomTagService.saveRoomTag(room, roomData.getTag());
-
-
-        log.info("CREATE Chat RoomId: {}", room.getId());
-
-        return RoomData.of(room);
+        return roomService.getRoomData(roomData, userContext, room);
     }
 
     // 그룹 인증방 생성
@@ -114,14 +102,7 @@ public class RoomController {
                 roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
                 roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay());
 
-        roomUserService.createRoomUser(userContext, room.getId());
-        roomUserService.setManager(userContext, room);
-        roomTagService.saveRoomTag(room, roomData.getTag());
-
-
-        log.info("CREATE Chat RoomId: {}", room.getId());
-
-        return RoomData.of(room);
+        return roomService.getRoomData(roomData, userContext, room);
     }
 
     // 인증방 처음 입장
@@ -136,6 +117,12 @@ public class RoomController {
         Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
 
         return "number of user : " + RoomData.of(room).getNowUser();
+    }
+
+    // 인증방 입장
+    @GetMapping("/in/{roomId}")
+    public RoomData roomIn(@PathVariable Long roomId, @RequestAttribute UserContext userContext){
+        return roomService.getRoomInfo(roomId, userContext);
     }
 
     // 비공개 인증방 입장시 비밀번호 확인 절차
@@ -238,10 +225,22 @@ public class RoomController {
     @CustomAuthentication
     @PostMapping("/update")
     @ResponseBody
-    public RoomData update(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext, @RequestParam Long roomId, @RequestParam List<String> tags){
-        roomService.update(roomId, userContext, roomData, tags);
+    public RoomData update(@RequestBody RoomData roomData,
+                           @RequestAttribute UserContext userContext,
+                           @RequestParam Long roomId){
+        roomService.update(roomId, userContext, roomData);
 
         return RoomData.of(roomRepository.findById(roomId).orElseThrow(NotFoundException::new));
+    }
+
+    // 인증방 비밀번호 변경
+    @CustomAuthentication
+    @PostMapping("/change-pwd/{roomId}")
+    @ResponseBody
+    public Boolean changePwd(@PathVariable Long roomId, @RequestBody PasswordChangeRequestData passwordChangeRequestData){
+
+        return roomService.changeRoomPassword(roomId, passwordChangeRequestData);
+
     }
 
     // 유저 추방
@@ -289,8 +288,6 @@ public class RoomController {
                     .distinct()
                     .collect(Collectors.toList());
         }
-
-
     }
 
 }

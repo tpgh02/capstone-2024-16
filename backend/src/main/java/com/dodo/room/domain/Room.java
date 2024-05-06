@@ -63,12 +63,11 @@ public class Room {
     private List<RoomTag> roomTags;
 
     // 인증방 기능 설정
-    public void update(String name, String password, String info, LocalDateTime endDay,
+    public void update(String name, String info, LocalDateTime endDay,
                        Long maxUser, Boolean canChat, Integer numOfVoteSuccess,
                        Integer numOfVoteFail, Image image, Periodicity periodicity,
                        Integer frequency, CertificationType certificationType) {
         if (name != null){this.name = name;}
-        if (password != null){this.password = password;}
         if (info != null){this.info = info;}
         if (endDay != null){this.endDay = endDay;}
         if (canChat != null){this.canChat = canChat;}
@@ -82,6 +81,10 @@ public class Room {
             this.maxUser = maxUser;
             this.isFull = maxUser.equals(this.nowUser);
         }
+    }
+
+    public void updatePwd(String password) {
+        this.password = password;
     }
 
 }
