@@ -1,18 +1,13 @@
 import json
 
+# from app.core.custom.exception import exception_json
 from paddleocr import PaddleOCR
-from app.model.image import StudyImage
+from app.schemas.image import ImageData
 
-def exception_json(code, message, cat, id):
-    content = {
-        "code": code,
-        "message": message,
-        "category": cat,
-        "certification_id": id
-    }
-    return json.dumps(content, indent=4)
+from app.core.custom.exception import exception_json
 
-async def time_detection(image, data: StudyImage):
+
+async def study_detection(image, data: ImageData):
     # get info
     id = data.certificationId
     category = data.category
@@ -57,4 +52,4 @@ async def time_detection(image, data: StudyImage):
         
         result['result'].append(item[1][0])
     
-    return json.dumps(result, indent=4)
+    return result
