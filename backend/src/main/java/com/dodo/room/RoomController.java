@@ -9,6 +9,7 @@ import com.dodo.room.dto.UserData;
 import com.dodo.tag.repository.RoomTagRepository;
 import com.dodo.tag.service.RoomTagService;
 import com.dodo.user.domain.UserContext;
+import com.dodo.user.dto.PasswordChangeRequestData;
 import lombok.RequiredArgsConstructor;
 import com.dodo.room.domain.Room;
 import com.dodo.exception.NotFoundException;
@@ -249,6 +250,16 @@ public class RoomController {
         roomService.update(roomId, userContext, roomData, tags);
 
         return RoomData.of(roomRepository.findById(roomId).orElseThrow(NotFoundException::new));
+    }
+
+    // 인증방 비밀번호 변경
+    @CustomAuthentication
+    @PostMapping("/change-pwd/{roomId}")
+    @ResponseBody
+    public Boolean changePwd(@PathVariable Long roomId, @RequestBody PasswordChangeRequestData passwordChangeRequestData){
+
+        return roomService.changeRoomPassword(roomId, passwordChangeRequestData);
+
     }
 
     // 유저 추방

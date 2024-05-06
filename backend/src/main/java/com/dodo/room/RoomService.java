@@ -11,13 +11,17 @@ import com.dodo.roomuser.domain.RoomUser;
 import com.dodo.tag.domain.RoomTag;
 import com.dodo.tag.repository.RoomTagRepository;
 import com.dodo.tag.service.RoomTagService;
+import com.dodo.user.PasswordAuthenticationRepository;
 import com.dodo.user.UserRepository;
+import com.dodo.user.domain.PasswordAuthentication;
 import com.dodo.user.domain.User;
 import com.dodo.user.domain.UserContext;
+import com.dodo.user.dto.PasswordChangeRequestData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,6 +42,7 @@ public class RoomService {
     private final RoomUserService roomUserService;
     private final RoomTagRepository roomTagRepository;
     private final RoomTagService roomTagService;
+    private final PasswordAuthenticationRepository passwordAuthenticationRepository;
 
     public List<RoomListData> getMyRoomList(UserContext userContext) {
         User user = getUser(userContext);
@@ -221,7 +226,6 @@ public class RoomService {
             log.info("roomData's maxUser : {}", roomData.getMaxUser());
             room.update(
                     roomData.getName(),
-                    roomData.getPwd(),
                     roomData.getInfo(),
                     roomData.getEndDay(),
                     roomData.getMaxUser(),
@@ -238,6 +242,28 @@ public class RoomService {
 
             log.info("room name : {}", room.getName());
         }
+    }
+
+    // 인증방 비밀번호 변경
+    @Transactional
+    public boolean changeRoomPassword(Long roomId, PasswordChangeRequestData passwordChangeRequestData) {
+
+        Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
+
+        String password = room.getPassword();
+
+        if(!password.equals(passwordChangeRequestData.getCurrentPassword())) {
+            throw new RuntimeException("현재 비밀번호가 일치하지 않습니다.");
+        }
+        if(!passwordChangeRequestData.getChangePassword1().equals(passwordChangeRequestData.getChangePassword2())) {
+            throw new RuntimeException("새로운 비밀번호 1, 2가 일치하지 않습니다.");
+        }
+        if(passwordChangeRequestData.getCurrentPassword().equals(passwordChangeRequestData.getChangePassword1())) {
+            throw new RuntimeException("현재 비밀번호와 새로운 비밀번호가 일치합니다.");
+        }
+        room.updatePwd(passwordChangeRequestData.getChangePassword1());
+
+        return true;
     }
 
     // 유저 추방
