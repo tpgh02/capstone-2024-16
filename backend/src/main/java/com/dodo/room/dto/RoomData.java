@@ -60,4 +60,8 @@ public class RoomData {
 
         return roomData;
     }
+
+    public void updateTag(List<String> tag){
+        this.tag = tag;
+    }
 }

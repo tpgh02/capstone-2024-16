@@ -143,7 +143,7 @@ public class RoomController {
     // 인증방 입장
     @GetMapping("/in/{roomId}")
     public RoomData roomIn(@PathVariable Long roomId){
-        return RoomData.of(roomRepository.findById(roomId).orElseThrow(NotFoundException::new));
+        return roomService.getRoomInfo(roomId);
     }
 
     // 비공개 인증방 입장시 비밀번호 확인 절차
@@ -246,8 +246,10 @@ public class RoomController {
     @CustomAuthentication
     @PostMapping("/update")
     @ResponseBody
-    public RoomData update(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext, @RequestParam Long roomId, @RequestParam List<String> tags){
-        roomService.update(roomId, userContext, roomData, tags);
+    public RoomData update(@RequestBody RoomData roomData,
+                           @RequestAttribute UserContext userContext,
+                           @RequestParam Long roomId){
+        roomService.update(roomId, userContext, roomData);
 
         return RoomData.of(roomRepository.findById(roomId).orElseThrow(NotFoundException::new));
     }
@@ -307,8 +309,6 @@ public class RoomController {
                     .distinct()
                     .collect(Collectors.toList());
         }
-
-
     }
 
 }

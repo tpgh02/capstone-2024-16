@@ -9,6 +9,7 @@ import com.dodo.roomuser.RoomUserRepository;
 import com.dodo.roomuser.RoomUserService;
 import com.dodo.roomuser.domain.RoomUser;
 import com.dodo.tag.domain.RoomTag;
+import com.dodo.tag.domain.Tag;
 import com.dodo.tag.repository.RoomTagRepository;
 import com.dodo.tag.service.RoomTagService;
 import com.dodo.user.PasswordAuthenticationRepository;
@@ -213,7 +214,7 @@ public class RoomService {
     }
 
     // 방장의 채팅방 설정 수정
-    public void update(Long roomId, UserContext userContext, RoomData roomData, List<String> tags) {
+    public void update(Long roomId, UserContext userContext, RoomData roomData) {
         User user = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
         Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
         RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).orElseThrow(NotFoundException::new);
@@ -238,7 +239,7 @@ public class RoomService {
                     roomData.getCertificationType()
             );
             roomTagRepository.deleteAllInBatch(roomTags);
-            roomTagService.saveRoomTag(room, tags);
+            roomTagService.saveRoomTag(room, roomData.getTag());
 
             log.info("room name : {}", room.getName());
         }
@@ -279,6 +280,18 @@ public class RoomService {
             minusUserCnt(roomId);
         }
 
+    }
+
+    public RoomData getRoomInfo(Long roomId){
+        Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
+        RoomData roomData = RoomData.of(room);
+        List<RoomTag> roomTag = roomTagRepository.findAllByRoom(room).orElseThrow(NotFoundException::new);
+        List<String> tags = roomTag.stream()
+                .map(RoomTag::getTag)
+                .map(Tag::getName)
+                .toList();
+        roomData.updateTag(tags);
+        return roomData;
     }
 
     public User getUser(UserContext userContext) {
