@@ -1,6 +1,7 @@
 package com.dodo.room;
 
 import com.dodo.exception.NotFoundException;
+import com.dodo.image.ImageRepository;
 import com.dodo.room.domain.*;
 import com.dodo.room.dto.RoomData;
 import com.dodo.room.dto.RoomListData;
@@ -23,6 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -43,7 +46,7 @@ public class RoomService {
     private final RoomUserService roomUserService;
     private final RoomTagRepository roomTagRepository;
     private final RoomTagService roomTagService;
-    private final PasswordAuthenticationRepository passwordAuthenticationRepository;
+    private final ImageRepository imageRepository;
 
     public List<RoomListData> getMyRoomList(UserContext userContext) {
         User user = getUser(userContext);
@@ -54,6 +57,7 @@ public class RoomService {
                 .map(RoomUser::getRoom)
                 .map(RoomListData::new)
                 .map(RoomListData -> updateStatus(RoomListData, roomUserService.getCertificationStatus(userContext, RoomListData)))
+                .map(RoomListData -> updateIsManager(RoomListData, user))
                 .toList();
     }
 
@@ -113,6 +117,7 @@ public class RoomService {
                 .numOfVoteSuccess(numOfVoteSuccess).numOfVoteFail(numOfVoteFail)
                 .roomType(roomType)
                 .isFull(isFull)
+                .image(imageRepository.findById(1L).get())
                 .build();
 
         roomRepository.save(room);
@@ -142,6 +147,7 @@ public class RoomService {
                 .numOfGoal(numOfGoal)
                 .goal(goal)
                 .isFull(isFull)
+                .image(imageRepository.findById(1L).get())
                 .build();
 
         roomRepository.save(room);
@@ -213,7 +219,7 @@ public class RoomService {
         }
     }
 
-    // 방장의 채팅방 설정 수정
+    // 방장의 인증방 설정 수정
     public void update(Long roomId, UserContext userContext, RoomData roomData) {
         User user = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
         Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
@@ -282,20 +288,47 @@ public class RoomService {
 
     }
 
-    public RoomData getRoomInfo(Long roomId){
+    public RoomData getRoomInfo(Long roomId, UserContext userContext){
         Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
+        User user = getUser(userContext);
+        RoomUser roomUser = getRoomUser(user, room);
         RoomData roomData = RoomData.of(room);
+
         List<RoomTag> roomTag = roomTagRepository.findAllByRoom(room).orElseThrow(NotFoundException::new);
         List<String> tags = roomTag.stream()
                 .map(RoomTag::getTag)
                 .map(Tag::getName)
                 .toList();
         roomData.updateTag(tags);
+        roomData.updateIsManager(roomUser.getIsManager());
         return roomData;
+    }
+
+    public RoomData getRoomData(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext, Room room) {
+        roomUserService.createRoomUser(userContext, room.getId());
+        roomUserService.setManager(userContext, room);
+        roomTagService.saveRoomTag(room, roomData.getTag());
+
+
+        log.info("CREATE Chat RoomId: {}", room.getId());
+
+        RoomData roomData2 = RoomData.of(room);
+        roomData2.updateIsManager(true);
+        return roomData2;
     }
 
     public User getUser(UserContext userContext) {
         return userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
+    }
+    public RoomUser getRoomUser(User user, Room room){
+        return roomUserRepository.findByUserAndRoom(user, room).orElseThrow(NotFoundException::new);
+    }
+
+    public RoomListData updateIsManager(RoomListData roomListData, User user){
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, roomRepository.findById(roomListData.getRoomId()).orElseThrow(NotFoundException::new)).orElseThrow(NotFoundException::new);
+
+        roomListData.updateIsManager(roomUser.getIsManager());
+        return roomListData;
     }
 
 }

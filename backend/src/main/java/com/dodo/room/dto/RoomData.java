@@ -37,6 +37,8 @@ public class RoomData {
 
     private List<String> tag;
 
+    private Boolean isManager = false;
+
     public static RoomData of(Room room) {
         RoomData roomData = new RoomData();
 
@@ -63,5 +65,9 @@ public class RoomData {
 
     public void updateTag(List<String> tag){
         this.tag = tag;
+    }
+
+    public void updateIsManager(Boolean isManager){
+        this.isManager = isManager;
     }
 }

@@ -76,14 +76,7 @@ public class RoomController {
                 roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
                 roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay(), RoomType.NORMAL);
 
-        roomUserService.createRoomUser(userContext, room.getId());
-        roomUserService.setManager(userContext, room);
-        roomTagService.saveRoomTag(room, roomData.getTag());
-
-
-        log.info("CREATE Chat RoomId: {}", room.getId());
-
-        return RoomData.of(room);
+        return roomService.getRoomData(roomData, userContext, room);
     }
 
     // ai 인증방 생성
@@ -96,14 +89,7 @@ public class RoomController {
                 roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
                 roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay(), RoomType.AI);
 
-        roomUserService.createRoomUser(userContext, room.getId());
-        roomUserService.setManager(userContext, room);
-        roomTagService.saveRoomTag(room, roomData.getTag());
-
-
-        log.info("CREATE Chat RoomId: {}", room.getId());
-
-        return RoomData.of(room);
+        return roomService.getRoomData(roomData, userContext, room);
     }
 
     // 그룹 인증방 생성
@@ -116,14 +102,7 @@ public class RoomController {
                 roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
                 roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay());
 
-        roomUserService.createRoomUser(userContext, room.getId());
-        roomUserService.setManager(userContext, room);
-        roomTagService.saveRoomTag(room, roomData.getTag());
-
-
-        log.info("CREATE Chat RoomId: {}", room.getId());
-
-        return RoomData.of(room);
+        return roomService.getRoomData(roomData, userContext, room);
     }
 
     // 인증방 처음 입장
@@ -142,8 +121,8 @@ public class RoomController {
 
     // 인증방 입장
     @GetMapping("/in/{roomId}")
-    public RoomData roomIn(@PathVariable Long roomId){
-        return roomService.getRoomInfo(roomId);
+    public RoomData roomIn(@PathVariable Long roomId, @RequestAttribute UserContext userContext){
+        return roomService.getRoomInfo(roomId, userContext);
     }
 
     // 비공개 인증방 입장시 비밀번호 확인 절차

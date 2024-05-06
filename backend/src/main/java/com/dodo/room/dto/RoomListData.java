@@ -20,8 +20,10 @@ public class RoomListData {
     private Long maxUser;
     private Long nowUser;
     private String password;
-    public CertificationStatus status;
+    private CertificationStatus status;
     private RoomType roomType;
+
+    private Boolean isManager = false;
 
     public RoomListData(Room room) {
         this.roomId = room.getId();
@@ -38,5 +40,9 @@ public class RoomListData {
         roomListData.status = certificationStatus;
 
         return roomListData;
+    }
+
+    public void updateIsManager(Boolean isManager) {
+        this.isManager = isManager;
     }
 }
