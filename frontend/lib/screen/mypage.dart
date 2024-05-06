@@ -17,14 +17,14 @@ Future<MyInfo> fetchMyInfo_GET() async {
 
   if (response.statusCode == 200) {
     print('Mypage: Connected!');
-    print(json.decode(response.body));
-    return MyInfo.fromJson(json.decode(response.body));
+    print(utf8.decode(response.bodyBytes));
+    return MyInfo.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
   } else {
     throw Exception('Mypage: fail to connect');
   }
 }
 
-Future<MyInfo> fetchMyInfo_POST(Map<String, dynamic> form) async {
+Future<String> fetchMyInfo_POST(Map<String, dynamic> form) async {
   var mypagePostUrl = serverUrl + '/api/v1/users/user-update';
   final mypagePostresponse = await http.post(
     Uri.parse(mypagePostUrl),
@@ -38,9 +38,9 @@ Future<MyInfo> fetchMyInfo_POST(Map<String, dynamic> form) async {
   try {
     if (mypagePostresponse.statusCode == 200) {
       print('닉네임 변경 성공');
-      Map<String, dynamic> responseData = json.decode(mypagePostresponse.body);
-      print(responseData['name']);
-      return responseData['name'];
+      var responseData = utf8.decode(mypagePostresponse.bodyBytes);
+      print(responseData);
+      return responseData;
     } else {
       print('닉네임 변경 실패: ${mypagePostresponse.body}');
       throw Exception('닉네임 변경에 실패했습니다');
@@ -603,7 +603,7 @@ class _MyPageState extends State<MyPage> {
 
       dio.options.headers = {
         'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjJ9.WrM3msDSet3X24r8Kf79dsQ52UuuxbpXU_L8JR5daUU'
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjJ9.WrM3msDSet3X24r8Kf79dsQ52UuuxbpXU_L8JR5daUU',
       };
 
       FormData formData = FormData.fromMap({
@@ -646,7 +646,7 @@ class _MyPageState extends State<MyPage> {
 
       FormData formData = FormData.fromMap({
         'name': nickname,
-        'introduceMessage': '',
+        'introduceMessage': ' ',
         'image': {
           'id': 1,
           'url':
