@@ -13,16 +13,17 @@ class i_items extends StatefulWidget {
   final String img;
   final String name;
   final String info;
+  final bool isActivate;
   final int c_id;
 
-  const i_items(this.cost, this.img, this.name, this.info, this.c_id);
+  const i_items(
+      this.cost, this.img, this.name, this.info, this.isActivate, this.c_id);
 
   @override
   State<i_items> createState() => _i_itemsState();
 }
 
 class _i_itemsState extends State<i_items> {
-  bool turn = false;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -36,16 +37,14 @@ class _i_itemsState extends State<i_items> {
         height: 1000,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: turn ? Colors.grey : Colors.white,
+          color: widget.isActivate ? Colors.grey : Colors.white,
         ),
         child: Column(
           children: [
             Container(
-              //alignment: Alignment.center,
               margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
               width: 70,
               height: 80,
-              //color: Colors.red,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Image.network(
@@ -55,7 +54,6 @@ class _i_itemsState extends State<i_items> {
               ),
             ),
             Container(
-              //color: Colors.blue,
               child: Row(
                 children: [
                   const Icon(

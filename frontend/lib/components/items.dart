@@ -2,19 +2,20 @@
 //import 'package:dodo/components/certification.dart';
 import 'dart:convert';
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/const/image.dart';
 import 'package:dodo/const/server.dart';
 import 'package:dodo/screen/buy_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-
-Future<Map> fetchBuy(int creatureId) async {
-  Map<String, dynamic> requestBody = {
+Future<bool> fetchBuy(int creatureId) async {
+  Map<String, int> requestBody = {
     'creatureId': creatureId,
   };
   final response = await http.post(
     Uri.parse(serverUrl + '/api/v1/creature/purchase'),
     headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
       'Authorization':
           'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
     },
@@ -23,9 +24,8 @@ Future<Map> fetchBuy(int creatureId) async {
   try {
     if (response.statusCode == 200) {
       print('연결 성공!');
-      Map responseData = json.decode(response.body);
-      // Map responseData = jsonDecode(
-      //     utf8.decode(response.bodyBytes));
+      //Map responseData = json.decode(response.body);
+      bool responseData = jsonDecode(utf8.decode(response.bodyBytes));
       print('$responseData');
       return responseData;
     } else {
@@ -34,6 +34,7 @@ Future<Map> fetchBuy(int creatureId) async {
     }
   } catch (e) {
     print('네트워크 오류: $e');
+    print('response body: ${response.body}');
     throw Exception('네트워크 오류가 발생했습니다');
   }
 }
@@ -55,8 +56,6 @@ class items extends StatefulWidget {
 class _itemsState extends State<items> {
   @override
   Widget build(BuildContext context) {
-    //late Future<List<Buy>>? futureStore;
-
     return InkWell(
       onTap: () {
         //누르면 팝업 생성하는 함수
@@ -115,7 +114,8 @@ class _itemsState extends State<items> {
 }
 
 //팝업 생성하는 함수 - 다이얼로그
-void itemsdialog(context, int cost, String img, String name, info, int c_id) {
+void itemsdialog(
+    context, int cost, String img, String name, String info, int c_id) {
   showDialog(
     context: context,
     builder: (context) {
@@ -199,9 +199,9 @@ void itemsdialog(context, int cost, String img, String name, info, int c_id) {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-
-                    fetchBuy(c_id).then((data) {
+                    fetchBuy(c_id).then((bool data) {
                       print("오케이");
+
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -219,7 +219,7 @@ void itemsdialog(context, int cost, String img, String name, info, int c_id) {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     backgroundColor: PRIMARY_COLOR,
-                    fixedSize: Size(150, 50),
+                    fixedSize: const Size(150, 50),
                   ),
                 )
               ],

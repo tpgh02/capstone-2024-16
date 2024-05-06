@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:dodo/components/I_items.dart';
-import 'package:dodo/components/items.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +11,7 @@ import 'package:http/http.dart' as http;
 Future<List<Inven>> fetchInven() async {
   final response = await http
       .get(Uri.parse(serverUrl + '/api/v1/creature/inventory'), headers: {
+    'Content-Type': 'application/json; charset=UTF-8',
     'Authorization':
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
   });
@@ -30,6 +30,7 @@ class Inven {
   final String name;
   final String info;
   final image;
+  final bool activate;
   final int creatureId;
 
   const Inven({
@@ -37,6 +38,7 @@ class Inven {
     required this.name,
     required this.info,
     required this.image,
+    required this.activate,
     required this.creatureId,
   });
 
@@ -45,7 +47,8 @@ class Inven {
       price: json['price'],
       name: json['name'],
       info: json['info'],
-      image: json['image'],
+      image: json['imageUrl'],
+      activate: json["isActivate"],
       creatureId: json['creatureId'],
     );
   }
@@ -107,36 +110,33 @@ class _searchPageState extends State<InvenPage> {
                         print("?" + snapshot.data.toString());
                         return Text('Error: ${snapshot.error}');
                       } else if (snapshot.hasData) {
-                        return Column(
-                          children: snapshot.data!.map((Inven) {
-                            String imageurl = Inven.image['url'];
-                            print(imageurl);
-                            return Container(
-                              alignment: Alignment.centerRight,
-                              padding: const EdgeInsets.all(20),
-                              height: 400,
-                              child: CustomScrollView(
-                                slivers: <Widget>[
-                                  SliverGrid(
-                                      delegate: SliverChildBuilderDelegate(
-                                        (BuildContext context, int idx) {
-                                          return postContainer(
-                                              Inven.price,
-                                              imageurl,
-                                              Inven.name,
-                                              Inven.info,
-                                              Inven.creatureId);
-                                        },
-                                        childCount: snapshot.data!.length,
-                                      ),
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3,
-                                      ))
-                                ],
+                        return Container(
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.all(20),
+                          height: double.maxFinite,
+                          child: CustomScrollView(
+                            slivers: <Widget>[
+                              SliverGrid(
+                                delegate: SliverChildBuilderDelegate(
+                                  (BuildContext context, int idx) {
+                                    return postContainer(
+                                      snapshot.data![idx].price,
+                                      snapshot.data![idx].image,
+                                      snapshot.data![idx].name,
+                                      snapshot.data![idx].info,
+                                      snapshot.data![idx].activate,
+                                      snapshot.data![idx].creatureId,
+                                    );
+                                  },
+                                  childCount: snapshot.data!.length,
+                                ),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                ),
                               ),
-                            );
-                          }).toList(),
+                            ],
+                          ),
                         );
                       } else {
                         return const Text('No data available');
@@ -150,11 +150,11 @@ class _searchPageState extends State<InvenPage> {
     );
   }
 
-  Container postContainer(title, _root, name, info, c_id) {
+  Container postContainer(title, _root, name, info, bool active, c_id) {
     return Container(
       margin: const EdgeInsets.all(5),
       alignment: Alignment.center,
-      child: i_items(title, _root, name, info, c_id),
+      child: i_items(title, _root, name, info, active, c_id),
     );
   }
 }

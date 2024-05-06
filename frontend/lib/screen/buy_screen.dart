@@ -114,13 +114,9 @@ class _buyPageState extends State<buyPage> {
               height: 30,
             ),
             Container(
-              //margin: EdgeInsets.symmetric(horizontal: 20),
               alignment: Alignment.bottomCenter,
               child: Image.asset('assets/images/turtle_w_e.png',
-                  // width: 200,
-                  // height: 200, //175
-                  fit: BoxFit.cover,
-                  alignment: Alignment.bottomCenter),
+                  fit: BoxFit.cover, alignment: Alignment.bottomCenter),
             ),
           ],
         ),
