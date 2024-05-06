@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-class StudyImage(BaseModel):
+class ImageData(BaseModel):
     certificationId: int
     category: str
     image: str
