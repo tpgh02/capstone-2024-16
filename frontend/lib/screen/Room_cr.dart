@@ -11,7 +11,7 @@ class Room_cr extends StatefulWidget {
 
 class _Room_crState extends State<Room_cr> {
   List _roomname = ['헬스', '운동', '기상', '학습', '식단', '기타'];
-  late String _select;
+  String _select = '헬스';
   TextEditingController _title = TextEditingController();
   TextEditingController _tag = TextEditingController();
   TextEditingController _comments = TextEditingController();
@@ -216,12 +216,6 @@ class _Room_crState extends State<Room_cr> {
                   ),
                   OutlinedButton(
                     onPressed: () {
-                      print(_select);
-                      print(_title.text +
-                          _tag.text +
-                          _comments.text +
-                          _peoplenum.text +
-                          _password.text);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
