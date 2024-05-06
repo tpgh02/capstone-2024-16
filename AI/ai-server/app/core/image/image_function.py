@@ -35,11 +35,11 @@ async def save_image(data):
     
     # load the image
     try:
-        img = Image.open(BytesIO(image_data))
+        img = Image.open(BytesIO(image_data)).convert("RGB")
     except IOError as e:
         raise HTTPException(status_code=400, detail="The image file not opened.")
     
     # change image from PIL to Numpy array        
     img = np.array(img)
     
-    return img, Response(content=json.dumps({"message": "OCR will be processing."}, indent=4), status_code=200)
+    return img, Response(content=json.dumps({"message": "AI detection will be processing."}, indent=4), status_code=200)
