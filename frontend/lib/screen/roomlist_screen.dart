@@ -1,7 +1,62 @@
 import 'package:dodo/components/room_list.dart';
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/const/server.dart';
 import 'package:dodo/screen/AIroom_cr.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Future<List<MyRoom>> fetchRooms() async {
+  final response =
+      await http.get(Uri.parse(serverUrl + '/api/v1/room/list'), headers: {
+    'Authorization':
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+  });
+  if (response.statusCode == 200) {
+    final List<dynamic> jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+
+    List<MyRoom> Rooms = jsonData.map((json) => MyRoom.fromJson(json)).toList();
+    print("인증방 리스트 연결 완료");
+    return Rooms;
+  } else {
+    throw Exception('Failed to load album');
+  }
+}
+
+class MyRoom {
+  final String room_title;
+  final int room_id;
+  final String? room_pwd;
+  final room_img;
+  final int room_mem;
+  final int room_maxmem;
+  final String room_type;
+  final bool is_manager;
+
+  const MyRoom({
+    required this.room_title,
+    required this.room_id,
+    required this.room_pwd,
+    required this.room_img,
+    required this.room_mem,
+    required this.room_maxmem,
+    required this.room_type,
+    required this.is_manager,
+  });
+
+  factory MyRoom.fromJson(dynamic json) {
+    return MyRoom(
+      room_title: json['name'],
+      room_id: json['roomId'],
+      room_pwd: json['password'],
+      room_img: json['image'],
+      room_mem: json['nowUser'],
+      room_maxmem: json['maxUser'],
+      room_type: json['roomType'],
+      is_manager: json['isManager'],
+    );
+  }
+}
 
 class RoomListPage extends StatefulWidget {
   const RoomListPage({super.key});
@@ -11,6 +66,14 @@ class RoomListPage extends StatefulWidget {
 }
 
 class _RoomListState extends State<RoomListPage> {
+  late Future<List<MyRoom>>? futureRoomList;
+
+  @override
+  void initState() {
+    super.initState();
+    futureRoomList = fetchRooms();
+  }
+
   final List<dynamic> roomList = [
     {
       "room_title": "자취요리왕",
@@ -56,50 +119,114 @@ class _RoomListState extends State<RoomListPage> {
       appBar: _roomListAppBar(),
       backgroundColor: LIGHTGREY,
       floatingActionButton: appendRoom(),
-      body: roomList.isNotEmpty
-          ? SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                children: [
-                  const SizedBox(height: 10),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: roomList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return room_list(
-                        room_title: roomList[index]["room_title"],
-                        room_id: roomList[index]["room_id"],
-                        room_pwd: roomList[index]["room_pwd"],
-                        room_type: roomList[index]["room_type"],
-                        room_img: roomList[index]["room_img"],
-                        room_mem: roomList[index]["room_mem"],
-                        room_maxmem: roomList[index]["room_maxmem"],
-                        canChat: roomList[index]["canChat"],
-                        is_manager: roomList[index]["is_manager"],
-                        certificationType: roomList[index]["certificationType"],
-                      );
-                    },
-                  ),
-                ],
-              ),
-            )
-          // 가입한 방 없을 때
-          : const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '아직 가입한 그룹이 없습니다.\n그룹을 새로 만들거나 가입해 보세요!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black45,
-                      fontFamily: 'bm',
-                      fontSize: 20,
+      body: FutureBuilder<List<MyRoom>>(
+        future: futureRoomList,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(child: CircularProgressIndicator()),
+              ],
+            );
+          } else if (snapshot.hasError) {
+            print("인증방 리스트 연결 실패" + snapshot.data.toString());
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.hasData) {
+            if (snapshot.data?.length == 0) {
+              print('가입한 방이 없습니다.');
+              return const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '아직 가입한 그룹이 없습니다.\n그룹을 새로 만들거나 가입해 보세요!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black45,
+                        fontFamily: 'bm',
+                        fontSize: 20,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
+                  ],
+                ),
+              );
+            } else {
+              print('가입한 방이 존재합니다.');
+              return SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Column(
+                      children: snapshot.data!.map((MyRoom) {
+                        return room_list(
+                          room_title: MyRoom.room_title.toString(),
+                          room_id: MyRoom.room_id,
+                          room_pwd: MyRoom.room_pwd.toString(),
+                          room_type: MyRoom.room_pwd.toString(),
+                          room_img: MyRoom.room_img['url'].toString(),
+                          room_mem: MyRoom.room_mem,
+                          room_maxmem: MyRoom.room_maxmem,
+                          canChat: true,
+                          is_manager: MyRoom.is_manager,
+                          certificationType: "VOTE",
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              );
+            }
+          } else {
+            return const Text('No data available');
+          }
+        },
+      ),
+      // body: roomList.isNotEmpty
+      //     ? SingleChildScrollView(
+      //         scrollDirection: Axis.vertical,
+      //         child: Column(
+      //           children: [
+      //             const SizedBox(height: 10),
+      //             ListView.builder(
+      //               shrinkWrap: true,
+      //               itemCount: roomList.length,
+      //               itemBuilder: (BuildContext context, int index) {
+      //                 return room_list(
+      //                   room_title: roomList[index]["room_title"],
+      //                   room_id: roomList[index]["room_id"],
+      //                   room_pwd: roomList[index]["room_pwd"],
+      //                   room_type: roomList[index]["room_type"],
+      //                   room_img: roomList[index]["room_img"],
+      //                   room_mem: roomList[index]["room_mem"],
+      //                   room_maxmem: roomList[index]["room_maxmem"],
+      //                   canChat: roomList[index]["canChat"],
+      //                   is_manager: roomList[index]["is_manager"],
+      //                   certificationType: roomList[index]["certificationType"],
+      //                 );
+      //               },
+      //             ),
+      //           ],
+      //         ),
+      //       )
+      //     // 가입한 방 없을 때
+      //     : const Center(
+      //         child: Column(
+      //           mainAxisAlignment: MainAxisAlignment.center,
+      //           children: [
+      //             Text(
+      //               '아직 가입한 그룹이 없습니다.\n그룹을 새로 만들거나 가입해 보세요!',
+      //               textAlign: TextAlign.center,
+      //               style: TextStyle(
+      //                 color: Colors.black45,
+      //                 fontFamily: 'bm',
+      //                 fontSize: 20,
+      //               ),
+      //             ),
+      //           ],
+      //         ),
+      //       ),
     );
   }
 
