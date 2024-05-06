@@ -56,7 +56,7 @@ class _roomListState extends State<room_list> {
                     width: 100,
                     height: 100,
                     child: ClipOval(
-                      child: Image.asset(
+                      child: Image.network(
                         widget.room_img,
                         fit: BoxFit.cover,
                       ),
@@ -72,7 +72,7 @@ class _roomListState extends State<room_list> {
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            if (widget.room_type == "default") {
+                            if (widget.room_type != "group") {
                               return room_main(
                                 room_title: widget.room_title,
                                 room_id: widget.room_id,
@@ -110,7 +110,7 @@ class _roomListState extends State<room_list> {
                           widget.room_title,
                           style: const TextStyle(
                             fontFamily: "bm",
-                            fontSize: 25,
+                            fontSize: 22,
                           ),
                         ),
                         // 방 속성
@@ -206,26 +206,6 @@ class _roomListState extends State<room_list> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                TextButton(
-                  onPressed: () {},
-                  child: const Column(
-                    children: [
-                      Icon(
-                        Icons.camera_alt_rounded,
-                        color: POINT_COLOR,
-                        size: 40,
-                      ),
-                      Text(
-                        '카메라',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: POINT_COLOR,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 TextButton(
                   onPressed: () {},
                   child: const Column(
