@@ -12,7 +12,7 @@ Future<MyInfo> fetchMyInfo_GET() async {
   final response =
       await http.get(Uri.parse(serverUrl + '/api/v1/users/me'), headers: {
     'Authorization':
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjJ9.WrM3msDSet3X24r8Kf79dsQ52UuuxbpXU_L8JR5daUU'
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
   });
 
   if (response.statusCode == 200) {
@@ -30,14 +30,13 @@ Future<String> fetchMyInfo_POST(Map<String, dynamic> form) async {
     Uri.parse(mypagePostUrl),
     headers: {
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjJ9.WrM3msDSet3X24r8Kf79dsQ52UuuxbpXU_L8JR5daUU',
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU',
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode(form),
   );
   try {
     if (mypagePostresponse.statusCode == 200) {
-      print('닉네임 변경 성공');
       var responseData = utf8.decode(mypagePostresponse.bodyBytes);
       print(responseData);
       return responseData;
@@ -603,7 +602,7 @@ class _MyPageState extends State<MyPage> {
 
       dio.options.headers = {
         'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjJ9.WrM3msDSet3X24r8Kf79dsQ52UuuxbpXU_L8JR5daUU',
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU',
       };
 
       FormData formData = FormData.fromMap({
@@ -641,7 +640,7 @@ class _MyPageState extends State<MyPage> {
 
       dio.options.headers = {
         'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjJ9.WrM3msDSet3X24r8Kf79dsQ52UuuxbpXU_L8JR5daUU'
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
       };
 
       FormData formData = FormData.fromMap({
