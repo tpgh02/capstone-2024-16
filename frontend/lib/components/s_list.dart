@@ -46,7 +46,7 @@ class _s_listState extends State<s_list> {
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: Image.asset(
-                                  "../assets/images/turtle_noradius.png")),
+                                  "assets/images/turtle_noradius.png")),
                         ),
                         const SizedBox(
                           width: 10,
@@ -112,7 +112,7 @@ class _s_listState extends State<s_list> {
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: Image.asset(
-                                  "../assets/images/turtle_noradius.png")),
+                                  "assets/images/turtle_noradius.png")),
                         ),
                         const SizedBox(
                           width: 10,
@@ -178,7 +178,7 @@ class _s_listState extends State<s_list> {
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: Image.asset(
-                                  "../assets/images/turtle_noradius.png")),
+                                  "assets/images/turtle_noradius.png")),
                         ),
                         const SizedBox(
                           width: 10,
@@ -244,7 +244,7 @@ class _s_listState extends State<s_list> {
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: Image.asset(
-                                  "../assets/images/turtle_noradius.png")),
+                                  "assets/images/turtle_noradius.png")),
                         ),
                         const SizedBox(
                           width: 10,

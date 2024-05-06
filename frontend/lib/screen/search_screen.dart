@@ -22,7 +22,7 @@ class _searchPageState extends State<searchPage> {
           Container(
               alignment: Alignment.bottomCenter,
               color: LIGHTGREY,
-              child: Image.asset("../assets/images/turtle_w_e.png")),
+              child: Image.asset("assets/images/turtle_w_e.png")),
           SingleChildScrollView(
             child: Column(
               children: [

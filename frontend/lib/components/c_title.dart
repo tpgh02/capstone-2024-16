@@ -56,8 +56,8 @@ class _c_titleState extends State<c_title> {
                     height: 60,
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
-                        child: Image.asset(
-                            "../assets/images/turtle_noradius.png")),
+                        child:
+                            Image.asset("assets/images/turtle_noradius.png")),
                   ),
                   const SizedBox(
                     width: 15,

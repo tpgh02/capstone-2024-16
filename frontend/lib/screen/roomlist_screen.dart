@@ -116,7 +116,7 @@ class _RoomListState extends State<RoomListPage> {
                 ),
               ),
               child: Text(
-                'AI인증방',
+                'AI인증방 생성',
                 style: TextStyle(
                     color: Colors.white, fontFamily: 'bma', fontSize: 20),
               ),
@@ -146,7 +146,7 @@ class _RoomListState extends State<RoomListPage> {
                 ),
               ),
               child: Text(
-                '일반 인증방',
+                '일반 인증방 생성',
                 style: TextStyle(
                     color: Colors.white, fontFamily: 'bma', fontSize: 20),
               ),
@@ -176,7 +176,7 @@ class _RoomListState extends State<RoomListPage> {
                 ),
               ),
               child: Text(
-                '일반 인증방',
+                '그룹 인증방 생성',
                 style: TextStyle(
                     color: Colors.white, fontFamily: 'bma', fontSize: 20),
               ),

@@ -16,7 +16,7 @@ Future<MyInfo> fetchMyInfo() async {
   if (response.statusCode == 200) {
     print('Mypage: Connected!');
     print(json.decode(response.body));
-    return MyInfo.fromJson(json.decode(response.body));
+    return MyInfo.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
   } else {
     throw Exception('Mypage: fail to connect');
   }
