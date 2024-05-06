@@ -71,6 +71,7 @@ class _searchPageState extends State<InvenPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: LIGHTGREY,
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
@@ -95,17 +96,7 @@ class _searchPageState extends State<InvenPage> {
                   ),
                 ],
               ),
-              Container(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: 120,
-                    height: 200,
-                    child:
-                        Image.asset("assets/images/sea.png"), //서버에서 받은 이미지로 부르기
-                  ),
-                ),
-              ),
+
               Container(
                 child: FutureBuilder<List<Inven>>(
                     future: futureInven,
@@ -152,25 +143,6 @@ class _searchPageState extends State<InvenPage> {
                       }
                     }),
               ),
-              Container(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => reportPage()));
-                    },
-                    child: Text(
-                      "적용하기",
-                      style: TextStyle(
-                          color: Colors.white, fontFamily: 'bm', fontSize: 20),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: PRIMARY_COLOR,
-                    ),
-                  )),
             ],
           ),
         ),

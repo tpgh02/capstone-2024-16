@@ -7,18 +7,26 @@ import 'package:dodo/screen/buy_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-Future<Map> fetchBuy(Map<String, int> userData) async {
-  final response = await http
-      .post(Uri.parse(serverUrl + '/api/v1/creature/purchase'), headers: {
-    'Authorization':
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
-  });
+
+Future<Map> fetchBuy(int creatureId) async {
+  Map<String, dynamic> requestBody = {
+    'creatureId': creatureId,
+  };
+  final response = await http.post(
+    Uri.parse(serverUrl + '/api/v1/creature/purchase'),
+    headers: {
+      'Authorization':
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+    },
+    body: jsonEncode(requestBody),
+  );
   try {
     if (response.statusCode == 200) {
       print('연결 성공!');
-
       Map responseData = json.decode(response.body);
-      print('$responseData'); //log 찍는 걸로 차후에 변경하기
+      // Map responseData = jsonDecode(
+      //     utf8.decode(response.bodyBytes));
+      print('$responseData');
       return responseData;
     } else {
       // 에러가 있는 경우 처리
@@ -61,10 +69,6 @@ class _itemsState extends State<items> {
         children: [
           Container(
             width: double.infinity,
-            //height: double.infinity,
-
-            //width: 80,
-            // height: 1000,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: Colors.white,
@@ -72,11 +76,9 @@ class _itemsState extends State<items> {
             child: Column(
               children: [
                 Container(
-                  //alignment: Alignment.center,
-                  margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                   width: 70,
                   height: 80,
-                  //color: Colors.red,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: Image.network(
@@ -89,7 +91,7 @@ class _itemsState extends State<items> {
                   //color: Colors.blue,
                   child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.attach_money_rounded,
                         color: Colors.amber,
                       ),
@@ -119,7 +121,7 @@ void itemsdialog(context, int cost, String img, String name, info, int c_id) {
     builder: (context) {
       return Dialog(
           child: Container(
-        margin: EdgeInsets.all(8),
+        margin: const EdgeInsets.all(8),
         width: 400,
         height: 400,
         child: Column(
@@ -140,7 +142,7 @@ void itemsdialog(context, int cost, String img, String name, info, int c_id) {
             ),
             Text(
               name,
-              style: TextStyle(fontFamily: "bm", fontSize: 25),
+              style: const TextStyle(fontFamily: "bm", fontSize: 25),
             ),
             const SizedBox(
               height: 10,
@@ -155,13 +157,13 @@ void itemsdialog(context, int cost, String img, String name, info, int c_id) {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
+                const Icon(
                   Icons.attach_money_rounded,
                   color: Colors.amber,
                 ),
                 Text(
                   '$cost',
-                  style: TextStyle(fontFamily: "bma", fontSize: 25),
+                  style: const TextStyle(fontFamily: "bma", fontSize: 25),
                 ),
               ],
             ),
@@ -176,14 +178,8 @@ void itemsdialog(context, int cost, String img, String name, info, int c_id) {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text(
-                    "닫기",
-                    style: TextStyle(
-                        color: Colors.black, fontSize: 25, fontFamily: 'bm'),
-                  ),
                   style: OutlinedButton.styleFrom(
                     fixedSize: Size(150, 50),
-                    //backgroundColor: Colors.red,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     side: BorderSide(
@@ -191,16 +187,20 @@ void itemsdialog(context, int cost, String img, String name, info, int c_id) {
                       width: 3,
                     ),
                   ),
+                  child: Text(
+                    "닫기",
+                    style: TextStyle(
+                        color: Colors.black, fontSize: 25, fontFamily: 'bm'),
+                  ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 30,
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Map<String, int> userData = {
-                      'creatureId': c_id,
-                    };
-                    fetchBuy(userData).then((data) {
+                    Navigator.of(context).pop();
+
+                    fetchBuy(c_id).then((data) {
                       print("오케이");
                       Navigator.push(
                           context,
@@ -208,7 +208,6 @@ void itemsdialog(context, int cost, String img, String name, info, int c_id) {
                               builder: (context) => buyPage(img, name)));
                     }).catchError((error) {
                       print("에러$error");
-                      print("$userData");
                     });
                   },
                   child: Text(

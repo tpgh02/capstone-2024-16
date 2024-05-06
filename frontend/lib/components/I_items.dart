@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
 import 'package:dodo/screen/buy_screen.dart';
+import 'package:dodo/screen/overview_sea.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,20 +18,18 @@ class i_items extends StatefulWidget {
   const i_items(this.cost, this.img, this.name, this.info, this.c_id);
 
   @override
-  State<i_items> createState() => _itemsState();
+  State<i_items> createState() => _i_itemsState();
 }
 
-class _itemsState extends State<i_items> {
+class _i_itemsState extends State<i_items> {
   bool turn = false;
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         //누르면 좌표입력하기
-        setState() {
-          turn = !turn;
-          print("turn");
-        }
+
+        showDemo(context, overview_sea(widget.c_id));
       },
       child: Container(
         width: double.infinity,
@@ -59,7 +58,7 @@ class _itemsState extends State<i_items> {
               //color: Colors.blue,
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.attach_money_rounded,
                     color: Colors.amber,
                   ),
@@ -75,5 +74,9 @@ class _itemsState extends State<i_items> {
         ),
       ),
     );
+  }
+
+  void showDemo(BuildContext ctx, Widget demo) {
+    Navigator.of(ctx).push(MaterialPageRoute(builder: (ctx) => demo));
   }
 }

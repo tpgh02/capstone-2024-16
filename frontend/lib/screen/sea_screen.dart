@@ -33,28 +33,6 @@ class _seaPageState extends State<seaPage> {
             ),
           ),
         ),
-        //업적
-        // Align(
-        //   alignment: Alignment.bottomLeft,
-        //   child: Container(
-        //     width: 70,
-        //     height: 70,
-        //     margin: EdgeInsets.all(20),
-        //     child: FloatingActionButton(
-        //       shape: RoundedRectangleBorder(
-        //           borderRadius: BorderRadius.circular(100)),
-        //       onPressed: () {},
-        //       backgroundColor: PRIMARY_COLOR,
-        //       heroTag: "actionButton",
-        //       child: Text(
-        //         "업적",
-        //         style: TextStyle(
-        //             fontFamily: 'bm', fontSize: 20, color: Colors.white),
-        //       ),
-        //       elevation: 1,
-        //     ),
-        //   ),
-        // ),
         Align(
           alignment:
               Alignment(Alignment.bottomRight.x, Alignment.bottomRight.y - 0.3),
