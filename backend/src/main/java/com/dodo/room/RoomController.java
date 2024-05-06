@@ -139,6 +139,12 @@ public class RoomController {
         return "number of user : " + RoomData.of(room).getNowUser();
     }
 
+    // 인증방 입장
+    @GetMapping("/in/{roomId}")
+    public RoomData roomIn(@PathVariable Long roomId){
+        return RoomData.of(roomRepository.findById(roomId).orElseThrow(NotFoundException::new));
+    }
+
     // 비공개 인증방 입장시 비밀번호 확인 절차
     @GetMapping("/confirmPwd/{roomId}")
     @ResponseBody
