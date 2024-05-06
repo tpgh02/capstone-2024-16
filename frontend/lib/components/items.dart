@@ -8,13 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 Future<Map> fetchBuy(Map<String, int> userData) async {
-  var headers = {
+  final response = await http
+      .post(Uri.parse(serverUrl + '/api/v1/creature/purchase'), headers: {
     'Authorization':
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
-  };
-  final response =
-      await http.post(Uri.parse(serverUrl + '/api/v1/creature/purchase'));
-  response.headers.addAll(headers);
+  });
   try {
     if (response.statusCode == 200) {
       print('연결 성공!');

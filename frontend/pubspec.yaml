@@ -43,6 +43,7 @@ dependencies:
   stomp_dart_client: 1.0.0
   percent_indicator: ^4.2.3
   dio: ^4.0.0
+  custom_floating_action_button: ^0.0.3
 
 dev_dependencies:
   flutter_test:

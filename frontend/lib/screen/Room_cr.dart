@@ -1,27 +1,22 @@
 import 'package:dodo/const/colors.dart';
-import 'package:dodo/screen/AIroom_cr3.dart';
+import 'package:dodo/screen/Room_cr2.dart';
 import 'package:flutter/material.dart';
 
-class AIroom_cr2 extends StatefulWidget {
-  const AIroom_cr2({super.key});
+class Room_cr extends StatefulWidget {
+  const Room_cr({super.key});
 
   @override
-  State<AIroom_cr2> createState() => _AIroom_cr2State();
+  State<Room_cr> createState() => _Room_crState();
 }
 
-class _AIroom_cr2State extends State<AIroom_cr2> {
-  List _roomname = ['운동', '기상', '학습'];
-  Object? _select = '운동';
+class _Room_crState extends State<Room_cr> {
+  List _roomname = ['헬스', '운동', '기상', '학습', '식단', '기타'];
+  String _select = '헬스';
   TextEditingController _title = TextEditingController();
   TextEditingController _tag = TextEditingController();
   TextEditingController _comments = TextEditingController();
   TextEditingController _peoplenum = TextEditingController();
   TextEditingController _password = TextEditingController();
-  bool _isAI = false;
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +38,7 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
             ),
             padding: const EdgeInsets.fromLTRB(30, 20, 0, 0),
             child: const Text(
-              'AI 인증방 생성',
+              '일반 인증방 생성',
               style: TextStyle(
                 color: PRIMARY_COLOR,
                 fontFamily: "bm",
@@ -67,8 +62,8 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide.none),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: const BorderSide(color: PRIMARY_COLOR),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: PRIMARY_COLOR),
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     labelText: '인증방 제목',
@@ -98,8 +93,8 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide.none),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: const BorderSide(color: PRIMARY_COLOR),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: PRIMARY_COLOR),
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     labelText: '해시태그 ( 선택 )',
@@ -124,8 +119,8 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide.none),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: const BorderSide(color: PRIMARY_COLOR),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: PRIMARY_COLOR),
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     labelText: '인증방 소개 (200자 미만)',
@@ -145,6 +140,7 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
                 child: TextField(
                   controller: _peoplenum,
                   keyboardType: TextInputType.emailAddress,
+                  scrollPadding: const EdgeInsets.all(8),
                   style: const TextStyle(
                     fontSize: 20,
                     fontFamily: "bma",
@@ -153,8 +149,8 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide.none),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: const BorderSide(color: PRIMARY_COLOR),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: PRIMARY_COLOR),
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     labelText: '최대 인원 수 (숫자만 입력)',
@@ -174,7 +170,9 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
                 child: TextField(
                   controller: _password,
                   keyboardType: TextInputType.visiblePassword,
-                  style: const TextStyle(fontSize: 20, fontFamily: 'bma'),
+                  scrollPadding: EdgeInsets.zero,
+                  style: const TextStyle(
+                      fontSize: 20, fontFamily: 'bma', color: POINT_COLOR),
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -207,7 +205,7 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
                         elevation: 2,
                         foregroundColor: Colors.black,
                         shadowColor: Colors.black,
-                        side: BorderSide(color: PRIMARY_COLOR),
+                        side: const BorderSide(color: PRIMARY_COLOR),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
                     child: const Text("이전",
@@ -218,24 +216,16 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
                   ),
                   OutlinedButton(
                     onPressed: () {
-                      if (_select == '학습' || _select == '기상') {
-                        _isAI = true;
-                        print(_select);
-                        print(_isAI);
-                      } else {
-                        _isAI = false;
-                      }
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => AIroom_cr3(
+                              builder: (context) => Room_cr2(
                                   _title.text,
+                                  _select,
                                   _tag.text,
-                                  _select.toString(),
                                   _comments.text,
                                   _peoplenum.text,
-                                  _password.text,
-                                  _isAI)));
+                                  _password.text)));
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: PRIMARY_COLOR,
@@ -275,10 +265,10 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
               return DropdownMenuItem(
                 value: value,
                 child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  margin: EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
                     value,
-                    style: const TextStyle(fontFamily: 'bm', fontSize: 20),
+                    style: TextStyle(fontFamily: 'bm', fontSize: 20),
                   ),
                 ),
               );
