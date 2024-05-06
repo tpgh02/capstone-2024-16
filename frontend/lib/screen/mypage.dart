@@ -1,7 +1,56 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/const/server.dart';
 import 'package:dodo/screen/mypage_settings.dart';
 import 'package:flutter/material.dart';
 // import 'package:image_picker/image_picker.dart';
+
+Future<MyInfo> fetchMyInfo() async {
+  final response =
+      await http.get(Uri.parse(serverUrl + '/api/v1/users/me'), headers: {
+    'Authorization':
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+  });
+
+  if (response.statusCode == 200) {
+    print('Mypage: Connected!');
+    print(json.decode(response.body));
+    return MyInfo.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+  } else {
+    throw Exception('Mypage: fail to connect');
+  }
+}
+
+class MyInfo {
+  final int userId;
+  final String authenticationType;
+  final String email;
+  final String name;
+  final int mileage;
+  final String introduceMessage;
+  final image;
+
+  MyInfo(
+      {required this.userId,
+      required this.authenticationType,
+      required this.email,
+      required this.name,
+      required this.mileage,
+      required this.introduceMessage,
+      required this.image});
+
+  factory MyInfo.fromJson(dynamic json) {
+    return MyInfo(
+        userId: json["userId"],
+        authenticationType: json["authenticationType"],
+        email: json["email"],
+        name: json["name"],
+        mileage: json["mileage"],
+        introduceMessage: json["introduceMessage"],
+        image: json["image"]);
+  }
+}
 
 class MyPage extends StatefulWidget {
   const MyPage({super.key});
@@ -11,25 +60,71 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+  Future<MyInfo>? myInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    myInfo = fetchMyInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: LIGHTGREY,
-      body: Column(
-        children: [
-          _info(),
-          _button(),
-          const SizedBox(
-            height: 8,
-          ),
-          const MyPageSetting(),
-        ],
+      body: FutureBuilder<MyInfo>(
+        future: myInfo,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(child: CircularProgressIndicator()),
+              ],
+            );
+          } else if (snapshot.hasError) {
+            print("Mypage: Error " + snapshot.data.toString());
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '서버 연결에 실패하였습니다.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black45,
+                      fontFamily: 'bm',
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else if (snapshot.hasData) {
+            // image url, 닉네임
+            String imageurl = snapshot.data!.image['url'].toString();
+            String nickname = snapshot.data!.name.toString();
+
+            return Column(
+              children: [
+                _info(imageurl, nickname),
+                _button(imageurl, nickname),
+                const SizedBox(
+                  height: 8,
+                ),
+                const MyPageSetting(),
+              ],
+            );
+          } else {
+            return const Text('No data available');
+          }
+        },
       ),
     );
   }
 
   // 상단 프로필
-  Widget _info() {
+  Widget _info(String imageurl, String nickname) {
     return Padding(
       padding: const EdgeInsets.all(30),
       child: Row(
@@ -43,9 +138,7 @@ class _MyPageState extends State<MyPage> {
                 height: 120,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
-                  child: const Image(
-                    image: AssetImage('assets/images/Turtle_noradius.png'),
-                  ),
+                  child: Image.network(imageurl),
                 ),
               ),
             ),
@@ -54,14 +147,13 @@ class _MyPageState extends State<MyPage> {
           // 닉네임
           Expanded(
             child: SizedBox(
-              width: 150,
+              width: 200,
               child: Text(
-                'Username',
+                nickname,
                 style: const TextStyle(
                     color: PRIMARY_COLOR,
                     fontSize: 30,
                     fontWeight: FontWeight.bold),
-                // softWrap: false,
               ),
             ),
           ),
@@ -70,7 +162,7 @@ class _MyPageState extends State<MyPage> {
     );
   }
 
-  Widget _button() {
+  Widget _button(String imageurl, String nickname) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
       child: Row(
@@ -80,7 +172,8 @@ class _MyPageState extends State<MyPage> {
           Expanded(
               flex: 1,
               child: MyPageButton(
-                  onTap: () => editProfileDialog(), label: "프로필 수정")),
+                  onTap: () => editProfileDialog(imageurl, nickname),
+                  label: "프로필 수정")),
           const SizedBox(
             width: 15,
           ),
@@ -95,9 +188,9 @@ class _MyPageState extends State<MyPage> {
   }
 
   // 프로필 수정 다이얼로그
-  void editProfileDialog() {
+  void editProfileDialog(String imageurl, String nickname) {
     TextEditingController nicknameController =
-        TextEditingController(text: 'Username');
+        TextEditingController(text: nickname);
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -125,11 +218,8 @@ class _MyPageState extends State<MyPage> {
                           width: 120,
                           height: 120,
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: const Image(
-                                image: AssetImage(
-                                    'assets/images/Turtle_noradius.png')),
-                          ),
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.network(imageurl)),
                         ),
                       ),
                       // 카메라 아이콘
@@ -188,9 +278,10 @@ class _MyPageState extends State<MyPage> {
             ),
           ),
           actions: <Widget>[
+            // 수정 버튼
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop(); //창 닫기
+                Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: POINT_COLOR,
@@ -209,9 +300,11 @@ class _MyPageState extends State<MyPage> {
                     fontWeight: FontWeight.bold),
               ),
             ),
+
+            // 닫기 버튼
             OutlinedButton(
               onPressed: () {
-                Navigator.of(context).pop(); //창 닫기
+                Navigator.of(context).pop();
               },
               style: OutlinedButton.styleFrom(
                 foregroundColor: POINT_COLOR,

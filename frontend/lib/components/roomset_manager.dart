@@ -610,7 +610,7 @@ class RoomSetting_Manager extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             const Text(
-                              "인증방을 해체하려면 비밀번호를 입력하세요.",
+                              "인증방을 해체하려면 '해체하겠습니다'를 입력하세요.",
                               style: TextStyle(
                                 color: POINT_COLOR,
                                 fontSize: 15,
@@ -635,17 +635,17 @@ class RoomSetting_Manager extends StatelessWidget {
                                       borderSide:
                                           const BorderSide(color: POINT_COLOR),
                                     ),
-                                    hintText: '인증방의 비밀번호를 입력하세요.',
+                                    hintText: "'해체하겠습니다'를 입력하세요.",
                                     labelStyle: const TextStyle(
                                         color: Color(0xff4f4f4f), fontSize: 18),
                                     filled: true,
                                     fillColor: const Color(0xffEDEDED)),
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
-                                    return '비밀번호를 입력해주세요.';
+                                    return '문장을 입력해주세요.';
                                   }
-                                  if (value != room_pwd) {
-                                    return '비밀번호가 틀립니다.';
+                                  if (value != '해체하겠습니다') {
+                                    return '입력한 문장이 맞지 않습니다.';
                                   }
                                   return null;
                                 },

@@ -1,4 +1,3 @@
-import 'package:dodo/components/m2_tabbar.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/screen/gallery_screen.dart';
 import 'package:dodo/screen/report_screen.dart';
@@ -30,23 +29,23 @@ class _m2_button extends State<m2_button> {
                     color: Colors.grey.withOpacity(0.5),
                     //spreadRadius: 1,
                     blurRadius: 2,
-                    offset: Offset(0, 3)),
+                    offset: const Offset(0, 3)),
               ],
             ),
             child: Padding(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Column(
                   children: [
-                    Text(
+                    const Text(
                       "리포트를 받고 싶다면?",
                       style: TextStyle(fontFamily: "bm", fontSize: 25),
                     ),
-                    Icon(
+                    const Icon(
                       Icons.local_post_office_sharp,
                       color: POINT_COLOR,
                       size: 100,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Container(
@@ -57,9 +56,9 @@ class _m2_button extends State<m2_button> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => reportPage()));
+                                    builder: (context) => const reportPage()));
                           },
-                          child: Text(
+                          child: const Text(
                             "보러가기",
                             style: TextStyle(
                                 color: Colors.white,
@@ -72,7 +71,7 @@ class _m2_button extends State<m2_button> {
                         )),
                   ],
                 ))),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         Container(
@@ -84,23 +83,23 @@ class _m2_button extends State<m2_button> {
                     color: Colors.grey.withOpacity(0.5),
                     //spreadRadius: 1,
                     blurRadius: 2,
-                    offset: Offset(0, 3)),
+                    offset: const Offset(0, 3)),
               ],
             ),
             child: Padding(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Column(
                   children: [
-                    Text(
+                    const Text(
                       "사진을 받고 싶다면?",
                       style: TextStyle(fontFamily: "bm", fontSize: 25),
                     ),
-                    Icon(
+                    const Icon(
                       Icons.photo,
                       color: POINT_COLOR,
                       size: 100,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Container(
@@ -111,9 +110,9 @@ class _m2_button extends State<m2_button> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => galleryPage()));
+                                    builder: (context) => const galleryPage()));
                           },
-                          child: Text(
+                          child: const Text(
                             "보러가기",
                             style: TextStyle(
                                 color: Colors.white,

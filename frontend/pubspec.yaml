@@ -48,8 +48,7 @@ dependencies:
   matrix_gesture_detector: ^0.2.0-nullsafety.1
   provider: ^5.0.0
   shared_preferences: ^2.0.0
-
-
+  custom_floating_action_button: ^0.0.3
 
 
 dev_dependencies:

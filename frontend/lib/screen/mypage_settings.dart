@@ -1,4 +1,5 @@
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/screen/mypage_appinfo.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 
@@ -60,17 +61,26 @@ class MyPageSetting extends StatelessWidget {
                 title: const Text('앱 버전'),
                 value: const Text('1.0.0'),
                 leading: const Icon(Icons.info_outline),
-                // onPressed: ((context) {}),
               ),
               SettingsTile.navigation(
                 title: const Text('서비스 이용 약관'),
                 leading: const Icon(Icons.help_outline_outlined),
-                onPressed: ((context) {}),
+                onPressed: ((context) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const TermsOfService()));
+                }),
               ),
               SettingsTile.navigation(
                 title: const Text('오픈소스 라이선스'),
                 leading: const Icon(Icons.code),
-                onPressed: ((context) {}),
+                onPressed: ((context) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const OpenSourceLicense()));
+                }),
               ),
             ],
           ),
@@ -359,7 +369,7 @@ class MyPageSetting extends StatelessWidget {
                             ),
                           ),
                           child: const Text(
-                            "해체",
+                            "비활성화",
                             style: TextStyle(
                                 color: Color.fromARGB(226, 255, 255, 255),
                                 fontWeight: FontWeight.bold),

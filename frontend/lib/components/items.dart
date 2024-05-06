@@ -7,6 +7,7 @@ import 'package:dodo/screen/buy_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+
 Future<Map> fetchBuy(int creatureId) async {
   Map<String, dynamic> requestBody = {
     'creatureId': creatureId,
@@ -19,7 +20,6 @@ Future<Map> fetchBuy(int creatureId) async {
     },
     body: jsonEncode(requestBody),
   );
-
   try {
     if (response.statusCode == 200) {
       print('연결 성공!');
