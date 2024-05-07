@@ -169,7 +169,9 @@ class _RoomListState extends State<RoomListPage> {
                             room_id: MyRoom.room_id,
                             room_pwd: MyRoom.room_pwd?.toString(),
                             room_type: MyRoom.room_type.toString(),
-                            room_img: MyRoom.room_img['url'].toString(),
+                            room_img: MyRoom.room_img != null
+                                ? MyRoom.room_img['url'].toString()
+                                : "https://my-dodo-bucket.s3.ap-northeast-2.amazonaws.com/image/default.png",
                             room_mem: MyRoom.room_mem,
                             room_maxmem: MyRoom.room_maxmem,
                             canChat: true,
@@ -232,7 +234,6 @@ class _RoomListState extends State<RoomListPage> {
         //           ],
         //         ),
         //       ),
-
       ),
       options: [
         Row(
@@ -285,7 +286,8 @@ class _RoomListState extends State<RoomListPage> {
             ),
             InkWell(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Room_cr()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Room_cr()));
                 },
                 child: Image.asset(
                   "assets/images/일반인증방생성.png",
