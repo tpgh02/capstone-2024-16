@@ -7,3 +7,6 @@ venv/
 # test files
 test/
 ai-server/app/uploads/
+
+# log files
+**/*.log
