@@ -57,29 +57,33 @@ class _s_listState extends State<s_list> {
                         ),
                       ],
                     ),
-                    Container(
-                      color: Colors.white,
-                      margin: const EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 8,
-                                height: 8,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.green,
+                    Visibility(
+                      visible: MediaQuery.of(context).size.width >
+                          320, // 예를 들어, 화면 너비가 320보다 클 때만 아이콘 표시
+                      child: Container(
+                        color: Colors.white,
+                        margin: const EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.green,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              const Text("참여중"),
-                            ],
-                          ),
-                          const Text("112,788명 활동중")
-                        ],
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                const Text("참여중"),
+                              ],
+                            ),
+                            const Text("112,788명 활동중")
+                          ],
+                        ),
                       ),
                     ),
                     Container(
@@ -123,29 +127,33 @@ class _s_listState extends State<s_list> {
                         ),
                       ],
                     ),
-                    Container(
-                      color: Colors.white,
-                      margin: const EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 8,
-                                height: 8,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.green,
+                    Visibility(
+                      visible: MediaQuery.of(context).size.width >
+                          320, // 예를 들어, 화면 너비가 320보다 클 때만 아이콘 표시
+                      child: Container(
+                        color: Colors.white,
+                        margin: const EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.green,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              const Text("참여중"),
-                            ],
-                          ),
-                          const Text("112,788명 활동중")
-                        ],
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                const Text("참여중"),
+                              ],
+                            ),
+                            const Text("112,788명 활동중")
+                          ],
+                        ),
                       ),
                     ),
                     Container(
@@ -189,29 +197,33 @@ class _s_listState extends State<s_list> {
                         ),
                       ],
                     ),
-                    Container(
-                      color: Colors.white,
-                      margin: const EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 8,
-                                height: 8,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.green,
+                    Visibility(
+                      visible: MediaQuery.of(context).size.width >
+                          320, // 예를 들어, 화면 너비가 320보다 클 때만 아이콘 표시
+                      child: Container(
+                        color: Colors.white,
+                        margin: const EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.green,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              const Text("참여중"),
-                            ],
-                          ),
-                          const Text("112,788명 활동중")
-                        ],
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                const Text("참여중"),
+                              ],
+                            ),
+                            const Text("112,788명 활동중")
+                          ],
+                        ),
                       ),
                     ),
                     Container(
@@ -255,29 +267,33 @@ class _s_listState extends State<s_list> {
                         ),
                       ],
                     ),
-                    Container(
-                      color: Colors.white,
-                      margin: const EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 8,
-                                height: 8,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.green,
+                    Visibility(
+                      visible: MediaQuery.of(context).size.width >
+                          320, // 예를 들어, 화면 너비가 320보다 클 때만 아이콘 표시
+                      child: Container(
+                        color: Colors.white,
+                        margin: const EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.green,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              const Text("참여중"),
-                            ],
-                          ),
-                          const Text("112,788명 활동중")
-                        ],
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                const Text("참여중"),
+                              ],
+                            ),
+                            const Text("112,788명 활동중")
+                          ],
+                        ),
                       ),
                     ),
                     Container(

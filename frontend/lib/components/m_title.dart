@@ -12,10 +12,10 @@ Future<UserName> fetchUserName() async {
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
   });
   if (response.statusCode == 200) {
-    log('Main title: Connected!: ${utf8.decode(response.bodyBytes)}');
+    log('[report] Connected!: ${utf8.decode(response.bodyBytes)}');
     return UserName.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
   } else {
-    throw Exception('Main title: fail to connect');
+    throw Exception('[report] : fail to connect');
   }
 }
 
