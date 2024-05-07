@@ -1,8 +1,6 @@
-import json
-
-from app.core.custom.exception import exception_json
 from app.schemas.image import ImageData
 from ultralytics import YOLO
+from app.core.custom.exception import exception_dict
 
 
 async def gym_detection(image, data: ImageData):
@@ -12,7 +10,7 @@ async def gym_detection(image, data: ImageData):
     
     # Check the image
     if image is None:
-        return exception_json(code=500, message="Can't find the downloaded image", cat=category, id=id)
+        return exception_dict(code=500, message="Can't find the downloaded image", cat=category, id=id)
     
     # Get YOLO Model and detect
     model_path = "app/model/workout/best_class14_epoch300.pt"
@@ -48,7 +46,7 @@ async def gym_detection(image, data: ImageData):
 
     # Failed to get the OCR result
     if yolo_result is None:
-        return exception_json(code=500, message="Failed to get the gym detection result", cat=category, id=id)
+        return exception_dict(code=500, message="Failed to get the gym detection result", cat=category, id=id)
     
     # make json
     result = {}

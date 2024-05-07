@@ -1,6 +1,4 @@
-import json
-
-def exception_json(code, message, cat, id):
+def exception_dict(code, message, cat, id):
     content = {
         "code": code,
         "message": message,
@@ -8,4 +6,4 @@ def exception_json(code, message, cat, id):
         "certification_id": id
     }
     
-    return json.dumps(content, indent=4)
+    return content

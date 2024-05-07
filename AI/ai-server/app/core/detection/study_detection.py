@@ -1,10 +1,6 @@
-import json
-
-# from app.core.custom.exception import exception_json
 from paddleocr import PaddleOCR
 from app.schemas.image import ImageData
-
-from app.core.custom.exception import exception_json
+from app.core.custom.exception import exception_dict
 
 
 async def study_detection(image, data: ImageData):
@@ -14,7 +10,7 @@ async def study_detection(image, data: ImageData):
     
     # Check the image
     if image is None:
-        return exception_json(code=500, message="Can't find the downloaded image", cat=category, id=id)
+        return exception_dict(code=500, message="Can't find the downloaded image", cat=category, id=id)
     
     # Do OCR
     ocr_model = PaddleOCR(lang='en')
@@ -33,7 +29,7 @@ async def study_detection(image, data: ImageData):
 
     # Failed to get the OCR result
     if ocr_result is None:
-        return exception_json(code=500, message="Failed to get the OCR result", cat=category, id=id)
+        return exception_dict(code=500, message="Failed to get the OCR result", cat=category, id=id)
 
     # make json
     result = {}
