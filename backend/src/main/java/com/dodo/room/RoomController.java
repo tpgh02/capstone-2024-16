@@ -99,6 +99,11 @@ public class RoomController {
     @PostMapping("/enter/{roomId}")
     public String roomEnter(@PathVariable Long roomId, @RequestAttribute UserContext userContext){
 
+        if(roomUserRepository.findByUserAndRoom(
+                userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new),
+                roomRepository.findById(roomId).orElseThrow(NotFoundException::new)
+        ).orElse(null) != null) {return "이미 입장한 유저입니다."; }
+
         roomService.plusUserCnt(roomId);
         roomUserService.createRoomUser(userContext, roomId);
 
@@ -128,21 +133,12 @@ public class RoomController {
 
         roomService.minusUserCnt(roomId);
         roomUserService.deleteChatRoomUser(roomId, userContext.getUserId());
+        if (roomRepository.findById(roomId).orElseThrow(NotFoundException::new).getNowUser() == 0) {
 
-
-        // 확인
-        Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
-        User user = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
-
-        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)
-                .orElse(null);
-        if (roomUser == null) {
-            return "해당 유저는 인증방에서 삭제되었습니다." + "\n" +
-                    "nowUser = " + room.getNowUser();
+            roomService.deleteRoom(roomId);
         }
-        else {
-            return "유저가 인증방에서 삭제되지 않았습니다.." ;
-        }
+
+        return "200 OK";
     }
 
     // 인증방 해체하기
@@ -157,9 +153,7 @@ public class RoomController {
             return "방장이 아닙니다.";
         }
 
-        roomUserRepository.deleteAllInBatch(roomUserRepository.findAllByRoomId(roomId).orElseThrow(NotFoundException::new));
-        roomTagRepository.deleteAllInBatch(roomTagRepository.findAllByRoom(roomRepository.findById(roomId).orElseThrow(NotFoundException::new)).orElseThrow(NotFoundException::new));
-        roomRepository.deleteById(roomId);
+        roomService.deleteRoom(roomId);
 
         log.info("삭제 완료");
         // 확인

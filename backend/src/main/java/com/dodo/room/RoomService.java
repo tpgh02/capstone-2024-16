@@ -157,20 +157,19 @@ public class RoomService {
 
     // 채팅방 인원 감소
     public void minusUserCnt(Long roomId){
-        log.info("room Id : {}", roomId);
         Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
         room.setNowUser(room.getNowUser()-1);
+
+        log.info("인원 : {}", room.getNowUser());
     }
 
-    // 채팅방 삭제
+    // 인증방 해체
     public void deleteRoom(Long roomId){
-        Room room = roomRepository.findById(roomId).
-                orElse(null);
-        if (room == null){
-            System.out.println("room = null");
-            return;
-        }
+
+        roomUserRepository.deleteAllInBatch(roomUserRepository.findAllByRoomId(roomId).orElseThrow(NotFoundException::new));
+        roomTagRepository.deleteAllInBatch(roomTagRepository.findAllByRoom(roomRepository.findById(roomId).orElseThrow(NotFoundException::new)).orElseThrow(NotFoundException::new));
         roomRepository.deleteById(roomId);
+
     }
 
     // 채팅방 공지 수정

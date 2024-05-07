@@ -52,9 +52,18 @@ public class RoomUserService {
         RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room)
                 .orElse(null);
         if (roomUser == null) {
-            System.out.println("roomUser = null");
+            log.info("없는 유저입니다.");
             return;
         }
+        if (roomUser.getIsManager()) {
+            List<RoomUser> roomUsers = roomUserRepository.findAllByRoomId(roomId).get();
+            if (roomUsers.size() > 1) {
+                RoomUser ru = roomUsers.get(1);
+                ru.setIsManager(true);
+                roomUserRepository.save(ru);
+            }
+        }
+
         roomUserRepository.delete(roomUser);
 
         log.info("삭제한 room : {}, user : {}", roomUser.getRoom().getId(), roomUser.getUser().getId());
