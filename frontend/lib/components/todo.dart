@@ -1,9 +1,5 @@
-import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:dodo/components/c_dialog.dart';
-import 'package:dodo/const/server.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 //소유하고 있는 방들의 각각 컴포넌트를 생성
 class todo extends StatefulWidget {
@@ -20,7 +16,6 @@ class todo extends StatefulWidget {
 class _todoState extends State<todo> {
   @override
   Widget build(BuildContext context) {
-    int room_id = 1;
     return Stack(
       children: [
         Container(
@@ -35,7 +30,7 @@ class _todoState extends State<todo> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return c_dialog(room_id);
+                  return c_dialog(widget.room_id);
                 },
               );
             },
@@ -53,11 +48,11 @@ class _todoState extends State<todo> {
         //방 이름을 사진 위에 얹는 부분
         Container(
           alignment: Alignment.topLeft,
-          margin: const EdgeInsets.fromLTRB(15, 15, 15, 30),
+          margin: const EdgeInsets.fromLTRB(15, 15, 50, 50),
           child: Text(
             widget.room_name,
             style: const TextStyle(
-                fontFamily: "bm", fontSize: 22, color: Colors.white),
+                fontFamily: "bm", fontSize: 25, color: Colors.white),
           ),
         )
       ],

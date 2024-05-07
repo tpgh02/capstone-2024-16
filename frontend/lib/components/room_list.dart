@@ -123,11 +123,14 @@ class _roomListState extends State<room_list> {
 
                             // 인증방 타입
                             widget.room_type == "GROUP"
-                                ? const Padding(
-                                    padding: EdgeInsets.fromLTRB(6, 0, 0, 0),
-                                    child: Icon(
-                                      Icons.group,
-                                      size: 24,
+                                ? Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(6, 0, 0, 0),
+                                    child: SizedBox(
+                                      height: 30,
+                                      width: 30,
+                                      child: Image.asset(
+                                          'assets/images/GroupMark.png'),
                                     ),
                                   )
                                 : const SizedBox(
@@ -135,13 +138,23 @@ class _roomListState extends State<room_list> {
                                   ),
 
                             widget.room_type == "AI"
-                                ? const Padding(
-                                    padding: EdgeInsets.fromLTRB(6, 0, 0, 0),
-                                    child: Icon(
-                                      Icons.podcasts,
-                                      size: 24,
+                                ? Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(6, 0, 0, 0),
+                                    child: SizedBox(
+                                      height: 30,
+                                      width: 30,
+                                      child: Image.asset(
+                                          'assets/images/AIMark.png'),
                                     ),
                                   )
+                                // const Padding(
+                                //     padding: EdgeInsets.fromLTRB(6, 0, 0, 0),
+                                //     child: Icon(
+                                //       Icons.podcasts,
+                                //       size: 24,
+                                //     ),
+                                //   )
                                 : const SizedBox(
                                     width: 0.1,
                                   ),
@@ -152,7 +165,7 @@ class _roomListState extends State<room_list> {
                                     padding: EdgeInsets.fromLTRB(6, 0, 0, 0),
                                     child: Icon(
                                       Icons.lock,
-                                      size: 18,
+                                      size: 23,
                                     ),
                                   )
                                 : const SizedBox(

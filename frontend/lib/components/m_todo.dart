@@ -52,6 +52,13 @@ class m_todo extends StatefulWidget {
 }
 
 class _m_todoState extends State<m_todo> {
+  // final postList = [
+  //   {"room_title": "자취요리왕", "room_img": "assets/images/cook.jpg"},
+  //   {"room_title": "오운완", "room_img": "assets/images/turtle_noradius.png"},
+  //   {"room_title": "H.O.T", "room_img": "assets/images/turtle_noradius.png"},
+  // ];
+  // List<int> top = <int>[];
+  // List<int> bottom = <int>[0];
   late Future<List<MyRoom_Main>>? futureRoomListMain;
 
   @override
@@ -119,11 +126,18 @@ class _m_todoState extends State<m_todo> {
                             SliverGrid(
                               delegate: SliverChildBuilderDelegate(
                                   (BuildContext context, int idx) {
-                                return postContainer(
-                                    snapshot.data![idx].room_title.toString(),
-                                    snapshot.data![idx].room_img['url']
-                                        .toString(),
-                                    snapshot.data![idx].room_id);
+                                if (snapshot.data![idx].room_img == null) {
+                                  return postContainer(
+                                      snapshot.data![idx].room_title.toString(),
+                                      "https://my-dodo-bucket.s3.ap-northeast-2.amazonaws.com/image/default.png",
+                                      snapshot.data![idx].room_id);
+                                } else {
+                                  return postContainer(
+                                      snapshot.data![idx].room_title.toString(),
+                                      snapshot.data![idx].room_img['url']
+                                          .toString(),
+                                      snapshot.data![idx].room_id);
+                                }
                               }, childCount: snapshot.data!.length),
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
