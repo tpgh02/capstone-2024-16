@@ -28,7 +28,7 @@ async def study(data: ImageData, background: BackgroundTasks):
         elif data.category == "GYM":
             background.add_task(back_task_gym, image, data)
         else:
-            LOGGER.error("Wrong Category. Requested category is %s." % (data.category))
+            LOGGER.error("Wrong Category. Requested category: %s." % (data.category))
             raise HTTPException(status_code=400, detail="Wrong category. The category should be only STUDY and GYM")
     
     return response

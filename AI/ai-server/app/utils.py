@@ -28,7 +28,7 @@ def set_logger(console_level=logging.ERROR, file_level=logging.INFO, log_file_pa
     
     # file handler
     if log_file_path is not None:
-        file_format = "%(asctime)s %(levelname)s - %(message)s line %(lineno)s in %(funcName)s at %(filename)s"
+        file_format = "%(asctime)s %(levelname)s - %(message)s - line %(lineno)s in %(funcName)s at %(filename)s"
         file_date_format = "%Y-%m-%d %H:%M:%S"
         file_handler = logging.FileHandler(log_file_path)
         file_handler.setLevel(file_level)
