@@ -14,7 +14,7 @@ def exception_dict(code, message, cat, id):
 
 
 def set_logger(console_level=logging.ERROR, file_level=logging.INFO, log_file_path=None):
-    logger = logging.getLogger()
+    logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
     
     # console handler
@@ -28,7 +28,7 @@ def set_logger(console_level=logging.ERROR, file_level=logging.INFO, log_file_pa
     
     # file handler
     if log_file_path is not None:
-        file_format = "%(asctime)s %(levelname)s - %(message)s at %(filename)s %(funcName)s %(lineno)s"
+        file_format = "%(asctime)s %(levelname)s - %(message)s line %(lineno)s in %(funcName)s at %(filename)s"
         file_date_format = "%Y-%m-%d %H:%M:%S"
         file_handler = logging.FileHandler(log_file_path)
         file_handler.setLevel(file_level)
@@ -38,7 +38,7 @@ def set_logger(console_level=logging.ERROR, file_level=logging.INFO, log_file_pa
         
     return logger
     
-LOGGER = set_logger(log_file_path="ai-server.log")
+LOGGER = set_logger(log_file_path="ai-server.log", console_level=logging.WARNING)
 
 
 def get_server_address(path="config.json"):
