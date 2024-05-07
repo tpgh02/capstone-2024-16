@@ -82,16 +82,14 @@ public class CertificationService {
                 .build());
 
         // 기상인증인 경우
+        // TODO -> 기준 시각정보가 룸에 있어야 함
         if(room.getCategory() == Category.WAKEUP) {
-            // TODO -> 시간체크
-            // 기준 시각 +- 30분이라고 하겠음
             if(checkTime(room)) {
                 certification.setStatus(CertificationStatus.SUCCESS);
             } else {
                 certification.setStatus(CertificationStatus.FAIL);
             }
         }
-
 
         // AI인증방인 경우 AI에 요청 보내기
         if(room.getRoomType() == RoomType.AI) {
@@ -101,9 +99,9 @@ public class CertificationService {
         return new CertificationUploadResponseData(certification);
     }
 
+    // 기상 시간 체크하고 기준 시간과 비교함
     private boolean checkTime(Room room) {
-        // TODO
-        // 방에서 정한 기준 시각을 받아와야 함.
+        // TODO -> 방에서 기준 시각 가져와야 함
         LocalDateTime standard = null;
         int standardMinute = standard.getMinute() + standard.getHour() * 60;
         int startMinute = (standardMinute - 30 + 1440) % 1440;
@@ -119,8 +117,6 @@ public class CertificationService {
 
     // TODO
     //  AI api URL
-    //  반환형식 확인.
-    //  전달해주면 바로 반환되는지 아니면 컨트롤러로 나중에 보내줄건지
     private void transferToAi(Room room, Certification certification) {
         RestTemplate rt = new RestTemplate();
 
@@ -135,10 +131,9 @@ public class CertificationService {
 
         HttpEntity<AiRequestData> entity = new HttpEntity<AiRequestData>(aiRequestData, headers);
 
-        // TODO
-        //  응답을 string 말고 클래스 만들어서 다시 하기
-        ResponseEntity<String> reponse =  rt.exchange(AI_SERVER_URL, HttpMethod.POST, entity, String.class);
+        rt.exchange(AI_SERVER_URL, HttpMethod.POST, entity, String.class);
     }
+
 
 
     public CertificationDetailResponseData getCertificationDetail(
@@ -180,8 +175,7 @@ public class CertificationService {
         voteRepository.save(vote);
 
 
-        // TODO
-        // 인증 완료, 실패시 알림 제공
+        // TODO -> 인증 완료, 실패시 알림 제공
         if(certification.getVoteUp().equals(room.getNumOfVoteSuccess())) {
             certification.setStatus(CertificationStatus.SUCCESS);
             successCertificationToUpdateMileage(certification);
@@ -191,10 +185,10 @@ public class CertificationService {
             certification.setStatus(CertificationStatus.FAIL);
         }
 
-
         return new CertificationDetailResponseData(certification, vote, room);
     }
 
+    // 방장 승인, 거부
     public CertificationDetailResponseData approval(UserContext userContext, ApprovalRequestData requestData) {
         User user = getUser(userContext);
         Certification certification = certificationRepository.findById(requestData.getCertificationId())
@@ -214,7 +208,7 @@ public class CertificationService {
         return new CertificationDetailResponseData(certification, null, room);
     }
 
-
+    // 인증방의 인증 리스트 불러오기
     public List<CertificationListResponseData> getList(UserContext userContext, Long roomId) {
         User user = getUser(userContext);
         Room room = roomRepository.findById(roomId)
@@ -300,10 +294,24 @@ public class CertificationService {
         }
 
         if(category == Category.STUDY) {
-
+            Integer minute = extractTimeAndConvertToMinute(aiResponseData);
         } else if(category == Category.GYM) {
 
         }
+    }
+
+
+    private Integer extractTimeAndConvertToMinute(AiResponseData aiResponseData) {
+        List<String> resultList = aiResponseData.getResult().get();
+
+        for (String str : resultList) {
+            if (str.contains(":")) {
+                int idx = str.indexOf(":");
+
+
+            }
+        }
+
     }
 
     @Data
