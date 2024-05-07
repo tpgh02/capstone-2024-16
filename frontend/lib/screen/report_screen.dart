@@ -1,10 +1,37 @@
-import 'package:dodo/components/m2_board.dart';
-import 'package:dodo/components/m2_button.dart';
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/const/server.dart';
 import 'package:dodo/screen/main2_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:http/http.dart' as http;
+
+Future<UserName> fetchUserName() async {
+  final response = await http
+      .get(Uri.parse('$serverUrl/api/v1/users/simple-profile'), headers: {
+    'Authorization':
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+  });
+  if (response.statusCode == 200) {
+    log('Main title: Connected!: ${utf8.decode(response.bodyBytes)}');
+    return UserName.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+  } else {
+    throw Exception('Main title: fail to connect');
+  }
+}
+
+class UserName {
+  final String name;
+
+  UserName({required this.name});
+
+  factory UserName.fromJson(dynamic json) {
+    return UserName(name: json['name']);
+  }
+}
 
 class reportPage extends StatefulWidget {
   const reportPage({super.key});
@@ -14,8 +41,15 @@ class reportPage extends StatefulWidget {
 }
 
 class _reportPageState extends State<reportPage> {
+  Future<UserName>? myusername;
+
+  void init() {
+    myusername = fetchUserName();
+  }
+
   @override
   Widget build(BuildContext context) {
+    init();
     return Scaffold(
       backgroundColor: LIGHTGREY,
       body: SingleChildScrollView(
@@ -32,13 +66,36 @@ class _reportPageState extends State<reportPage> {
                     style: TextStyle(fontFamily: "bm", fontSize: 35),
                   ),
                 ),
-                Container(
-                  alignment: Alignment.centerRight,
-                  child: const Text(
-                    "Username",
-                    style: TextStyle(
-                        fontFamily: "bm", fontSize: 25, color: PRIMARY_COLOR),
-                  ),
+                FutureBuilder<UserName>(
+                  future: myusername,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(child: CircularProgressIndicator()),
+                        ],
+                      );
+                    } else if (snapshot.hasError) {
+                      log("Main title: Error - ${snapshot.data.toString()}");
+                      return const Text("서버 연결 실패",
+                          style: TextStyle(
+                              fontFamily: "kcc",
+                              fontSize: 40,
+                              color: PRIMARY_COLOR));
+                    } else if (snapshot.hasData) {
+                      return Container(
+                        alignment: Alignment.centerRight,
+                        child: Text(snapshot.data!.name.toString(),
+                            style: const TextStyle(
+                                fontFamily: "bm",
+                                fontSize: 25,
+                                color: PRIMARY_COLOR)),
+                      );
+                    } else {
+                      return const Text('잠시후 시도해주십시오');
+                    }
+                  },
                 ),
                 const SizedBox(
                   height: 10,
@@ -53,10 +110,10 @@ class _reportPageState extends State<reportPage> {
                               color: Colors.grey.withOpacity(0.7),
                               spreadRadius: 0,
                               blurRadius: 5.0,
-                              offset: Offset(0, 3))
+                              offset: const Offset(0, 3))
                         ]),
                     child: Padding(
-                        padding: EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(20),
                         child: Column(
                           children: [
                             Container(
@@ -98,7 +155,7 @@ class _reportPageState extends State<reportPage> {
                               percent: 0.82,
                               //center: Text("20"),
                               progressColor: PRIMARY_COLOR,
-                              barRadius: Radius.circular(20),
+                              barRadius: const Radius.circular(20),
                             ),
                             const SizedBox(
                               height: 5,
@@ -134,10 +191,10 @@ class _reportPageState extends State<reportPage> {
                             color: Colors.grey.withOpacity(0.7),
                             spreadRadius: 0,
                             blurRadius: 5.0,
-                            offset: Offset(0, 3))
+                            offset: const Offset(0, 3))
                       ]),
                   child: Padding(
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     child: Column(
                       children: [
                         Container(
@@ -147,17 +204,20 @@ class _reportPageState extends State<reportPage> {
                             style: TextStyle(fontFamily: "bm", fontSize: 25),
                           ),
                         ),
-                        const Row(
+                        Row(
                           children: [
-                            Icon(
-                              Icons.flag,
-                              color: PRIMARY_COLOR,
-                              size: 150,
+                            Visibility(
+                              visible: MediaQuery.of(context).size.width > 320,
+                              child: Icon(
+                                Icons.flag,
+                                color: PRIMARY_COLOR,
+                                size: MediaQuery.of(context).size.width * 0.2,
+                              ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 20,
                             ),
-                            Column(
+                            const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
@@ -216,10 +276,10 @@ class _reportPageState extends State<reportPage> {
                             color: Colors.grey.withOpacity(0.7),
                             spreadRadius: 0,
                             blurRadius: 5.0,
-                            offset: Offset(0, 3))
+                            offset: const Offset(0, 3))
                       ]),
                   child: Padding(
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     child: Column(
                       children: [
                         Container(
@@ -231,7 +291,7 @@ class _reportPageState extends State<reportPage> {
                         ),
                         Container(
                           alignment: Alignment.bottomRight,
-                          child: Text(
+                          child: const Text(
                             "상위 15%",
                             style: TextStyle(
                               fontFamily: "bm",
@@ -240,7 +300,7 @@ class _reportPageState extends State<reportPage> {
                             ),
                           ),
                         ),
-                        Icon(
+                        const Icon(
                           Icons.eco_rounded,
                           color: POINT_COLOR,
                           size: 100,
@@ -254,7 +314,7 @@ class _reportPageState extends State<reportPage> {
                           percent: 0.75,
                           //center: Text("20"),
                           progressColor: PRIMARY_COLOR,
-                          barRadius: Radius.circular(20),
+                          barRadius: const Radius.circular(20),
                         ),
                         const SizedBox(
                           height: 5,
@@ -274,9 +334,9 @@ class _reportPageState extends State<reportPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => main2Page()));
+                                builder: (context) => const main2Page()));
                       },
-                      child: Text(
+                      child: const Text(
                         "이미지로 다운받기",
                         style: TextStyle(
                             color: Colors.white,
