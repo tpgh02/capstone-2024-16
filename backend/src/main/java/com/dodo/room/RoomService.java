@@ -5,7 +5,6 @@ import com.dodo.image.ImageRepository;
 import com.dodo.room.domain.*;
 import com.dodo.room.dto.RoomData;
 import com.dodo.room.dto.RoomListData;
-import com.dodo.room.dto.UserData;
 import com.dodo.roomuser.RoomUserRepository;
 import com.dodo.roomuser.RoomUserService;
 import com.dodo.roomuser.domain.RoomUser;
@@ -13,12 +12,11 @@ import com.dodo.tag.domain.RoomTag;
 import com.dodo.tag.domain.Tag;
 import com.dodo.tag.repository.RoomTagRepository;
 import com.dodo.tag.service.RoomTagService;
-import com.dodo.user.PasswordAuthenticationRepository;
 import com.dodo.user.UserRepository;
-import com.dodo.user.domain.PasswordAuthentication;
 import com.dodo.user.domain.User;
 import com.dodo.user.domain.UserContext;
 import com.dodo.user.dto.PasswordChangeRequestData;
+import com.dodo.user.dto.UserData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -58,14 +56,6 @@ public class RoomService {
                 .map(RoomListData::new)
                 .map(RoomListData -> updateStatus(RoomListData, roomUserService.getCertificationStatus(userContext, RoomListData)))
                 .map(RoomListData -> updateIsManager(RoomListData, user))
-                .toList();
-    }
-
-    public List<UserData> getUsers(UserContext userContext, Long roomId) {
-        return roomUserRepository.findAllByRoomId(roomId)
-                .orElseThrow(NotFoundException::new)
-                .stream()
-                .map(UserData::new) //TODO
                 .toList();
     }
 
@@ -232,7 +222,6 @@ public class RoomService {
             log.info("roomData's maxUser : {}", roomData.getMaxUser());
             room.update(
                     roomData.getName(),
-                    roomData.getPwd(),
                     roomData.getInfo(),
                     roomData.getEndDay(),
                     roomData.getMaxUser(),
