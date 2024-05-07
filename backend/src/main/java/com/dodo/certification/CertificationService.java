@@ -73,11 +73,6 @@ public class CertificationService {
                 .orElseThrow(() -> new NotFoundException("인증방에 소속되어 있지 않습니다"));
         Image image = imageService.save(img);
 
-        // 테스트용
-//        RoomUser roomUser = roomUserRepository.save(new RoomUser(user, room));
-//        Room room = roomRepository.save(new Room());
-//        log.info("{}", image.getUrl());
-
         Certification certification = certificationRepository.save(Certification.builder()
                 .status(CertificationStatus.WAIT)
                 .roomUser(roomUser)
@@ -88,8 +83,13 @@ public class CertificationService {
 
         // 기상인증인 경우
         if(room.getCategory() == Category.WAKEUP) {
-            // TODO -> 시간이 잘 나오나?
-
+            // TODO -> 시간체크
+            // 기준 시각 +- 30분이라고 하겠음
+            if(checkTime(room)) {
+                certification.setStatus(CertificationStatus.SUCCESS);
+            } else {
+                certification.setStatus(CertificationStatus.FAIL);
+            }
         }
 
 
@@ -99,6 +99,22 @@ public class CertificationService {
         }
 
         return new CertificationUploadResponseData(certification);
+    }
+
+    private boolean checkTime(Room room) {
+        // TODO
+        // 방에서 정한 기준 시각을 받아와야 함.
+        LocalDateTime standard = null;
+        int standardMinute = standard.getMinute() + standard.getHour() * 60;
+        int startMinute = (standardMinute - 30 + 1440) % 1440;
+        int endMinute = (standardMinute + 30) % 1440;
+
+        LocalDateTime now = LocalDateTime.now();
+        int nowMinute = now.getMinute() + now.getHour() * 60;
+
+        // 24시에 걸친 경우
+        if(standardMinute - 30 < 0 || standardMinute + 30 > 1440) return startMinute <= nowMinute || nowMinute <= endMinute;
+        return startMinute <= nowMinute && nowMinute <= endMinute;
     }
 
     // TODO
