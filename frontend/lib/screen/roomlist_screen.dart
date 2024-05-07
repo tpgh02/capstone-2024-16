@@ -4,11 +4,12 @@ import 'package:dodo/const/server.dart';
 import 'package:dodo/screen/AIroom_cr.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'dart:developer';
 import 'package:http/http.dart' as http;
 
 Future<List<MyRoom>> fetchRooms() async {
   final response =
-      await http.get(Uri.parse(serverUrl + '/api/v1/room/list'), headers: {
+      await http.get(Uri.parse('$serverUrl/api/v1/room/list'), headers: {
     'Authorization':
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
   });
@@ -16,10 +17,10 @@ Future<List<MyRoom>> fetchRooms() async {
     final List<dynamic> jsonData = jsonDecode(utf8.decode(response.bodyBytes));
 
     List<MyRoom> Rooms = jsonData.map((json) => MyRoom.fromJson(json)).toList();
-    print("인증방 리스트 연결 완료");
+    log("인증방 리스트 연결 완료");
     return Rooms;
   } else {
-    throw Exception('Failed to load album');
+    throw Exception('Failed to load room list');
   }
 }
 
@@ -130,11 +131,11 @@ class _RoomListState extends State<RoomListPage> {
               ],
             );
           } else if (snapshot.hasError) {
-            print("인증방 리스트 연결 실패" + snapshot.data.toString());
+            log("인증방 리스트 연결 실패: ${snapshot.data.toString()}");
             return Text('Error: ${snapshot.error}');
           } else if (snapshot.hasData) {
             if (snapshot.data?.length == 0) {
-              print('가입한 방이 없습니다.');
+              log('가입한 방이 없습니다.');
               return const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
