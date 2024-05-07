@@ -106,7 +106,7 @@ class _mainPageState extends State<mainPage>
                 //color: Colors.black,
                 child: Column(
                   children: [
-                    m_title('$user_name'),
+                    m_title(),
                     m_state(state),
                     const SizedBox(
                       height: 20,
