@@ -99,6 +99,11 @@ public class RoomController {
     @PostMapping("/enter/{roomId}")
     public String roomEnter(@PathVariable Long roomId, @RequestAttribute UserContext userContext){
 
+        if(roomUserRepository.findByUserAndRoom(
+                userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new),
+                roomRepository.findById(roomId).orElseThrow(NotFoundException::new)
+        ).orElse(null) != null) {return "이미 입장한 유저입니다."; }
+
         roomService.plusUserCnt(roomId);
         roomUserService.createRoomUser(userContext, roomId);
 
