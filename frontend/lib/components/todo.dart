@@ -1,6 +1,4 @@
-//import 'package:dodo/const/colors.dart';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:dodo/components/c_dialog.dart';
 import 'package:dodo/const/server.dart';
@@ -11,8 +9,9 @@ import 'package:flutter/widgets.dart';
 class todo extends StatefulWidget {
   final String room_name;
   final String room_img;
+  final int room_id;
 
-  const todo(this.room_name, this.room_img);
+  const todo(this.room_name, this.room_img, this.room_id);
 
   @override
   State<todo> createState() => _todoState();
@@ -44,7 +43,7 @@ class _todoState extends State<todo> {
                 //사진을 둥글게 만들 수 있는 함수
                 ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.asset(
+              child: Image.network(
                 widget.room_img,
                 fit: BoxFit.cover,
               ),
@@ -56,7 +55,7 @@ class _todoState extends State<todo> {
           alignment: Alignment.topLeft,
           margin: const EdgeInsets.fromLTRB(15, 15, 50, 50),
           child: Text(
-            "${widget.room_name}",
+            widget.room_name,
             style: const TextStyle(
                 fontFamily: "bm", fontSize: 25, color: Colors.white),
           ),

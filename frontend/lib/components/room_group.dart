@@ -5,6 +5,7 @@ import 'package:dodo/components/roomset_basic.dart';
 import 'package:dodo/components/roomset_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:dodo/const/colors.dart';
+import 'package:horizontal_stepper_step/horizontal_stepper_step.dart';
 
 class room_group extends StatefulWidget {
   final String room_title;
@@ -109,12 +110,12 @@ class _roomMainState extends State<room_group> {
         child: Column(
           children: [
             const SizedBox(
-              height: 25,
+              height: 10,
             ),
             // 목표 기한
             _progressBar(),
             Container(
-              margin: const EdgeInsets.all(20),
+              margin: const EdgeInsets.fromLTRB(20, 17, 20, 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -225,93 +226,51 @@ class _roomMainState extends State<room_group> {
     );
   }
 
-  Container _progressBar() {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: const Color.fromARGB(199, 193, 208, 214),
-      ),
-      height: 100,
-      margin: const EdgeInsets.fromLTRB(28, 0, 28, 0),
-      padding: EdgeInsets.fromLTRB(
-          MediaQuery.of(context).size.width * 0.06, 10, 0, 10),
-      child: Row(
+  SizedBox _progressBar() {
+    return const SizedBox(
+      height: 118,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const Icon(
-            Icons.lightbulb_outline_rounded,
-            color: POINT_COLOR,
-            size: 40,
+          Text(
+            "지금 목표는? ",
+            style: TextStyle(
+              color: POINT_COLOR,
+              fontFamily: 'bm',
+              fontSize: 18,
+            ),
+          ),
+          Text(
+            "기부 총액 5만원 달성하기",
+            style: TextStyle(
+              color: PRIMARY_COLOR,
+              fontFamily: 'bm',
+              fontSize: 22,
+            ),
+          ),
+          // progress bar
+          Padding(
+            padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
+            child: HorizontalStepper(
+              totalStep: 5,
+              completedStep: 1,
+              selectedColor: PRIMARY_COLOR,
+              backGroundColor: Color.fromARGB(199, 193, 208, 214),
+            ),
+          ),
+          // D-day
+          Text(
+            "2024-05-10까지 도전",
+            style: TextStyle(
+              color: POINT_COLOR,
+              fontFamily: 'bm',
+              fontSize: 18,
+            ),
           ),
           SizedBox(
-            width: MediaQuery.of(context).size.width * 0.03,
+            height: 3,
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Row(
-                children: [
-                  Text(
-                    "목표를 ",
-                    style: TextStyle(
-                      color: POINT_COLOR,
-                      fontFamily: 'bm',
-                      fontSize: 21,
-                    ),
-                  ),
-                  Text(
-                    "70%",
-                    style: TextStyle(
-                      color: PRIMARY_COLOR,
-                      fontFamily: 'bm',
-                      fontSize: 25,
-                    ),
-                  ),
-                  Text(
-                    " 달성했어요!",
-                    style: TextStyle(
-                      color: POINT_COLOR,
-                      fontFamily: 'bm',
-                      fontSize: 21,
-                    ),
-                  ),
-                ],
-              ),
-              // progress bar
-              Stack(
-                children: [
-                  Container(
-                    height: 15,
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                    ),
-                  ),
-                  Container(
-                    height: 15,
-                    width: MediaQuery.of(context).size.width * 0.42,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: PRIMARY_COLOR,
-                    ),
-                  ),
-                ],
-              ),
-              // D-day
-              const SizedBox(
-                height: 2,
-              ),
-              Text(
-                "목표까지 D-30",
-                style: const TextStyle(
-                  color: POINT_COLOR,
-                  fontFamily: 'bm',
-                  fontSize: 18,
-                ),
-              ),
-            ],
-          ),
+          Divider(),
         ],
       ),
     );
