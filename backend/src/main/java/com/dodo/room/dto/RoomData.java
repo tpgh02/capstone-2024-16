@@ -60,6 +60,7 @@ public class RoomData {
         roomData.goal = room.getGoal();
         roomData.numOfGoal = room.getNumOfGoal();
         roomData.roomType = room.getRoomType();
+        roomData.image = room.getImage();
 
         return roomData;
     }
