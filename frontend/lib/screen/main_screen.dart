@@ -116,7 +116,7 @@ class _mainPageState extends State<mainPage>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          margin: EdgeInsets.all(10),
+                          margin: const EdgeInsets.all(10),
                           width: 12,
                           height: 12,
                           decoration: BoxDecoration(
@@ -138,7 +138,7 @@ class _mainPageState extends State<mainPage>
                           ),
                         ),
                         Container(
-                            margin: EdgeInsets.all(10),
+                            margin: const EdgeInsets.all(10),
                             width: 12,
                             height: 12,
                             decoration: BoxDecoration(
@@ -155,7 +155,8 @@ class _mainPageState extends State<mainPage>
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => main2Page()));
+                                        builder: (context) =>
+                                            const main2Page()));
                               },
                               backgroundColor:
                                   _main_idx == 1 ? DARKGREY : Colors.black12,
@@ -171,18 +172,18 @@ class _mainPageState extends State<mainPage>
           : _selectedIndex == 1
               ?
               //바다 화면 구성. sea_screen.dart
-              seaPage()
+              const seaPage()
               : _selectedIndex == 2
                   ?
                   //방 화면 구성. room_screen.dart
-                  RoomListPage()
+                  const RoomListPage()
                   : _selectedIndex == 3
                       ?
                       // 검색 화면 구성. search_screen.dart
-                      searchPage()
+                      const searchPage()
                       :
                       // 개인 화면 구성. personal_screen.dart
-                      MyPage(),
+                      const MyPage(),
     );
   }
 }
