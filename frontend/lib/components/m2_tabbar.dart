@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,52 +8,61 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+String _lastMonth = '';
+String _thisMonth = '';
+
 class m2Tabbar extends StatefulWidget {
-  const m2Tabbar({Key? key}) : super(key: key);
+  final roomId;
+  const m2Tabbar({this.roomId});
 
   @override
   State<m2Tabbar> createState() => _m2TabbarState();
 }
 
-Future<List<Calendar>> fetchCalendar() async {
+Future<List<calendarData>> fetchcalendarData(roomId) async {
   final response = await http
-      .get(Uri.parse(serverUrl + '/api/v1/creature/Calendartory'), headers: {
+      .get(Uri.parse('${serverUrl}/api/v1/report/simple/${roomId}'), headers: {
     'Authorization':
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
   });
+  log('서버 : ${serverUrl}/api/v1/report/simple/${roomId}');
   if (response.statusCode == 200) {
-    final List<dynamic> jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+    // final Map<String, dynamic> jsonData =
+    //     jsonDecode(utf8.decode(response.bodyBytes));
+    // log("that is fetch data: $jsonData");
+    // final List<calendarData> calenderData = jsonData['calender'];
 
-    List<Calendar> Calendars =
-        jsonData.map((json) => Calendar.fromJson(json)).toList();
-    return Calendars;
+    // log("that is fetch error:${calendarData}");
+    // log("that is fetch error:${roomId == null}");
+    final Map<String, dynamic> jsonData =
+        jsonDecode(utf8.decode(response.bodyBytes));
+    _lastMonth = jsonData["lastMonth"].toString();
+    _thisMonth = jsonData["thisMonth"].toString();
+    final List<dynamic> calendarDataList = jsonData['calender'];
+
+    List<calendarData> calendarDatas =
+        calendarDataList.map((json) => calendarData.fromJson(json)).toList();
+    log("that is fetch data:${calendarDataList}");
+    return calendarDatas;
   } else {
-    throw Exception('Failed to load album');
+    log("that is no");
+    throw Exception('Failed to load calendarData data');
   }
 }
 
-class Calendar {
-  final int price;
-  final String name;
-  final String info;
-  final image;
-  final int creatureId;
+class calendarData {
+  final String date;
+  final bool flag;
 
-  const Calendar({
-    required this.price,
-    required this.name,
-    required this.info,
-    required this.image,
-    required this.creatureId,
+  const calendarData({
+    required this.date,
+    required this.flag,
   });
 
-  factory Calendar.fromJson(dynamic json) {
-    return Calendar(
-      price: json['price'],
-      name: json['name'],
-      info: json['info'],
-      image: json['image'],
-      creatureId: json['creatureId'],
+  factory calendarData.fromJson(Map<String, dynamic> json) {
+    return calendarData(
+      date: json['date'],
+      flag: json['flag'] == "true",
     );
   }
 }
@@ -59,6 +70,7 @@ class Calendar {
 class _m2TabbarState extends State<m2Tabbar>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
+  late Future<List<calendarData>> _calendarDataFuture;
 
   List<String> dayoff = ['지난 달', '이번 달'];
   String month = '지난 달';
@@ -79,16 +91,11 @@ class _m2TabbarState extends State<m2Tabbar>
         month = dayoff[tabController.index];
       });
     });
+    log("m2_tabbar!!! roomId:${widget.roomId}");
+    if (widget.roomId != null) {
+      _calendarDataFuture = fetchcalendarData(widget.roomId.toString());
+    } else {}
   }
-
-  final List<Map<String, dynamic>> calendarData = [
-    {'date': '1', 'flag': false},
-    {'date': '4', 'flag': true},
-    {'date': '5', 'flag': true},
-    {'date': '20', 'flag': true},
-    {'date': '24', 'flag': true},
-    {'date': '18', 'flag': true}
-  ];
 
   @override
   void dispose() {
@@ -98,55 +105,39 @@ class _m2TabbarState extends State<m2Tabbar>
 
   @override
   Widget build(BuildContext context) {
+    print("m2_tabbar : ${widget.roomId}");
     return Column(
       children: [
         Container(
           child: _tabBar(),
         ),
-        TableCalendar(
-          focusedDay: DateTime.now(),
-          firstDay: DateTime.utc(2024, 5, 1),
-          lastDay: DateTime.utc(2024, 5, 31),
-          headerStyle: const HeaderStyle(
-            titleCentered: true,
-            formatButtonVisible: false,
-            leftChevronVisible: false,
-            rightChevronVisible: false,
-            titleTextStyle: TextStyle(fontFamily: 'bm', fontSize: 20),
-          ),
-          calendarStyle: const CalendarStyle(
-            todayDecoration: BoxDecoration(
-              color: PRIMARY_COLOR, // 변경 가능
-              shape: BoxShape.circle,
-            ),
-          ),
-          calendarBuilders: CalendarBuilders(
-            // 특정 날짜에 대한 셀을 구성하고 스타일 적용
-            markerBuilder: (context, date, events) {
-              if (calendarData
-                      .where(
-                          (element) => element['date'] == date.day.toString())
-                      .toList()
-                      .isNotEmpty &&
-                  calendarData
-                      .where((element) =>
-                          element['date'] == date.day.toString() &&
-                          element['flag'] == true)
-                      .toList()
-                      .isNotEmpty) {
+        FutureBuilder<List<calendarData>>(
+          future: _calendarDataFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Column(
+                children: [
+                  _buildDefaultCalendar(),
+                  Text('Error: ${snapshot.error}'),
+                ],
+              );
+            } else if (snapshot.hasData) {
+              final calendarDataList = snapshot.data!;
+              if (calendarDataList.isEmpty) {
+                return _buildDefaultCalendar();
+              } else {
+                log("데이터 있음");
+                //log("${calendarDataList[0].flag}");
                 return Container(
-                  margin: const EdgeInsets.all(4.0),
-                  decoration: BoxDecoration(
-                    color: POINT_COLOR, // 변경 가능
-                    shape: BoxShape.circle,
-                  ),
-                  width: 8,
-                  height: 8,
+                  child: _CalendarData(calendarDataList),
                 );
               }
-              return null;
-            },
-          ),
+            } else {
+              return _buildDefaultCalendar();
+            }
+          },
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -159,7 +150,7 @@ class _m2TabbarState extends State<m2Tabbar>
                     style: TextStyle(fontFamily: "bm", fontSize: 20),
                   ),
                   Text(
-                    "$state%",
+                    "$_thisMonth%",
                     style: const TextStyle(fontFamily: "bm", fontSize: 30),
                   )
                 ],
@@ -171,7 +162,7 @@ class _m2TabbarState extends State<m2Tabbar>
                     style: TextStyle(fontFamily: "bm", fontSize: 20),
                   ),
                   Text(
-                    "$state%",
+                    "$_lastMonth%",
                     style: const TextStyle(fontFamily: "bm", fontSize: 30),
                   )
                 ],
@@ -203,4 +194,75 @@ class _m2TabbarState extends State<m2Tabbar>
       ).toList(),
     );
   }
+}
+
+Widget _buildDefaultCalendar() {
+  return TableCalendar(
+    focusedDay: DateTime.now(),
+    firstDay: DateTime.utc(2024, 5, 1),
+    lastDay: DateTime.utc(2024, 5, 31),
+    headerStyle: const HeaderStyle(
+      titleCentered: true,
+      formatButtonVisible: false,
+      leftChevronVisible: false,
+      rightChevronVisible: false,
+      titleTextStyle: TextStyle(fontFamily: 'bm', fontSize: 20),
+    ),
+    calendarStyle: const CalendarStyle(
+      todayDecoration: BoxDecoration(
+        color: PRIMARY_COLOR, // 변경 가능
+        shape: BoxShape.circle,
+      ),
+    ),
+    calendarBuilders: CalendarBuilders(
+      markerBuilder: (context, date, events) {
+        return null;
+      },
+    ),
+  );
+}
+
+Widget _CalendarData(List<calendarData> calendarDataList) {
+  return TableCalendar(
+    focusedDay: DateTime.now(),
+    firstDay: DateTime.utc(2024, 5, 1),
+    lastDay: DateTime.utc(2024, 5, 31),
+    headerStyle: const HeaderStyle(
+      titleCentered: true,
+      formatButtonVisible: false,
+      leftChevronVisible: false,
+      rightChevronVisible: false,
+      titleTextStyle: TextStyle(fontFamily: 'bm', fontSize: 20),
+    ),
+    calendarStyle: const CalendarStyle(
+      todayDecoration: BoxDecoration(
+        color: PRIMARY_COLOR, // 변경 가능
+        shape: BoxShape.circle,
+      ),
+    ),
+    calendarBuilders: CalendarBuilders(
+      // 서버에서 받은 캘린더 데이터를 이용하여 셀을 구성하고 스타일 적용
+      markerBuilder: (context, date, events) {
+        final filteredData = calendarDataList
+            .where((element) => element.date == date.day.toString());
+        final flaggedData =
+            filteredData.where((element) => element.flag == true);
+        if (filteredData.isNotEmpty && flaggedData.isNotEmpty) {
+          return Container(
+            margin: const EdgeInsets.all(4.0),
+            decoration: BoxDecoration(
+              color: POINT_COLOR, // 변경 가능
+              shape: BoxShape.circle,
+            ),
+            width: 8,
+            height: 8,
+          );
+        }
+        return null;
+      },
+      // markerBuilder: (context, date, events) {
+      //   return null;
+      // },
+    ),
+  );
 }
