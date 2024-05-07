@@ -1,6 +1,6 @@
 from app.schemas.image import ImageData
 from ultralytics import YOLO
-from app.core.custom.exception import exception_dict
+from app.utils import exception_dict
 
 
 async def gym_detection(image, data: ImageData):

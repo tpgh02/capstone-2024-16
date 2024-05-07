@@ -1,6 +1,6 @@
 from paddleocr import PaddleOCR
 from app.schemas.image import ImageData
-from app.core.custom.exception import exception_dict
+from app.utils import exception_dict
 
 
 async def study_detection(image, data: ImageData):
