@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
@@ -10,14 +11,13 @@ import 'package:dio/dio.dart';
 
 Future<MyInfo> fetchMyInfo_GET() async {
   final response =
-      await http.get(Uri.parse(serverUrl + '/api/v1/users/me'), headers: {
+      await http.get(Uri.parse('$serverUrl/api/v1/users/me'), headers: {
     'Authorization':
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
   });
 
   if (response.statusCode == 200) {
-    print('Mypage: Connected!');
-    print(utf8.decode(response.bodyBytes));
+    log('Mypage: Connected!: ${utf8.decode(response.bodyBytes)}');
     return MyInfo.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
   } else {
     throw Exception('Mypage: fail to connect');
@@ -25,7 +25,7 @@ Future<MyInfo> fetchMyInfo_GET() async {
 }
 
 Future<String> fetchMyInfo_POST(Map<String, dynamic> form) async {
-  var mypagePostUrl = serverUrl + '/api/v1/users/user-update';
+  var mypagePostUrl = '$serverUrl/api/v1/users/user-update';
   final mypagePostresponse = await http.post(
     Uri.parse(mypagePostUrl),
     headers: {
@@ -38,15 +38,15 @@ Future<String> fetchMyInfo_POST(Map<String, dynamic> form) async {
   try {
     if (mypagePostresponse.statusCode == 200) {
       var responseData = utf8.decode(mypagePostresponse.bodyBytes);
-      print(responseData);
+      log('Mypage: Success to Post : $responseData');
       return responseData;
     } else {
-      print('닉네임 변경 실패: ${mypagePostresponse.body}');
+      log('닉네임 변경 실패: ${mypagePostresponse.body}');
       throw Exception('닉네임 변경에 실패했습니다');
     }
   } catch (e) {
-    print(mypagePostresponse.body);
-    print('$e');
+    log(mypagePostresponse.body);
+    log('$e');
     throw Exception('네트워크 오류가 발생했습니다');
   }
 }
@@ -111,7 +111,7 @@ class _MyPageState extends State<MyPage> {
       setState(() {
         _pickedImage = sendData;
       });
-      print("이미지 선택함: $_pickedImage");
+      log("이미지 선택함: $_pickedImage");
     }
   }
 
@@ -130,7 +130,7 @@ class _MyPageState extends State<MyPage> {
               ],
             );
           } else if (snapshot.hasError) {
-            print("Mypage: Error " + snapshot.data.toString());
+            log("Mypage: Error ${snapshot.data}");
             return const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -206,7 +206,7 @@ class _MyPageState extends State<MyPage> {
           ),
           IconButton(
             onPressed: () => editNicknameDialog(imageurl, nickname),
-            icon: Icon(Icons.edit),
+            icon: const Icon(Icons.edit),
             color: PRIMARY_COLOR,
           ),
         ],
@@ -297,9 +297,9 @@ class _MyPageState extends State<MyPage> {
                   'image': {'id': 1, 'url': imageurl}
                 };
                 fetchMyInfo_POST(nicknameData).then((data) {
-                  print("닉네임 변경 성공");
+                  log("닉네임 변경 성공");
                 }).catchError((e) {
-                  print("닉네임 변경 에러: $e");
+                  log("닉네임 변경 에러: $e");
                 });
                 Navigator.of(context).pop();
               },
@@ -592,15 +592,16 @@ class _MyPageState extends State<MyPage> {
   }
 
   Future<dynamic> patchProfilePic(dynamic input, String nickname) async {
-    print('프로필 사진 수정: $input');
+    log('프로필 사진 수정: $input');
     var dio = Dio();
-    var imageUrl = serverUrl + '/api/v1/users/user-update';
+    var imageUrl = '$serverUrl/api/v1/users/user-update';
 
     try {
       dio.options.contentType = 'multipart/form-data';
       dio.options.maxRedirects.isFinite;
 
       dio.options.headers = {
+        'Content-Type': 'application/json',
         'Authorization':
             'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU',
       };
@@ -616,22 +617,22 @@ class _MyPageState extends State<MyPage> {
       if (imageEditResponse.statusCode == 200) {
         // final responseData = response.data;
         // final imageUrl = responseData["image"]["url"];
-        print('성공적으로 업로드했습니다: $imageEditResponse');
+        log('성공적으로 업로드했습니다: $imageEditResponse');
         //return imageUrl;
       } else {
-        print('서버로부터 잘못된 응답이 도착했습니다. 상태 코드: ${imageEditResponse.statusCode}');
+        log('서버로부터 잘못된 응답이 도착했습니다. 상태 코드: ${imageEditResponse.statusCode}');
         //return null;
       }
     } catch (e) {
-      print("프사 변경 에러 발생: $e");
+      log("프사 변경 에러 발생: $e");
       return null;
     }
   }
 
   Future<dynamic> patchBasicPic(dynamic input, String nickname) async {
-    print('프로필 사진 수정: $input');
+    log('프로필 사진 수정: $input');
     var dio = Dio();
-    var imageUrl = serverUrl + '/api/v1/users/user-update';
+    var imageUrl = '$serverUrl/api/v1/users/user-update';
     _pickedImage = '';
 
     try {
@@ -658,14 +659,14 @@ class _MyPageState extends State<MyPage> {
       if (response.statusCode == 200) {
         // final responseData = response.data;
         // final imageUrl = responseData["image"]["url"];
-        print('성공적으로 업로드했습니다');
+        log('성공적으로 업로드했습니다');
         //return imageUrl;
       } else {
-        print('서버로부터 잘못된 응답이 도착했습니다. 상태 코드: ${response.statusCode}');
+        log('서버로부터 잘못된 응답이 도착했습니다. 상태 코드: ${response.statusCode}');
         //return null;
       }
     } catch (e) {
-      print("프사 변경 에러 발생: $e");
+      log("프사 변경 에러 발생: $e");
       return null;
     }
   }
