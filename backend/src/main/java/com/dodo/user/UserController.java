@@ -69,11 +69,10 @@ public class UserController {
     @PostMapping("user-update")
     public ProfileChangeResponseData changeProfile(
             @RequestAttribute UserContext userContext,
-            @RequestParam(required = false) MultipartFile img,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String introduceMessage
+            @RequestPart(required = false) MultipartFile img,
+            @RequestPart(required = false) UserUpdateRequestData requestData
     ) throws IOException {
-        return userService.changeProfile(userContext, img, name, introduceMessage);
+        return userService.changeProfile(userContext, img, requestData);
     }
 
     @CustomAuthentication
