@@ -123,16 +123,23 @@ class _roomListState extends State<room_list> {
 
                             // 인증방 타입
                             widget.room_type == "GROUP"
-                                ? Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(6, 0, 0, 0),
-                                    child: SizedBox(
-                                      height: 30,
-                                      width: 30,
-                                      child: Image.asset(
-                                          'assets/images/GroupMark.png'),
+                                ? const Padding(
+                                    padding: EdgeInsets.fromLTRB(6, 0, 0, 0),
+                                    child: Icon(
+                                      Icons.groups_3,
+                                      size: 30,
                                     ),
                                   )
+                                // Padding(
+                                //     padding:
+                                //         const EdgeInsets.fromLTRB(6, 0, 0, 0),
+                                //     child: SizedBox(
+                                //       height: 31,
+                                //       width: 31,
+                                //       child: Image.asset(
+                                //           'assets/images/GroupMark.png'),
+                                //     ),
+                                //   )
                                 : const SizedBox(
                                     width: 0.1,
                                   ),
