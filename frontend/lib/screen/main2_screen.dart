@@ -1,6 +1,7 @@
 import 'package:dodo/components/m2_board.dart';
 import 'package:dodo/components/m2_button.dart';
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/screen/main_screen.dart';
 import 'package:flutter/material.dart';
 
 class main2Page extends StatefulWidget {
@@ -36,7 +37,10 @@ class _main2PageState extends State<main2Page> {
                     children: [
                       IconButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => mainPage()));
                           },
                           icon: const Icon(
                             Icons.arrow_back_ios_new_rounded,

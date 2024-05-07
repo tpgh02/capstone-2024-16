@@ -1,12 +1,8 @@
 import 'dart:convert';
 import 'package:dodo/components/items.dart';
-import 'package:dodo/components/s2_hotroom.dart';
-import 'package:dodo/components/s2_tag.dart';
-import 'package:dodo/components/s_list.dart';
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/const/image.dart';
 import 'package:dodo/const/server.dart';
-import 'package:dodo/screen/main2_screen.dart';
-import 'package:dodo/screen/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -37,14 +33,14 @@ class Store {
   final int price;
   final String name;
   final String info;
-  final image;
+  final imageurl;
   final int creatureId;
 
   const Store({
     required this.price,
     required this.name,
     required this.info,
-    required this.image,
+    required this.imageurl,
     required this.creatureId,
   });
 
@@ -53,7 +49,7 @@ class Store {
       price: json['price'],
       name: json['name'],
       info: json['info'],
-      image: json['image'],
+      imageurl: json['imageUrl'],
       creatureId: json['creatureId'],
     );
   }
@@ -79,6 +75,7 @@ class _searchPageState extends State<storePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: LIGHTGREY,
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
@@ -115,8 +112,6 @@ class _searchPageState extends State<storePage> {
                       } else if (snapshot.hasData) {
                         return Column(
                           children: snapshot.data!.map((store) {
-                            String imageurl = store.image['url'];
-                            print(imageurl);
                             return Container(
                               //color: Colors.yellow,
                               alignment: Alignment.centerRight,
@@ -129,7 +124,7 @@ class _searchPageState extends State<storePage> {
                                         (BuildContext context, int idx) {
                                           return postContainer(
                                               store.price,
-                                              imageurl,
+                                              store.imageurl,
                                               store.name,
                                               store.info,
                                               store.creatureId);
@@ -146,7 +141,15 @@ class _searchPageState extends State<storePage> {
                           }).toList(),
                         );
                       } else {
-                        return Text('No data available');
+                        return Center(
+                          child: Text(
+                            '데이터가 존재하지 않습니다. 잠시 후 시도해주십시오',
+                            style: TextStyle(
+                                fontFamily: "bm",
+                                fontSize: 20,
+                                color: DARKGREY),
+                          ),
+                        );
                       }
                     }),
               ),

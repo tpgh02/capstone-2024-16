@@ -232,6 +232,7 @@ class _RoomListState extends State<RoomListPage> {
         //           ],
         //         ),
         //       ),
+
       ),
       options: [
         Row(
@@ -284,9 +285,7 @@ class _RoomListState extends State<RoomListPage> {
             ),
             InkWell(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Room_cr())
-                      );
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Room_cr()));
                 },
                 child: Image.asset(
                   "assets/images/일반인증방생성.png",

@@ -44,6 +44,12 @@ dependencies:
   percent_indicator: ^4.2.3
   dio: ^4.0.0
   horizontal_stepper_step: ^0.0.5
+  path_provider: 2.0.1
+  vector_math: ^2.1.0
+  matrix_gesture_detector: ^0.2.0-nullsafety.1
+  provider: ^5.0.0
+  shared_preferences: ^2.0.0
+  custom_floating_action_button: ^0.0.3
 
 dev_dependencies:
   flutter_test:

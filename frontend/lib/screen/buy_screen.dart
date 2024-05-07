@@ -33,27 +33,27 @@ class _buyPageState extends State<buyPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Image.network(
                   widget.img,
                   scale: 4,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
-                Text(
+                const Text(
                   "바다 꾸미는 중",
-                  style: TextStyle(fontFamily: 'bma', fontSize: 30),
+                  style: TextStyle(fontFamily: 'bma', fontSize: 20),
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 50),
+              margin: const EdgeInsets.symmetric(horizontal: 50),
               child: Column(
                 children: [
                   Container(
@@ -100,7 +100,7 @@ class _buyPageState extends State<buyPage> {
                         //backgroundColor: Colors.red,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
-                        side: BorderSide(
+                        side: const BorderSide(
                           color: PRIMARY_COLOR,
                           width: 3,
                         ),
@@ -110,17 +110,13 @@ class _buyPageState extends State<buyPage> {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Container(
-              //margin: EdgeInsets.symmetric(horizontal: 20),
               alignment: Alignment.bottomCenter,
               child: Image.asset('assets/images/turtle_w_e.png',
-                  // width: 200,
-                  // height: 200, //175
-                  fit: BoxFit.cover,
-                  alignment: Alignment.bottomCenter),
+                  fit: BoxFit.cover, alignment: Alignment.bottomCenter),
             ),
           ],
         ),
