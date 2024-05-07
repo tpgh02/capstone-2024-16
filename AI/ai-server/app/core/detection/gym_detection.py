@@ -44,18 +44,7 @@ async def gym_detection(image, data: ImageData):
         ]
     """
 
-    # Failed to get the OCR result
-    if yolo_result is None:
-        return exception_dict(code=500, message="Failed to get the gym detection result", cat=category, id=id)
-    
-    # make json
-    result = {}
-    result['code'] = 200
-    result['message'] = "OK"
-    result['category'] = category
-    result['certification_id'] = id
-    result['result'] = []
-    
+    res = []
     for item in yolo_result:
         """ item example
             {
@@ -73,6 +62,18 @@ async def gym_detection(image, data: ImageData):
         
         threshold = 0.5
         if item['confidence'] >= threshold:
-            result['result'].append(item['name'])
+            res.append(item['name'])
+    
+    # Failed to get the OCR result
+    if len(res) == 0:
+        return exception_dict(code=500, message="Failed to get the gym detection result", cat=category, id=id)
+    
+    # make json
+    result = {}
+    result['code'] = 200
+    result['message'] = "OK"
+    result['category'] = category
+    result['certification_id'] = id
+    result['result'] = res
             
     return result
