@@ -1,16 +1,18 @@
 from paddleocr import PaddleOCR
 from app.schemas.image import ImageData
 from app.utils import exception_dict
+from app.utils import LOGGER
 
 
 async def study_detection(image, data: ImageData):
     # get info
-    id = data.certificationId
+    cid = data.certificationId
     category = data.category
     
     # Check the image
     if image is None:
-        return exception_dict(code=500, message="Can't find the downloaded image", cat=category, id=id)
+        LOGGER.error(f"[{category}] Can't find the downloaded image. ID: {cid}")
+        return exception_dict(code=500, message="Can't find the downloaded image", cat=category, id=cid)
     
     # Do OCR
     ocr_model = PaddleOCR(lang='en')
@@ -29,16 +31,11 @@ async def study_detection(image, data: ImageData):
 
     # Failed to get the OCR result
     if ocr_result is None:
-        return exception_dict(code=500, message="Failed to get the OCR result", cat=category, id=id)
+        LOGGER.warning(f"[{category}] Failed to get the OCR result. ID: {cid}")
+        return exception_dict(code=500, message="Failed to get the OCR result", cat=category, id=cid)
 
-    # make json
-    result = {}
-    result['code'] = 200
-    result['message'] = "OK"
-    result['category'] = category
-    result['certification_id'] = id
-    result['result'] = []
-    
+    # get result
+    res = []
     for item in ocr_result:
         """ item example
             [
@@ -46,6 +43,15 @@ async def study_detection(image, data: ImageData):
             ]
         """
         
-        result['result'].append(item[1][0])
+        res.append(item[1][0])
+        
+    # make json
+    result = {}
+    result['code'] = 200
+    result['message'] = "OK"
+    result['category'] = category
+    result['certification_id'] = cid
+    result['result'] = res
     
+    LOGGER.info(f"[{category}] Success OCR. ID: {cid}, result: {res}")
     return result

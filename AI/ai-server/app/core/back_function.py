@@ -5,8 +5,8 @@ from app.core.request.result import request_result
 
 async def back_task_study(image, data):
     json_result = await study_detection(image, data)
-    request_result(json_result, data.category)
+    request_result(json_result, data)
     
 async def back_task_gym(image, data):
     json_result = await gym_detection(image, data)
-    request_result(json_result, data.category)
+    request_result(json_result, data)
