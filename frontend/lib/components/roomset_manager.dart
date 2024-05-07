@@ -1,6 +1,9 @@
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/const/server.dart';
+import 'package:dodo/screen/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:http/http.dart' as http;
 
 class RoomSetting_Manager extends StatelessWidget {
   final String room_title;
@@ -41,7 +44,7 @@ class RoomSetting_Manager extends StatelessWidget {
                       leading: const Icon(Icons.vpn_key),
                     ),
                     SettingsTile.navigation(
-                      title: const Text('인증방 제목/소개/태그 수정'),
+                      title: const Text('인증방 편집'),
                       leading: const Icon(Icons.edit),
                       onPressed: ((context) => modifyRoomSetDialog(context)),
                     ),
@@ -594,109 +597,9 @@ class RoomSetting_Manager extends StatelessWidget {
           actions: <Widget>[
             ElevatedButton(
               onPressed: () {
-                // 인증방 해체 전 비밀번호 확인
+                // 인증방 해체 전 검증
                 Navigator.of(context).pop();
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: ((context) {
-                    return AlertDialog(
-                      backgroundColor: LIGHTGREY,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      content: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text(
-                              "인증방을 해체하려면 '해체하겠습니다'를 입력하세요.",
-                              style: TextStyle(
-                                color: POINT_COLOR,
-                                fontSize: 15,
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
-                              child: TextFormField(
-                                obscureText: true,
-                                style: const TextStyle(
-                                  color: Color(0xff4f4f4f),
-                                  fontSize: 15,
-                                ),
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide:
-                                          const BorderSide(color: POINT_COLOR),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide:
-                                          const BorderSide(color: POINT_COLOR),
-                                    ),
-                                    hintText: "'해체하겠습니다'를 입력하세요.",
-                                    labelStyle: const TextStyle(
-                                        color: Color(0xff4f4f4f), fontSize: 18),
-                                    filled: true,
-                                    fillColor: const Color(0xffEDEDED)),
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return '문장을 입력해주세요.';
-                                  }
-                                  if (value != '해체하겠습니다') {
-                                    return '입력한 문장이 맞지 않습니다.';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      actions: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(); //창 닫기
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: POINT_COLOR,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            side: const BorderSide(
-                              color: POINT_COLOR,
-                              width: 1.0,
-                            ),
-                          ),
-                          child: const Text(
-                            "해체",
-                            style: TextStyle(
-                                color: Color.fromARGB(226, 255, 255, 255),
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        OutlinedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(); //창 닫기
-                          },
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: POINT_COLOR,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            side: const BorderSide(
-                              color: POINT_COLOR,
-                              width: 1.0,
-                            ),
-                          ),
-                          child: const Text("취소",
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                      ],
-                    );
-                  }),
-                );
+                deleteRoomValidaion(context);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: POINT_COLOR,
@@ -730,6 +633,136 @@ class RoomSetting_Manager extends StatelessWidget {
                 ),
               ),
               child: const Text("아니오",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
+  // 인증방 해체 검증
+  void deleteRoomValidaion(BuildContext context) {
+    final _deleteRoomKey = GlobalKey<FormState>();
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: ((context) {
+        return AlertDialog(
+          backgroundColor: LIGHTGREY,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          content: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  "인증방을 해체하려면 '해체하겠습니다'를 입력하세요.",
+                  style: TextStyle(
+                    color: POINT_COLOR,
+                    fontSize: 15,
+                  ),
+                ),
+
+                // 인증방 해체 검증용 문자 입력
+                Container(
+                  padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
+                  child: Form(
+                    key: _deleteRoomKey,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          // controller: deleteRoomController,
+                          style: const TextStyle(
+                            color: Color(0xff4f4f4f),
+                            fontSize: 15,
+                          ),
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide:
+                                    const BorderSide(color: POINT_COLOR),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide:
+                                    const BorderSide(color: POINT_COLOR),
+                              ),
+                              hintText: "'해체하겠습니다'를 입력하세요.",
+                              labelStyle: const TextStyle(
+                                  color: Color(0xff4f4f4f), fontSize: 18),
+                              filled: true,
+                              fillColor: const Color(0xffEDEDED)),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return '문장을 입력해주세요.';
+                            }
+                            if (value.replaceAll(RegExp('\\s'), "") !=
+                                '해체하겠습니다') {
+                              return '입력한 문장이 맞지 않습니다.';
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () async {
+                if (_deleteRoomKey.currentState!.validate()) {
+                  String deleteroomUrl =
+                      '$serverUrl/api/v1/room/delete-room/$room_id';
+                  await http.get(Uri.parse(deleteroomUrl), headers: {
+                    'Authorization':
+                        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+                  });
+                  print(deleteroomUrl);
+                  Navigator.of(context).pop(); //창 닫기
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const mainPage()));
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: POINT_COLOR,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                side: const BorderSide(
+                  color: POINT_COLOR,
+                  width: 1.0,
+                ),
+              ),
+              child: const Text(
+                "해체",
+                style: TextStyle(
+                    color: Color.fromARGB(226, 255, 255, 255),
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            OutlinedButton(
+              onPressed: () async {
+                Navigator.of(context).pop(); //창 닫기
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: POINT_COLOR,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                side: const BorderSide(
+                  color: POINT_COLOR,
+                  width: 1.0,
+                ),
+              ),
+              child: const Text("취소",
                   style: TextStyle(fontWeight: FontWeight.bold)),
             ),
           ],
