@@ -27,10 +27,10 @@ async def save_image(data):
     try:
         image_data = urllib.request.urlopen(url).read()
     except URLError as e:
-        LOGGER.error(f"Image download failed: {e}, URL: {url}")
+        LOGGER.error(f"Image download failed, {e}. URL: {url}")
         raise HTTPException(status_code=403, detail="Image Download failed")
     except Exception as e:
-        LOGGER.error(f"Can't download the image: {e}, URL: {url}")
+        LOGGER.error(f"Can't download the image, {e}. URL: {url}")
         raise HTTPException(status_code=500, detail="Can't download the image")
     
     # check extension

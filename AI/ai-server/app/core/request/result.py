@@ -14,4 +14,4 @@ def request_result(result, data):
             LOGGER.warning(f"[{data.category}] Success post the result. code: {r.status_code}, message: {r.text}, ID: {data.certificationId}")
         
     except Exception as e:
-        LOGGER.error(f"[{data.category}] POST fail: {e}, ID: {data.certificationId}")
+        LOGGER.error(f"[{data.category}] POST fail, {e}. ID: {data.certificationId}")
