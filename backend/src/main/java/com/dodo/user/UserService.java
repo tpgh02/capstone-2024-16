@@ -153,7 +153,7 @@ public class UserService {
         if(!passwordChangeRequestData.getChangePassword1().equals(passwordChangeRequestData.getChangePassword2())) {
             throw new RuntimeException("새로운 비밀번호 1, 2가 일치하지 않습니다.");
         }
-        if(!passwordChangeRequestData.getCurrentPassword().equals(passwordChangeRequestData.getChangePassword1())) {
+        if(passwordChangeRequestData.getCurrentPassword().equals(passwordChangeRequestData.getChangePassword1())) {
             throw new RuntimeException("현재 비밀번호와 새로운 비밀번호가 일치합니다.");
         }
         passwordAuthentication.setPassword(passwordEncoder.encode(passwordChangeRequestData.getChangePassword1()));
