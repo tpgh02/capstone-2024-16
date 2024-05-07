@@ -11,7 +11,6 @@ import com.dodo.image.ImageService;
 import com.dodo.image.domain.Image;
 import com.dodo.room.RoomRepository;
 import com.dodo.room.domain.Category;
-import com.dodo.room.domain.CertificationType;
 import com.dodo.room.domain.Periodicity;
 import com.dodo.room.domain.Room;
 import com.dodo.room.domain.RoomType;
@@ -279,6 +278,11 @@ public class CertificationService {
         Category category = aiResponseData.getCategory();
         Certification certification = certificationRepository.findById(aiResponseData.getCertificationId())
                 .orElseThrow(() -> new NotFoundException("인증 정보를 찾을 수 없습니다"));
+        if(aiResponseData.getCode() == 500) {
+            //
+            return ;
+        }
+
         if(category == Category.STUDY) {
 
         } else if(category == Category.GYM) {

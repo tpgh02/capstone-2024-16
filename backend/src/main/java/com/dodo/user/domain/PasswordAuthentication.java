@@ -3,11 +3,12 @@ package com.dodo.user.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table
 @NoArgsConstructor
-@Getter
+@Getter @Setter
 public class PasswordAuthentication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,4 +23,5 @@ public class PasswordAuthentication {
         this.user = user;
         this.password = password;
     }
+
 }

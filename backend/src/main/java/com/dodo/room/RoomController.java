@@ -4,12 +4,10 @@ import com.dodo.config.auth.CustomAuthentication;
 import com.dodo.room.domain.Category;
 import com.dodo.room.domain.RoomType;
 import com.dodo.room.dto.RoomData;
-import com.dodo.room.dto.RoomListData;
 import com.dodo.room.dto.UserData;
 import com.dodo.tag.repository.RoomTagRepository;
 import com.dodo.tag.service.RoomTagService;
 import com.dodo.user.domain.UserContext;
-import com.dodo.user.dto.PasswordChangeRequestData;
 import lombok.RequiredArgsConstructor;
 import com.dodo.room.domain.Room;
 import com.dodo.exception.NotFoundException;
@@ -48,16 +46,6 @@ public class RoomController {
             @RequestAttribute UserContext userContext
     ) {
         return roomService.getMyRoomList(userContext);
-    }
-
-
-    // TODO
-    // UserData 라는 이름으로 괜찮을지,,
-    @GetMapping("/users")
-    public List<UserData> getUsersInTheRoom(
-            @RequestAttribute UserContext userContext,
-            @RequestParam Long roomId) {
-        return roomService.getUsers(userContext, roomId);
     }
 
     // 카테고리로 방 찾기

@@ -1,10 +1,7 @@
 package com.dodo.statistics;
 
 import com.dodo.config.auth.CustomAuthentication;
-import com.dodo.statistics.dto.ReportResponseData;
-import com.dodo.statistics.dto.RoomProfileData;
-import com.dodo.statistics.dto.SimpleReportResponseData;
-import com.dodo.statistics.dto.DailyGoalResponseData;
+import com.dodo.statistics.dto.*;
 import com.dodo.user.domain.UserContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -46,5 +43,12 @@ public class StatisticsController {
             @PathVariable Long roomUserId
     ) {
         return statisticsService.getRoomProfile(userContext, roomUserId);
+    }
+
+    @GetMapping("/album")
+    public List<AlbumResponseData> getAlbum(
+            @RequestAttribute UserContext userContext
+    ) {
+        return statisticsService.getAlbum(userContext);
     }
 }

@@ -2,21 +2,23 @@ package com.dodo.user;
 
 import com.dodo.exception.NotFoundException;
 import com.dodo.image.ImageRepository;
+import com.dodo.image.ImageService;
 import com.dodo.image.domain.Image;
 import com.dodo.token.TokenService;
 import com.dodo.user.domain.AuthenticationType;
 import com.dodo.user.domain.PasswordAuthentication;
 import com.dodo.user.domain.User;
 import com.dodo.user.domain.UserContext;
-import com.dodo.user.dto.UserCreateRequestData;
-import com.dodo.user.dto.UserData;
-import com.dodo.user.dto.UserLoginRequestData;
+import com.dodo.user.dto.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @Service
@@ -28,6 +30,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
     private final ImageRepository imageRepository;
+    private final ImageService imageService;
 
 
     @Transactional
@@ -129,5 +132,64 @@ public class UserService {
         String password = passwordEncoder.encode("123");
 
         passwordAuthenticationRepository.save(new PasswordAuthentication(user, password));
+    }
+
+    public boolean checkPassword(UserContext userContext, String password) {
+        User user = getUser(userContext);
+        PasswordAuthentication passwordAuthentication = passwordAuthenticationRepository.findByUser(user).get();
+        if(!passwordEncoder.matches(password, passwordAuthentication.getPassword())) {
+            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+        }
+        return true;
+    }
+
+    @Transactional
+    public boolean changePassword(UserContext userContext, PasswordChangeRequestData passwordChangeRequestData) {
+        User user = getUser(userContext);
+        PasswordAuthentication passwordAuthentication = passwordAuthenticationRepository.findByUser(user).get();
+        if(!passwordEncoder.matches(passwordChangeRequestData.getCurrentPassword(), passwordAuthentication.getPassword())) {
+            throw new RuntimeException("나의 비밀번호가 일치하지 않습니다.");
+        }
+        if(!passwordChangeRequestData.getChangePassword1().equals(passwordChangeRequestData.getChangePassword2())) {
+            throw new RuntimeException("새로운 비밀번호 1, 2가 일치하지 않습니다.");
+        }
+        if(passwordChangeRequestData.getCurrentPassword().equals(passwordChangeRequestData.getChangePassword1())) {
+            throw new RuntimeException("현재 비밀번호와 새로운 비밀번호가 일치합니다.");
+        }
+        passwordAuthentication.setPassword(passwordEncoder.encode(passwordChangeRequestData.getChangePassword1()));
+        return true;
+    }
+
+
+    @Transactional
+    public ProfileChangeResponseData changeProfile(UserContext userContext, MultipartFile img, String name, String introduceMessage) throws IOException {
+        User user = getUser(userContext);
+        if(img != null) {
+            Image image = imageService.save(img);
+            user.setImage(image);
+        }
+        if(name != null) {
+            user.setName(name);
+        }
+        if(introduceMessage != null) {
+            user.setIntroduceMessage(introduceMessage);
+        }
+        return new ProfileChangeResponseData(user);
+    }
+
+    public ProfileRequestData getProfile(UserContext userContext) {
+        User user = getUser(userContext);
+        return new ProfileRequestData(user);
+    }
+
+    public Image getImage(UserContext userContext) {
+        User user = getUser(userContext);
+        return user.getImage();
+    }
+
+    @Transactional
+    public User getUser(UserContext userContext) {
+        return userRepository.findById(userContext.getUserId())
+                .orElseThrow(() -> new NotFoundException("유저정보가 올바르지 않습니다."));
     }
 }

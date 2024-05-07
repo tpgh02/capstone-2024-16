@@ -91,7 +91,7 @@ public class ImageService {
     }
 
     @PostConstruct
-    private void updateDefaultImage() {
+    public void setBucketName() {
         bucketName = System.getenv().get("S3_BUCKET");
         imageRepository.save(new Image(DEFAULT_IMAGE_URL));
     }

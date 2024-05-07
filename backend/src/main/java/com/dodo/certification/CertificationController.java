@@ -40,8 +40,6 @@ public class CertificationController {
         return certificationService.getList(userContext, roomId);
     }
 
-    // 인증방의 인
-
     // 특정 인증 클릭했을 때 나오는 디테일 화면 보여주기
     @GetMapping("/detail/{certificationId}")
     public CertificationDetailResponseData getCertificationDetail(

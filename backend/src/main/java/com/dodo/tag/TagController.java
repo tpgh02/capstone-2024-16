@@ -2,7 +2,6 @@ package com.dodo.tag;
 
 import com.dodo.exception.NotFoundException;
 import com.dodo.room.RoomRepository;
-import com.dodo.room.domain.Room;
 import com.dodo.tag.domain.RoomTag;
 import com.dodo.tag.dto.TagResponseDTO;
 import com.dodo.tag.repository.RoomTagRepository;

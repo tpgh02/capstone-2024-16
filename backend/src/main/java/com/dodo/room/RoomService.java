@@ -21,7 +21,6 @@ import com.dodo.user.domain.UserContext;
 import com.dodo.user.dto.PasswordChangeRequestData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -30,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -52,7 +52,7 @@ public class RoomService {
         User user = getUser(userContext);
 
         return roomUserRepository.findAllByUser(user)
-                .orElseThrow(NotFoundException::new)
+                .orElse(new ArrayList<>())
                 .stream()
                 .map(RoomUser::getRoom)
                 .map(RoomListData::new)
@@ -147,7 +147,6 @@ public class RoomService {
                 .numOfGoal(numOfGoal)
                 .goal(goal)
                 .isFull(isFull)
-                .image(imageRepository.findById(1L).get())
                 .build();
 
         roomRepository.save(room);
@@ -233,6 +232,7 @@ public class RoomService {
             log.info("roomData's maxUser : {}", roomData.getMaxUser());
             room.update(
                     roomData.getName(),
+                    roomData.getPwd(),
                     roomData.getInfo(),
                     roomData.getEndDay(),
                     roomData.getMaxUser(),
