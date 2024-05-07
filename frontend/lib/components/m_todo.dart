@@ -52,13 +52,6 @@ class m_todo extends StatefulWidget {
 }
 
 class _m_todoState extends State<m_todo> {
-  // final postList = [
-  //   {"room_title": "자취요리왕", "room_img": "assets/images/cook.jpg"},
-  //   {"room_title": "오운완", "room_img": "assets/images/turtle_noradius.png"},
-  //   {"room_title": "H.O.T", "room_img": "assets/images/turtle_noradius.png"},
-  // ];
-  // List<int> top = <int>[];
-  // List<int> bottom = <int>[0];
   late Future<List<MyRoom_Main>>? futureRoomListMain;
 
   @override

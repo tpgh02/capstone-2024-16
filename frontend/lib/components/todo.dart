@@ -48,11 +48,11 @@ class _todoState extends State<todo> {
         //방 이름을 사진 위에 얹는 부분
         Container(
           alignment: Alignment.topLeft,
-          margin: const EdgeInsets.fromLTRB(15, 15, 50, 50),
+          margin: const EdgeInsets.fromLTRB(15, 15, 15, 30),
           child: Text(
             widget.room_name,
             style: const TextStyle(
-                fontFamily: "bm", fontSize: 25, color: Colors.white),
+                fontFamily: "bm", fontSize: 22, color: Colors.white),
           ),
         )
       ],
