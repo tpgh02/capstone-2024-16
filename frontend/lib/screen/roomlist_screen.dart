@@ -163,8 +163,8 @@ class _RoomListState extends State<RoomListPage> {
                         return room_list(
                           room_title: MyRoom.room_title.toString(),
                           room_id: MyRoom.room_id,
-                          room_pwd: MyRoom.room_pwd.toString(),
-                          room_type: MyRoom.room_pwd.toString(),
+                          room_pwd: MyRoom.room_pwd?.toString(),
+                          room_type: MyRoom.room_type.toString(),
                           room_img: MyRoom.room_img['url'].toString(),
                           room_mem: MyRoom.room_mem,
                           room_maxmem: MyRoom.room_maxmem,
