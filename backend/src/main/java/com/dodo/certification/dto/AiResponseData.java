@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Data
 public class AiResponseData {
-    private String code;
+    private Integer code;
     private String message;
     private Category category;
     private Long certificationId;
@@ -18,7 +18,7 @@ public class AiResponseData {
 
     @JsonCreator
     public AiResponseData(
-            @JsonProperty("code") String code,
+            @JsonProperty("code") Integer code,
             @JsonProperty("message") String message,
             @JsonProperty("category") Category category,
             @JsonProperty("certification_id") Long certificationId,

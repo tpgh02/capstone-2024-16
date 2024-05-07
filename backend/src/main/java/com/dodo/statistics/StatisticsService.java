@@ -10,10 +10,7 @@ import com.dodo.room.domain.Periodicity;
 import com.dodo.room.domain.Room;
 import com.dodo.roomuser.RoomUserRepository;
 import com.dodo.roomuser.domain.RoomUser;
-import com.dodo.statistics.dto.DailyGoalResponseData;
-import com.dodo.statistics.dto.ReportResponseData;
-import com.dodo.statistics.dto.RoomProfileData;
-import com.dodo.statistics.dto.SimpleReportResponseData;
+import com.dodo.statistics.dto.*;
 import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
 import com.dodo.user.domain.UserContext;
@@ -241,6 +238,18 @@ public class StatisticsService {
 
     }
 
+    // TODO
+    // 이미지 앨범 받아오기
+    public List<AlbumResponseData> getAlbum(UserContext userContext) {
+        User user = userRepository.findById(userContext.getUserId())
+                .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다"));
+        List<RoomUser> roomUserList = roomUserRepository.findAllByUser(user)
+                .orElse(new ArrayList<>());
+        List<Certification> certificationList = certificationRepository.findAllByRoomUserIn(roomUserList)
+                .orElse(new ArrayList<>());
+        return new ArrayList<>();
+    }
+
     public List<LocalDateTime> getThisWeek() {
         LocalDateTime now = LocalDateTime.now();
         DayOfWeek dayOfWeek = now.getDayOfWeek();
@@ -248,7 +257,6 @@ public class StatisticsService {
         LocalDateTime monday = now.minusDays(6).with(LocalTime.MIN);
         return Arrays.asList(monday, sunday);
     }
-
     private List<DailyGoalResponseData> getEmptyWeek(LocalDateTime thisWeekStart) {
         List<DailyGoalResponseData> result = new ArrayList<>();
         // flag false 인 일주일 만들기
@@ -257,6 +265,7 @@ public class StatisticsService {
         }
         return result;
     }
+
     private List<DailyGoalResponseData> getEmptyMonth() {
         YearMonth now = YearMonth.now();
         List<DailyGoalResponseData> result = new ArrayList<>();
@@ -266,5 +275,4 @@ public class StatisticsService {
         }
         return result;
     }
-
 }
