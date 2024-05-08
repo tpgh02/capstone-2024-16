@@ -27,6 +27,7 @@ public class RoomData {
     private Integer numOfVoteFail;
     private Integer numOfGoal;
     private List<String> goal;
+    private Integer nowGoal;
     private Boolean isFull;
 
     public CertificationStatus status;
@@ -61,6 +62,7 @@ public class RoomData {
         roomData.numOfGoal = room.getNumOfGoal();
         roomData.roomType = room.getRoomType();
         roomData.image = room.getImage();
+        roomData.nowGoal = room.getNowGoal();
 
         return roomData;
     }

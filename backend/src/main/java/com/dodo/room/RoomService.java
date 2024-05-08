@@ -136,6 +136,7 @@ public class RoomService {
                 .roomType(RoomType.GROUP)
                 .numOfGoal(numOfGoal)
                 .goal(goal)
+                .nowGoal(0)
                 .isFull(isFull)
                 .build();
 
@@ -305,18 +306,30 @@ public class RoomService {
         return roomData2;
     }
 
-    public User getUser(UserContext userContext) {
-        return userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
-    }
-    public RoomUser getRoomUser(User user, Room room){
-        return roomUserRepository.findByUserAndRoom(user, room).orElseThrow(NotFoundException::new);
-    }
-
     public RoomListData updateIsManager(RoomListData roomListData, User user){
         RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, roomRepository.findById(roomListData.getRoomId()).orElseThrow(NotFoundException::new)).orElseThrow(NotFoundException::new);
 
         roomListData.updateIsManager(roomUser.getIsManager());
         return roomListData;
     }
+
+    public void upMilestone(Long roomId) {
+
+        Room room = getRoom(roomId);
+        room.setNowGoal(room.getNowGoal() + 1);
+        roomRepository.save(room);
+
+    }
+
+    public User getUser(UserContext userContext) {
+        return userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
+    }
+    public Room getRoom(Long roomId){
+        return roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
+    }
+    public RoomUser getRoomUser(User user, Room room){
+        return roomUserRepository.findByUserAndRoom(user, room).orElseThrow(NotFoundException::new);
+    }
+
 
 }

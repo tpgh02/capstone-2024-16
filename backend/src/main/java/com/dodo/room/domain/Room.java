@@ -5,6 +5,7 @@ import com.dodo.roomuser.domain.RoomUser;
 import com.dodo.tag.domain.RoomTag;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,6 +35,8 @@ public class Room {
     private Integer numOfGoal;
     @ElementCollection
     private List<String> goal;
+    @Setter
+    private Integer nowGoal;
 
     @ManyToOne
     private Image image;

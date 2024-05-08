@@ -40,7 +40,6 @@ public class RoomController {
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
     private final RoomTagService roomTagService;
-    private final RoomTagRepository roomTagRepository;
 
     @GetMapping("/list")
     public List<RoomListData> getMyRoomList(
@@ -271,6 +270,14 @@ public class RoomController {
                     .distinct()
                     .collect(Collectors.toList());
         }
+    }
+
+    // 그룹인증방의 마일스톤 넘기기
+    @PostMapping("/up-milestone/{roomId}")
+    public String upMilestone(@PathVariable Long roomId){
+        roomService.upMilestone(roomId);
+
+        return "200 OK";
     }
 
 }
