@@ -53,8 +53,9 @@ public class UserAuthenticationInterceptor implements HandlerInterceptor {
         }
 
         String authorizationToken = getAuthorizationToken(request);
+        log.info("");
         log.info("요청 URI = {}", request.getRequestURI());
-        log.info("실행 메서드 = {}", handlerMethod.getMethod().getName());
+        log.info("메서드 = {}, 클래스 = {}", handlerMethod.getMethod().getName(), handlerMethod.getBean());
         log.info("Token = {}", authorizationToken);
         if (authorizationToken == null) {
             // 인증 실패

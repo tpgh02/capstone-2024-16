@@ -14,7 +14,9 @@ import com.dodo.statistics.dto.*;
 import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
 import com.dodo.user.domain.UserContext;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class StatisticsService {
     private final UserRepository userRepository;
     private final RoomUserRepository roomUserRepository;
@@ -81,6 +84,7 @@ public class StatisticsService {
         return new ReportResponseData(lastMonth.get() / roomUserSize, thisMonth.get() / roomUserSize, categoryStatus, allCategoryStatus, mostActivity);
     }
 
+    @Transactional
     public SimpleReportResponseData getSimpleReport(UserContext userContext, Long roomId) {
         User user = userRepository.findById(userContext.getUserId())
                 .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다"));
@@ -91,10 +95,10 @@ public class StatisticsService {
 
         List<Certification> certificationList = certificationRepository.findAllByRoomUser(roomuser)
                 .orElse(new ArrayList<>());
-
+        log.info("{}", roomuser);
+        log.info("size = {}", certificationList.size());
         List<DailyGoalResponseData> calender = getEmptyMonth();
         LocalDateTime now = LocalDateTime.now();
-
 
         if(room.getPeriodicity() == Periodicity.DAILY) {
             // 일일 인증
@@ -168,12 +172,11 @@ public class StatisticsService {
                     if(certification.getStatus() == CertificationStatus.SUCCESS) {
                         LocalDateTime time = certification.getCreatedTime();
                         if(time.isAfter(start) && time.isBefore(end)) {
-                            calender.get(time.getDayOfMonth()).setFlag(true);
+                            calender.get(time.getDayOfMonth() - 1).setFlag(true);
                         }
                     }
                 });
     }
-
 
 
     // TODO
@@ -186,6 +189,7 @@ public class StatisticsService {
         List<Certification> certificationList = certificationRepository.findAllByRoomUserIn(roomUser)
                 .orElse(new ArrayList<>());
         List<LocalDateTime> thisWeek = getThisWeek();
+        log.info("start = {}", thisWeek.get(0));
         List<DailyGoalResponseData> result = getEmptyWeek(thisWeek.get(0));
 
         certificationList.stream()
@@ -197,7 +201,7 @@ public class StatisticsService {
                 .forEach(
                         certification -> {
                             if(certification.getStatus() == CertificationStatus.SUCCESS) {
-                                result.get(certification.getCreatedTime().getDayOfWeek().getValue()).setFlag(true);
+                                result.get(certification.getCreatedTime().getDayOfWeek().getValue() - 1).setFlag(true);
                             }
                         }
                 );
@@ -254,7 +258,7 @@ public class StatisticsService {
         LocalDateTime now = LocalDateTime.now();
         DayOfWeek dayOfWeek = now.getDayOfWeek();
         LocalDateTime sunday = now.plusDays(7 - dayOfWeek.getValue()).with(LocalTime.MAX);
-        LocalDateTime monday = now.minusDays(6).with(LocalTime.MIN);
+        LocalDateTime monday = sunday.minusDays(6).with(LocalTime.MIN);
         return Arrays.asList(monday, sunday);
     }
     private List<DailyGoalResponseData> getEmptyWeek(LocalDateTime thisWeekStart) {
@@ -270,7 +274,7 @@ public class StatisticsService {
         YearMonth now = YearMonth.now();
         List<DailyGoalResponseData> result = new ArrayList<>();
         // flag false 인 일주일 만들기
-        for(int i = 1; i <= now.atEndOfMonth().getMonthValue(); i++) {
+        for(int i = 1; i <= now.atEndOfMonth().getDayOfMonth(); i++) {
             result.add(new DailyGoalResponseData(i));
         }
         return result;

@@ -162,17 +162,15 @@ public class UserService {
 
 
     @Transactional
-    public ProfileChangeResponseData changeProfile(UserContext userContext, MultipartFile img, String name, String introduceMessage) throws IOException {
+    public ProfileChangeResponseData changeProfile(UserContext userContext, MultipartFile img, UserUpdateRequestData requestData) throws IOException {
         User user = getUser(userContext);
         if(img != null) {
             Image image = imageService.save(img);
             user.setImage(image);
         }
-        if(name != null) {
-            user.setName(name);
-        }
-        if(introduceMessage != null) {
-            user.setIntroduceMessage(introduceMessage);
+        if(requestData != null) {
+            if(requestData.getName() != null) user.setName(requestData.getName());
+            if(requestData.getIntroduceMessage() != null) user.setIntroduceMessage(requestData.getIntroduceMessage());
         }
         return new ProfileChangeResponseData(user);
     }
