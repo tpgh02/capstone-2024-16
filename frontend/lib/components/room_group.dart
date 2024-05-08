@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'package:http/http.dart' as http;
 import 'package:dodo/components/c_dialog.dart';
 import 'package:dodo/components/room_chatscreen.dart';
 import 'package:dodo/components/roomuser_list.dart';
@@ -5,30 +8,96 @@ import 'package:dodo/components/roomset_basic.dart';
 import 'package:dodo/components/roomset_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/const/server.dart';
 import 'package:horizontal_stepper_step/horizontal_stepper_step.dart';
 
-class room_group extends StatefulWidget {
-  final String room_title;
+Future<RoomInfo_Group> fetchGroupRoomInfo(int room_id) async {
+  final response =
+      await http.get(Uri.parse('$serverUrl/api/v1/room/in/$room_id'), headers: {
+    'Authorization':
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+  });
+  log('$serverUrl/api/v1/room/in/$room_id');
+  if (response.statusCode == 200) {
+    log('Group Room Main: Connected!');
+    return RoomInfo_Group.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+  } else {
+    throw Exception('Group Room Main: fail to connect');
+  }
+}
+
+class RoomInfo_Group {
   final int room_id;
+  final String room_title;
+  final int maxUser;
+  final int nowUser;
+  final String endDay;
+  final String? periodicity; // final String periodicity;
   final String? room_pwd;
-  final String room_type;
-  // final String room_img;
-  final int room_mem;
-  final int room_maxmem;
+  final String category;
+  final String? info;
   final bool canChat;
-  final bool is_manager;
+  final int? numOfVoteSuccess;
+  final int? numOfVoteFail;
+  final String room_type;
   final String certificationType;
+  final int frequency;
+  final List<dynamic>? tag; // final String tag;
+  final bool isManager;
+  final int numOfGoal;
+  final List<dynamic> goal;
+  // final bool isFull;
+
+  RoomInfo_Group(
+      {required this.room_id,
+      required this.room_title,
+      required this.maxUser,
+      required this.nowUser,
+      required this.endDay,
+      required this.periodicity,
+      required this.room_pwd,
+      required this.category,
+      required this.info,
+      required this.canChat,
+      required this.numOfVoteSuccess,
+      required this.numOfVoteFail,
+      required this.room_type,
+      required this.certificationType,
+      required this.frequency,
+      required this.tag,
+      required this.isManager,
+      required this.numOfGoal,
+      required this.goal});
+
+  factory RoomInfo_Group.fromJson(dynamic json) {
+    return RoomInfo_Group(
+        room_id: json['roomId'],
+        room_title: json['name'],
+        maxUser: json['maxUser'],
+        nowUser: json['nowUser'],
+        endDay: json['endDay'],
+        periodicity: json['periodicity'],
+        room_pwd: json['pwd'],
+        category: json['category'],
+        info: json['info'],
+        canChat: json['canChat'],
+        numOfVoteSuccess: json['numOfVoteSuccess'],
+        numOfVoteFail: json['numOfVoteFail'],
+        room_type: json['roomType'],
+        certificationType: json['certificationType'],
+        frequency: json['frequency'],
+        tag: json['tag'],
+        isManager: json['isManager'],
+        numOfGoal: json['numOfGoal'],
+        goal: json['goal']);
+  }
+}
+
+class room_group extends StatefulWidget {
+  final int room_id;
   const room_group({
     super.key,
-    required this.room_title,
     required this.room_id,
-    this.room_pwd,
-    required this.room_type,
-    required this.room_mem,
-    required this.room_maxmem,
-    required this.canChat,
-    required this.is_manager,
-    required this.certificationType,
   });
 
   @override
@@ -36,6 +105,14 @@ class room_group extends StatefulWidget {
 }
 
 class _roomMainState extends State<room_group> {
+  Future<RoomInfo_Group>? nowGroupRoomInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    nowGroupRoomInfo = fetchGroupRoomInfo(widget.room_id);
+  }
+
   final userList = [
     {
       "user_name": "User1",
@@ -95,49 +172,177 @@ class _roomMainState extends State<room_group> {
 
   @override
   Widget build(BuildContext context) {
-    String room_title = widget.room_title;
     int room_id = widget.room_id;
-    int room_mem = widget.room_mem;
-    bool canChat = widget.canChat;
-    bool is_manager = widget.is_manager;
 
-    return Scaffold(
-      appBar: _roomMainAppBar(room_title, manager: is_manager),
-      backgroundColor: LIGHTGREY,
-      floatingActionButton:
-          canChat ? chattingRoom(room_title, is_manager, room_id, 1) : null,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            // 목표 기한
-            _progressBar(),
-            Container(
-              margin: const EdgeInsets.fromLTRB(20, 17, 20, 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return FutureBuilder<RoomInfo_Group>(
+        future: nowGroupRoomInfo,
+        builder: (context, snapshot) {
+          // 연결중
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Scaffold(
+              appBar: PreferredSize(
+                preferredSize: const Size.fromHeight(80),
+                child: Container(
+                  width: 390,
+                  height: 80,
+                  // Border Line
+                  decoration: const ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        width: 2,
+                        strokeAlign: BorderSide.strokeAlignOutside,
+                        color: Color(0x7F414C58),
+                      ),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AppBar(
+                        backgroundColor: LIGHTGREY,
+                        leading: const BackButton(
+                          color: PRIMARY_COLOR,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              backgroundColor: LIGHTGREY,
+              body: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // 도전 완료 사용자 수
-                  _certificated_person(room_mem),
-                  // 인증하기 버튼
-                  _certification_button(),
+                  Center(child: CircularProgressIndicator()),
                 ],
               ),
-            ),
-            RoomUserList(
-              room_id: room_id,
-              is_manager: is_manager,
-              certificationType: widget.certificationType,
-            ),
-          ],
-        ),
-      ),
-    );
+            );
+          }
+          // 연결 에러
+          else if (snapshot.hasError) {
+            log("Main title: Error - ${snapshot.data.toString()}");
+            return Scaffold(
+              appBar: PreferredSize(
+                preferredSize: const Size.fromHeight(80),
+                child: Container(
+                  width: 390,
+                  height: 80,
+                  // Border Line
+                  decoration: const ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        width: 2,
+                        strokeAlign: BorderSide.strokeAlignOutside,
+                        color: Color(0x7F414C58),
+                      ),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AppBar(
+                        backgroundColor: LIGHTGREY,
+                        leading: const BackButton(
+                          color: PRIMARY_COLOR,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              backgroundColor: LIGHTGREY,
+              body: const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '서버 연결에 실패하였습니다.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black45,
+                        fontFamily: 'bm',
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          // 서버 연결 성공
+          else if (snapshot.hasData) {
+            final String nowRoomTitle = snapshot.data!.room_title;
+            final bool nowIsManager = snapshot.data!.isManager;
+            log("room id: ${snapshot.data!.room_id}");
+            log("title: $nowRoomTitle");
+            log("maxUser: ${snapshot.data!.maxUser}");
+            log("nowUser: ${snapshot.data!.nowUser}");
+            log("endDay: ${snapshot.data!.endDay}");
+            log("periodicity: ${snapshot.data!.periodicity}");
+            log("room_pwd: ${snapshot.data!.room_pwd}");
+            log("category: ${snapshot.data!.category}");
+            log("info: ${snapshot.data!.info}");
+            log("canChat: ${snapshot.data!.canChat}");
+            log("numOfVoteSuccess: ${snapshot.data!.numOfVoteSuccess}");
+            log("numOfVoteFail: ${snapshot.data!.numOfVoteFail}");
+            log("room_type: ${snapshot.data!.room_type}");
+            log("certification: ${snapshot.data!.certificationType}");
+            log("frequency: ${snapshot.data!.frequency}");
+            log("tag: ${snapshot.data!.tag}");
+            log("isManager: $nowIsManager");
+            log("numOfGoal: ${snapshot.data!.numOfGoal}");
+            log("goal: ${snapshot.data!.goal}");
+            return Scaffold(
+              appBar: _roomMainAppBar(
+                  nowRoomTitle,
+                  snapshot.data!.canChat,
+                  snapshot.data!.room_pwd,
+                  snapshot.data!.nowUser,
+                  snapshot.data!.maxUser,
+                  manager: nowIsManager),
+              backgroundColor: LIGHTGREY,
+              floatingActionButton: snapshot.data!.canChat
+                  ? chattingRoom(nowRoomTitle, nowIsManager, room_id, 1)
+                  : null,
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    // 목표 기한
+                    _progressBar(snapshot.data!.goal, snapshot.data!.numOfGoal,
+                        snapshot.data!.endDay),
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(20, 17, 20, 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          // 도전 완료 사용자 수
+                          _certificated_person(snapshot.data!.nowUser),
+                          // 인증하기 버튼
+                          _certification_button(),
+                        ],
+                      ),
+                    ),
+                    RoomUserList(
+                      room_id: room_id,
+                      is_manager: nowIsManager,
+                      certificationType: snapshot.data!.certificationType,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          } else {
+            return const Text('No data available');
+          }
+        });
   }
 
-  PreferredSizeWidget _roomMainAppBar(String title, {bool manager = false}) {
+  PreferredSizeWidget _roomMainAppBar(
+      String title, bool canChat, String? room_pwd, int nowUser, int maxUser,
+      {bool manager = false}) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(80),
       child: Container(
@@ -185,12 +390,12 @@ class _roomMainState extends State<room_group> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => RoomSetting_Manager(
-                            room_title: widget.room_title,
+                            room_title: title,
                             room_id: widget.room_id,
-                            room_pwd: widget.room_pwd,
-                            room_mem: widget.room_mem,
-                            room_maxmem: widget.room_maxmem,
-                            canChat: widget.canChat,
+                            room_pwd: room_pwd,
+                            room_mem: nowUser,
+                            room_maxmem: maxUser,
+                            canChat: canChat,
                           ),
                         ),
                       );
@@ -199,10 +404,10 @@ class _roomMainState extends State<room_group> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => RoomSetting_Basic(
-                            room_title: widget.room_title,
+                            room_title: title,
                             room_id: widget.room_id,
-                            room_pwd: widget.room_pwd,
-                            canChat: widget.canChat,
+                            room_pwd: room_pwd,
+                            canChat: canChat,
                           ),
                         ),
                       );
@@ -222,13 +427,16 @@ class _roomMainState extends State<room_group> {
     );
   }
 
-  SizedBox _progressBar() {
-    return const SizedBox(
+  SizedBox _progressBar(List<dynamic> goal, int numOfGoal, String endDay) {
+    String endDate = endDay.split("T")[0];
+    String endHour = endDay.split("T")[1].split(":")[0];
+    String endMin = endDay.split("T")[1].split(":")[1];
+    return SizedBox(
       height: 118,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             "지금 목표는? ",
             style: TextStyle(
               color: POINT_COLOR,
@@ -237,8 +445,8 @@ class _roomMainState extends State<room_group> {
             ),
           ),
           Text(
-            "기부 총액 5만원 달성하기",
-            style: TextStyle(
+            "${goal[0]}",
+            style: const TextStyle(
               color: PRIMARY_COLOR,
               fontFamily: 'bm',
               fontSize: 22,
@@ -246,27 +454,28 @@ class _roomMainState extends State<room_group> {
           ),
           // progress bar
           Padding(
-            padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
+            padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
             child: HorizontalStepper(
-              totalStep: 5,
-              completedStep: 1,
+              totalStep: numOfGoal,
+              completedStep: 0,
               selectedColor: PRIMARY_COLOR,
-              backGroundColor: Color.fromARGB(199, 193, 208, 214),
+              backGroundColor: const Color.fromARGB(199, 193, 208, 214),
             ),
           ),
           // D-day
+
           Text(
-            "2024-05-10까지 도전",
-            style: TextStyle(
+            "$endDate $endHour:$endMin까지 도전",
+            style: const TextStyle(
               color: POINT_COLOR,
               fontFamily: 'bm',
               fontSize: 18,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 3,
           ),
-          Divider(),
+          const Divider(),
         ],
       ),
     );

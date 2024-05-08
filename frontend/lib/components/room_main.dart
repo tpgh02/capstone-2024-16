@@ -88,11 +88,9 @@ class RoomInfo {
 
 class room_main extends StatefulWidget {
   final int room_id;
-  // final String certificationType;
   const room_main({
     super.key,
     required this.room_id,
-    // required this.certificationType,
   });
 
   @override
@@ -168,7 +166,6 @@ class _roomMainState extends State<room_main> {
   @override
   Widget build(BuildContext context) {
     int room_id = widget.room_id;
-    // bool canChat = widget.canChat;
 
     return FutureBuilder<RoomInfo>(
       future: nowRoomInfo,
