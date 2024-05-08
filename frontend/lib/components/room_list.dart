@@ -74,14 +74,11 @@ class _roomListState extends State<room_list> {
                           builder: (context) {
                             if (widget.room_type != "GROUP") {
                               return room_main(
-                                room_title: widget.room_title,
                                 room_id: widget.room_id,
                                 room_pwd: widget.room_pwd,
                                 room_type: widget.room_type,
                                 room_mem: widget.room_mem,
                                 room_maxmem: widget.room_maxmem,
-                                canChat: widget.canChat,
-                                is_manager: widget.is_manager,
                                 certificationType: widget.certificationType,
                               );
                             } else {

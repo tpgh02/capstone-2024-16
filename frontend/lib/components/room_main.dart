@@ -87,26 +87,20 @@ class RoomInfo {
 }
 
 class room_main extends StatefulWidget {
-  final String room_title;
   final int room_id;
   final String? room_pwd;
   final String room_type;
   // final String room_img;
   final int room_mem;
   final int room_maxmem;
-  final bool canChat;
-  final bool is_manager;
   final String certificationType;
   const room_main({
     super.key,
-    required this.room_title,
     required this.room_id,
     this.room_pwd,
     required this.room_type,
     required this.room_mem,
     required this.room_maxmem,
-    required this.canChat,
-    required this.is_manager,
     required this.certificationType,
   });
 
@@ -182,66 +176,148 @@ class _roomMainState extends State<room_main> {
 
   @override
   Widget build(BuildContext context) {
-    String room_title = widget.room_title;
     int room_id = widget.room_id;
-    int room_mem = widget.room_mem;
-    bool canChat = widget.canChat;
-    bool is_manager = widget.is_manager;
+    // bool canChat = widget.canChat;
 
-    return Scaffold(
-      appBar: _roomMainAppBar(room_title, manager: is_manager),
-      backgroundColor: LIGHTGREY,
-      floatingActionButton:
-          canChat ? chattingRoom(room_title, is_manager, room_id, 1) : null,
-      body: FutureBuilder<RoomInfo>(
-        future: nowRoomInfo,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Column(
+    return FutureBuilder<RoomInfo>(
+      future: nowRoomInfo,
+      builder: (context, snapshot) {
+        // 연결중
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(80),
+              child: Container(
+                width: 390,
+                height: 80,
+                // Border Line
+                decoration: const ShapeDecoration(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      width: 2,
+                      strokeAlign: BorderSide.strokeAlignOutside,
+                      color: Color(0x7F414C58),
+                    ),
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppBar(
+                      backgroundColor: LIGHTGREY,
+                      leading: const BackButton(
+                        color: PRIMARY_COLOR,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            backgroundColor: LIGHTGREY,
+            body: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Center(child: CircularProgressIndicator()),
               ],
-            );
-          } else if (snapshot.hasError) {
-            log("Main title: Error - ${snapshot.data.toString()}");
-            return const Text("서버 연결 실패",
-                style: TextStyle(
-                    fontFamily: "kcc", fontSize: 40, color: PRIMARY_COLOR));
-          } else if (snapshot.hasData) {
-            log("room id: ${snapshot.data!.room_id}");
-            log("title: ${snapshot.data!.room_title}");
-            log("maxUser: ${snapshot.data!.maxUser}");
-            log("nowUser: ${snapshot.data!.nowUser}");
-            log("endDay: ${snapshot.data!.endDay}");
-            log("periodicity: ${snapshot.data!.periodicity}");
-            log("room_pwd: ${snapshot.data!.room_pwd}");
-            log("category: ${snapshot.data!.category}");
-            log("info: ${snapshot.data!.info}");
-            log("canChat: ${snapshot.data!.canChat}");
-            log("numOfVoteSuccess: ${snapshot.data!.numOfVoteSuccess}");
-            log("numOfVoteFail: ${snapshot.data!.numOfVoteFail}");
-            log("room_type: ${snapshot.data!.room_type}");
-            log("certification: ${snapshot.data!.certificationType}");
-            log("frequency: ${snapshot.data!.frequency}");
-            log("tag: ${snapshot.data!.tag}");
-            log("isManager: ${snapshot.data!.isManager}");
+            ),
+          );
+        }
 
-            return SingleChildScrollView(
+        // 연결 에러
+        else if (snapshot.hasError) {
+          log("Main title: Error - ${snapshot.data.toString()}");
+          return Scaffold(
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(80),
+              child: Container(
+                width: 390,
+                height: 80,
+                // Border Line
+                decoration: const ShapeDecoration(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      width: 2,
+                      strokeAlign: BorderSide.strokeAlignOutside,
+                      color: Color(0x7F414C58),
+                    ),
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppBar(
+                      backgroundColor: LIGHTGREY,
+                      leading: const BackButton(
+                        color: PRIMARY_COLOR,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            backgroundColor: LIGHTGREY,
+            body: const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '서버 연결에 실패하였습니다.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black45,
+                      fontFamily: 'bm',
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        // 서버 연결 성공
+        else if (snapshot.hasData) {
+          final String nowRoomTitle = snapshot.data!.room_title;
+          final bool nowIsManager = snapshot.data!.isManager;
+          log("room id: ${snapshot.data!.room_id}");
+          log("title: $nowRoomTitle");
+          log("maxUser: ${snapshot.data!.maxUser}");
+          log("nowUser: ${snapshot.data!.nowUser}");
+          log("endDay: ${snapshot.data!.endDay}");
+          log("periodicity: ${snapshot.data!.periodicity}");
+          log("room_pwd: ${snapshot.data!.room_pwd}");
+          log("category: ${snapshot.data!.category}");
+          log("info: ${snapshot.data!.info}");
+          log("canChat: ${snapshot.data!.canChat}");
+          log("numOfVoteSuccess: ${snapshot.data!.numOfVoteSuccess}");
+          log("numOfVoteFail: ${snapshot.data!.numOfVoteFail}");
+          log("room_type: ${snapshot.data!.room_type}");
+          log("certification: ${snapshot.data!.certificationType}");
+          log("frequency: ${snapshot.data!.frequency}");
+          log("tag: ${snapshot.data!.tag}");
+          log("isManager: $nowIsManager");
+          return Scaffold(
+            appBar: _roomMainAppBar(nowRoomTitle, snapshot.data!.canChat,
+                manager: nowIsManager),
+            backgroundColor: LIGHTGREY,
+            floatingActionButton: snapshot.data!.canChat
+                ? chattingRoom(nowRoomTitle, nowIsManager, room_id, 1)
+                : null,
+            body: SingleChildScrollView(
               child: Column(
                 children: [
                   const SizedBox(
                     height: 25,
                   ),
                   // 목표 기한
-                  _d_day(room_title),
+                  _d_day(snapshot.data!.info, snapshot.data!.endDay),
                   Container(
                     margin: const EdgeInsets.all(20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         // 도전 완료 사용자 수
-                        _certificated_person(room_mem),
+                        _certificated_person(snapshot.data!.nowUser),
                         // 인증하기 버튼
                         _certification_button(),
                       ],
@@ -249,21 +325,22 @@ class _roomMainState extends State<room_main> {
                   ),
                   RoomUserList(
                     room_id: room_id,
-                    is_manager: is_manager,
+                    is_manager: nowIsManager,
                     certificationType: widget.certificationType,
                   ),
                 ],
               ),
-            );
-          } else {
-            return const Text('No data available');
-          }
-        },
-      ),
+            ),
+          );
+        } else {
+          return const Text('No data available');
+        }
+      },
     );
   }
 
-  PreferredSizeWidget _roomMainAppBar(String title, {bool manager = false}) {
+  PreferredSizeWidget _roomMainAppBar(String title, bool canChat,
+      {bool manager = false}) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(80),
       child: Container(
@@ -311,13 +388,13 @@ class _roomMainState extends State<room_main> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => RoomSetting_Manager(
-                            room_title: widget.room_title,
+                            room_title: title,
                             room_id: widget.room_id,
                             room_pwd: widget.room_pwd,
                             room_type: widget.room_type,
                             room_mem: widget.room_mem,
                             room_maxmem: widget.room_maxmem,
-                            canChat: widget.canChat,
+                            canChat: canChat,
                           ),
                         ),
                       );
@@ -326,13 +403,13 @@ class _roomMainState extends State<room_main> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => RoomSetting_Basic(
-                            room_title: widget.room_title,
+                            room_title: title,
                             room_id: widget.room_id,
                             room_pwd: widget.room_pwd,
                             room_type: widget.room_type,
                             room_mem: widget.room_mem,
                             room_maxmem: widget.room_maxmem,
-                            canChat: widget.canChat,
+                            canChat: canChat,
                           ),
                         ),
                       );
@@ -352,7 +429,10 @@ class _roomMainState extends State<room_main> {
     );
   }
 
-  Container _d_day(String? title) {
+  Container _d_day(String? info, String endDay) {
+    String endDate = endDay.split("T")[0];
+    String endHour = endDay.split("T")[1].split(":")[0];
+    String endMin = endDay.split("T")[1].split(":")[1];
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -374,19 +454,28 @@ class _roomMainState extends State<room_main> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                info != null
+                    ? Text(
+                        info,
+                        style: const TextStyle(
+                          color: POINT_COLOR,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    : const Text(
+                        "소개글이 없습니다.",
+                        style: TextStyle(
+                          color: POINT_COLOR,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                 Text(
-                  "가나다라마바사아자차카타파하가나다라마바사아자차카타파하",
+                  "$endDate $endHour:$endMin까지",
                   style: const TextStyle(
                     color: POINT_COLOR,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Text(
-                  "D - 30",
-                  style: TextStyle(
-                    color: POINT_COLOR,
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -398,7 +487,7 @@ class _roomMainState extends State<room_main> {
     );
   }
 
-  Column _certificated_person(int? mem) {
+  Column _certificated_person(int nowUser) {
     return Column(
       children: [
         const Text(
@@ -410,7 +499,7 @@ class _roomMainState extends State<room_main> {
         Row(
           children: [
             Text(
-              "1/$mem",
+              "1/$nowUser",
               style: const TextStyle(
                   color: POINT_COLOR,
                   fontSize: 48,
