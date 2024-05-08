@@ -88,20 +88,11 @@ class RoomInfo {
 
 class room_main extends StatefulWidget {
   final int room_id;
-  final String? room_pwd;
-  final String room_type;
-  // final String room_img;
-  final int room_mem;
-  final int room_maxmem;
-  final String certificationType;
+  // final String certificationType;
   const room_main({
     super.key,
     required this.room_id,
-    this.room_pwd,
-    required this.room_type,
-    required this.room_mem,
-    required this.room_maxmem,
-    required this.certificationType,
+    // required this.certificationType,
   });
 
   @override
@@ -297,7 +288,12 @@ class _roomMainState extends State<room_main> {
           log("tag: ${snapshot.data!.tag}");
           log("isManager: $nowIsManager");
           return Scaffold(
-            appBar: _roomMainAppBar(nowRoomTitle, snapshot.data!.canChat,
+            appBar: _roomMainAppBar(
+                nowRoomTitle,
+                snapshot.data!.canChat,
+                snapshot.data!.room_pwd,
+                snapshot.data!.nowUser,
+                snapshot.data!.maxUser,
                 manager: nowIsManager),
             backgroundColor: LIGHTGREY,
             floatingActionButton: snapshot.data!.canChat
@@ -326,7 +322,7 @@ class _roomMainState extends State<room_main> {
                   RoomUserList(
                     room_id: room_id,
                     is_manager: nowIsManager,
-                    certificationType: widget.certificationType,
+                    certificationType: snapshot.data!.certificationType,
                   ),
                 ],
               ),
@@ -339,7 +335,8 @@ class _roomMainState extends State<room_main> {
     );
   }
 
-  PreferredSizeWidget _roomMainAppBar(String title, bool canChat,
+  PreferredSizeWidget _roomMainAppBar(
+      String title, bool canChat, String? room_pwd, int nowUser, int maxUser,
       {bool manager = false}) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(80),
@@ -390,10 +387,9 @@ class _roomMainState extends State<room_main> {
                           builder: (context) => RoomSetting_Manager(
                             room_title: title,
                             room_id: widget.room_id,
-                            room_pwd: widget.room_pwd,
-                            room_type: widget.room_type,
-                            room_mem: widget.room_mem,
-                            room_maxmem: widget.room_maxmem,
+                            room_pwd: room_pwd,
+                            room_mem: nowUser,
+                            room_maxmem: maxUser,
                             canChat: canChat,
                           ),
                         ),
@@ -405,10 +401,7 @@ class _roomMainState extends State<room_main> {
                           builder: (context) => RoomSetting_Basic(
                             room_title: title,
                             room_id: widget.room_id,
-                            room_pwd: widget.room_pwd,
-                            room_type: widget.room_type,
-                            room_mem: widget.room_mem,
-                            room_maxmem: widget.room_maxmem,
+                            room_pwd: room_pwd,
                             canChat: canChat,
                           ),
                         ),
@@ -472,10 +465,10 @@ class _roomMainState extends State<room_main> {
                         ),
                       ),
                 Text(
-                  "$endDate $endHour:$endMin까지",
+                  "$endDate $endHour:$endMin까지 도전",
                   style: const TextStyle(
                     color: POINT_COLOR,
-                    fontSize: 18,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

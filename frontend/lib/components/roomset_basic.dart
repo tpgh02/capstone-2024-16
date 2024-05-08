@@ -6,10 +6,7 @@ class RoomSetting_Basic extends StatelessWidget {
   final String room_title;
   final int room_id;
   final String? room_pwd;
-  final String room_type;
   // final String room_img;
-  final int room_mem;
-  final int room_maxmem;
   final bool canChat;
   // final bool is_manager;
   const RoomSetting_Basic({
@@ -17,9 +14,6 @@ class RoomSetting_Basic extends StatelessWidget {
     required this.room_title,
     required this.room_id,
     this.room_pwd,
-    required this.room_type,
-    required this.room_mem,
-    required this.room_maxmem,
     required this.canChat,
   });
 
@@ -98,52 +92,6 @@ class RoomSetting_Basic extends StatelessWidget {
                   ],
                 ),
                 const Divider(),
-
-                // 인증 방식
-                Row(
-                  children: [
-                    const Expanded(
-                      child: Text(
-                        "인증 방식",
-                        style: TextStyle(
-                            color: POINT_COLOR,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    Text(
-                      room_type,
-                      style: const TextStyle(
-                        color: POINT_COLOR,
-                        fontSize: 15,
-                      ),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.15),
-                  ],
-                ),
-
-                // 최대 인원 수
-                Row(
-                  children: [
-                    const Expanded(
-                      child: Text(
-                        "최대 인원 수",
-                        style: TextStyle(
-                            color: POINT_COLOR,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    Text(
-                      "$room_maxmem",
-                      style: const TextStyle(
-                        color: POINT_COLOR,
-                        fontSize: 15,
-                      ),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.15),
-                  ],
-                ),
 
                 // 채팅 가능 여부
                 Row(

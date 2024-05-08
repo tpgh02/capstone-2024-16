@@ -9,7 +9,6 @@ class RoomSetting_Manager extends StatelessWidget {
   final String room_title;
   final int room_id;
   final String? room_pwd;
-  final String room_type;
   // final String room_img;
   final int room_mem;
   final int room_maxmem;
@@ -20,7 +19,6 @@ class RoomSetting_Manager extends StatelessWidget {
       required this.room_title,
       required this.room_id,
       this.room_pwd,
-      required this.room_type,
       required this.room_mem,
       required this.room_maxmem,
       required this.canChat});
