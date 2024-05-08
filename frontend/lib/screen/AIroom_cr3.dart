@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
+import 'package:dodo/screen/main_screen.dart';
 import 'package:dodo/screen/roomlist_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
 Future<Map> fetchCreate(Map<String, dynamic> formData) async {
@@ -228,11 +230,15 @@ class _AIroom_cr3State extends State<AIroom_cr3>
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Row(
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Wrap(
+                    direction: Axis.horizontal,
+                    spacing: 5,
+                    runSpacing: 5,
+                    alignment: WrapAlignment.start,
+                    children: [
+                      Row(
                         children: [
                           Checkbox(
                             value: _peoplevote,
@@ -248,9 +254,13 @@ class _AIroom_cr3State extends State<AIroom_cr3>
                             "구성원 투표",
                             style: TextStyle(fontFamily: "bma", fontSize: 20),
                           ),
-                          const SizedBox(
-                            width: 15,
-                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      Row(
+                        children: [
                           const Checkbox(
                             value: true,
                             onChanged: null,
@@ -260,9 +270,13 @@ class _AIroom_cr3State extends State<AIroom_cr3>
                             "방장 승인",
                             style: TextStyle(fontFamily: "bma", fontSize: 20),
                           ),
-                          const SizedBox(
-                            width: 15,
-                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      Row(
+                        children: [
                           const Checkbox(
                             value: true,
                             onChanged: null,
@@ -271,55 +285,71 @@ class _AIroom_cr3State extends State<AIroom_cr3>
                           const Text(
                             "AI 인증",
                             style: TextStyle(fontFamily: "bma", fontSize: 20),
-                          )
+                          ),
                         ],
-                      ),
-                    ),
-                  ],
+                      )
+                    ],
+                  ),
                 ),
 
                 const SizedBox(
                   height: 20,
                 ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: const Text(
-                    "구성원 투표 최소 투표율",
-                    style: TextStyle(fontFamily: "bm", fontSize: 20),
-                  ),
-                ),
+                _peoplevote
+                    ? Container(
+                        alignment: Alignment.centerLeft,
+                        child: Column(
+                          children: [
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: const Text(
+                                "구성원 투표 최소 투표 수",
+                                style:
+                                    TextStyle(fontFamily: "bm", fontSize: 20),
+                              ),
+                            ),
+                            Wrap(
+                              direction: Axis.horizontal,
+                              alignment: WrapAlignment.spaceBetween,
+                              spacing: 5,
+                              runSpacing: 5,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Text(
+                                      "인증",
+                                      style: TextStyle(
+                                          fontFamily: "bm", fontSize: 20),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Container(child: vote_gdd()),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const Text(
+                                      "실패",
+                                      style: TextStyle(
+                                          fontFamily: "bm", fontSize: 20),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Container(child: vote_fdd()),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
+                    : Container(),
                 const SizedBox(
                   height: 20,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const Text(
-                          "인증",
-                          style: TextStyle(fontFamily: "bm", fontSize: 20),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Container(child: vote_gdd()),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text(
-                          "실패",
-                          style: TextStyle(fontFamily: "bm", fontSize: 20),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Container(child: vote_fdd()),
-                      ],
-                    ),
-                  ],
-                ),
+
                 const SizedBox(height: 15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -451,7 +481,7 @@ class _AIroom_cr3State extends State<AIroom_cr3>
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => RoomListPage()));
+                                  builder: (context) => mainPage()));
                         }).catchError((error) {
                           print("에러$error");
                           print("$formData");
