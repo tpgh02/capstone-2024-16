@@ -233,7 +233,7 @@ class _roomMainState extends State<room_main> {
       ),
       height: 100,
       margin: const EdgeInsets.fromLTRB(28, 0, 28, 0),
-      padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
       child: Row(
         children: [
           const Icon(
@@ -241,28 +241,30 @@ class _roomMainState extends State<room_main> {
             color: POINT_COLOR,
             size: 40,
           ),
-          const SizedBox(width: 20),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "$title의 목표기한",
-                style: const TextStyle(
-                  color: POINT_COLOR,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+          const SizedBox(width: 15),
+          Flexible(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "가나다라마바사아자차카타파하가나다라마바사아자차카타파하",
+                  style: const TextStyle(
+                    color: POINT_COLOR,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const Text(
-                "D - 30",
-                style: TextStyle(
-                  color: POINT_COLOR,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                const Text(
+                  "D - 30",
+                  style: TextStyle(
+                    color: POINT_COLOR,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
