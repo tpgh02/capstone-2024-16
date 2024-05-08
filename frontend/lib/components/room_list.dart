@@ -35,7 +35,6 @@ class room_list extends StatefulWidget {
 class _roomListState extends State<room_list> {
   @override
   Widget build(BuildContext context) {
-    print(widget.room_pwd);
     return Column(
       children: [
         Padding(
