@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'package:http/http.dart' as http;
 import 'package:dodo/components/c_dialog.dart';
 import 'package:dodo/components/room_chatscreen.dart';
 import 'package:dodo/components/roomuser_list.dart';
@@ -5,6 +8,83 @@ import 'package:dodo/components/roomset_basic.dart';
 import 'package:dodo/components/roomset_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/const/server.dart';
+
+Future<RoomInfo> fetchRoomInfo(int room_id) async {
+  final response =
+      await http.get(Uri.parse('$serverUrl/api/v1/room/in/$room_id'), headers: {
+    'Authorization':
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+  });
+  log('$serverUrl/api/v1/room/in/$room_id');
+  if (response.statusCode == 200) {
+    log('Room Main: Connected!');
+    return RoomInfo.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+  } else {
+    throw Exception('Room Main: fail to connect');
+  }
+}
+
+class RoomInfo {
+  final int room_id;
+  final String room_title;
+  final int maxUser;
+  final int nowUser;
+  final String endDay;
+  final String periodicity;
+  final String? room_pwd;
+  final String category;
+  final String? info;
+  final bool canChat;
+  final int? numOfVoteSuccess;
+  final int? numOfVoteFail;
+  final String room_type;
+  final String certificationType;
+  final int frequency;
+  final List<dynamic>? tag; // final String tag;
+  final bool isManager;
+  // final bool isFull;
+
+  RoomInfo(
+      {required this.room_id,
+      required this.room_title,
+      required this.maxUser,
+      required this.nowUser,
+      required this.endDay,
+      required this.periodicity,
+      required this.room_pwd,
+      required this.category,
+      required this.info,
+      required this.canChat,
+      required this.numOfVoteSuccess,
+      required this.numOfVoteFail,
+      required this.room_type,
+      required this.certificationType,
+      required this.frequency,
+      required this.tag,
+      required this.isManager});
+
+  factory RoomInfo.fromJson(dynamic json) {
+    return RoomInfo(
+        room_id: json['roomId'],
+        room_title: json['name'],
+        maxUser: json['maxUser'],
+        nowUser: json['nowUser'],
+        endDay: json['endDay'],
+        periodicity: json['periodicity'],
+        room_pwd: json['pwd'],
+        category: json['category'],
+        info: json['info'],
+        canChat: json['canChat'],
+        numOfVoteSuccess: json['numOfVoteSuccess'],
+        numOfVoteFail: json['numOfVoteFail'],
+        room_type: json['roomType'],
+        certificationType: json['certificationType'],
+        frequency: json['frequency'],
+        tag: json['tag'],
+        isManager: json['isManager']);
+  }
+}
 
 class room_main extends StatefulWidget {
   final String room_title;
@@ -35,6 +115,14 @@ class room_main extends StatefulWidget {
 }
 
 class _roomMainState extends State<room_main> {
+  Future<RoomInfo>? nowRoomInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    nowRoomInfo = fetchRoomInfo(widget.room_id);
+  }
+
   final userList = [
     {
       "user_name": "User1",
@@ -105,33 +193,72 @@ class _roomMainState extends State<room_main> {
       backgroundColor: LIGHTGREY,
       floatingActionButton:
           canChat ? chattingRoom(room_title, is_manager, room_id, 1) : null,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 25,
-            ),
-            // 목표 기한
-            _d_day(room_title),
-            Container(
-              margin: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: FutureBuilder<RoomInfo>(
+        future: nowRoomInfo,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(child: CircularProgressIndicator()),
+              ],
+            );
+          } else if (snapshot.hasError) {
+            log("Main title: Error - ${snapshot.data.toString()}");
+            return const Text("서버 연결 실패",
+                style: TextStyle(
+                    fontFamily: "kcc", fontSize: 40, color: PRIMARY_COLOR));
+          } else if (snapshot.hasData) {
+            log("room id: ${snapshot.data!.room_id}");
+            log("title: ${snapshot.data!.room_title}");
+            log("maxUser: ${snapshot.data!.maxUser}");
+            log("nowUser: ${snapshot.data!.nowUser}");
+            log("endDay: ${snapshot.data!.endDay}");
+            log("periodicity: ${snapshot.data!.periodicity}");
+            log("room_pwd: ${snapshot.data!.room_pwd}");
+            log("category: ${snapshot.data!.category}");
+            log("info: ${snapshot.data!.info}");
+            log("canChat: ${snapshot.data!.canChat}");
+            log("numOfVoteSuccess: ${snapshot.data!.numOfVoteSuccess}");
+            log("numOfVoteFail: ${snapshot.data!.numOfVoteFail}");
+            log("room_type: ${snapshot.data!.room_type}");
+            log("certification: ${snapshot.data!.certificationType}");
+            log("frequency: ${snapshot.data!.frequency}");
+            log("tag: ${snapshot.data!.tag}");
+            log("isManager: ${snapshot.data!.isManager}");
+
+            return SingleChildScrollView(
+              child: Column(
                 children: [
-                  // 도전 완료 사용자 수
-                  _certificated_person(room_mem),
-                  // 인증하기 버튼
-                  _certification_button(),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  // 목표 기한
+                  _d_day(room_title),
+                  Container(
+                    margin: const EdgeInsets.all(20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        // 도전 완료 사용자 수
+                        _certificated_person(room_mem),
+                        // 인증하기 버튼
+                        _certification_button(),
+                      ],
+                    ),
+                  ),
+                  RoomUserList(
+                    room_id: room_id,
+                    is_manager: is_manager,
+                    certificationType: widget.certificationType,
+                  ),
                 ],
               ),
-            ),
-            RoomUserList(
-              room_id: room_id,
-              is_manager: is_manager,
-              certificationType: widget.certificationType,
-            ),
-          ],
-        ),
+            );
+          } else {
+            return const Text('No data available');
+          }
+        },
       ),
     );
   }
