@@ -93,8 +93,23 @@ class _m_todoState extends State<m_todo> {
                         ],
                       );
                     } else if (snapshot.hasError) {
-                      log("메인 인증방 리스트 연결 실패: ${snapshot.data.toString()}");
-                      return Text('Error: ${snapshot.error}');
+                      log("메인 인증방 리스트 연결 실패: ${snapshot.error}");
+                      return const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '서버 연결에 실패하였습니다.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.black45,
+                                fontFamily: 'bm',
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
                     } else if (snapshot.hasData) {
                       if (snapshot.data?.length == 0) {
                         return const Center(
