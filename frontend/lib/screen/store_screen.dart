@@ -116,7 +116,7 @@ class _searchPageState extends State<storePage> {
                               //color: Colors.yellow,
                               alignment: Alignment.centerRight,
                               padding: const EdgeInsets.all(20),
-                              height: 400,
+                              height: 600,
                               child: CustomScrollView(
                                 slivers: <Widget>[
                                   SliverGrid(
@@ -134,6 +134,7 @@ class _searchPageState extends State<storePage> {
                                       gridDelegate:
                                           const SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3,
+                                        childAspectRatio: 1 / 2,
                                       ))
                                 ],
                               ),

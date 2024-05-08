@@ -68,6 +68,7 @@ class _itemsState extends State<items> {
         children: [
           Container(
             width: double.infinity,
+            height: 130,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: Colors.white,
