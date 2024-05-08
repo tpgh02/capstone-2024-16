@@ -134,8 +134,23 @@ class _RoomListState extends State<RoomListPage> {
                 ],
               );
             } else if (snapshot.hasError) {
-              log("인증방 리스트 연결 실패: ${snapshot.data.toString()}");
-              return Text('Error: ${snapshot.error}');
+              log("인증방 리스트 연결 실패: ${snapshot.error}");
+              return const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '서버 연결에 실패하였습니다.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black45,
+                        fontFamily: 'bm',
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+              );
             } else if (snapshot.hasData) {
               if (snapshot.data?.length == 0) {
                 log('가입한 방이 없습니다.');
@@ -156,7 +171,7 @@ class _RoomListState extends State<RoomListPage> {
                   ),
                 );
               } else {
-                print('가입한 방이 존재합니다.');
+                log('가입한 방이 존재합니다.');
                 return SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Column(
@@ -189,51 +204,6 @@ class _RoomListState extends State<RoomListPage> {
             }
           },
         ),
-        // roomList.isNotEmpty
-        //     ? SingleChildScrollView(
-        //         scrollDirection: Axis.vertical,
-        //         child: Column(
-        //           children: [
-        //             const SizedBox(height: 10),
-        //             ListView.builder(
-        //               shrinkWrap: true,
-        //               itemCount: roomList.length,
-        //               itemBuilder: (BuildContext context, int index) {
-        //                 return room_list(
-        //                   room_title: roomList[index]["room_title"],
-        //                   room_id: roomList[index]["room_id"],
-        //                   room_pwd: roomList[index]["room_pwd"],
-        //                   room_type: roomList[index]["room_type"],
-        //                   room_img: roomList[index]["room_img"],
-        //                   room_mem: roomList[index]["room_mem"],
-        //                   room_maxmem: roomList[index]["room_maxmem"],
-        //                   canChat: roomList[index]["canChat"],
-        //                   is_manager: roomList[index]["is_manager"],
-        //                   certificationType: roomList[index]
-        //                       ["certificationType"],
-        //                 );
-        //               },
-        //             ),
-        //           ],
-        //         ),
-        //       )
-        //     // 가입한 방 없을 때
-        //     : const Center(
-        //         child: Column(
-        //           mainAxisAlignment: MainAxisAlignment.center,
-        //           children: [
-        //             Text(
-        //               '아직 가입한 그룹이 없습니다.\n그룹을 새로 만들거나 가입해 보세요!',
-        //               textAlign: TextAlign.center,
-        //               style: TextStyle(
-        //                 color: Colors.black45,
-        //                 fontFamily: 'bm',
-        //                 fontSize: 20,
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //       ),
       ),
       options: [
         Row(
