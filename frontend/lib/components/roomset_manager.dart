@@ -9,7 +9,7 @@ class RoomSetting_Manager extends StatelessWidget {
   final String room_title;
   final int room_id;
   final String? room_pwd;
-  // final String room_img;
+  final String? info;
   final int room_mem;
   final int room_maxmem;
   final bool canChat;
@@ -18,6 +18,7 @@ class RoomSetting_Manager extends StatelessWidget {
       {super.key,
       required this.room_title,
       required this.room_id,
+      required this.info,
       this.room_pwd,
       required this.room_mem,
       required this.room_maxmem,
@@ -124,10 +125,14 @@ class RoomSetting_Manager extends StatelessWidget {
 
   // 인증방 제목/소개/태그 수정
   void modifyRoomSetDialog(BuildContext context) {
+    String? nowRoomInfo = "";
+    if (info != null) {
+      nowRoomInfo = info;
+    }
     TextEditingController roomTitleController =
         TextEditingController(text: room_title);
     TextEditingController roomIntroController =
-        TextEditingController(text: "인증방 소개");
+        TextEditingController(text: nowRoomInfo);
     TextEditingController roomTagController = TextEditingController(text: "");
 
     showDialog(
@@ -138,7 +143,7 @@ class RoomSetting_Manager extends StatelessWidget {
           backgroundColor: LIGHTGREY,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-          title: const Text('인증방 제목/소개/태그 수정'),
+          title: const Text('인증방 편집'),
           content: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: SizedBox(
@@ -187,12 +192,13 @@ class RoomSetting_Manager extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
                     child: TextFormField(
                       controller: roomIntroController,
-                      maxLines: 6,
+                      maxLines: 4,
                       style: const TextStyle(
                         color: Color(0xff4f4f4f),
                         fontSize: 15,
                       ),
                       decoration: InputDecoration(
+                          alignLabelWithHint: true,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: const BorderSide(color: POINT_COLOR),

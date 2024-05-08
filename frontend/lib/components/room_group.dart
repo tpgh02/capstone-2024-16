@@ -295,6 +295,7 @@ class _roomMainState extends State<room_group> {
             return Scaffold(
               appBar: _roomMainAppBar(
                   nowRoomTitle,
+                  snapshot.data!.info,
                   snapshot.data!.canChat,
                   snapshot.data!.room_pwd,
                   snapshot.data!.nowUser,
@@ -340,8 +341,8 @@ class _roomMainState extends State<room_group> {
         });
   }
 
-  PreferredSizeWidget _roomMainAppBar(
-      String title, bool canChat, String? room_pwd, int nowUser, int maxUser,
+  PreferredSizeWidget _roomMainAppBar(String title, String? info, bool canChat,
+      String? room_pwd, int nowUser, int maxUser,
       {bool manager = false}) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(80),
@@ -391,6 +392,7 @@ class _roomMainState extends State<room_group> {
                         MaterialPageRoute(
                           builder: (context) => RoomSetting_Manager(
                             room_title: title,
+                            info: info,
                             room_id: widget.room_id,
                             room_pwd: room_pwd,
                             room_mem: nowUser,
