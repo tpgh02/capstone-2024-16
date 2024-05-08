@@ -156,7 +156,7 @@ class _RoomListState extends State<RoomListPage> {
                   ),
                 );
               } else {
-                print('가입한 방이 존재합니다.');
+                log('가입한 방이 존재합니다.');
                 return SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Column(
