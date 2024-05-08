@@ -189,6 +189,7 @@ public class CertificationService {
     }
 
     // 방장 승인, 거부
+    @Transactional
     public CertificationDetailResponseData approval(UserContext userContext, ApprovalRequestData requestData) {
         User user = getUser(userContext);
         Certification certification = certificationRepository.findById(requestData.getCertificationId())
@@ -311,7 +312,7 @@ public class CertificationService {
 
             }
         }
-
+        return null;
     }
 
     @Data
