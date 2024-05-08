@@ -129,16 +129,6 @@ class _roomListState extends State<room_list> {
                                       size: 30,
                                     ),
                                   )
-                                // Padding(
-                                //     padding:
-                                //         const EdgeInsets.fromLTRB(6, 0, 0, 0),
-                                //     child: SizedBox(
-                                //       height: 31,
-                                //       width: 31,
-                                //       child: Image.asset(
-                                //           'assets/images/GroupMark.png'),
-                                //     ),
-                                //   )
                                 : const SizedBox(
                                     width: 0.1,
                                   ),
@@ -154,28 +144,21 @@ class _roomListState extends State<room_list> {
                                           'assets/images/AIMark.png'),
                                     ),
                                   )
-                                // const Padding(
-                                //     padding: EdgeInsets.fromLTRB(6, 0, 0, 0),
-                                //     child: Icon(
-                                //       Icons.podcasts,
-                                //       size: 24,
-                                //     ),
-                                //   )
                                 : const SizedBox(
                                     width: 0.1,
                                   ),
 
                             // 비밀방 여부
-                            widget.room_pwd != null
-                                ? const Padding(
+                            widget.room_pwd == null || widget.room_pwd == ""
+                                ? const SizedBox(
+                                    width: 0.1,
+                                  )
+                                : const Padding(
                                     padding: EdgeInsets.fromLTRB(6, 0, 0, 0),
                                     child: Icon(
                                       Icons.lock,
                                       size: 23,
                                     ),
-                                  )
-                                : const SizedBox(
-                                    width: 0.1,
                                   ),
                           ],
                         ),
