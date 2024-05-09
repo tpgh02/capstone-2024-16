@@ -129,18 +129,12 @@ class _main2PageState extends State<main2Page>
     tabController.addListener(() {
       setState(() {
         month = dayoff[tabController.index];
-        //_initializeCalendarData(_selectedRoom!.room_id.toString());
       });
     });
-    if (_selectedRoom != null) {
-      _initializeCalendarData(_selectedRoom!.room_id.toString());
-      _calendarDataFuture =
-          fetchcalendarData(_selectedRoom!.room_id.toString());
-    } else {
-      _initializeCalendarData("1");
-      _calendarDataFuture = fetchcalendarData("1");
-    }
+
     _roomsMainFuture = fetchRoomsMain();
+    _initializeCalendarData("1");
+    _calendarDataFuture = fetchcalendarData("1");
   }
 
   @override
@@ -202,8 +196,10 @@ class _main2PageState extends State<main2Page>
                             onChanged: (value) {
                               setState(() {
                                 _selectedRoom = value as MyRoom_Main?;
-                                _initializeCalendarData(
-                                    _selectedRoom!.room_id.toString());
+                                if (_selectedRoom != null) {
+                                  _initializeCalendarData(
+                                      _selectedRoom!.room_id.toString());
+                                }
                               });
                             },
                           );
@@ -237,10 +233,15 @@ class _main2PageState extends State<main2Page>
                     const SizedBox(
                       width: 5,
                     ),
-                    const Text(
-                      "에서 나는?",
-                      style: TextStyle(
-                          fontSize: 20, fontFamily: 'kcc', color: POINT_COLOR),
+                    Visibility(
+                      visible: MediaQuery.of(context).size.width > 320,
+                      child: const Text(
+                        "에서 나는?",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'kcc',
+                            color: POINT_COLOR),
+                      ),
                     ),
                   ],
                 ),
@@ -265,9 +266,6 @@ class _main2PageState extends State<main2Page>
                       ),
                       Column(
                         children: [
-                          Container(
-                            child: _tabBar(),
-                          ),
                           FutureBuilder<List<calendarData>>(
                               future: _calendarDataFuture,
                               builder: (context, snapshot) {
@@ -277,14 +275,11 @@ class _main2PageState extends State<main2Page>
                                 } else if (snapshot.hasError) {
                                   log(_selectedRoom!.room_id.toString());
                                   log('calendar Error: ${snapshot.error}');
-                                  return Column(
-                                    children: [
-                                      _buildDefaultCalendar(),
-                                    ],
-                                  );
+                                  return _buildDefaultCalendar();
                                 } else if (snapshot.hasData) {
                                   final calendarDataList = snapshot.data!;
                                   if (calendarDataList.isEmpty) {
+                                    log("데이터 없음");
                                     return _buildDefaultCalendar();
                                   } else {
                                     log(_selectedRoom!.room_id.toString());
@@ -387,7 +382,8 @@ Widget _buildDefaultCalendar() {
       formatButtonVisible: false,
       leftChevronVisible: false,
       rightChevronVisible: false,
-      titleTextStyle: TextStyle(fontFamily: 'bm', fontSize: 20),
+      titleTextStyle:
+          TextStyle(fontFamily: 'bm', fontSize: 20, color: PRIMARY_COLOR),
     ),
     calendarStyle: const CalendarStyle(
       todayDecoration: BoxDecoration(
@@ -416,7 +412,8 @@ Widget _CalendarData(calendarDataList) {
       formatButtonVisible: false,
       leftChevronVisible: false,
       rightChevronVisible: false,
-      titleTextStyle: TextStyle(fontFamily: 'bm', fontSize: 20),
+      titleTextStyle:
+          TextStyle(fontFamily: 'bm', fontSize: 20, color: PRIMARY_COLOR),
     ),
     calendarStyle: const CalendarStyle(
       todayDecoration: BoxDecoration(
