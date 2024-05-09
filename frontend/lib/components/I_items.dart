@@ -30,7 +30,7 @@ class _i_itemsState extends State<i_items> {
       onTap: () {
         //누르면 좌표입력하기
 
-        showDemo(context, overview_sea(widget.c_id));
+        showDemo(context, overview_sea(widget.c_id, widget.img));
       },
       child: Container(
         width: double.infinity,
@@ -62,8 +62,11 @@ class _i_itemsState extends State<i_items> {
                   ),
                   Text(
                     "${widget.cost}",
-                    style: const TextStyle(
-                        fontFamily: "bm", fontSize: 25, color: Colors.black),
+                    style: TextStyle(
+                        fontFamily: "bm",
+                        fontSize: 25,
+                        color:
+                            widget.isActivate ? Colors.black54 : Colors.black),
                   ),
                 ],
               ),
