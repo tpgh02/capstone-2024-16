@@ -113,7 +113,7 @@ class _searchPageState extends State<InvenPage> {
                         return Container(
                           alignment: Alignment.centerRight,
                           padding: const EdgeInsets.all(20),
-                          height: double.maxFinite,
+                          height: 600, //double.maxFinite,
                           child: CustomScrollView(
                             slivers: <Widget>[
                               SliverGrid(
@@ -133,6 +133,7 @@ class _searchPageState extends State<InvenPage> {
                                 gridDelegate:
                                     const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 3,
+                                  childAspectRatio: 1 / 2,
                                 ),
                               ),
                             ],

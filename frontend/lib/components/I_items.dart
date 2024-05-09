@@ -34,7 +34,7 @@ class _i_itemsState extends State<i_items> {
       },
       child: Container(
         width: double.infinity,
-        height: 1000,
+        height: 130,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: widget.isActivate ? Colors.grey : Colors.white,

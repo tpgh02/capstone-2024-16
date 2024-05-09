@@ -124,11 +124,11 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide.none),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: const BorderSide(color: PRIMARY_COLOR),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: PRIMARY_COLOR),
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
-                    labelText: '인증방 소개 (200자 미만)',
+                    labelText: '인증방 목표 (30자 미만)',
                     filled: true,
                     fillColor: Colors.white,
                     labelStyle: TextStyle(
