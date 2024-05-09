@@ -72,6 +72,11 @@ class _searchPageState extends State<InvenPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: LIGHTGREY,
