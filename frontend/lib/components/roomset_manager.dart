@@ -89,11 +89,6 @@ class _roomSetManagerState extends State<RoomSetting_Manager> {
                       onPressed: ((context) => resetRoomPwdDialog(context)),
                     ),
                     SettingsTile.navigation(
-                      title: const Text('인증 빈도/방식 변경'),
-                      leading: const Icon(Icons.edit_calendar),
-                      onPressed: ((context) {}),
-                    ),
-                    SettingsTile.navigation(
                       title: const Text('인원 제한 변경'),
                       leading: const Icon(Icons.person),
                       onPressed: ((context) => modifyMaxMemlog(context)),
@@ -375,6 +370,12 @@ class _roomSetManagerState extends State<RoomSetting_Manager> {
 
   // 비밀번호 변경
   void resetRoomPwdDialog(BuildContext context) {
+    String? nowPwd = "";
+    if (widget.room_pwd != null) {
+      nowPwd = widget.room_pwd;
+    }
+    TextEditingController resetPwdController =
+        TextEditingController(text: nowPwd);
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -396,7 +397,7 @@ class _roomSetManagerState extends State<RoomSetting_Manager> {
                   Container(
                     padding: const EdgeInsets.fromLTRB(14, 7, 14, 7),
                     child: TextFormField(
-                      obscureText: true,
+                      controller: resetPwdController,
                       style: const TextStyle(
                         color: Color(0xff4f4f4f),
                         fontSize: 15,
@@ -410,20 +411,11 @@ class _roomSetManagerState extends State<RoomSetting_Manager> {
                             borderRadius: BorderRadius.circular(10),
                             borderSide: const BorderSide(color: POINT_COLOR),
                           ),
-                          labelText: '현재 비밀번호',
+                          labelText: '비밀번호 입력',
                           labelStyle: const TextStyle(
                               color: Color(0xff4f4f4f), fontSize: 18),
                           filled: true,
                           fillColor: const Color(0xffEDEDED)),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return '비밀번호를 입력해주세요.';
-                        }
-                        if (value.length < 4) {
-                          return '4글자 이상 입력해주세요.';
-                        }
-                        return null;
-                      },
                     ),
                   ),
                 ],
@@ -433,6 +425,15 @@ class _roomSetManagerState extends State<RoomSetting_Manager> {
           actions: <Widget>[
             ElevatedButton(
               onPressed: () {
+                String? changedPwd = resetPwdController.text;
+                if (resetPwdController.text.isEmpty) {
+                  changedPwd = null;
+                }
+                fetchRoomInfo({"pwd": changedPwd}, widget.room_id).then((data) {
+                  log("changed pwd: $changedPwd");
+                }).catchError((error) {
+                  log("Room Pwd Edit Fail: $error");
+                });
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
