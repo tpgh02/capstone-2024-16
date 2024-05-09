@@ -1,6 +1,5 @@
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
-// import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:io';
@@ -31,8 +30,6 @@ class _c_dialogState extends State<c_dialog> {
 
   @override
   Widget build(BuildContext context) {
-    const TextStyle style =
-        TextStyle(color: Colors.white, fontFamily: "kcc", fontSize: 30);
     int c_length = 3; //인증개수
 
     return Dialog(
@@ -52,8 +49,6 @@ class _c_dialogState extends State<c_dialog> {
                   ),
                   IconButton(
                     onPressed: () async {
-                      await patchUserProfileImage(_pickedImages);
-
                       //팝업 지우기
                       Navigator.of(context).pop();
                     },
@@ -79,6 +74,25 @@ class _c_dialogState extends State<c_dialog> {
             )),
             const SizedBox(
               height: 100,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                  width: double.infinity,
+                  height: 40,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await patchUserProfileImage(_pickedImages);
+                    },
+                    child: const Text(
+                      "확인",
+                      style: TextStyle(
+                          color: Colors.white, fontFamily: 'bm', fontSize: 20),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: PRIMARY_COLOR,
+                    ),
+                  )),
             ),
           ],
         ),
