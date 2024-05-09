@@ -1,9 +1,39 @@
+import 'dart:developer';
+import 'dart:convert';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
 import 'package:dodo/screen/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:http/http.dart' as http;
+
+// 인증방 속성 변경
+Future<String> fetchRoomInfo(Map<String, dynamic> form, int roomId) async {
+  var url = '$serverUrl/api/v1/room/update?roomId=$roomId';
+  final response = await http.post(
+    Uri.parse(url),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization':
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+    },
+    body: jsonEncode(form),
+  );
+  try {
+    if (response.statusCode == 200) {
+      var responseData = utf8.decode(response.bodyBytes);
+      log('인증방 수정 성공: $responseData');
+      return responseData;
+    } else {
+      log('인증방 수정 실패: ${response.body}');
+      throw Exception('인증방 수정을 실패하였습니다.');
+    }
+  } catch (e) {
+    log(response.body);
+    log('$e');
+    throw Exception('네트워크 오류가 발생했습니다');
+  }
+}
 
 class RoomSetting_Manager extends StatelessWidget {
   final String room_title;
@@ -13,6 +43,7 @@ class RoomSetting_Manager extends StatelessWidget {
   final int room_mem;
   final int room_maxmem;
   final bool canChat;
+  final List<dynamic>? tag;
   // final bool is_manager;
   const RoomSetting_Manager(
       {super.key,
@@ -22,7 +53,8 @@ class RoomSetting_Manager extends StatelessWidget {
       this.room_pwd,
       required this.room_mem,
       required this.room_maxmem,
-      required this.canChat});
+      required this.canChat,
+      required this.tag});
 
   @override
   Widget build(BuildContext context) {
@@ -125,15 +157,30 @@ class RoomSetting_Manager extends StatelessWidget {
 
   // 인증방 제목/소개/태그 수정
   void modifyRoomSetDialog(BuildContext context) {
+    final _editRoomKey = GlobalKey<FormState>();
+
+    // controller
     String? nowRoomInfo = "";
     if (info != null) {
       nowRoomInfo = info;
     }
+    String? nowRoomTag = "";
+    if (tag!.isNotEmpty || tag == null) {
+      nowRoomTag = tag!.join(' ');
+    }
     TextEditingController roomTitleController =
         TextEditingController(text: room_title);
-    TextEditingController roomIntroController =
+    TextEditingController roomInfoController =
         TextEditingController(text: nowRoomInfo);
-    TextEditingController roomTagController = TextEditingController(text: "");
+    TextEditingController roomTagController =
+        TextEditingController(text: nowRoomTag);
+
+    void dispose() {
+      roomTitleController.dispose();
+      roomInfoController.dispose();
+      roomTagController.dispose();
+      dispose();
+    }
 
     showDialog(
       context: context,
@@ -148,106 +195,137 @@ class RoomSetting_Manager extends StatelessWidget {
             scrollDirection: Axis.vertical,
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  // 인증방 제목
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(14, 14, 14, 7),
-                    child: TextFormField(
-                      controller: roomTitleController,
-                      style: const TextStyle(
-                        color: Color(0xff4f4f4f),
-                        fontSize: 15,
+              child: Form(
+                key: _editRoomKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    // 인증방 제목
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(14, 14, 14, 7),
+                      child: TextFormField(
+                        controller: roomTitleController,
+                        style: const TextStyle(
+                          color: Color(0xff4f4f4f),
+                          fontSize: 15,
+                        ),
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: POINT_COLOR),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: POINT_COLOR),
+                            ),
+                            labelText: '인증방 제목',
+                            labelStyle: const TextStyle(
+                                color: Color(0xff4f4f4f), fontSize: 18),
+                            filled: true,
+                            fillColor: const Color(0xffEDEDED)),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return '제목을 입력해주세요.';
+                          }
+                          if (value.length < 2) {
+                            return '2글자 이상 입력해주세요.';
+                          }
+                          return null;
+                        },
                       ),
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: POINT_COLOR),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: POINT_COLOR),
-                          ),
-                          labelText: '인증방 제목',
-                          labelStyle: const TextStyle(
-                              color: Color(0xff4f4f4f), fontSize: 18),
-                          filled: true,
-                          fillColor: const Color(0xffEDEDED)),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return '제목을 입력해주세요.';
-                        }
-                        if (value.length < 2) {
-                          return '2글자 이상 입력해주세요.';
-                        }
-                        return null;
-                      },
                     ),
-                  ),
 
-                  // 인증방 소개
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                    child: TextFormField(
-                      controller: roomIntroController,
-                      maxLines: 4,
-                      style: const TextStyle(
-                        color: Color(0xff4f4f4f),
-                        fontSize: 15,
+                    // 인증방 소개
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                      child: TextFormField(
+                        controller: roomInfoController,
+                        maxLines: 4,
+                        style: const TextStyle(
+                          color: Color(0xff4f4f4f),
+                          fontSize: 15,
+                        ),
+                        decoration: InputDecoration(
+                            alignLabelWithHint: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: POINT_COLOR),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: POINT_COLOR),
+                            ),
+                            labelText: '인증방 소개',
+                            labelStyle: const TextStyle(
+                                color: Color(0xff4f4f4f), fontSize: 18),
+                            filled: true,
+                            fillColor: const Color(0xffEDEDED)),
                       ),
-                      decoration: InputDecoration(
-                          alignLabelWithHint: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: POINT_COLOR),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: POINT_COLOR),
-                          ),
-                          labelText: '인증방 소개',
-                          labelStyle: const TextStyle(
-                              color: Color(0xff4f4f4f), fontSize: 18),
-                          filled: true,
-                          fillColor: const Color(0xffEDEDED)),
                     ),
-                  ),
 
-                  // 인증방 태그
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(14, 7, 14, 7),
-                    child: TextFormField(
-                      controller: roomTagController,
-                      style: const TextStyle(
-                        color: Color(0xff4f4f4f),
-                        fontSize: 15,
+                    // 인증방 태그
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(14, 7, 14, 7),
+                      child: TextFormField(
+                        controller: roomTagController,
+                        style: const TextStyle(
+                          color: Color(0xff4f4f4f),
+                          fontSize: 15,
+                        ),
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: POINT_COLOR),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: POINT_COLOR),
+                            ),
+                            labelText: '인증방 태그',
+                            labelStyle: const TextStyle(
+                                color: Color(0xff4f4f4f), fontSize: 18),
+                            filled: true,
+                            fillColor: const Color(0xffEDEDED)),
                       ),
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: POINT_COLOR),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: POINT_COLOR),
-                          ),
-                          labelText: '인증방 태그',
-                          labelStyle: const TextStyle(
-                              color: Color(0xff4f4f4f), fontSize: 18),
-                          filled: true,
-                          fillColor: const Color(0xffEDEDED)),
                     ),
-                  ),
-                ],
+                    const Center(
+                      child: Text('※ 태그는 띄어쓰기로 구분해주세요.'),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
           actions: <Widget>[
             ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
+              onPressed: () async {
+                if (_editRoomKey.currentState!.validate()) {
+                  String editedName = roomTitleController.text;
+                  String? editedInfo = roomInfoController.text;
+                  List<dynamic>? editedTag = [];
+                  if (roomTagController.text != "") {
+                    editedTag = roomTagController.text.split(' ');
+                    log("$editedTag");
+                  }
+                  if (editedInfo.isEmpty) {
+                    editedInfo = null;
+                  }
+
+                  Map<String, dynamic> editedRoomData = {
+                    "name": editedName,
+                    "info": editedInfo,
+                    "tag": editedTag
+                  };
+
+                  fetchRoomInfo(editedRoomData, room_id)
+                      .then((data) {})
+                      .catchError((error) {
+                    log("Room Edit Fail: $error");
+                  });
+
+                  Navigator.of(context).pop();
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: POINT_COLOR,
@@ -678,7 +756,6 @@ class RoomSetting_Manager extends StatelessWidget {
                     child: Column(
                       children: [
                         TextFormField(
-                          // controller: deleteRoomController,
                           style: const TextStyle(
                             color: Color(0xff4f4f4f),
                             fontSize: 15,

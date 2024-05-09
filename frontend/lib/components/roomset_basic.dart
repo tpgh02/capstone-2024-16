@@ -9,13 +9,14 @@ class RoomSetting_Basic extends StatelessWidget {
   // final String room_img;
   final bool canChat;
   // final bool is_manager;
-  const RoomSetting_Basic({
-    super.key,
-    required this.room_title,
-    required this.room_id,
-    this.room_pwd,
-    required this.canChat,
-  });
+  final List<dynamic>? tag;
+  const RoomSetting_Basic(
+      {super.key,
+      required this.room_title,
+      required this.room_id,
+      this.room_pwd,
+      required this.canChat,
+      required this.tag});
 
   @override
   Widget build(BuildContext context) {

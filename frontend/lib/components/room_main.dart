@@ -292,6 +292,7 @@ class _roomMainState extends State<room_main> {
                 snapshot.data!.room_pwd,
                 snapshot.data!.nowUser,
                 snapshot.data!.maxUser,
+                snapshot.data!.tag,
                 manager: nowIsManager),
             backgroundColor: LIGHTGREY,
             floatingActionButton: snapshot.data!.canChat
@@ -334,7 +335,7 @@ class _roomMainState extends State<room_main> {
   }
 
   PreferredSizeWidget _roomMainAppBar(String title, String? info, bool canChat,
-      String? room_pwd, int nowUser, int maxUser,
+      String? room_pwd, int nowUser, int maxUser, List<dynamic>? tag,
       {bool manager = false}) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(80),
@@ -383,14 +384,14 @@ class _roomMainState extends State<room_main> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => RoomSetting_Manager(
-                            room_title: title,
-                            info: info,
-                            room_id: widget.room_id,
-                            room_pwd: room_pwd,
-                            room_mem: nowUser,
-                            room_maxmem: maxUser,
-                            canChat: canChat,
-                          ),
+                              room_title: title,
+                              info: info,
+                              room_id: widget.room_id,
+                              room_pwd: room_pwd,
+                              room_mem: nowUser,
+                              room_maxmem: maxUser,
+                              canChat: canChat,
+                              tag: tag),
                         ),
                       );
                     } else {
@@ -398,11 +399,11 @@ class _roomMainState extends State<room_main> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => RoomSetting_Basic(
-                            room_title: title,
-                            room_id: widget.room_id,
-                            room_pwd: room_pwd,
-                            canChat: canChat,
-                          ),
+                              room_title: title,
+                              room_id: widget.room_id,
+                              room_pwd: room_pwd,
+                              canChat: canChat,
+                              tag: tag),
                         ),
                       );
                     }
