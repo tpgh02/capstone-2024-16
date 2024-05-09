@@ -171,7 +171,7 @@ class _mainPageState extends State<mainPage>
           : _selectedIndex == 1
               ?
               //바다 화면 구성. sea_screen.dart
-              const seaPage()
+              seaPage()
               : _selectedIndex == 2
                   ?
                   //방 화면 구성. room_screen.dart
