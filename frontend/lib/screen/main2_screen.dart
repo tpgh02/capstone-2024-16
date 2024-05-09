@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:dodo/components/m2_board.dart';
 import 'package:dodo/components/m2_button.dart';
-import 'package:dodo/components/m2_tabbar.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
 import 'package:dodo/screen/main_screen.dart';
