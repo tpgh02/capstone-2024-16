@@ -510,6 +510,7 @@ class _roomSetManagerState extends State<RoomSetting_Manager> {
 
   // 인원 제한 변경
   void modifyMaxMemlog(BuildContext context) {
+    final _modifyMaxMemKey = GlobalKey<FormState>();
     TextEditingController maxMemController =
         TextEditingController(text: "${widget.room_maxmem}");
 
@@ -532,35 +533,38 @@ class _roomSetManagerState extends State<RoomSetting_Manager> {
                 children: <Widget>[
                   Container(
                     padding: const EdgeInsets.fromLTRB(14, 14, 14, 7),
-                    child: TextFormField(
-                      controller: maxMemController,
-                      style: const TextStyle(
-                        color: Color(0xff4f4f4f),
-                        fontSize: 15,
+                    child: Form(
+                      key: _modifyMaxMemKey,
+                      child: TextFormField(
+                        controller: maxMemController,
+                        style: const TextStyle(
+                          color: Color(0xff4f4f4f),
+                          fontSize: 15,
+                        ),
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: POINT_COLOR),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: POINT_COLOR),
+                            ),
+                            labelText: '최대 인원 수',
+                            labelStyle: const TextStyle(
+                                color: Color(0xff4f4f4f), fontSize: 18),
+                            filled: true,
+                            fillColor: const Color(0xffEDEDED)),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return '숫자를 입력해주세요.';
+                          }
+                          if (int.parse(value) < widget.room_mem) {
+                            return '현재 소속된 인원 수보다 많아야 합니다.';
+                          }
+                          return null;
+                        },
                       ),
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: POINT_COLOR),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: POINT_COLOR),
-                          ),
-                          labelText: '최대 인원 수',
-                          labelStyle: const TextStyle(
-                              color: Color(0xff4f4f4f), fontSize: 18),
-                          filled: true,
-                          fillColor: const Color(0xffEDEDED)),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return '숫자를 입력해주세요.';
-                        }
-                        if (value as int < widget.room_mem) {
-                          return '현재 소속된 인원 수보다 많아야 합니다.';
-                        }
-                        return null;
-                      },
                     ),
                   ),
                 ],
@@ -569,8 +573,16 @@ class _roomSetManagerState extends State<RoomSetting_Manager> {
           ),
           actions: <Widget>[
             ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
+              onPressed: () async {
+                if (_modifyMaxMemKey.currentState!.validate()) {
+                  fetchRoomInfo({"maxUser": int.parse(maxMemController.text)},
+                          widget.room_id)
+                      .then((data) {})
+                      .catchError((error) {
+                    log("Edit MaxUSer Fail: $error");
+                  });
+                  Navigator.of(context).pop();
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: POINT_COLOR,
