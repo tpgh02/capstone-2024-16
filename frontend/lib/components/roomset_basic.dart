@@ -2,7 +2,7 @@ import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 
-class RoomSetting_Basic extends StatelessWidget {
+class RoomSetting_Basic extends StatefulWidget {
   final String room_title;
   final int room_id;
   final String? room_pwd;
@@ -19,6 +19,10 @@ class RoomSetting_Basic extends StatelessWidget {
       required this.tag});
 
   @override
+  State<RoomSetting_Basic> createState() => _roomSetBasicState();
+}
+
+class _roomSetBasicState extends State<RoomSetting_Basic> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _roomSetAppBar(),
@@ -33,7 +37,7 @@ class RoomSetting_Basic extends StatelessWidget {
                   tiles: [
                     SettingsTile(
                       title: const Text('방 ID'),
-                      value: Text('$room_id'),
+                      value: Text('${widget.room_id}'),
                       leading: const Icon(Icons.vpn_key),
                     ),
                     SettingsTile.navigation(
@@ -67,7 +71,7 @@ class RoomSetting_Basic extends StatelessWidget {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           title: Text(
-            room_title,
+            widget.room_title,
             style: const TextStyle(
               color: POINT_COLOR,
               fontSize: 20,
@@ -79,21 +83,6 @@ class RoomSetting_Basic extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 인증방 소개
-                Row(
-                  children: [
-                    Text(
-                      "인증방 소개",
-                      style: const TextStyle(
-                        color: POINT_COLOR,
-                        fontSize: 15,
-                      ),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.15),
-                  ],
-                ),
-                const Divider(),
-
                 // 채팅 가능 여부
                 Row(
                   children: [
@@ -106,7 +95,7 @@ class RoomSetting_Basic extends StatelessWidget {
                             fontWeight: FontWeight.w600),
                       ),
                     ),
-                    canChat
+                    widget.canChat
                         ? const Text(
                             "O",
                             style: TextStyle(

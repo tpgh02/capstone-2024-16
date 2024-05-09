@@ -35,7 +35,7 @@ Future<String> fetchRoomInfo(Map<String, dynamic> form, int roomId) async {
   }
 }
 
-class RoomSetting_Manager extends StatelessWidget {
+class RoomSetting_Manager extends StatefulWidget {
   final String room_title;
   final int room_id;
   final String? room_pwd;
@@ -57,6 +57,10 @@ class RoomSetting_Manager extends StatelessWidget {
       required this.tag});
 
   @override
+  State<RoomSetting_Manager> createState() => _roomSetManagerState();
+}
+
+class _roomSetManagerState extends State<RoomSetting_Manager> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _roomSetAppBar(),
@@ -71,7 +75,7 @@ class RoomSetting_Manager extends StatelessWidget {
                   tiles: [
                     SettingsTile(
                       title: const Text('방 ID'),
-                      value: Text('$room_id'),
+                      value: Text('${widget.room_id}'),
                       leading: const Icon(Icons.vpn_key),
                     ),
                     SettingsTile.navigation(
@@ -98,7 +102,7 @@ class RoomSetting_Manager extends StatelessWidget {
                       title: const Text('채팅 기능 활성화'),
                       leading: const Icon(Icons.chat),
                       onToggle: ((context) {}),
-                      initialValue: true,
+                      initialValue: widget.canChat,
                     ),
                     SettingsTile.navigation(
                       title: const Text('인증방 해체하기'),
@@ -161,15 +165,15 @@ class RoomSetting_Manager extends StatelessWidget {
 
     // controller
     String? nowRoomInfo = "";
-    if (info != null) {
-      nowRoomInfo = info;
+    if (widget.info != null) {
+      nowRoomInfo = widget.info;
     }
     String? nowRoomTag = "";
-    if (tag!.isNotEmpty || tag == null) {
-      nowRoomTag = tag!.join(' ');
+    if (widget.tag!.isNotEmpty || widget.tag == null) {
+      nowRoomTag = widget.tag!.join(' ');
     }
     TextEditingController roomTitleController =
-        TextEditingController(text: room_title);
+        TextEditingController(text: widget.room_title);
     TextEditingController roomInfoController =
         TextEditingController(text: nowRoomInfo);
     TextEditingController roomTagController =
@@ -318,7 +322,7 @@ class RoomSetting_Manager extends StatelessWidget {
                     "tag": editedTag
                   };
 
-                  fetchRoomInfo(editedRoomData, room_id)
+                  fetchRoomInfo(editedRoomData, widget.room_id)
                       .then((data) {})
                       .catchError((error) {
                     log("Room Edit Fail: $error");
@@ -388,7 +392,7 @@ class RoomSetting_Manager extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  // 현재 비밀번호
+                  // 비밀번호 입력
                   Container(
                     padding: const EdgeInsets.fromLTRB(14, 7, 14, 7),
                     child: TextFormField(
@@ -407,76 +411,6 @@ class RoomSetting_Manager extends StatelessWidget {
                             borderSide: const BorderSide(color: POINT_COLOR),
                           ),
                           labelText: '현재 비밀번호',
-                          labelStyle: const TextStyle(
-                              color: Color(0xff4f4f4f), fontSize: 18),
-                          filled: true,
-                          fillColor: const Color(0xffEDEDED)),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return '비밀번호를 입력해주세요.';
-                        }
-                        if (value.length < 4) {
-                          return '4글자 이상 입력해주세요.';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-
-                  // 변경할 비밀번호
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(14, 7, 14, 7),
-                    child: TextFormField(
-                      obscureText: true,
-                      style: const TextStyle(
-                        color: Color(0xff4f4f4f),
-                        fontSize: 15,
-                      ),
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: POINT_COLOR),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: POINT_COLOR),
-                          ),
-                          labelText: '새 비밀번호',
-                          labelStyle: const TextStyle(
-                              color: Color(0xff4f4f4f), fontSize: 18),
-                          filled: true,
-                          fillColor: const Color(0xffEDEDED)),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return '비밀번호를 입력해주세요.';
-                        }
-                        if (value.length < 4) {
-                          return '4글자 이상 입력해주세요.';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-
-                  // 비밀번호 확인
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(14, 7, 14, 7),
-                    child: TextFormField(
-                      obscureText: true,
-                      style: const TextStyle(
-                        color: Color(0xff4f4f4f),
-                        fontSize: 15,
-                      ),
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: POINT_COLOR),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: POINT_COLOR),
-                          ),
-                          labelText: '비밀번호 확인',
                           labelStyle: const TextStyle(
                               color: Color(0xff4f4f4f), fontSize: 18),
                           filled: true,
@@ -546,7 +480,7 @@ class RoomSetting_Manager extends StatelessWidget {
   // 인원 제한 변경
   void modifyMaxMemlog(BuildContext context) {
     TextEditingController maxMemController =
-        TextEditingController(text: "$room_maxmem");
+        TextEditingController(text: "${widget.room_maxmem}");
 
     showDialog(
       context: context,
@@ -591,7 +525,7 @@ class RoomSetting_Manager extends StatelessWidget {
                         if (value == null || value.trim().isEmpty) {
                           return '숫자를 입력해주세요.';
                         }
-                        if (value as int < room_mem) {
+                        if (value as int < widget.room_mem) {
                           return '현재 소속된 인원 수보다 많아야 합니다.';
                         }
                         return null;
@@ -799,7 +733,7 @@ class RoomSetting_Manager extends StatelessWidget {
               onPressed: () async {
                 if (_deleteRoomKey.currentState!.validate()) {
                   String deleteroomUrl =
-                      '$serverUrl/api/v1/room/delete-room/$room_id';
+                      '$serverUrl/api/v1/room/delete-room/${widget.room_id}';
                   await http.get(Uri.parse(deleteroomUrl), headers: {
                     'Authorization':
                         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
