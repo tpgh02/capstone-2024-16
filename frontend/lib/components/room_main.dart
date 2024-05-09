@@ -265,15 +265,19 @@ class _roomMainState extends State<room_main> {
 
         // 서버 연결 성공
         else if (snapshot.hasData) {
-          final String nowRoomTitle = snapshot.data!.room_title;
-          final bool nowIsManager = snapshot.data!.isManager;
+          String nowRoomTitle = snapshot.data!.room_title;
+          bool nowIsManager = snapshot.data!.isManager;
+          String? nowRoomPwd = snapshot.data!.room_pwd;
+          if (snapshot.data!.room_pwd?.length == 0) {
+            nowRoomPwd = null;
+          }
           log("room id: ${snapshot.data!.room_id}");
           log("title: $nowRoomTitle");
           log("maxUser: ${snapshot.data!.maxUser}");
           log("nowUser: ${snapshot.data!.nowUser}");
           log("endDay: ${snapshot.data!.endDay}");
           log("periodicity: ${snapshot.data!.periodicity}");
-          log("room_pwd: ${snapshot.data!.room_pwd}");
+          log("room_pwd: $nowRoomPwd");
           log("category: ${snapshot.data!.category}");
           log("info: ${snapshot.data!.info}");
           log("canChat: ${snapshot.data!.canChat}");
@@ -289,7 +293,7 @@ class _roomMainState extends State<room_main> {
                 nowRoomTitle,
                 snapshot.data!.info,
                 snapshot.data!.canChat,
-                snapshot.data!.room_pwd,
+                nowRoomPwd,
                 snapshot.data!.nowUser,
                 snapshot.data!.maxUser,
                 snapshot.data!.tag,
