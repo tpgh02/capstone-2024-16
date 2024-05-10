@@ -470,6 +470,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "validators",
+      "rootUri": "file:///C:/Users/happy/AppData/Local/Pub/Cache/hosted/pub.dev/validators-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "vector_math",
       "rootUri": "file:///C:/Users/happy/AppData/Local/Pub/Cache/hosted/pub.dev/vector_math-2.1.4",
       "packageUri": "lib/",
@@ -518,7 +524,7 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2024-05-07T15:11:38.608664Z",
+  "generated": "2024-05-10T14:41:26.748358Z",
   "generator": "pub",
   "generatorVersion": "3.3.1"
 }

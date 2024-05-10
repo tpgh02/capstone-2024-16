@@ -109,36 +109,48 @@ class _searchPageState extends State<storePage> {
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else if (snapshot.hasData) {
-                      return Container(
-                        //color: Colors.yellow,
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.all(20),
-                        height: 195,
+                      if (snapshot.data!.isEmpty) {
+                        return Center(
+                          child: Text(
+                            '데이터가 존재하지 않습니다. 잠시 후 시도해주십시오',
+                            style: TextStyle(
+                                fontFamily: "bm",
+                                fontSize: 20,
+                                color: DARKGREY),
+                          ),
+                        );
+                      } else {
+                        return Container(
+                          //color: Colors.yellow,
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.all(20),
+                          height: 195,
 
-                        child: CustomScrollView(
-                          slivers: <Widget>[
-                            SliverGrid(
-                              delegate: SliverChildBuilderDelegate(
-                                (BuildContext context, int idx) {
-                                  final store = snapshot.data![idx];
-                                  return postContainer(
-                                      store.price,
-                                      store.imageurl,
-                                      store.name,
-                                      store.info,
-                                      store.creatureId);
-                                },
-                                childCount: snapshot.data!.length,
+                          child: CustomScrollView(
+                            slivers: <Widget>[
+                              SliverGrid(
+                                delegate: SliverChildBuilderDelegate(
+                                  (BuildContext context, int idx) {
+                                    final store = snapshot.data![idx];
+                                    return postContainer(
+                                        store.price,
+                                        store.imageurl,
+                                        store.name,
+                                        store.info,
+                                        store.creatureId);
+                                  },
+                                  childCount: snapshot.data!.length,
+                                ),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  childAspectRatio: 2 / 3,
+                                ),
                               ),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                childAspectRatio: 2 / 3,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
+                            ],
+                          ),
+                        );
+                      }
                     } else {
                       return Center(
                         child: Text(

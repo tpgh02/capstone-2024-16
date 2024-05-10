@@ -85,6 +85,7 @@ class _seaPageState extends State<seaPage> {
                       height: 120,
                       child: Image.network(
                         item.imageUrl,
+                        scale: 3,
                         errorBuilder: (context, error, stackTrace) {
                           return const Icon(
                               Icons.error); // 에러 발생 시 대체 이미지로 아이콘을 표시합니다.

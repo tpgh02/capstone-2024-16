@@ -1,15 +1,15 @@
 import 'package:dodo/const/colors.dart';
-import 'package:dodo/screen/Room_cr2.dart';
+import 'package:dodo/screen/Groproom_cr2.dart';
 import 'package:flutter/material.dart';
 
-class Room_cr extends StatefulWidget {
-  const Room_cr({super.key});
+class Groproom_cr extends StatefulWidget {
+  const Groproom_cr({super.key});
 
   @override
-  State<Room_cr> createState() => _Room_crState();
+  State<Groproom_cr> createState() => _Groproom_crState();
 }
 
-class _Room_crState extends State<Room_cr> {
+class _Groproom_crState extends State<Groproom_cr> {
   List _roomname = ['헬스', '운동', '기상', '학습', '식단', '기타'];
   String _select = '헬스';
   TextEditingController _title = TextEditingController();
@@ -38,7 +38,7 @@ class _Room_crState extends State<Room_cr> {
             ),
             padding: const EdgeInsets.fromLTRB(30, 20, 0, 0),
             child: const Text(
-              '일반 인증방 생성',
+              '그룹 인증방 생성',
               style: TextStyle(
                 color: PRIMARY_COLOR,
                 fontFamily: "bm",
@@ -219,7 +219,7 @@ class _Room_crState extends State<Room_cr> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Room_cr2(
+                              builder: (context) => Groproom_cr2(
                                   _title.text,
                                   _select,
                                   _tag.text,

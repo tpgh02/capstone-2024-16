@@ -150,11 +150,14 @@ class _overview_seaState extends State<overview_sea> {
                               "isActivate": false
                             };
                             fetchCreate(format).then((data) {
-                              print("오케이");
+                              print("오케이_삭제");
+                              print(format);
                               Navigator.pop(context);
                             }).catchError((error) {
                               print("에러$error");
                               print("$format");
+                              //나중에 시도해달라고 할것
+                              Navigator.pop(context);
                             });
                           },
                           style: OutlinedButton.styleFrom(
@@ -183,17 +186,19 @@ class _overview_seaState extends State<overview_sea> {
                               saveCoordinates(tx!, ty!); // y 좌표는 0으로 설정
                             }
                             Map format = {
-                              "seaCreatureId": 1,
+                              "seaCreatureId": widget.c_id,
                               "coordinate_x": tx,
                               "coordinate_y": ty,
                               "isActivate": true
                             };
                             fetchCreate(format).then((data) {
-                              print("오케이");
+                              print("오케이_저장");
+                              print(format);
                               Navigator.pop(context);
                             }).catchError((error) {
                               print("에러$error");
                               print("$format");
+                              //토스트 알림으로 잠시후 시도해달라고 할것.
                             });
                           },
                           style: ElevatedButton.styleFrom(
