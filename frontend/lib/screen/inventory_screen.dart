@@ -107,47 +107,49 @@ class _searchPageState extends State<InvenPage> {
 
               Container(
                 child: FutureBuilder<List<Inven>>(
-                    future: futureInven,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        print("?" + snapshot.data.toString());
-                        return Text('Error: ${snapshot.error}');
-                      } else if (snapshot.hasData) {
-                        return Container(
-                          alignment: Alignment.centerRight,
-                          padding: const EdgeInsets.all(20),
-                          height: 600, //double.maxFinite,
-                          child: CustomScrollView(
-                            slivers: <Widget>[
-                              SliverGrid(
-                                delegate: SliverChildBuilderDelegate(
-                                  (BuildContext context, int idx) {
-                                    return postContainer(
-                                      snapshot.data![idx].price,
-                                      snapshot.data![idx].image,
-                                      snapshot.data![idx].name,
-                                      snapshot.data![idx].info,
-                                      snapshot.data![idx].activate,
-                                      snapshot.data![idx].creatureId,
-                                    );
-                                  },
-                                  childCount: snapshot.data!.length,
-                                ),
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  childAspectRatio: 1 / 2,
-                                ),
+                  future: futureInven,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (snapshot.hasData) {
+                      return Container(
+                        //color: Colors.yellow,
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.all(20),
+                        height: 195,
+
+                        child: CustomScrollView(
+                          slivers: <Widget>[
+                            SliverGrid(
+                              delegate: SliverChildBuilderDelegate(
+                                (BuildContext context, int idx) {
+                                  final inven = snapshot.data![idx];
+                                  return postContainer(
+                                      inven.price,
+                                      inven.image,
+                                      inven.name,
+                                      inven.info,
+                                      inven.activate,
+                                      inven.creatureId);
+                                },
+                                childCount: snapshot.data!.length,
                               ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        return const Text('No data available');
-                      }
-                    }),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                childAspectRatio: 2 / 3,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
               ),
             ],
           ),
