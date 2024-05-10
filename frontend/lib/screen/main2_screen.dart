@@ -282,7 +282,6 @@ class _main2PageState extends State<main2Page>
                                     log("데이터 없음");
                                     return _buildDefaultCalendar();
                                   } else {
-                                    log(_selectedRoom!.room_id.toString());
                                     log("데이터 있음");
                                     return Container(
                                       child: _CalendarData(calendarDataList),
