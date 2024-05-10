@@ -40,9 +40,7 @@ public class CreatureService {
                                        ,MultipartFile img
                                        ) throws IOException {
 
-        // Image image = imageService.save(img);
-
-        Image image = imageRepository.findById(1L).get();
+        Image image = imageService.save(img);
 
         Creature creature = Creature.builder()
                 .name(name)
@@ -81,9 +79,9 @@ public class CreatureService {
         }
 
         // 기존에 있는 생물을 구매하지 못하게
-//        if (seaCreatureRepository.findByUserAndCreature(user, creature).isPresent()) {
-//            return false;
-//        }
+        if (seaCreatureRepository.findByUserAndCreature(user, creature).isPresent()) {
+            return false;
+        }
 
         user.updateMileage(user.getMileage() - creature.getPrice()); // 유저의 마일리지 차감
 
