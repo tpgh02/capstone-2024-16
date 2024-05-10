@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'package:http/http.dart' as http;
 import 'package:dodo/components/c_dialog.dart';
 import 'package:dodo/components/room_chatscreen.dart';
 import 'package:dodo/components/roomuser_list.dart';
@@ -5,29 +8,89 @@ import 'package:dodo/components/roomset_basic.dart';
 import 'package:dodo/components/roomset_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/const/server.dart';
+
+Future<RoomInfo> fetchRoomInfo(int room_id) async {
+  final response =
+      await http.get(Uri.parse('$serverUrl/api/v1/room/in/$room_id'), headers: {
+    'Authorization':
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+  });
+  log('$serverUrl/api/v1/room/in/$room_id');
+  if (response.statusCode == 200) {
+    log('Room Main: Connected!');
+    return RoomInfo.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+  } else {
+    throw Exception('Room Main: fail to connect');
+  }
+}
+
+class RoomInfo {
+  final int room_id;
+  final String room_title;
+  final int maxUser;
+  final int nowUser;
+  final String endDay;
+  final String periodicity;
+  final String? room_pwd;
+  final String category;
+  final String? info;
+  final bool canChat;
+  final int? numOfVoteSuccess;
+  final int? numOfVoteFail;
+  final String room_type;
+  final String certificationType;
+  final int frequency;
+  final List<dynamic>? tag; // final String tag;
+  final bool isManager;
+  // final bool isFull;
+
+  RoomInfo(
+      {required this.room_id,
+      required this.room_title,
+      required this.maxUser,
+      required this.nowUser,
+      required this.endDay,
+      required this.periodicity,
+      required this.room_pwd,
+      required this.category,
+      required this.info,
+      required this.canChat,
+      required this.numOfVoteSuccess,
+      required this.numOfVoteFail,
+      required this.room_type,
+      required this.certificationType,
+      required this.frequency,
+      required this.tag,
+      required this.isManager});
+
+  factory RoomInfo.fromJson(dynamic json) {
+    return RoomInfo(
+        room_id: json['roomId'],
+        room_title: json['name'],
+        maxUser: json['maxUser'],
+        nowUser: json['nowUser'],
+        endDay: json['endDay'],
+        periodicity: json['periodicity'],
+        room_pwd: json['pwd'],
+        category: json['category'],
+        info: json['info'],
+        canChat: json['canChat'],
+        numOfVoteSuccess: json['numOfVoteSuccess'],
+        numOfVoteFail: json['numOfVoteFail'],
+        room_type: json['roomType'],
+        certificationType: json['certificationType'],
+        frequency: json['frequency'],
+        tag: json['tag'],
+        isManager: json['isManager']);
+  }
+}
 
 class room_main extends StatefulWidget {
-  final String room_title;
   final int room_id;
-  final String? room_pwd;
-  final String room_type;
-  // final String room_img;
-  final int room_mem;
-  final int room_maxmem;
-  final bool canChat;
-  final bool is_manager;
-  final String certificationType;
   const room_main({
     super.key,
-    required this.room_title,
     required this.room_id,
-    this.room_pwd,
-    required this.room_type,
-    required this.room_mem,
-    required this.room_maxmem,
-    required this.canChat,
-    required this.is_manager,
-    required this.certificationType,
   });
 
   @override
@@ -35,6 +98,14 @@ class room_main extends StatefulWidget {
 }
 
 class _roomMainState extends State<room_main> {
+  Future<RoomInfo>? nowRoomInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    nowRoomInfo = fetchRoomInfo(widget.room_id);
+  }
+
   final userList = [
     {
       "user_name": "User1",
@@ -94,49 +165,182 @@ class _roomMainState extends State<room_main> {
 
   @override
   Widget build(BuildContext context) {
-    String room_title = widget.room_title;
     int room_id = widget.room_id;
-    int room_mem = widget.room_mem;
-    bool canChat = widget.canChat;
-    bool is_manager = widget.is_manager;
 
-    return Scaffold(
-      appBar: _roomMainAppBar(room_title, manager: is_manager),
-      backgroundColor: LIGHTGREY,
-      floatingActionButton:
-          canChat ? chattingRoom(room_title, is_manager, room_id, 1) : null,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 25,
+    return FutureBuilder<RoomInfo>(
+      future: nowRoomInfo,
+      builder: (context, snapshot) {
+        // 연결중
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(80),
+              child: Container(
+                width: 390,
+                height: 80,
+                // Border Line
+                decoration: const ShapeDecoration(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      width: 2,
+                      strokeAlign: BorderSide.strokeAlignOutside,
+                      color: Color(0x7F414C58),
+                    ),
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppBar(
+                      backgroundColor: LIGHTGREY,
+                      leading: const BackButton(
+                        color: PRIMARY_COLOR,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            // 목표 기한
-            _d_day(room_title),
-            Container(
-              margin: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+            backgroundColor: LIGHTGREY,
+            body: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(child: CircularProgressIndicator()),
+              ],
+            ),
+          );
+        }
+
+        // 연결 에러
+        else if (snapshot.hasError) {
+          log("Main title: Error - ${snapshot.data.toString()}");
+          return Scaffold(
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(80),
+              child: Container(
+                width: 390,
+                height: 80,
+                // Border Line
+                decoration: const ShapeDecoration(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      width: 2,
+                      strokeAlign: BorderSide.strokeAlignOutside,
+                      color: Color(0x7F414C58),
+                    ),
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppBar(
+                      backgroundColor: LIGHTGREY,
+                      leading: const BackButton(
+                        color: PRIMARY_COLOR,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            backgroundColor: LIGHTGREY,
+            body: const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // 도전 완료 사용자 수
-                  _certificated_person(room_mem),
-                  // 인증하기 버튼
-                  _certification_button(),
+                  Text(
+                    '서버 연결에 실패하였습니다.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black45,
+                      fontFamily: 'bm',
+                      fontSize: 20,
+                    ),
+                  ),
                 ],
               ),
             ),
-            RoomUserList(
-              room_id: room_id,
-              is_manager: is_manager,
-              certificationType: widget.certificationType,
+          );
+        }
+
+        // 서버 연결 성공
+        else if (snapshot.hasData) {
+          String nowRoomTitle = snapshot.data!.room_title;
+          bool nowIsManager = snapshot.data!.isManager;
+          String? nowRoomPwd = snapshot.data!.room_pwd;
+          if (snapshot.data!.room_pwd?.length == 0) {
+            nowRoomPwd = null;
+          }
+          log("room id: ${snapshot.data!.room_id}");
+          log("title: $nowRoomTitle");
+          log("maxUser: ${snapshot.data!.maxUser}");
+          log("nowUser: ${snapshot.data!.nowUser}");
+          log("endDay: ${snapshot.data!.endDay}");
+          log("periodicity: ${snapshot.data!.periodicity}");
+          log("room_pwd: $nowRoomPwd");
+          log("category: ${snapshot.data!.category}");
+          log("info: ${snapshot.data!.info}");
+          log("canChat: ${snapshot.data!.canChat}");
+          log("numOfVoteSuccess: ${snapshot.data!.numOfVoteSuccess}");
+          log("numOfVoteFail: ${snapshot.data!.numOfVoteFail}");
+          log("room_type: ${snapshot.data!.room_type}");
+          log("certification: ${snapshot.data!.certificationType}");
+          log("frequency: ${snapshot.data!.frequency}");
+          log("tag: ${snapshot.data!.tag}");
+          log("isManager: $nowIsManager");
+          return Scaffold(
+            appBar: _roomMainAppBar(
+                nowRoomTitle,
+                snapshot.data!.info,
+                snapshot.data!.canChat,
+                nowRoomPwd,
+                snapshot.data!.nowUser,
+                snapshot.data!.maxUser,
+                snapshot.data!.tag,
+                manager: nowIsManager),
+            backgroundColor: LIGHTGREY,
+            floatingActionButton: snapshot.data!.canChat
+                ? chattingRoom(nowRoomTitle, nowIsManager, room_id, 1)
+                : null,
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  // 목표 기한
+                  _d_day(snapshot.data!.info, snapshot.data!.endDay),
+                  Container(
+                    margin: const EdgeInsets.all(20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        // 도전 완료 사용자 수
+                        _certificated_person(snapshot.data!.nowUser),
+                        // 인증하기 버튼
+                        _certification_button(),
+                      ],
+                    ),
+                  ),
+                  RoomUserList(
+                    room_id: room_id,
+                    is_manager: nowIsManager,
+                    certificationType: snapshot.data!.certificationType,
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
+          );
+        } else {
+          return const Text('No data available');
+        }
+      },
     );
   }
 
-  PreferredSizeWidget _roomMainAppBar(String title, {bool manager = false}) {
+  PreferredSizeWidget _roomMainAppBar(String title, String? info, bool canChat,
+      String? room_pwd, int nowUser, int maxUser, List<dynamic>? tag,
+      {bool manager = false}) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(80),
       child: Container(
@@ -184,14 +388,14 @@ class _roomMainState extends State<room_main> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => RoomSetting_Manager(
-                            room_title: widget.room_title,
-                            room_id: widget.room_id,
-                            room_pwd: widget.room_pwd,
-                            room_type: widget.room_type,
-                            room_mem: widget.room_mem,
-                            room_maxmem: widget.room_maxmem,
-                            canChat: widget.canChat,
-                          ),
+                              room_title: title,
+                              info: info,
+                              room_id: widget.room_id,
+                              room_pwd: room_pwd,
+                              room_mem: nowUser,
+                              room_maxmem: maxUser,
+                              canChat: canChat,
+                              tag: tag),
                         ),
                       );
                     } else {
@@ -199,14 +403,11 @@ class _roomMainState extends State<room_main> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => RoomSetting_Basic(
-                            room_title: widget.room_title,
-                            room_id: widget.room_id,
-                            room_pwd: widget.room_pwd,
-                            room_type: widget.room_type,
-                            room_mem: widget.room_mem,
-                            room_maxmem: widget.room_maxmem,
-                            canChat: widget.canChat,
-                          ),
+                              room_title: title,
+                              room_id: widget.room_id,
+                              room_pwd: room_pwd,
+                              canChat: canChat,
+                              tag: tag),
                         ),
                       );
                     }
@@ -225,7 +426,10 @@ class _roomMainState extends State<room_main> {
     );
   }
 
-  Container _d_day(String? title) {
+  Container _d_day(String? info, String endDay) {
+    String endDate = endDay.split("T")[0];
+    String endHour = endDay.split("T")[1].split(":")[0];
+    String endMin = endDay.split("T")[1].split(":")[1];
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -233,7 +437,7 @@ class _roomMainState extends State<room_main> {
       ),
       height: 100,
       margin: const EdgeInsets.fromLTRB(28, 0, 28, 0),
-      padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
       child: Row(
         children: [
           const Icon(
@@ -241,35 +445,46 @@ class _roomMainState extends State<room_main> {
             color: POINT_COLOR,
             size: 40,
           ),
-          const SizedBox(width: 20),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "$title의 목표기한",
-                style: const TextStyle(
-                  color: POINT_COLOR,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+          const SizedBox(width: 15),
+          Flexible(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                info != null
+                    ? Text(
+                        info,
+                        style: const TextStyle(
+                          color: POINT_COLOR,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    : const Text(
+                        "소개글이 없습니다.",
+                        style: TextStyle(
+                          color: POINT_COLOR,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                Text(
+                  "$endDate $endHour:$endMin까지 도전",
+                  style: const TextStyle(
+                    color: POINT_COLOR,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const Text(
-                "D - 30",
-                style: TextStyle(
-                  color: POINT_COLOR,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  Column _certificated_person(int? mem) {
+  Column _certificated_person(int nowUser) {
     return Column(
       children: [
         const Text(
@@ -281,7 +496,7 @@ class _roomMainState extends State<room_main> {
         Row(
           children: [
             Text(
-              "1/$mem",
+              "1/$nowUser",
               style: const TextStyle(
                   color: POINT_COLOR,
                   fontSize: 48,

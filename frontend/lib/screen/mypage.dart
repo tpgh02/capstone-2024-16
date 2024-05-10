@@ -8,6 +8,7 @@ import 'package:dodo/screen/mypage_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 
 Future<MyInfo> fetchMyInfo_GET() async {
   final response =
@@ -91,25 +92,20 @@ class MyPage extends StatefulWidget {
 class _MyPageState extends State<MyPage> {
   Future<MyInfo>? myInfo;
   final ImagePicker _picker = ImagePicker();
-  var _pickedImage = '';
+  late File? _pickedImage = File('assets/images/turtle_noradius.png');
 
   @override
   void initState() {
     super.initState();
     myInfo = fetchMyInfo_GET();
+    _pickedImage = File('assets/images/turtle_noradius.png');
   }
 
   void getNewImage(ImageSource source) async {
-    final XFile? selectedImage = await _picker.pickImage(
-      source: source,
-      // maxHeight: 120,
-      // maxWidth: 120,
-      // imageQuality: 30,
-    );
+    final XFile? selectedImage = await _picker.pickImage(source: source);
     if (selectedImage != null) {
-      dynamic sendData = selectedImage.path;
       setState(() {
-        _pickedImage = sendData;
+        _pickedImage = File(selectedImage.path);
       });
       log("이미지 선택함: $_pickedImage");
     }
@@ -185,7 +181,7 @@ class _MyPageState extends State<MyPage> {
                 height: 120,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
-                  child: Image.network(imageurl),
+                  child: Image.network(imageurl, fit: BoxFit.cover),
                 ),
               ),
             ),
@@ -205,7 +201,9 @@ class _MyPageState extends State<MyPage> {
             ),
           ),
           IconButton(
-            onPressed: () => editNicknameDialog(imageurl, nickname),
+            onPressed: () async {
+              editNicknameDialog(imageurl, nickname);
+            },
             icon: const Icon(Icons.edit),
             color: PRIMARY_COLOR,
           ),
@@ -224,7 +222,9 @@ class _MyPageState extends State<MyPage> {
           Expanded(
               flex: 1,
               child: MyPageButton(
-                  onTap: () => editProfileDialog(imageurl, nickname),
+                  onTap: () async {
+                    editProfileDialog(imageurl, nickname);
+                  },
                   label: "프로필 사진 수정")),
           const SizedBox(
             width: 15,
@@ -347,6 +347,7 @@ class _MyPageState extends State<MyPage> {
 
   // 프로필 수정 다이얼로그
   void editProfileDialog(String imageurl, String nickname) {
+    log("$_pickedImage");
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -356,7 +357,7 @@ class _MyPageState extends State<MyPage> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           title: const Text(
-            "프로필 수정",
+            "프로필 사진 수정",
             style: TextStyle(fontWeight: FontWeight.bold, color: POINT_COLOR),
           ),
           content: SizedBox(
@@ -364,7 +365,7 @@ class _MyPageState extends State<MyPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if (_pickedImage != '')
+                if (_pickedImage != File('assets/images/turtle_noradius.png'))
                   Flexible(
                     child: Stack(
                       children: <Widget>[
@@ -375,8 +376,8 @@ class _MyPageState extends State<MyPage> {
                             height: 120,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
-                              child: Image.file(
-                                File(_pickedImage),
+                              child: Image.network(
+                                imageurl,
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -412,7 +413,7 @@ class _MyPageState extends State<MyPage> {
                             height: 120,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
-                              child: Image.network(imageurl),
+                              child: Image.file(File(_pickedImage!.path)),
                             ),
                           ),
                         ),
@@ -421,10 +422,12 @@ class _MyPageState extends State<MyPage> {
                           bottom: 5,
                           right: 35,
                           child: InkWell(
-                            onTap: () => showModalBottomSheet(
-                                context: context,
-                                builder: ((builder) =>
-                                    editProfilePic(nickname))),
+                            onTap: () {
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: ((builder) =>
+                                      editProfilePic(nickname)));
+                            },
                             child: const Icon(
                               Icons.camera_enhance,
                               color: PRIMARY_COLOR,
@@ -435,8 +438,6 @@ class _MyPageState extends State<MyPage> {
                       ],
                     ),
                   ),
-
-                // 닉네임
               ],
             ),
           ),
@@ -444,8 +445,9 @@ class _MyPageState extends State<MyPage> {
             // 수정 버튼
             ElevatedButton(
               onPressed: () async {
-                if (_pickedImage != '')
+                if (_pickedImage != File('assets/images/turtle_noradius.png')) {
                   await patchProfilePic(_pickedImage, nickname);
+                }
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
@@ -515,28 +517,6 @@ class _MyPageState extends State<MyPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                // TextButton(
-                //   onPressed: () {
-                //     getNewImage(ImageSource.camera);
-                //   },
-                //   child: const Column(
-                //     children: [
-                //       Icon(
-                //         Icons.camera_alt_rounded,
-                //         color: POINT_COLOR,
-                //         size: 40,
-                //       ),
-                //       Text(
-                //         '카메라',
-                //         style: TextStyle(
-                //           fontSize: 20,
-                //           fontWeight: FontWeight.bold,
-                //           color: POINT_COLOR,
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
                 TextButton(
                   onPressed: () async {
                     getNewImage(ImageSource.gallery);
@@ -562,7 +542,7 @@ class _MyPageState extends State<MyPage> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    patchBasicPic(_pickedImage, nickname);
+                    patchBasicPic(nickname);
                     Navigator.of(context).pop();
                   },
                   child: const Column(
@@ -591,37 +571,36 @@ class _MyPageState extends State<MyPage> {
     );
   }
 
-  Future<dynamic> patchProfilePic(dynamic input, String nickname) async {
+  Future<dynamic> patchProfilePic(File? input, String nickname) async {
     log('프로필 사진 수정: $input');
     var dio = Dio();
     var imageUrl = '$serverUrl/api/v1/users/user-update';
+    MultipartFile toEditImage;
+    if (input != null) {
+      toEditImage = MultipartFile.fromFileSync(input.path,
+          contentType: MediaType("image", "jpg"));
+    } else {
+      throw Exception('이미지 파일이 유효하지 않습니다.');
+    }
+
+    FormData formData = FormData.fromMap({'img': toEditImage});
 
     try {
       dio.options.contentType = 'multipart/form-data';
       dio.options.maxRedirects.isFinite;
 
       dio.options.headers = {
-        'Content-Type': 'application/json',
         'Authorization':
             'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU',
       };
 
-      FormData formData = FormData.fromMap({
-        'name': nickname,
-        'introduceMessage': '',
-        'image': {'id': 1, 'url': await MultipartFile.fromFile(input)}
-      });
-
-      final imageEditResponse = await dio.post(imageUrl, data: formData);
+      final imageEditResponse = await dio.post(imageUrl,
+          data: formData, options: Options(contentType: 'multipart/form-data'));
 
       if (imageEditResponse.statusCode == 200) {
-        // final responseData = response.data;
-        // final imageUrl = responseData["image"]["url"];
         log('성공적으로 업로드했습니다: $imageEditResponse');
-        //return imageUrl;
       } else {
         log('서버로부터 잘못된 응답이 도착했습니다. 상태 코드: ${imageEditResponse.statusCode}');
-        //return null;
       }
     } catch (e) {
       log("프사 변경 에러 발생: $e");
@@ -629,11 +608,15 @@ class _MyPageState extends State<MyPage> {
     }
   }
 
-  Future<dynamic> patchBasicPic(dynamic input, String nickname) async {
-    log('프로필 사진 수정: $input');
+  Future<dynamic> patchBasicPic(String nickname) async {
+    log('프로필 사진 삭제');
     var dio = Dio();
     var imageUrl = '$serverUrl/api/v1/users/user-update';
-    _pickedImage = '';
+
+    FormData formData = FormData.fromMap({
+      'img':
+          'https://my-dodo-bucket.s3.ap-northeast-2.amazonaws.com/image/default.png',
+    });
 
     try {
       dio.options.contentType = 'multipart/form-data';
@@ -643,16 +626,6 @@ class _MyPageState extends State<MyPage> {
         'Authorization':
             'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
       };
-
-      FormData formData = FormData.fromMap({
-        'name': nickname,
-        'introduceMessage': ' ',
-        'image': {
-          'id': 1,
-          'url':
-              'https://my-dodo-bucket.s3.ap-northeast-2.amazonaws.com/image/default.png'
-        }
-      });
 
       final response = await dio.post(imageUrl, data: formData);
 

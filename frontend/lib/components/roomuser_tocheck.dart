@@ -72,13 +72,15 @@ class RoomUserToCheck extends StatelessWidget {
                     ),
                   );
                 } else {
-                  showDialog(
-                    context: context,
-                    builder: (context) => RoomCertiApprove(
-                      room_id: room_id,
-                      user_name: user_name,
-                    ),
-                  );
+                  is_manager
+                      ? showDialog(
+                          context: context,
+                          builder: (context) => RoomCertiApprove(
+                            room_id: room_id,
+                            user_name: user_name,
+                          ),
+                        )
+                      : null;
                 }
               },
               child: Column(

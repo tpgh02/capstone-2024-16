@@ -1,14 +1,83 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:developer';
 import 'package:dodo/components/room_group.dart';
 import 'package:dodo/components/room_main.dart';
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/const/server.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
+
+// 인증방 이미지 변경
+Future<dynamic> fetchRoomImage(
+    File? pickedImage, int roomId, var room_img) async {
+  var dio = Dio();
+  var url = '$serverUrl/api/v1/room/update?roomId=$roomId';
+
+  // final MultipartFile toEditImage;
+  // if (pickedImage != null) {
+  //   toEditImage = MultipartFile.fromFileSync(
+  //     pickedImage.path,
+  //     contentType: MediaType("image", "jpg"),
+  //   );
+  // } else {
+  //   throw Exception('이미지 파일이 유효하지 않습니다.');
+  // }
+  String? base64Image;
+  if (pickedImage != null) {
+    List<int> imageBytes = await pickedImage.readAsBytes();
+    base64Image = base64Encode(imageBytes);
+  } else {
+    throw Exception('이미지 파일이 유효하지 않습니다.');
+  }
+
+  try {
+    dio.options.maxRedirects.isFinite;
+    log("step 1");
+
+    Map<String, dynamic> jsonImage = {
+      "image": {"id": room_img['id'] + 1, "url": base64Image}
+    };
+
+    Map<String, dynamic> imageHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization':
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+    };
+
+    // dio.options.headers = {
+    //   HttpHeaders.contentTypeHeader: "application/json",
+    //   'Authorization':
+    //       'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+    // };
+
+    log("step 2");
+    final response = await dio.post(url,
+        data: jsonImage, options: Options(headers: imageHeaders));
+    log("step 3");
+    if (response.statusCode == 200) {
+      // final responseData = response.data;
+      // final imageUrl = responseData["image"]["url"];
+      print('커버 이미지 수정 성공');
+      //return imageUrl;
+    } else {
+      print('커버 이미지 수정 실패: ${response.statusCode}');
+      //return null;
+    }
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
 
 class room_list extends StatefulWidget {
   final String room_title;
   final int room_id;
   final String? room_pwd;
   final String room_type;
-  final String room_img;
+  final room_img;
   final int room_mem;
   final int room_maxmem;
   final bool canChat;
@@ -33,8 +102,22 @@ class room_list extends StatefulWidget {
 }
 
 class _roomListState extends State<room_list> {
+  final ImagePicker _picker = ImagePicker();
+  late File? _pickedImage = File('assets/images/turtle_noradius.png');
+
+  void getNewImage(ImageSource source) async {
+    final XFile? selectedImage = await _picker.pickImage(source: source);
+    if (selectedImage != null) {
+      setState(() {
+        _pickedImage = File(selectedImage.path);
+      });
+      log("이미지 선택함: $_pickedImage");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    log('${widget.room_img['id']}');
     return Column(
       children: [
         Padding(
@@ -57,7 +140,7 @@ class _roomListState extends State<room_list> {
                     height: 90,
                     child: ClipOval(
                       child: Image.network(
-                        widget.room_img,
+                        widget.room_img['url'],
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -74,27 +157,11 @@ class _roomListState extends State<room_list> {
                           builder: (context) {
                             if (widget.room_type != "GROUP") {
                               return room_main(
-                                room_title: widget.room_title,
                                 room_id: widget.room_id,
-                                room_pwd: widget.room_pwd,
-                                room_type: widget.room_type,
-                                room_mem: widget.room_mem,
-                                room_maxmem: widget.room_maxmem,
-                                canChat: widget.canChat,
-                                is_manager: widget.is_manager,
-                                certificationType: widget.certificationType,
                               );
                             } else {
                               return room_group(
-                                room_title: widget.room_title,
                                 room_id: widget.room_id,
-                                room_pwd: widget.room_pwd,
-                                room_type: widget.room_type,
-                                room_mem: widget.room_mem,
-                                room_maxmem: widget.room_maxmem,
-                                canChat: widget.canChat,
-                                is_manager: widget.is_manager,
-                                certificationType: widget.certificationType,
                               );
                             }
                           },
@@ -129,16 +196,6 @@ class _roomListState extends State<room_list> {
                                       size: 30,
                                     ),
                                   )
-                                // Padding(
-                                //     padding:
-                                //         const EdgeInsets.fromLTRB(6, 0, 0, 0),
-                                //     child: SizedBox(
-                                //       height: 31,
-                                //       width: 31,
-                                //       child: Image.asset(
-                                //           'assets/images/GroupMark.png'),
-                                //     ),
-                                //   )
                                 : const SizedBox(
                                     width: 0.1,
                                   ),
@@ -154,28 +211,21 @@ class _roomListState extends State<room_list> {
                                           'assets/images/AIMark.png'),
                                     ),
                                   )
-                                // const Padding(
-                                //     padding: EdgeInsets.fromLTRB(6, 0, 0, 0),
-                                //     child: Icon(
-                                //       Icons.podcasts,
-                                //       size: 24,
-                                //     ),
-                                //   )
                                 : const SizedBox(
                                     width: 0.1,
                                   ),
 
                             // 비밀방 여부
-                            widget.room_pwd != null
-                                ? const Padding(
+                            widget.room_pwd == null || widget.room_pwd == ""
+                                ? const SizedBox(
+                                    width: 0.1,
+                                  )
+                                : const Padding(
                                     padding: EdgeInsets.fromLTRB(6, 0, 0, 0),
                                     child: Icon(
                                       Icons.lock,
                                       size: 23,
                                     ),
-                                  )
-                                : const SizedBox(
-                                    width: 0.1,
                                   ),
                           ],
                         ),
@@ -227,7 +277,14 @@ class _roomListState extends State<room_list> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    getNewImage(ImageSource.gallery);
+                    if (_pickedImage !=
+                        File('assets/images/turtle_noradius.png')) {}
+                    await fetchRoomImage(
+                        _pickedImage, widget.room_id, widget.room_img);
+                    Navigator.of(context).pop();
+                  },
                   child: const Column(
                     children: [
                       Icon(
