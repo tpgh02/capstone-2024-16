@@ -1,14 +1,18 @@
+import 'dart:async';
 import 'package:dodo/components/s2_hotroom.dart';
 import 'package:dodo/components/s2_tag.dart';
-import 'package:dodo/components/s_list.dart';
 import 'package:dodo/const/colors.dart';
-import 'package:dodo/screen/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 class search2Page extends StatefulWidget {
-  const search2Page({super.key});
+  final String searchQuery;
+
+  const search2Page({Key? key, required this.searchQuery}) : super(key: key);
+
+  // const search2Page({super.key});
 
   @override
   State<search2Page> createState() => _searchPageState();
@@ -18,8 +22,7 @@ class _searchPageState extends State<search2Page> {
   final widgetkey = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    final tagList = ['운동', '주 3회', '수영', '필라테스'];
-    int idx = 0;
+    StreamController _streamSearch = StreamController();
     TextEditingController _search = TextEditingController();
     //Futrue<QuerySnapshot> futureSearchResults; //DB에서 가져오려는 거
 
@@ -49,8 +52,51 @@ class _searchPageState extends State<search2Page> {
                   Flexible(
                     child: Container(
                       margin: EdgeInsets.all(10),
-                      child: TextFormField(
+                      child: TextField(
                         controller: _search,
+                        decoration: InputDecoration(
+                          hintText: '검색어를 입력하세요',
+                          hintStyle: TextStyle(
+                            color: DARKGREY,
+                          ),
+                          enabledBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: POINT_COLOR,
+                              width: 5,
+                            ),
+                          ),
+                          focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: PRIMARY_COLOR,
+                              width: 5,
+                            ),
+                          ),
+                          suffixIcon: IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.search,
+                              color: POINT_COLOR,
+                            ),
+                          ),
+                        ),
+                        style: const TextStyle(
+                            fontFamily: 'kcc',
+                            fontSize: 18,
+                            color: Colors.black),
+                        //onFieldSubmitted: controlSerching,
+                      ),
+                    ),
+                  ),
+                  //테스트용
+                  Flexible(
+                    child: Container(
+                      margin: EdgeInsets.all(10),
+                      child: TextField(
+                        controller: _search,
+                        keyboardType: TextInputType.text,
+                        onChanged: (text) {
+                          _streamSearch.add(text);
+                        },
                         decoration: InputDecoration(
                           hintText: '검색어를 입력하세요',
                           hintStyle: TextStyle(
