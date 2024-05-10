@@ -1,8 +1,5 @@
-//import 'package:dodo/const/colors.dart';
-//import 'package:dodo/components/certification.dart';
 import 'dart:convert';
 import 'package:dodo/const/colors.dart';
-import 'package:dodo/const/image.dart';
 import 'package:dodo/const/server.dart';
 import 'package:dodo/screen/buy_screen.dart';
 import 'package:flutter/material.dart';

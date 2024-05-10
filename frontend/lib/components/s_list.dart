@@ -59,7 +59,7 @@ class _s_listState extends State<s_list> {
                     ),
                     Visibility(
                       visible: MediaQuery.of(context).size.width >
-                          320, // 예를 들어, 화면 너비가 320보다 클 때만 아이콘 표시
+                          420, // 예를 들어, 화면 너비가 320보다 클 때만 아이콘 표시
                       child: Container(
                         color: Colors.white,
                         margin: const EdgeInsets.all(10),
@@ -128,8 +128,7 @@ class _s_listState extends State<s_list> {
                       ],
                     ),
                     Visibility(
-                      visible: MediaQuery.of(context).size.width >
-                          320, // 예를 들어, 화면 너비가 320보다 클 때만 아이콘 표시
+                      visible: MediaQuery.of(context).size.width > 420,
                       child: Container(
                         color: Colors.white,
                         margin: const EdgeInsets.all(10),
@@ -198,8 +197,7 @@ class _s_listState extends State<s_list> {
                       ],
                     ),
                     Visibility(
-                      visible: MediaQuery.of(context).size.width >
-                          320, // 예를 들어, 화면 너비가 320보다 클 때만 아이콘 표시
+                      visible: MediaQuery.of(context).size.width > 420,
                       child: Container(
                         color: Colors.white,
                         margin: const EdgeInsets.all(10),
@@ -268,8 +266,7 @@ class _s_listState extends State<s_list> {
                       ],
                     ),
                     Visibility(
-                      visible: MediaQuery.of(context).size.width >
-                          320, // 예를 들어, 화면 너비가 320보다 클 때만 아이콘 표시
+                      visible: MediaQuery.of(context).size.width > 420,
                       child: Container(
                         color: Colors.white,
                         margin: const EdgeInsets.all(10),
