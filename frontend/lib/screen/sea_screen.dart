@@ -45,6 +45,7 @@ Future<List<Items>> fetchItems() async {
   if (response.statusCode == 200) {
     final List<dynamic> jsonData = jsonDecode(utf8.decode(response.bodyBytes));
     List<Items> Itemss = jsonData.map((json) => Items.fromJson(json)).toList();
+    print(Itemss);
     return Itemss;
   } else {
     throw Exception('Failed to load data');
@@ -82,7 +83,13 @@ class _seaPageState extends State<seaPage> {
                     child: Container(
                       width: 120,
                       height: 120,
-                      child: Image.network(item.imageUrl),
+                      child: Image.network(
+                        item.imageUrl,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(
+                              Icons.error); // 에러 발생 시 대체 이미지로 아이콘을 표시합니다.
+                        },
+                      ),
                     ),
                   ),
                 Align(
