@@ -45,7 +45,6 @@ class _i_itemsState extends State<i_items> {
                   opacity: widget.isActivate ? 0.4 : 1,
                   child: Image.network(
                     widget.img,
-                    fit: BoxFit.cover,
                   ),
                 ),
               ),

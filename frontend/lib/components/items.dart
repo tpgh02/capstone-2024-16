@@ -78,7 +78,6 @@ class _itemsState extends State<items> {
                 borderRadius: BorderRadius.circular(20),
                 child: Image.network(
                   widget.img,
-                  fit: BoxFit.cover,
                 ),
               ),
             ),
@@ -136,9 +135,12 @@ void itemsdialog(
             const SizedBox(
               height: 10,
             ),
-            Text(
-              info,
-              style: TextStyle(fontFamily: "bma", fontSize: 25),
+            Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: Text(
+                info,
+                style: const TextStyle(fontFamily: "bma", fontSize: 18),
+              ),
             ),
             const SizedBox(
               height: 5,
