@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:dodo/components/items.dart';
 import 'package:dodo/const/colors.dart';
-import 'package:dodo/const/image.dart';
 import 'package:dodo/const/server.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -103,56 +102,54 @@ class _searchPageState extends State<storePage> {
 
               Container(
                 child: FutureBuilder<List<Store>>(
-                    future: futureStore,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else if (snapshot.hasData) {
-                        return Column(
-                          children: snapshot.data!.map((store) {
-                            return Container(
-                              //color: Colors.yellow,
-                              alignment: Alignment.centerRight,
-                              padding: const EdgeInsets.all(20),
-                              height: 600,
-                              child: CustomScrollView(
-                                slivers: <Widget>[
-                                  SliverGrid(
-                                      delegate: SliverChildBuilderDelegate(
-                                        (BuildContext context, int idx) {
-                                          return postContainer(
-                                              store.price,
-                                              store.imageurl,
-                                              store.name,
-                                              store.info,
-                                              store.creatureId);
-                                        },
-                                        childCount: snapshot.data!.length,
-                                      ),
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3,
-                                        childAspectRatio: 1 / 2,
-                                      ))
-                                ],
+                  future: futureStore,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (snapshot.hasData) {
+                      return Container(
+                        //color: Colors.yellow,
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.all(20),
+                        height: 195,
+
+                        child: CustomScrollView(
+                          slivers: <Widget>[
+                            SliverGrid(
+                              delegate: SliverChildBuilderDelegate(
+                                (BuildContext context, int idx) {
+                                  final store = snapshot.data![idx];
+                                  return postContainer(
+                                      store.price,
+                                      store.imageurl,
+                                      store.name,
+                                      store.info,
+                                      store.creatureId);
+                                },
+                                childCount: snapshot.data!.length,
                               ),
-                            );
-                          }).toList(),
-                        );
-                      } else {
-                        return Center(
-                          child: Text(
-                            '데이터가 존재하지 않습니다. 잠시 후 시도해주십시오',
-                            style: TextStyle(
-                                fontFamily: "bm",
-                                fontSize: 20,
-                                color: DARKGREY),
-                          ),
-                        );
-                      }
-                    }),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                childAspectRatio: 2 / 3,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      return Center(
+                        child: Text(
+                          '데이터가 존재하지 않습니다. 잠시 후 시도해주십시오',
+                          style: TextStyle(
+                              fontFamily: "bm", fontSize: 20, color: DARKGREY),
+                        ),
+                      );
+                    }
+                  },
+                ),
               ),
             ],
           ),
@@ -163,9 +160,8 @@ class _searchPageState extends State<storePage> {
 
   Container postContainer(price, _root, name, info, c_id) {
     return Container(
-      margin: const EdgeInsets.all(5),
-      alignment: Alignment.center,
-      child: items(price, _root, name, info, c_id),
-    );
+        margin: const EdgeInsets.all(5),
+        alignment: Alignment.center,
+        child: items(price, _root, name, info, c_id));
   }
 }
