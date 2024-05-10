@@ -279,10 +279,10 @@ class _main2PageState extends State<main2Page>
                                 } else if (snapshot.hasData) {
                                   final calendarDataList = snapshot.data!;
                                   if (calendarDataList.isEmpty) {
-                                    log("데이터 없음");
+                                    //log("데이터 없음");
                                     return _buildDefaultCalendar();
                                   } else {
-                                    log("데이터 있음");
+                                    //log("데이터 있음");
                                     return Container(
                                       child: _CalendarData(calendarDataList),
                                     );
@@ -399,9 +399,6 @@ Widget _buildDefaultCalendar() {
 }
 
 Widget _CalendarData(calendarDataList) {
-  log("${calendarDataList[7].date}");
-  log("${calendarDataList[7].flag}");
-  log("${_lastMonthPercentage}");
   return TableCalendar(
     focusedDay: DateTime.now(),
     firstDay: DateTime.utc(2024, 5, 1),
@@ -426,7 +423,7 @@ Widget _CalendarData(calendarDataList) {
         final filteredData = calendarDataList
             .where((element) => element.date == date.day.toString());
         final flaggedData =
-            filteredData.where((element) => element.flag == false); //true);
+            filteredData.where((element) => element.flag == true);
         if (filteredData.isNotEmpty && flaggedData.isNotEmpty) {
           return Container(
             margin: const EdgeInsets.all(4.0),

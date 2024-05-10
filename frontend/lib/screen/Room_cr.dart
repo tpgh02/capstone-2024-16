@@ -108,7 +108,7 @@ class _Room_crState extends State<Room_cr> {
               const SizedBox(
                 height: 20,
               ),
-              //인증방 소개 (200자 미만)
+              //인증방 목표 (30자 미만)
               SizedBox(
                 height: 48,
                 child: TextField(
@@ -123,7 +123,7 @@ class _Room_crState extends State<Room_cr> {
                       borderSide: BorderSide(color: PRIMARY_COLOR),
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
-                    labelText: '인증방 소개 (200자 미만)',
+                    labelText: '인증방 목표 (30자 미만)',
                     filled: true,
                     fillColor: Colors.white,
                     labelStyle: TextStyle(

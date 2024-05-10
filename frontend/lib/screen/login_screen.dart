@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:validators/validators.dart';
 
 class loginPage extends StatefulWidget {
   final int? userId;
@@ -69,7 +70,7 @@ class _loginPageState extends State<loginPage> {
           alignment: Alignment.topRight,
           padding: const EdgeInsets.fromLTRB(0, 30, 30, 0),
           child: const Image(
-            image: AssetImage('../assets/images/logo.png'),
+            image: AssetImage('assets/images/logo.png'),
             width: 110,
             height: 110,
           ),
@@ -167,7 +168,9 @@ class _loginPageState extends State<loginPage> {
                         filled: true,
                         fillColor: const Color(0xffEDEDED)),
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
+                      if (value == null ||
+                          value.trim().isEmpty ||
+                          isEmail(value.trim())) {
                         return '이메일을 입력해주세요';
                       }
                       return null;

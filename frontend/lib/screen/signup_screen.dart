@@ -5,6 +5,7 @@ import 'package:dodo/const/colors.dart';
 import 'package:dodo/screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:validators/validators.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -91,7 +92,7 @@ class _SignupPageState extends State<SignupPage> {
                     //이메일
                     SizedBox(
                       height: 50,
-                      child: TextField(
+                      child: TextFormField(
                         controller: _email,
                         keyboardType: TextInputType.emailAddress,
                         style: const TextStyle(fontSize: 20),
@@ -107,6 +108,15 @@ class _SignupPageState extends State<SignupPage> {
                           labelStyle:
                               TextStyle(color: Color(0xff4f4f4f), fontSize: 18),
                         ),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return '이메일을 입력해주세요.';
+                          }
+                          if (!isEmail(value.trim())) {
+                            return '이메일 형식이 맞지 않습니다';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     const SizedBox(
@@ -115,7 +125,7 @@ class _SignupPageState extends State<SignupPage> {
                     //사용자이름
                     SizedBox(
                       height: 50,
-                      child: TextField(
+                      child: TextFormField(
                         controller: _username,
                         keyboardType: TextInputType.name,
                         style: const TextStyle(fontSize: 20),
@@ -130,6 +140,15 @@ class _SignupPageState extends State<SignupPage> {
                           fillColor: const Color(0xffEDEDED),
                           labelStyle: TextStyle(color: DARKGREY, fontSize: 18),
                         ),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return '사용하실 이름을 입력해주세요.';
+                          }
+                          if (value.length < 2) {
+                            return '2글자 이상 입력해주세요.';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     const SizedBox(
@@ -138,7 +157,7 @@ class _SignupPageState extends State<SignupPage> {
                     //비밀번호
                     SizedBox(
                       height: 50,
-                      child: TextField(
+                      child: TextFormField(
                         controller: _password1,
                         keyboardType: TextInputType.visiblePassword,
                         style: const TextStyle(fontSize: 20),
@@ -155,6 +174,15 @@ class _SignupPageState extends State<SignupPage> {
                           labelStyle:
                               TextStyle(color: Color(0xff4f4f4f), fontSize: 18),
                         ),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return '비밀번호를 입력하세요.';
+                          }
+                          if (value.length < 2) {
+                            return '6글자 이상 입력해주세요.';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     const SizedBox(
@@ -163,7 +191,7 @@ class _SignupPageState extends State<SignupPage> {
                     //비밀번호 확인
                     SizedBox(
                       height: 50,
-                      child: TextField(
+                      child: TextFormField(
                         controller: _password2,
                         keyboardType: TextInputType.emailAddress,
                         style: const TextStyle(fontSize: 20),
@@ -179,6 +207,12 @@ class _SignupPageState extends State<SignupPage> {
                           labelStyle:
                               TextStyle(color: Color(0xff4f4f4f), fontSize: 18),
                         ),
+                        validator: (value) {
+                          if (_password1.text != value) {
+                            return '패스워드 불일치';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     const SizedBox(
