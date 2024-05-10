@@ -123,7 +123,15 @@ class _roomSetManagerState extends State<RoomSetting_Manager> {
                     SettingsTile.switchTile(
                       title: const Text('채팅 기능 활성화'),
                       leading: const Icon(Icons.chat),
-                      onToggle: ((context) {}),
+                      onToggle: ((context) {
+                        fetchRoomInfo(
+                                {"canChat": !widget.canChat}, widget.room_id)
+                            .then((data) {
+                          log("changed canChat: ${!widget.canChat}");
+                        }).catchError((error) {
+                          log("Room CanChat Switch Fail: $error");
+                        });
+                      }),
                       initialValue: widget.canChat,
                     ),
                     SettingsTile.navigation(
