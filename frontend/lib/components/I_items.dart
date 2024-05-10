@@ -1,12 +1,6 @@
-//import 'package:dodo/const/colors.dart';
-//import 'package:dodo/components/certification.dart';
-import 'dart:convert';
 import 'package:dodo/const/colors.dart';
-import 'package:dodo/const/server.dart';
-import 'package:dodo/screen/buy_screen.dart';
 import 'package:dodo/screen/overview_sea.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class i_items extends StatefulWidget {
   final int cost;
@@ -42,33 +36,31 @@ class _i_itemsState extends State<i_items> {
         child: Column(
           children: [
             Container(
-              margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+              margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
               width: 70,
               height: 80,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.network(
-                  widget.img,
-                  fit: BoxFit.cover,
+                child: Opacity(
+                  opacity: widget.isActivate ? 0.4 : 1,
+                  child: Image.network(
+                    widget.img,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
+            const SizedBox(
+              height: 5,
+            ),
             Container(
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.attach_money_rounded,
-                    color: Colors.amber,
-                  ),
-                  Text(
-                    "${widget.cost}",
-                    style: TextStyle(
-                        fontFamily: "bm",
-                        fontSize: 25,
-                        color:
-                            widget.isActivate ? Colors.black54 : Colors.black),
-                  ),
-                ],
+              alignment: Alignment.bottomCenter,
+              child: Text(
+                "${widget.name}",
+                style: TextStyle(
+                    fontFamily: "bm",
+                    fontSize: 20,
+                    color: widget.isActivate ? Colors.black54 : POINT_COLOR),
               ),
             ),
           ],
