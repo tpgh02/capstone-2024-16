@@ -64,51 +64,42 @@ class _itemsState extends State<items> {
       },
       child:
           //사진을 둥글게 만들 수 있는 함수
-          Stack(
-        children: [
           Container(
-            width: double.infinity,
-            height: 130,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
-            ),
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                  width: 70,
-                  height: 80,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.network(
-                      widget.img,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+        width: double.infinity,
+        height: 130,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+        ),
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+              width: 70,
+              height: 80,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.network(
+                  widget.img,
+                  fit: BoxFit.cover,
                 ),
-                Container(
-                  //color: Colors.blue,
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.attach_money_rounded,
-                        color: Colors.amber,
-                      ),
-                      Text(
-                        "${widget.cost}",
-                        style: const TextStyle(
-                            fontFamily: "bm",
-                            fontSize: 25,
-                            color: Colors.black),
-                      ),
-                    ],
-                  ),
+              ),
+            ),
+            Row(
+              children: [
+                const Icon(
+                  Icons.attach_money_rounded,
+                  color: Colors.amber,
+                ),
+                Text(
+                  "${widget.cost}",
+                  style: const TextStyle(
+                      fontFamily: "bm", fontSize: 25, color: Colors.black),
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
