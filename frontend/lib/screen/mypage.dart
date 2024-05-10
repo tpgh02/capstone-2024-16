@@ -98,6 +98,7 @@ class _MyPageState extends State<MyPage> {
   void initState() {
     super.initState();
     myInfo = fetchMyInfo_GET();
+    _pickedImage = File('assets/images/turtle_noradius.png');
   }
 
   void getNewImage(ImageSource source) async {
@@ -346,6 +347,7 @@ class _MyPageState extends State<MyPage> {
 
   // 프로필 수정 다이얼로그
   void editProfileDialog(String imageurl, String nickname) {
+    log("$_pickedImage");
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -355,7 +357,7 @@ class _MyPageState extends State<MyPage> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           title: const Text(
-            "프로필 수정",
+            "프로필 사진 수정",
             style: TextStyle(fontWeight: FontWeight.bold, color: POINT_COLOR),
           ),
           content: SizedBox(
@@ -363,7 +365,7 @@ class _MyPageState extends State<MyPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if (_pickedImage != null)
+                if (_pickedImage != File('assets/images/turtle_noradius.png'))
                   Flexible(
                     child: Stack(
                       children: <Widget>[
@@ -374,8 +376,8 @@ class _MyPageState extends State<MyPage> {
                             height: 120,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
-                              child: Image.file(
-                                _pickedImage!,
+                              child: Image.network(
+                                imageurl,
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -411,7 +413,7 @@ class _MyPageState extends State<MyPage> {
                             height: 120,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
-                              child: Image.network(imageurl),
+                              child: Image.file(File(_pickedImage!.path)),
                             ),
                           ),
                         ),
@@ -420,10 +422,12 @@ class _MyPageState extends State<MyPage> {
                           bottom: 5,
                           right: 35,
                           child: InkWell(
-                            onTap: () => showModalBottomSheet(
-                                context: context,
-                                builder: ((builder) =>
-                                    editProfilePic(nickname))),
+                            onTap: () {
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: ((builder) =>
+                                      editProfilePic(nickname)));
+                            },
                             child: const Icon(
                               Icons.camera_enhance,
                               color: PRIMARY_COLOR,
@@ -441,7 +445,7 @@ class _MyPageState extends State<MyPage> {
             // 수정 버튼
             ElevatedButton(
               onPressed: () async {
-                if (_pickedImage != '' || _pickedImage != null) {
+                if (_pickedImage != File('assets/images/turtle_noradius.png')) {
                   await patchProfilePic(_pickedImage, nickname);
                 }
                 Navigator.of(context).pop();
@@ -538,7 +542,7 @@ class _MyPageState extends State<MyPage> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    patchBasicPic(_pickedImage, nickname);
+                    patchBasicPic(nickname);
                     Navigator.of(context).pop();
                   },
                   child: const Column(
@@ -604,8 +608,8 @@ class _MyPageState extends State<MyPage> {
     }
   }
 
-  Future<dynamic> patchBasicPic(dynamic input, String nickname) async {
-    log('프로필 사진 수정: $input');
+  Future<dynamic> patchBasicPic(String nickname) async {
+    log('프로필 사진 삭제');
     var dio = Dio();
     var imageUrl = '$serverUrl/api/v1/users/user-update';
 
