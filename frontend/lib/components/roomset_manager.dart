@@ -420,8 +420,25 @@ class _roomSetManagerState extends State<RoomSetting_Manager> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  // 비밀번호 존재 여부
-                  widget.room_pwd != null ? Text("비번ㅇ") : Text("비번X"),
+                  // 비밀번호 사용 여부
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(26, 0, 15, 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("비밀번호 사용"),
+                        Switch(
+                          activeColor: Colors.white,
+                          activeTrackColor: PRIMARY_COLOR,
+                          value: widget.room_pwd != null,
+                          onChanged: (value) {
+                            bool isExistPwd = widget.room_pwd != null;
+                            log("${!isExistPwd}");
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
 
                   // 비밀번호 입력
                   Container(
