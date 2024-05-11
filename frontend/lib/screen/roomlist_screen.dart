@@ -185,7 +185,11 @@ class _RoomListState extends State<RoomListPage> {
                             room_pwd: MyRoom.room_pwd?.toString(),
                             room_type: MyRoom.room_type.toString(),
                             room_img: MyRoom.room_img ??
-                                "https://my-dodo-bucket.s3.ap-northeast-2.amazonaws.com/image/default.png",
+                                {
+                                  "id": 1,
+                                  "url":
+                                      "https://my-dodo-bucket.s3.ap-northeast-2.amazonaws.com/image/default.png"
+                                },
                             room_mem: MyRoom.room_mem,
                             room_maxmem: MyRoom.room_maxmem,
                             canChat: true,
