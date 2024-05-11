@@ -293,10 +293,14 @@ class _roomMainState extends State<room_main> {
                 nowRoomTitle,
                 snapshot.data!.info,
                 snapshot.data!.canChat,
-                nowRoomPwd,
+                snapshot.data!.room_pwd,
                 snapshot.data!.nowUser,
                 snapshot.data!.maxUser,
                 snapshot.data!.tag,
+                snapshot.data!.periodicity,
+                snapshot.data!.frequency,
+                snapshot.data!.category,
+                snapshot.data!.certificationType,
                 manager: nowIsManager),
             backgroundColor: LIGHTGREY,
             floatingActionButton: snapshot.data!.canChat
@@ -338,8 +342,18 @@ class _roomMainState extends State<room_main> {
     );
   }
 
-  PreferredSizeWidget _roomMainAppBar(String title, String? info, bool canChat,
-      String? room_pwd, int nowUser, int maxUser, List<dynamic>? tag,
+  PreferredSizeWidget _roomMainAppBar(
+      String title,
+      String? info,
+      bool canChat,
+      String? room_pwd,
+      int nowUser,
+      int maxUser,
+      List<dynamic>? tag,
+      String? periodicity,
+      int frequency,
+      String category,
+      String certificationType,
       {bool manager = false}) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(80),
@@ -403,11 +417,16 @@ class _roomMainState extends State<room_main> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => RoomSetting_Basic(
-                              room_title: title,
-                              room_id: widget.room_id,
-                              room_pwd: room_pwd,
-                              canChat: canChat,
-                              tag: tag),
+                            room_title: title,
+                            room_id: widget.room_id,
+                            room_pwd: room_pwd,
+                            canChat: canChat,
+                            tag: tag,
+                            periodicity: periodicity,
+                            frequency: frequency,
+                            category: category,
+                            certificationType: certificationType,
+                          ),
                         ),
                       );
                     }

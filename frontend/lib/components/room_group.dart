@@ -15,7 +15,7 @@ Future<RoomInfo_Group> fetchGroupRoomInfo(int room_id) async {
   final response =
       await http.get(Uri.parse('$serverUrl/api/v1/room/in/$room_id'), headers: {
     'Authorization':
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjJ9.WrM3msDSet3X24r8Kf79dsQ52UuuxbpXU_L8JR5daUU'
   });
   log('$serverUrl/api/v1/room/in/$room_id');
   if (response.statusCode == 200) {
@@ -219,7 +219,7 @@ class _roomMainState extends State<room_group> {
           }
           // 연결 에러
           else if (snapshot.hasError) {
-            log("Main title: Error - ${snapshot.data.toString()}");
+            log("Group Room: Error - ${snapshot.data.toString()}");
             return Scaffold(
               appBar: PreferredSize(
                 preferredSize: const Size.fromHeight(80),
@@ -301,6 +301,10 @@ class _roomMainState extends State<room_group> {
                   snapshot.data!.nowUser,
                   snapshot.data!.maxUser,
                   snapshot.data!.tag,
+                  snapshot.data!.periodicity,
+                  snapshot.data!.frequency,
+                  snapshot.data!.category,
+                  snapshot.data!.certificationType,
                   manager: nowIsManager),
               backgroundColor: LIGHTGREY,
               floatingActionButton: snapshot.data!.canChat
@@ -314,7 +318,7 @@ class _roomMainState extends State<room_group> {
                     ),
                     // 목표 기한
                     _progressBar(snapshot.data!.goal, snapshot.data!.numOfGoal,
-                        snapshot.data!.endDay),
+                        snapshot.data!.endDay, snapshot.data!.isManager),
                     Container(
                       margin: const EdgeInsets.fromLTRB(20, 17, 20, 20),
                       child: Row(
@@ -342,8 +346,18 @@ class _roomMainState extends State<room_group> {
         });
   }
 
-  PreferredSizeWidget _roomMainAppBar(String title, String? info, bool canChat,
-      String? room_pwd, int nowUser, int maxUser, List<dynamic>? tag,
+  PreferredSizeWidget _roomMainAppBar(
+      String title,
+      String? info,
+      bool canChat,
+      String? room_pwd,
+      int nowUser,
+      int maxUser,
+      List<dynamic>? tag,
+      String? periodicity,
+      int frequency,
+      String category,
+      String certificationType,
       {bool manager = false}) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(80),
@@ -407,11 +421,16 @@ class _roomMainState extends State<room_group> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => RoomSetting_Basic(
-                              room_title: title,
-                              room_id: widget.room_id,
-                              room_pwd: room_pwd,
-                              canChat: canChat,
-                              tag: tag),
+                            room_title: title,
+                            room_id: widget.room_id,
+                            room_pwd: room_pwd,
+                            canChat: canChat,
+                            tag: tag,
+                            periodicity: periodicity,
+                            frequency: frequency,
+                            category: category,
+                            certificationType: certificationType,
+                          ),
                         ),
                       );
                     }
@@ -430,56 +449,62 @@ class _roomMainState extends State<room_group> {
     );
   }
 
-  SizedBox _progressBar(List<dynamic> goal, int numOfGoal, String endDay) {
+  Widget _progressBar(
+      List<dynamic> goal, int numOfGoal, String endDay, bool isManager) {
     String endDate = endDay.split("T")[0];
     String endHour = endDay.split("T")[1].split(":")[0];
     String endMin = endDay.split("T")[1].split(":")[1];
-    return SizedBox(
-      height: 118,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          const Text(
-            "지금 목표는? ",
-            style: TextStyle(
-              color: POINT_COLOR,
-              fontFamily: 'bm',
-              fontSize: 18,
+    return GestureDetector(
+      onTap: () {
+        isManager ? log("manager") : null;
+      },
+      child: SizedBox(
+        height: 118,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Text(
+              "지금 목표는? ",
+              style: TextStyle(
+                color: POINT_COLOR,
+                fontFamily: 'bm',
+                fontSize: 18,
+              ),
             ),
-          ),
-          Text(
-            "${goal[0]}",
-            style: const TextStyle(
-              color: PRIMARY_COLOR,
-              fontFamily: 'bm',
-              fontSize: 22,
+            Text(
+              "${goal[0]}",
+              style: const TextStyle(
+                color: PRIMARY_COLOR,
+                fontFamily: 'bm',
+                fontSize: 22,
+              ),
             ),
-          ),
-          // progress bar
-          Padding(
-            padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-            child: HorizontalStepper(
-              totalStep: numOfGoal,
-              completedStep: 0,
-              selectedColor: PRIMARY_COLOR,
-              backGroundColor: const Color.fromARGB(199, 193, 208, 214),
+            // progress bar
+            Padding(
+              padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+              child: HorizontalStepper(
+                totalStep: numOfGoal,
+                completedStep: 0,
+                selectedColor: PRIMARY_COLOR,
+                backGroundColor: const Color.fromARGB(199, 193, 208, 214),
+              ),
             ),
-          ),
-          // D-day
+            // D-day
 
-          Text(
-            "$endDate $endHour:$endMin까지 도전",
-            style: const TextStyle(
-              color: POINT_COLOR,
-              fontFamily: 'bm',
-              fontSize: 18,
+            Text(
+              "$endDate $endHour:$endMin까지 도전",
+              style: const TextStyle(
+                color: POINT_COLOR,
+                fontFamily: 'bm',
+                fontSize: 18,
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 3,
-          ),
-          const Divider(),
-        ],
+            const SizedBox(
+              height: 3,
+            ),
+            const Divider(),
+          ],
+        ),
       ),
     );
   }
@@ -530,7 +555,7 @@ class _roomMainState extends State<room_group> {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return c_dialog(1); //room_id
+              return c_dialog(widget.room_id); //room_id
             },
           );
         },

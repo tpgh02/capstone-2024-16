@@ -806,8 +806,7 @@ class _roomSetManagerState extends State<RoomSetting_Manager> {
                     'Authorization':
                         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
                   });
-                  print(deleteroomUrl);
-                  Navigator.of(context).pop(); //창 닫기
+                  log("인증방 해체 성공");
                   Navigator.push(
                       context,
                       MaterialPageRoute(
