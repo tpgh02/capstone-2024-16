@@ -132,7 +132,7 @@ class _searchPageState extends State<InvenPage> {
                                       inven.name,
                                       inven.info,
                                       inven.activate,
-                                      inven.creatureId);
+                                      inven.creatureId - 1);
                                 },
                                 childCount: snapshot.data!.length,
                               ),

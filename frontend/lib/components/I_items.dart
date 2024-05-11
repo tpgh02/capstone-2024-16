@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/screen/overview_sea.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +25,7 @@ class _i_itemsState extends State<i_items> {
     return InkWell(
       onTap: () {
         //누르면 좌표입력하기
-
+        log("${widget.img}");
         showDemo(context, overview_sea(widget.c_id, widget.img));
       },
       child: Container(

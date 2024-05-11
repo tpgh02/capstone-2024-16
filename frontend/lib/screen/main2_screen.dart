@@ -234,7 +234,7 @@ class _main2PageState extends State<main2Page>
                       width: 5,
                     ),
                     Visibility(
-                      visible: MediaQuery.of(context).size.width > 320,
+                      visible: MediaQuery.of(context).size.width > 420,
                       child: const Text(
                         "에서 나는?",
                         style: TextStyle(
