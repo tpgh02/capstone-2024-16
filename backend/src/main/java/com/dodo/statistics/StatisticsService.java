@@ -43,17 +43,16 @@ public class StatisticsService {
 
 
         // 이번달 저번달 달성률
-        Float roomUserSize = (float) roomUserList.size();
-        AtomicReference<Float> lastMonth = new AtomicReference<>(0F);
-        AtomicReference<Float> thisMonth = new AtomicReference<>(0F);
+        float roomUserSize = (float) roomUserList.size();
+        float lastMonth = 0F;
+        float thisMonth = 0F;
 
-        roomUserList.forEach(roomUser -> {
-                    Room room = roomUser.getRoom();
-                    SimpleReportResponseData data = getSimpleReport(userContext, room.getId());
-                    lastMonth.updateAndGet(v -> v + data.getLastMonth());
-                    thisMonth.updateAndGet(v -> v + data.getThisMonth());
-                });
-
+        for(RoomUser roomuser : roomUserList) {
+            Room room = roomuser.getRoom();
+            SimpleReportResponseData data = getSimpleReport(userContext, room.getId());
+            lastMonth += data.getLastMonth();
+            thisMonth += data.getThisMonth();
+        }
 
         // 가장 열심히 한 분야
         List<Certification> certificationList = certificationRepository.findAllByRoomUserIn(roomUserList)
@@ -81,7 +80,7 @@ public class StatisticsService {
         keys.sort(Comparator.comparing(CertificationListFromUser::get));
         Float mostActivity = (float) keys.indexOf(maxRoomUser.getUser()) / (float) keys.size();
 
-        return new ReportResponseData(lastMonth.get() / roomUserSize, thisMonth.get() / roomUserSize, categoryStatus, allCategoryStatus, mostActivity);
+        return new ReportResponseData(lastMonth / roomUserSize, thisMonth / roomUserSize, categoryStatus, allCategoryStatus, mostActivity);
     }
 
     @Transactional
