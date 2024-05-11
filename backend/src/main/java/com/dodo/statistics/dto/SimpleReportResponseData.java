@@ -12,7 +12,7 @@ public class SimpleReportResponseData {
 
     public SimpleReportResponseData(List<DailyGoalResponseData> calender, long lastMonthCount, long lastMonthSize, long thisMonthCount, long thisMonthSize) {
         this.calender = calender;
-        this.lastMonth = (float) thisMonthCount / (float) thisMonthSize;
-        this.thisMonth = (float) lastMonthCount / (float) lastMonthSize;
+        this.lastMonth = (float) lastMonthCount / (float) lastMonthSize;
+        this.thisMonth = (float) thisMonthCount / (float) thisMonthSize;
     }
 }
