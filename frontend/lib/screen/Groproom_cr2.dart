@@ -188,7 +188,7 @@ class _Groproom_cr2State extends State<Groproom_cr2>
                             _selectedDate != null
                                 ? _selectedDate.toString().split(" ")[0]
                                 : "목표기한",
-                            style: TextStyle(fontSize: 18)),
+                            style: const TextStyle(fontSize: 18)),
                       ],
                     ),
                   ),
@@ -256,7 +256,7 @@ class _Groproom_cr2State extends State<Groproom_cr2>
                               },
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 8,
                           )
                         ],
@@ -499,14 +499,14 @@ class _Groproom_cr2State extends State<Groproom_cr2>
                                   });
                                   return;
                                 }
-                                // setState(() {
-                                //   _isEnabled = false;
-                                //   _autovalidateMode = AutovalidateMode.always;
-                                // });
+
                                 try {
                                   fetchCreate(formData);
                                   print("오케이");
-
+                                  setState(() {
+                                    _isEnabled = false;
+                                    _autovalidateMode = AutovalidateMode.always;
+                                  });
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
