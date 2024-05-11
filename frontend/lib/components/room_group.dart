@@ -15,7 +15,7 @@ Future<RoomInfo_Group> fetchGroupRoomInfo(int room_id) async {
   final response =
       await http.get(Uri.parse('$serverUrl/api/v1/room/in/$room_id'), headers: {
     'Authorization':
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjJ9.WrM3msDSet3X24r8Kf79dsQ52UuuxbpXU_L8JR5daUU'
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
   });
   log('$serverUrl/api/v1/room/in/$room_id');
   if (response.statusCode == 200) {
