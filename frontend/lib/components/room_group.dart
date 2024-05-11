@@ -456,7 +456,7 @@ class _roomMainState extends State<room_group> {
     String endMin = endDay.split("T")[1].split(":")[1];
     return GestureDetector(
       onTap: () {
-        isManager ? log("manager") : null;
+        isManager ? milestone() : null;
       },
       child: SizedBox(
         height: 118,
@@ -507,6 +507,76 @@ class _roomMainState extends State<room_group> {
         ),
       ),
     );
+  }
+
+  void milestone() {
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: ((context) {
+          return AlertDialog(
+            backgroundColor: LIGHTGREY,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: const Text('마일스톤'),
+            content: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: const Center(
+                    child:
+                        Text("현재 목표를 모두 달성하셨나요?\n다음 목표로 넘어가시려면\n'넘어가기'를 눌러주세요.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'bm',
+                              fontSize: 20,
+                            ))),
+              ),
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: POINT_COLOR,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  side: const BorderSide(
+                    color: POINT_COLOR,
+                    width: 1.0,
+                  ),
+                ),
+                child: const Text(
+                  "넘어가기",
+                  style: TextStyle(
+                      color: Color.fromARGB(226, 255, 255, 255),
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); //창 닫기
+                },
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: POINT_COLOR,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  side: const BorderSide(
+                    color: POINT_COLOR,
+                    width: 1.0,
+                  ),
+                ),
+                child: const Text(
+                  "닫기",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          );
+        }));
   }
 
   Column _certificated_person(int? mem) {
