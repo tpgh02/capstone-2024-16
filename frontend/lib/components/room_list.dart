@@ -117,7 +117,7 @@ class _roomListState extends State<room_list> {
 
   @override
   Widget build(BuildContext context) {
-    log('${widget.room_img['id']}');
+    log("${widget.room_img}");
     return Column(
       children: [
         Padding(
@@ -128,24 +128,34 @@ class _roomListState extends State<room_list> {
               children: [
                 // 인증방 썸네일 이미지
                 GestureDetector(
-                  onTap: () {
-                    widget.is_manager
-                        ? showModalBottomSheet(
-                            context: context,
-                            builder: ((builder) => editRoomImg()))
-                        : null;
-                  },
-                  child: SizedBox(
-                    width: 90,
-                    height: 90,
-                    child: ClipOval(
-                      child: Image.network(
-                        widget.room_img['url'],
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
+                    onTap: () {
+                      widget.is_manager
+                          ? showModalBottomSheet(
+                              context: context,
+                              builder: ((builder) => editRoomImg()))
+                          : null;
+                    },
+                    child: widget.room_img != null
+                        ? SizedBox(
+                            width: 90,
+                            height: 90,
+                            child: ClipOval(
+                              child: Image.network(
+                                widget.room_img['url'],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          )
+                        : SizedBox(
+                            width: 90,
+                            height: 90,
+                            child: ClipOval(
+                              child: Image.network(
+                                "https://my-dodo-bucket.s3.ap-northeast-2.amazonaws.com/image/default.png",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          )),
                 const SizedBox(width: 15),
                 // 방 제목 및 속성
                 Expanded(
