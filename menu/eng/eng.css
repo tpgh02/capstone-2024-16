@@ -1,0 +1,132 @@
+*{
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+ul, li{
+    list-style: none;
+}
+
+a {
+    color: black;
+    text-decoration-line: none;
+}
+
+@font-face {
+    font-family: 'tway';
+    src: url(../../asset/tway_air.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'onebold';
+    src: url(../../asset/ONE\ Mobile\ Bold.ttf) format('truetype');
+}
+
+body{
+    font-family: 'tway';
+    height: 100vh;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.blank {
+    height: 10px;
+}
+
+h1 {
+    color: rgb(68, 68, 68);
+    font-family: 'onebold';
+    margin: 40px 0;
+    text-align: center;
+}
+
+p {
+    color: rgb(68, 68, 68);
+    font-family: 'onebold';
+    margin: 7px 0;
+    text-align: center;
+}
+
+#logo {
+    margin: 30px 30px 0 30px;
+    float: left;
+}
+
+#header {
+    width: 1200px;
+    height: 150px;
+    margin: 0 auto;
+}
+
+#menubar > ul > li {
+    display: inline-block;
+    padding: 30px 0;
+}
+
+#menubar > ul > li > a {
+    font-size: 20px;
+    margin: 0 10px;
+}
+
+.userbar {
+    float: right;
+    margin: 8px 0;
+}
+
+#submenu{
+    height: 0;
+    overflow: hidden;
+}
+
+#menuhover {
+    overflow: hidden;
+}
+
+#menuhoverli {
+    width: 15%; 
+    float: left;
+    line-height: 35px;
+    text-align: center;
+  }
+
+#menuhover > li:hover #submenu {
+    height: 100px;
+    transition-duration: 1s;
+}
+
+#selectbar {
+    margin: 0 auto;
+    text-align:center;
+}
+
+#selectbar > ul > li {
+    width: 150px;
+    background-color: #3ED182;
+    display: inline-block;
+    font-size: 0;
+    padding: 20px 20px;
+    margin: 10px 5px;
+}
+
+#selectbar > ul > li:hover {
+    background-color: #529772;
+}
+
+#selectbar > ul > li:enabled {
+    background-color: #529772;
+}
+
+
+#selectbar > ul > li > a {
+    color: whitesmoke;
+    display: inline-block;
+    font-family: 'onebold';
+    font-size: 18px;
+    margin: 0 10px;
+    text-align: center;
+}

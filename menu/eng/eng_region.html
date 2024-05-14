@@ -1,0 +1,224 @@
+<!DOCTYPE html> 
+<html>
+    <head>
+        <title>영어권 지역별 : 유유한유학</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="eng.css">
+    </head>
+    <body>
+        <!-- 상단 메뉴 -->
+        <div id="header">
+            <!-- 로고 -->
+            <h1 id="logo">
+                <a href="../../mainscreen_login.html">
+                    <img src="../../asset/logo_main.png" alt="logo_main">
+                </a>
+            </h1>
+
+            <!-- 메뉴 바 -->
+            <div id="menubar">
+                <ul id="menuhover">
+                    <li id='menuhoverli'>
+                        <a>영어권 어학연수</a>
+                        <ul id="submenu">
+                            <li><a href="eng_region.html">지역별</a></li>
+                            <li><a href="eng_org.html">교육 기관별</a></li>
+                        </ul>
+                    </li>
+                    <li id='menuhoverli'>
+                        <a>유럽 어학연수</a>
+                        <ul id="submenu">
+                            <li><a href="../europe/eur_region.html">지역별</a></li>
+                            <li><a href="../europe/eur_org.html">교육 기관별</a></li>
+                        </ul>
+                    </li>
+                    <li id='menuhoverli'>
+                        <a>아시아 어학연수</a>
+                        <ul id="submenu">
+                            <li><a href="../asia/asia_region.html">지역별</a></li>
+                            <li><a href="../asia/asia_org.html">교육 기관별</a></li>
+                        </ul>
+                    </li>
+                    <li id='menuhoverli'>
+                        <a>유학이야기</a>
+                        <ul id="submenu">
+                            <li><a href="../abroadstory/faq.html">FAQ</a></li>
+                            <li><a href="../abroadstory/abroadstory.html">유학 후기집</a></li>
+                        </ul>
+                    </li>
+                    <li class="userbar">
+                        <a href="../../mainscreen.html">LOGOUT</a>
+                    </li>
+                    <li class="userbar">
+                        <a href="../../user/mypage.html">MYPAGE</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 국가 선택 -->
+        <div id="selectbar">
+            <ul>
+                <li>
+                    <a href="#" onclick="shohRegion('usa')" id="usaLink">미국</a>
+                </li>
+                <li>
+                    <a href="#" onclick="shohRegion('can')" id="canLink">캐나다</a>
+                </li>
+                <li>
+                    <a href="#" onclick="shohRegion('oce')" id="oceLink">호주·뉴질랜드</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- a 선택 시 나타나는 글자 -->
+        <div>
+            <h1 id="result"></h1>
+        </div>
+
+        <hr/>
+
+        <!-- 어학연수 시설 정보 -->
+        <div class="container" id="engOrgContainer_reg"></div>
+        <div class="blank"></div>
+
+        <!-- a 선택 스크립트 -->
+        <script>
+            function shohRegion(reg) {
+              let result = '';
+              switch(reg) {
+                case 'usa':
+                  result = '미국';
+                  break;
+                case 'can':
+                  result = '캐나다';
+                  break;
+                case 'oce':
+                  result = '호주·뉴질랜드';
+                  break;
+                default:
+                  result = '';
+              }
+              document.getElementById('result').textContent = result;
+            }
+        </script>
+
+        <script type="module">
+            import { usaArray, canArray, oceArray } from "./js/eng_region.js";
+
+            document.getElementById('usaLink').addEventListener('click', () => {
+                const orgContainer = document.getElementById('engOrgContainer_reg');
+                orgContainer.innerHTML = '';
+                usaArray.forEach((info) => {
+                const div = document.createElement('div');
+                div.style.margin = '30px';
+                div.style.paddingTop = '5px';
+                div.style.paddingBottom = '30px';
+                div.style.backgroundColor = '#aad1bc9b';
+
+                // 기관명
+                const org_name = document.createElement('h1');
+                org_name.textContent = info[1];
+                div.appendChild(org_name);
+
+                // info
+                const org_info = document.createElement('p');
+                org_info.textContent = info[0];
+                div.appendChild(org_info);
+
+                // 지역
+                const org_reg = document.createElement('p');
+                org_reg.textContent = '국가: 미국';
+                div.appendChild(org_reg);
+
+                // 기관 종류
+                const org_type = document.createElement('p');
+                if (info[2] == 'etc') {
+                    org_type.textContent = '교육 기관: 기타'
+                } else if (info[2] == 'univ') {
+                    org_type.textContent = '교육 기관: 대학 부설 기관'
+                } else {org_type.textContent = '교육 기관: 어학원'}
+                div.appendChild(org_type);
+
+                orgContainer.appendChild(div);
+                });
+            });
+
+            document.getElementById('canLink').addEventListener('click', () => {
+                const orgContainer = document.getElementById('engOrgContainer_reg');
+                orgContainer.innerHTML = '';
+                canArray.forEach((info) => {
+                const div = document.createElement('div');
+                div.style.margin = '30px';
+                div.style.paddingTop = '5px';
+                div.style.paddingBottom = '30px';
+                div.style.backgroundColor = '#aad1bc9b';
+
+                // 기관명
+                const org_name = document.createElement('h1');
+                org_name.textContent = info[1];
+                div.appendChild(org_name);
+
+                // info
+                const org_info = document.createElement('p');
+                org_info.textContent = info[0];
+                div.appendChild(org_info);
+
+                // 지역
+                const org_reg = document.createElement('p');
+                org_reg.textContent = '국가: 캐나다';
+                div.appendChild(org_reg);
+
+                // 기관 종류
+                const org_type = document.createElement('p');
+                if (info[2] == 'etc') {
+                    org_type.textContent = '교육 기관: 기타'
+                } else if (info[2] == 'univ') {
+                    org_type.textContent = '교육 기관: 대학 부설 기관'
+                } else {org_type.textContent = '교육 기관: 어학원'}
+                div.appendChild(org_type);
+
+                orgContainer.appendChild(div);
+                });
+            });
+          
+            document.getElementById('oceLink').addEventListener('click', () => {
+                const orgContainer = document.getElementById('engOrgContainer_reg');
+                orgContainer.innerHTML = '';
+                oceArray.forEach((info) => {
+                const div = document.createElement('div');
+                div.style.margin = '30px';
+                div.style.paddingTop = '5px';
+                div.style.paddingBottom = '30px';
+                div.style.backgroundColor = '#aad1bc9b';
+
+                // 기관명
+                const org_name = document.createElement('h1');
+                org_name.textContent = info[1];
+                div.appendChild(org_name);
+                
+                // info
+                const org_info = document.createElement('p');
+                org_info.textContent = info[0];
+                div.appendChild(org_info);
+
+                // 지역
+                const org_reg = document.createElement('p');
+                org_reg.textContent = '국가: 호주·뉴질랜드';
+                div.appendChild(org_reg);
+
+                // 기관 종류
+                const org_type = document.createElement('p');
+                if (info[2] == 'etc') {
+                    org_type.textContent = '교육 기관: 기타'
+                } else if (info[2] == 'univ') {
+                    org_type.textContent = '교육 기관: 대학 부설 기관'
+                } else {org_type.textContent = '교육 기관: 어학원'}
+                div.appendChild(org_type);
+
+                orgContainer.appendChild(div);
+                });
+            });
+          </script>
+    </body>
+</html>

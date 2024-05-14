@@ -1,0 +1,72 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
+ul, li{
+    list-style: none;
+}
+
+a {
+    color: black;
+    text-decoration-line: none;
+}
+
+@font-face {
+    font-family: 'tway';
+    src: url(asset/tway_air.ttf) format('truetype');
+}
+
+body{
+    height: 100vh;
+    background: url(asset/bg_main.png) no-repeat center fixed;
+    background-size: cover;
+    font-family: 'tway';
+}
+
+#logo {
+    margin: 30px 30px 0 30px;
+    float: left;
+}
+
+#header {
+    width: 1200px;
+    height: 150px;
+    margin: 0 auto;
+}
+
+#menubar > ul > li {
+    display: inline-block;
+    padding: 30px 0;
+}
+
+#menubar > ul > li > a {
+    font-size: 20px;
+    margin: 0 10px;
+}
+
+.userbar {
+    float: right;
+    margin: 8px 0;
+}
+
+#submenu{
+    height: 0;
+    overflow: hidden;
+}
+
+#menuhover {
+    overflow: hidden;
+}
+
+#menuhoverli {
+    width: 15%; 
+    float: left;
+    line-height: 35px;
+    text-align: center;
+  }
+
+#menuhover > li:hover #submenu {
+    height: 100px;
+    transition-duration: 1s;
+}

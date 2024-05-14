@@ -1,0 +1,46 @@
+<!DOCTYPE html> 
+<html>
+    <head>
+        <title>회원가입 : 유유한유학</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="css/join.css">
+    </head>
+    <body>
+        <!-- 상단 메뉴 -->
+        <div id="header">
+            <!-- 로고 -->
+            <h1 id="logo">
+                <a  href="../mainscreen.html">
+                    <img src="../asset/logo_main.png" alt="logo_main">
+                </a>
+            </h1>
+
+            <!-- 메뉴 바 -->
+            <div id="menubar">
+                <ul id="menuhover">
+                    <li class="userbar">
+                        <a href="join.html">JOIN</a>
+                    </li>
+                    <li class="userbar">
+                        <a href="login.html">LOGIN</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!--회원가입 폼-->
+        <div class="loginboxwrap">
+            <form id="loginbox">
+                <h1>
+                    <img src="../asset/logo_user.png" alt="회원가입" width="135">
+                </h1>
+                <h2>회원가입</h2>
+                <input type="email" id="joinemail" placeholder="이메일">
+                <input type="password" id="joinpwd" placeholder="비밀번호" autocomplete="off">
+                <button type="submit" id="register">회원가입</button>
+                <p>· 비밀번호는 6자 이상 입력해주세요.</p>
+            </form>
+        </div>
+        <script type="module" src="js/join.js"></script>
+    </body>
+</html>
