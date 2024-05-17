@@ -1,6 +1,7 @@
 package com.dodo.room;
 
 import com.dodo.config.auth.CustomAuthentication;
+import com.dodo.image.domain.Image;
 import com.dodo.room.domain.Category;
 import com.dodo.room.domain.RoomType;
 import com.dodo.room.dto.RoomData;
@@ -227,13 +228,14 @@ public class RoomController {
         return RoomData.of(roomRepository.findById(roomId).orElseThrow(NotFoundException::new));
     }
 
-    // 인증방 비밀번호 변경
+    // 인증방 이미지 변경
     @CustomAuthentication
-    @PostMapping("/change-pwd/{roomId}")
+    @PostMapping("/change-image")
     @ResponseBody
-    public Boolean changePwd(@PathVariable Long roomId, @RequestBody PasswordChangeRequestData passwordChangeRequestData){
+    public RoomData changeImage(@RequestPart(required = false) Long roomId,
+                                @RequestPart Image image){
 
-        return roomService.changeRoomPassword(roomId, passwordChangeRequestData);
+        return roomService.changeRoomImage(roomId, image);
 
     }
 

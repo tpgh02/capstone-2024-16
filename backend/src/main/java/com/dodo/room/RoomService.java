@@ -2,6 +2,7 @@ package com.dodo.room;
 
 import com.dodo.exception.NotFoundException;
 import com.dodo.image.ImageRepository;
+import com.dodo.image.domain.Image;
 import com.dodo.room.domain.*;
 import com.dodo.room.dto.RoomData;
 import com.dodo.room.dto.RoomListData;
@@ -231,7 +232,8 @@ public class RoomService {
                     roomData.getImage(),
                     roomData.getPeriodicity(),
                     roomData.getFrequency(),
-                    roomData.getCertificationType()
+                    roomData.getCertificationType(),
+                    roomData.getPwd()
             );
             roomTagRepository.deleteAllInBatch(roomTags);
             roomTagService.saveRoomTag(room, roomData.getTag());
@@ -240,26 +242,16 @@ public class RoomService {
         }
     }
 
-    // 인증방 비밀번호 변경
+    // 인증방 이미지 변경
     @Transactional
-    public boolean changeRoomPassword(Long roomId, PasswordChangeRequestData passwordChangeRequestData) {
+    public RoomData changeRoomImage(Long roomId, Image image) {
 
         Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
 
-        String password = room.getPassword();
+        if(image == null) {room.setImage(imageRepository.findById(1L).get());}
+        else {room.setImage(image);}
 
-        if(!password.equals(passwordChangeRequestData.getCurrentPassword())) {
-            throw new RuntimeException("현재 비밀번호가 일치하지 않습니다.");
-        }
-        if(!passwordChangeRequestData.getChangePassword1().equals(passwordChangeRequestData.getChangePassword2())) {
-            throw new RuntimeException("새로운 비밀번호 1, 2가 일치하지 않습니다.");
-        }
-        if(passwordChangeRequestData.getCurrentPassword().equals(passwordChangeRequestData.getChangePassword1())) {
-            throw new RuntimeException("현재 비밀번호와 새로운 비밀번호가 일치합니다.");
-        }
-        room.updatePwd(passwordChangeRequestData.getChangePassword1());
-
-        return true;
+        return RoomData.of(room);
     }
 
     // 유저 추방

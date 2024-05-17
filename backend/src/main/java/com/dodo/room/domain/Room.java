@@ -35,7 +35,7 @@ public class Room {
     @ElementCollection
     private List<String> goal;
 
-    @ManyToOne
+    @ManyToOne @Setter
     private Image image;
 
     // 매일, 최대 3개까지
@@ -66,9 +66,10 @@ public class Room {
     public void update(String name, String info, LocalDateTime endDay,
                        Long maxUser, Boolean canChat, Integer numOfVoteSuccess,
                        Integer numOfVoteFail, Image image, Periodicity periodicity,
-                       Integer frequency, CertificationType certificationType) {
+                       Integer frequency, CertificationType certificationType, String password) {
         if (name != null){this.name = name;}
         if (info != null){this.info = info;}
+        if (password != null){this.password = password;}
         if (endDay != null){this.endDay = endDay;}
         if (canChat != null){this.canChat = canChat;}
         if (numOfVoteSuccess != null){this.numOfVoteSuccess = numOfVoteSuccess;}
