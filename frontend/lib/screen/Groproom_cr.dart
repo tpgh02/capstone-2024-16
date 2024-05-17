@@ -17,182 +17,99 @@ class _Groproom_crState extends State<Groproom_cr> {
   TextEditingController _comments = TextEditingController();
   TextEditingController _peoplenum = TextEditingController();
   TextEditingController _password = TextEditingController();
+  GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
+  AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: LIGHTGREY,
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(80),
-          child: Container(
-            width: 390,
-            height: 80,
-            decoration: const ShapeDecoration(
-              shape: RoundedRectangleBorder(
-                side: BorderSide(
-                  width: 2,
-                  strokeAlign: BorderSide.strokeAlignOutside,
-                  color: Color(0x7F414C58),
-                ),
-              ),
-            ),
-            padding: const EdgeInsets.fromLTRB(30, 20, 0, 0),
-            child: const Text(
-              '그룹 인증방 생성',
-              style: TextStyle(
-                color: PRIMARY_COLOR,
-                fontFamily: "bm",
-                fontSize: 30,
+      backgroundColor: LIGHTGREY,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(80),
+        child: Container(
+          width: 390,
+          height: 80,
+          decoration: const ShapeDecoration(
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                width: 2,
+                strokeAlign: BorderSide.strokeAlignOutside,
+                color: Color(0x7F414C58),
               ),
             ),
           ),
+          padding: const EdgeInsets.fromLTRB(30, 20, 0, 0),
+          child: const Text(
+            '그룹 인증방 생성',
+            style: TextStyle(
+              color: PRIMARY_COLOR,
+              fontFamily: "bm",
+              fontSize: 30,
+            ),
+          ),
         ),
-        body: Padding(
-          padding: EdgeInsets.all(20),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: Form(
+          key: _globalKey,
+          autovalidateMode: _autovalidateMode,
           child: Column(
             children: [
-              //인증방 제목
-              SizedBox(
-                height: 48,
-                child: TextField(
-                  controller: _title,
-                  keyboardType: TextInputType.emailAddress,
-                  style: const TextStyle(fontSize: 20, fontFamily: 'bma'),
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide.none),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: PRIMARY_COLOR),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    labelText: '인증방 제목',
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelStyle: TextStyle(
-                        color: POINT_COLOR, fontSize: 18, fontFamily: 'bm'),
-                  ),
-                ),
+              // 인증방 제목
+              _buildTextFormField(
+                controller: _title,
+                labelText: '인증방 제목',
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return '제목을 입력해주세요';
+                  }
+                  return null;
+                },
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              //카테고리 선택
+              const SizedBox(height: 20),
+              // 카테고리 선택
               Container(width: double.infinity, child: _roomBtn()),
-              const SizedBox(
-                height: 20,
+              const SizedBox(height: 20),
+              // 해시태그 ( 선택 )
+              _buildTextFormField(
+                controller: _tag,
+                labelText: '해시태그 ( 선택 )',
+                validator: null,
               ),
-              //해시태그 ( 선택 )
-              SizedBox(
-                height: 48,
-                child: TextField(
-                  controller: _tag,
-                  keyboardType: TextInputType.emailAddress,
-                  style: const TextStyle(fontSize: 20, fontFamily: 'bma'),
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide.none),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: PRIMARY_COLOR),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    labelText: '해시태그 ( 선택 )',
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelStyle: TextStyle(
-                        color: POINT_COLOR, fontSize: 18, fontFamily: 'bm'),
-                  ),
-                ),
+              const SizedBox(height: 20),
+              // 인증방 목표 (30자 미만)
+              _buildTextFormField(
+                controller: _comments,
+                labelText: '인증방 목표 (30자 미만)',
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return '목표를 입력해주세요';
+                  }
+                  return null;
+                },
               ),
-              const SizedBox(
-                height: 20,
+              const SizedBox(height: 20),
+              // 최대 인원 수
+              _buildTextFormField(
+                controller: _peoplenum,
+                labelText: '최대 인원 수',
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return '최대 인원 수를 입력해주세요';
+                  }
+                  return null;
+                },
               ),
-              //인증방 목표 (30자 미만)
-              SizedBox(
-                height: 48,
-                child: TextField(
-                  controller: _comments,
-                  keyboardType: TextInputType.emailAddress,
-                  style: const TextStyle(fontSize: 20, fontFamily: 'bma'),
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide.none),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: PRIMARY_COLOR),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    labelText: '인증방 목표 (30자 미만)',
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelStyle: TextStyle(
-                        color: POINT_COLOR, fontSize: 18, fontFamily: 'bm'),
-                  ),
-                ),
+              const SizedBox(height: 20),
+              // 비밀번호 (입력시 비밀방으로 생성)
+              _buildTextFormField(
+                controller: _password,
+                labelText: '비밀번호 (입력시 비밀방으로 생성)',
+                validator: null,
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              //최대 인원 수
-              SizedBox(
-                height: 48,
-                child: TextField(
-                  controller: _peoplenum,
-                  keyboardType: TextInputType.emailAddress,
-                  scrollPadding: const EdgeInsets.all(8),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontFamily: "bma",
-                  ),
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide.none),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: PRIMARY_COLOR),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    labelText: '최대 인원 수 (숫자만 입력)',
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelStyle: TextStyle(
-                        color: POINT_COLOR, fontSize: 18, fontFamily: 'bm'),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              //비밀번호 (입력시 비밀방으로 생성)
-              SizedBox(
-                height: 48,
-                child: TextField(
-                  controller: _password,
-                  keyboardType: TextInputType.visiblePassword,
-                  scrollPadding: EdgeInsets.zero,
-                  style: const TextStyle(
-                      fontSize: 20, fontFamily: 'bma', color: POINT_COLOR),
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide.none),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: PRIMARY_COLOR),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    labelText: '비밀번호 (입력시 비밀방으로 생성)',
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelStyle: TextStyle(
-                        color: POINT_COLOR, fontSize: 18, fontFamily: 'bm'),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              //이전, 다음 버튼
+              const SizedBox(height: 20),
+              // 이전, 다음 버튼
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -201,40 +118,53 @@ class _Groproom_crState extends State<Groproom_cr> {
                       Navigator.pop(context);
                     },
                     style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        elevation: 2,
-                        foregroundColor: Colors.black,
-                        shadowColor: Colors.black,
-                        side: const BorderSide(color: PRIMARY_COLOR),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10))),
-                    child: const Text("이전",
-                        style: TextStyle(color: PRIMARY_COLOR)),
+                      backgroundColor: Colors.white,
+                      elevation: 2,
+                      foregroundColor: Colors.black,
+                      shadowColor: Colors.black,
+                      side: const BorderSide(color: PRIMARY_COLOR),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text(
+                      "이전",
+                      style: TextStyle(color: PRIMARY_COLOR),
+                    ),
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
+                  const SizedBox(width: 10),
                   OutlinedButton(
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: () async {
+                      if (_globalKey.currentState!.validate()) {
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Groproom_cr2(
-                                  _title.text,
-                                  _select,
-                                  _tag.text,
-                                  _comments.text,
-                                  _peoplenum.text,
-                                  _password.text)));
+                            builder: (context) => Groproom_cr2(
+                              _title.text,
+                              _select,
+                              _tag.text,
+                              _comments.text,
+                              _peoplenum.text,
+                              _password.text,
+                            ),
+                          ),
+                        );
+                      } else {
+                        setState(() {
+                          _autovalidateMode = AutovalidateMode.always;
+                        });
+                      }
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: PRIMARY_COLOR,
-                        elevation: 2,
-                        foregroundColor: Colors.black,
-                        shadowColor: Colors.black,
-                        side: const BorderSide(color: PRIMARY_COLOR),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10))),
+                      backgroundColor: PRIMARY_COLOR,
+                      elevation: 2,
+                      foregroundColor: Colors.black,
+                      shadowColor: Colors.black,
+                      side: const BorderSide(color: PRIMARY_COLOR),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                     child: const Text(
                       "다음",
                       style: TextStyle(color: Colors.white),
@@ -244,14 +174,17 @@ class _Groproom_crState extends State<Groproom_cr> {
               )
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _roomBtn() {
     return DecoratedBox(
       decoration: BoxDecoration(
-          border: Border.all(color: PRIMARY_COLOR, width: 1),
-          borderRadius: BorderRadius.circular(10)),
+        border: Border.all(color: PRIMARY_COLOR, width: 1),
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20),
         child: DropdownButton(
@@ -281,6 +214,59 @@ class _Groproom_crState extends State<Groproom_cr> {
           },
         ),
       ),
+    );
+  }
+
+  Widget _buildTextFormField({
+    required TextEditingController controller,
+    required String labelText,
+    required String? Function(String?)? validator,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 48,
+          child: TextFormField(
+            controller: controller,
+            keyboardType: TextInputType.emailAddress,
+            style: const TextStyle(fontSize: 20, fontFamily: 'bma'),
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: PRIMARY_COLOR),
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+              labelText: labelText,
+              filled: true,
+              fillColor: Colors.white,
+              labelStyle: const TextStyle(
+                color: POINT_COLOR,
+                fontSize: 18,
+                fontFamily: 'bm',
+              ),
+            ),
+            validator: validator,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+          ),
+        ),
+        Visibility(
+          visible: controller.text.isNotEmpty &&
+              validator?.call(controller.text) != null,
+          child: Column(
+            children: [
+              const SizedBox(height: 5), // Error message와 필드 사이의 간격
+              Text(
+                validator?.call(controller.text) ?? '',
+                style: const TextStyle(color: Colors.red, fontSize: 12),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

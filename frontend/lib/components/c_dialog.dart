@@ -30,7 +30,7 @@ class _c_dialogState extends State<c_dialog> {
 
   @override
   Widget build(BuildContext context) {
-    int c_length = 3; //인증개수
+    int c_length = 1; // 인증 개수
 
     return Dialog(
       child: SizedBox(
@@ -48,8 +48,7 @@ class _c_dialogState extends State<c_dialog> {
                     style: TextStyle(fontFamily: 'bm', fontSize: 25),
                   ),
                   IconButton(
-                    onPressed: () async {
-                      //팝업 지우기
+                    onPressed: () {
                       Navigator.of(context).pop();
                     },
                     icon: const Icon(
@@ -82,7 +81,8 @@ class _c_dialogState extends State<c_dialog> {
                   height: 40,
                   child: ElevatedButton(
                     onPressed: () async {
-                      await patchUserProfileImage(_pickedImages);
+                      await patchUserProfileImage(
+                          _pickedImages, widget.room_id);
                     },
                     child: const Text(
                       "확인",
@@ -100,61 +100,63 @@ class _c_dialogState extends State<c_dialog> {
     );
   }
 
-// var url = serverUrl + '/api/v1/certification/upload';
-
-  Future<dynamic> patchUserProfileImage(List<File?> pickedImages) async {
+  Future<dynamic> patchUserProfileImage(
+      List<File?> pickedImages, int roomId) async {
     print("프로필 사진을 서버에 업로드 합니다.");
     var dio = Dio();
     var url = serverUrl + '/api/v1/certification/upload';
 
-    final List<MultipartFile> _files = pickedImages.map((img) {
-      if (img != null) {
-        return MultipartFile.fromFileSync(
-          img.path,
-          contentType: MediaType("image", "jpg"),
-        );
-      } else {
-        throw Exception('이미지 파일이 유효하지 않습니다.');
-      }
-    }).toList();
-
     try {
+      final List<MultipartFile> _files =
+          await Future.wait(pickedImages.map((img) async {
+        if (img != null) {
+          return await MultipartFile.fromFile(
+            img.path,
+            filename: img.path.split('/').last,
+            contentType: MediaType("image", "jpg"),
+          );
+        } else {
+          throw Exception('이미지 파일이 유효하지 않습니다.');
+        }
+      }).toList());
+
       dio.options.contentType = 'multipart/form-data';
-      dio.options.maxRedirects.isFinite;
+      dio.options.headers = {
+        'Authorization':
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU',
+        'Content-Type': 'multipart/form-data',
+      };
 
       FormData formData = FormData.fromMap({
         "certificationId": 1,
-        "image": _files,
+        "roomId": roomId,
+        "img": _files,
       });
 
-      dio.options.headers = {
-        'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
-      };
+      print('FormData contents: ${formData.fields}');
+      print('FormData files: ${formData.files}');
 
       final response = await dio.post(url, data: formData);
 
+      print('Response status: ${response.statusCode}');
+      print('Response data: ${response.data}');
+      print('Response headers: ${response.headers}');
+
       if (response.statusCode == 200) {
-        // final responseData = response.data;
-        // final imageUrl = responseData["image"]["url"];
         print('성공적으로 업로드했습니다');
-        //return imageUrl;
       } else {
         print('서버로부터 잘못된 응답이 도착했습니다. 상태 코드: ${response.statusCode}');
-        //return null;
       }
     } catch (e) {
-      print(e);
-      return null;
+      print('업로드 중 오류 발생: $e');
     }
   }
 
-//사진 고르는 부분
   Widget select(int index) {
     return Container(
       width: 180,
       height: 180,
-      margin: EdgeInsets.symmetric(vertical: 10), // 각 컨테이너 사이에 간격 추가
+      margin: EdgeInsets.symmetric(vertical: 10),
       child: InkWell(
         onTap: () {
           getImage(ImageSource.gallery);

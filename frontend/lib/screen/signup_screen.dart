@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dodo/components/l_title.dart';
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/const/server.dart';
 import 'package:dodo/screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -15,7 +16,7 @@ class SignupPage extends StatefulWidget {
 }
 
 Future<int> fetchInfo(Map<String, String> userData) async {
-  var url = 'http://43.203.195.126:8080/api/v1/users/register';
+  var url = '${serverUrl}/api/v1/users/register';
   final response = await http.post(
     Uri.parse(url),
     headers: <String, String>{
