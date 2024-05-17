@@ -45,6 +45,7 @@ class RoomInfo_Group {
   final List<dynamic>? tag; // final String tag;
   final bool isManager;
   final int numOfGoal;
+  final int nowGoal;
   final List<dynamic> goal;
   // final bool isFull;
 
@@ -67,6 +68,7 @@ class RoomInfo_Group {
       required this.tag,
       required this.isManager,
       required this.numOfGoal,
+      required this.nowGoal,
       required this.goal});
 
   factory RoomInfo_Group.fromJson(dynamic json) {
@@ -89,6 +91,7 @@ class RoomInfo_Group {
         tag: json['tag'],
         isManager: json['isManager'],
         numOfGoal: json['numOfGoal'],
+        nowGoal: json['nowGoal'],
         goal: json['goal']);
   }
 }
@@ -112,63 +115,6 @@ class _roomMainState extends State<room_group> {
     super.initState();
     nowGroupRoomInfo = fetchGroupRoomInfo(widget.room_id);
   }
-
-  final userList = [
-    {
-      "user_name": "User1",
-      "user_id": 1,
-      "user_img": "assets/images/cook.jpg",
-      "success": 0,
-      "wait": 1,
-      "max": 3,
-      "certification": false,
-    },
-    {
-      "user_name": "User2",
-      "user_id": 2,
-      "user_img": "assets/images/cook.jpg",
-      "success": 0,
-      "wait": 2,
-      "max": 3,
-      "certification": false,
-    },
-    {
-      "user_name": "User3",
-      "user_id": 3,
-      "user_img": "assets/images/cook.jpg",
-      "success": 1,
-      "wait": 1,
-      "max": 3,
-      "certification": false,
-    },
-    {
-      "user_name": "User4",
-      "user_id": 4,
-      "user_img": "assets/images/cook.jpg",
-      "success": 3,
-      "wait": 0,
-      "max": 3,
-      "certification": true,
-    },
-    {
-      "user_name": "User5",
-      "user_id": 5,
-      "user_img": "assets/images/cook.jpg",
-      "success": 0,
-      "wait": 3,
-      "max": 3,
-      "certification": false,
-    },
-    {
-      "user_name": "User6",
-      "user_id": 6,
-      "user_img": "assets/images/cook.jpg",
-      "success": 3,
-      "wait": 0,
-      "max": 3,
-      "certification": true,
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -291,6 +237,7 @@ class _roomMainState extends State<room_group> {
             log("tag: ${snapshot.data!.tag}");
             log("isManager: $nowIsManager");
             log("numOfGoal: ${snapshot.data!.numOfGoal}");
+            log("nowGoal: ${snapshot.data!.nowGoal}");
             log("goal: ${snapshot.data!.goal}");
             return Scaffold(
               appBar: _roomMainAppBar(
@@ -317,8 +264,12 @@ class _roomMainState extends State<room_group> {
                       height: 10,
                     ),
                     // 목표 기한
-                    _progressBar(snapshot.data!.goal, snapshot.data!.numOfGoal,
-                        snapshot.data!.endDay, snapshot.data!.isManager),
+                    _progressBar(
+                        snapshot.data!.goal,
+                        snapshot.data!.numOfGoal,
+                        snapshot.data!.nowGoal,
+                        snapshot.data!.endDay,
+                        snapshot.data!.isManager),
                     Container(
                       margin: const EdgeInsets.fromLTRB(20, 17, 20, 20),
                       child: Row(
@@ -449,14 +400,18 @@ class _roomMainState extends State<room_group> {
     );
   }
 
-  Widget _progressBar(
-      List<dynamic> goal, int numOfGoal, String endDay, bool isManager) {
+  Widget _progressBar(List<dynamic> goal, int numOfGoal, int nowGoal,
+      String endDay, bool isManager) {
     String endDate = endDay.split("T")[0];
     String endHour = endDay.split("T")[1].split(":")[0];
     String endMin = endDay.split("T")[1].split(":")[1];
     return GestureDetector(
       onTap: () {
-        isManager ? milestone() : null;
+        if (isManager == true) {
+          if (nowGoal < numOfGoal) {
+            milestone();
+          }
+        }
       },
       child: SizedBox(
         height: 118,
@@ -471,20 +426,29 @@ class _roomMainState extends State<room_group> {
                 fontSize: 18,
               ),
             ),
-            Text(
-              "${goal[0]}",
-              style: const TextStyle(
-                color: PRIMARY_COLOR,
-                fontFamily: 'bm',
-                fontSize: 22,
-              ),
-            ),
+            nowGoal != numOfGoal
+                ? Text(
+                    "${goal[nowGoal]}",
+                    style: const TextStyle(
+                      color: PRIMARY_COLOR,
+                      fontFamily: 'bm',
+                      fontSize: 22,
+                    ),
+                  )
+                : const Text(
+                    "목표를 달성했어요!",
+                    style: TextStyle(
+                      color: PRIMARY_COLOR,
+                      fontFamily: 'bm',
+                      fontSize: 22,
+                    ),
+                  ),
             // progress bar
             Padding(
               padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
               child: HorizontalStepper(
                 totalStep: numOfGoal,
-                completedStep: 0,
+                completedStep: nowGoal,
                 selectedColor: PRIMARY_COLOR,
                 backGroundColor: const Color.fromARGB(199, 193, 208, 214),
               ),
@@ -535,7 +499,23 @@ class _roomMainState extends State<room_group> {
             ),
             actions: [
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  String upMilestoneURL =
+                      '$serverUrl/api/v1/room/up-milestone/${widget.room_id}';
+                  final response =
+                      await http.post(Uri.parse(upMilestoneURL), headers: {
+                    'Authorization':
+                        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+                  });
+                  try {
+                    if (response.statusCode == 200) {
+                      log("마일스톤 넘기기 성공");
+                    }
+                  } catch (e) {
+                    log(response.body);
+                    log('$e');
+                    throw Exception('네트워크 오류가 발생했습니다.');
+                  }
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
