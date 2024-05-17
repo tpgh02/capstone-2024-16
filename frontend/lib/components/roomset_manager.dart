@@ -428,26 +428,6 @@ class _roomSetManagerState extends State<RoomSetting_Manager> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  // 비밀번호 사용 여부
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(26, 0, 15, 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text("비밀번호 사용"),
-                        Switch(
-                          activeColor: Colors.white,
-                          activeTrackColor: PRIMARY_COLOR,
-                          value: widget.room_pwd != null,
-                          onChanged: (value) {
-                            bool isExistPwd = widget.room_pwd != null;
-                            log("${!isExistPwd}");
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-
                   // 비밀번호 입력
                   Container(
                     padding: const EdgeInsets.fromLTRB(14, 7, 14, 7),
@@ -482,7 +462,7 @@ class _roomSetManagerState extends State<RoomSetting_Manager> {
               onPressed: () {
                 String? changedPwd = resetPwdController.text;
                 if (resetPwdController.text.isEmpty) {
-                  changedPwd = null;
+                  changedPwd = "";
                 }
                 fetchRoomInfo({"pwd": changedPwd}, widget.room_id).then((data) {
                   log("changed pwd: $changedPwd");
@@ -806,7 +786,8 @@ class _roomSetManagerState extends State<RoomSetting_Manager> {
                     'Authorization':
                         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
                   });
-                  log("인증방 해체 성공");
+                  print(deleteroomUrl);
+                  Navigator.of(context).pop(); //창 닫기
                   Navigator.push(
                       context,
                       MaterialPageRoute(
