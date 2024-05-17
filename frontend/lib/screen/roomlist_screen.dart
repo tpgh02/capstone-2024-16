@@ -78,52 +78,12 @@ class _RoomListState extends State<RoomListPage> {
     futureRoomList = fetchRooms();
   }
 
-  final List<dynamic> roomList = [
-    {
-      "room_title": "자취요리왕",
-      "room_id": 1,
-      "room_pwd": null,
-      "room_type": "default",
-      "room_img": "assets/images/cook.jpg",
-      "room_mem": 10,
-      "room_maxmem": 20,
-      "canChat": true,
-      "is_manager": true,
-      "certificationType": "VOTE",
-    },
-    {
-      "room_title": "오운완",
-      "room_id": 2,
-      "room_pwd": "1234",
-      "room_type": "AI",
-      "room_img": "assets/images/turtle_noradius.png",
-      "room_mem": 5,
-      "room_maxmem": 20,
-      "canChat": false,
-      "is_manager": false,
-      "certificationType": "AI",
-    },
-    {
-      "room_title": "H.O.T",
-      "room_id": 3,
-      "room_pwd": null,
-      "room_type": "group",
-      "room_img": "assets/images/turtle_noradius.png",
-      "room_mem": 10,
-      "room_maxmem": 20,
-      "canChat": true,
-      "is_manager": true,
-      "certificationType": "APPROVE",
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
     return CustomFloatingActionButton(
       body: Scaffold(
         appBar: _roomListAppBar(),
         backgroundColor: LIGHTGREY,
-        //floatingActionButton: appendRoom(),
         body: FutureBuilder<List<MyRoom>>(
           future: futureRoomList,
           builder: (context, snapshot) {

@@ -1,22 +1,34 @@
+import 'dart:developer';
+
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/const/server.dart';
+import 'package:dodo/screen/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:http/http.dart' as http;
 
 class RoomSetting_Basic extends StatefulWidget {
   final String room_title;
   final int room_id;
   final String? room_pwd;
-  // final String room_img;
   final bool canChat;
-  // final bool is_manager;
   final List<dynamic>? tag;
+  final String? periodicity;
+  final int frequency;
+  final String category;
+  final String certificationType;
+
   const RoomSetting_Basic(
       {super.key,
       required this.room_title,
       required this.room_id,
       this.room_pwd,
       required this.canChat,
-      required this.tag});
+      required this.tag,
+      required this.periodicity,
+      required this.frequency,
+      required this.category,
+      required this.certificationType});
 
   @override
   State<RoomSetting_Basic> createState() => _roomSetBasicState();
@@ -83,9 +95,101 @@ class _roomSetBasicState extends State<RoomSetting_Basic> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 채팅 가능 여부
+                // 카테고리
                 Row(
                   children: [
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.05),
+                    const Expanded(
+                      child: Text(
+                        "카테고리",
+                        style: TextStyle(
+                            color: POINT_COLOR,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    Text(
+                      "${widget.category}",
+                      style: const TextStyle(
+                        color: POINT_COLOR,
+                        fontSize: 15,
+                      ),
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.15),
+                  ],
+                ),
+                // 인증 주기
+                Row(
+                  children: [
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.05),
+                    const Expanded(
+                      child: Text(
+                        "인증 주기",
+                        style: TextStyle(
+                            color: POINT_COLOR,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    Text(
+                      "${widget.periodicity} ${widget.frequency}회",
+                      style: const TextStyle(
+                        color: POINT_COLOR,
+                        fontSize: 15,
+                      ),
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.15),
+                  ],
+                ),
+                // 인증 방식
+                Row(
+                  children: [
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.05),
+                    const Expanded(
+                      child: Text(
+                        "인증 방식",
+                        style: TextStyle(
+                            color: POINT_COLOR,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    widget.certificationType == 'VOTE'
+                        ? const Text(
+                            "투표",
+                            style: TextStyle(
+                              color: POINT_COLOR,
+                              fontSize: 15,
+                            ),
+                          )
+                        : SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.01),
+                    widget.certificationType == 'ADMIN'
+                        ? const Text(
+                            "방장 승인",
+                            style: TextStyle(
+                              color: POINT_COLOR,
+                              fontSize: 15,
+                            ),
+                          )
+                        : SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.01),
+                    widget.certificationType == 'BOTH'
+                        ? const Text(
+                            "방장 승인 & 투표",
+                            style: TextStyle(
+                              color: POINT_COLOR,
+                              fontSize: 15,
+                            ),
+                          )
+                        : SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.01),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.15),
+                  ],
+                ),
+                Row(
+                  children: [
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.05),
                     const Expanded(
                       child: Text(
                         "채팅 가능 여부",
@@ -169,8 +273,18 @@ class _roomSetBasicState extends State<RoomSetting_Basic> {
           ),
           actions: <Widget>[
             ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop(); //창 닫기
+              onPressed: () async {
+                String leaveRoomUrl =
+                    '$serverUrl/api/v1/room/room-out/${widget.room_id}';
+                await http.get(Uri.parse(leaveRoomUrl), headers: {
+                  'Authorization':
+                      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+                });
+                log("인증방 퇴장 성공");
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const mainPage())); //창 닫기
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: POINT_COLOR,

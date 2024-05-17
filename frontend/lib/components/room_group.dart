@@ -45,6 +45,7 @@ class RoomInfo_Group {
   final List<dynamic>? tag; // final String tag;
   final bool isManager;
   final int numOfGoal;
+  final int nowGoal;
   final List<dynamic> goal;
   // final bool isFull;
 
@@ -67,6 +68,7 @@ class RoomInfo_Group {
       required this.tag,
       required this.isManager,
       required this.numOfGoal,
+      required this.nowGoal,
       required this.goal});
 
   factory RoomInfo_Group.fromJson(dynamic json) {
@@ -89,6 +91,7 @@ class RoomInfo_Group {
         tag: json['tag'],
         isManager: json['isManager'],
         numOfGoal: json['numOfGoal'],
+        nowGoal: json['nowGoal'],
         goal: json['goal']);
   }
 }
@@ -112,63 +115,6 @@ class _roomMainState extends State<room_group> {
     super.initState();
     nowGroupRoomInfo = fetchGroupRoomInfo(widget.room_id);
   }
-
-  final userList = [
-    {
-      "user_name": "User1",
-      "user_id": 1,
-      "user_img": "assets/images/cook.jpg",
-      "success": 0,
-      "wait": 1,
-      "max": 3,
-      "certification": false,
-    },
-    {
-      "user_name": "User2",
-      "user_id": 2,
-      "user_img": "assets/images/cook.jpg",
-      "success": 0,
-      "wait": 2,
-      "max": 3,
-      "certification": false,
-    },
-    {
-      "user_name": "User3",
-      "user_id": 3,
-      "user_img": "assets/images/cook.jpg",
-      "success": 1,
-      "wait": 1,
-      "max": 3,
-      "certification": false,
-    },
-    {
-      "user_name": "User4",
-      "user_id": 4,
-      "user_img": "assets/images/cook.jpg",
-      "success": 3,
-      "wait": 0,
-      "max": 3,
-      "certification": true,
-    },
-    {
-      "user_name": "User5",
-      "user_id": 5,
-      "user_img": "assets/images/cook.jpg",
-      "success": 0,
-      "wait": 3,
-      "max": 3,
-      "certification": false,
-    },
-    {
-      "user_name": "User6",
-      "user_id": 6,
-      "user_img": "assets/images/cook.jpg",
-      "success": 3,
-      "wait": 0,
-      "max": 3,
-      "certification": true,
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -219,7 +165,7 @@ class _roomMainState extends State<room_group> {
           }
           // 연결 에러
           else if (snapshot.hasError) {
-            log("Main title: Error - ${snapshot.data.toString()}");
+            log("Group Room: Error - ${snapshot.data.toString()}");
             return Scaffold(
               appBar: PreferredSize(
                 preferredSize: const Size.fromHeight(80),
@@ -291,6 +237,7 @@ class _roomMainState extends State<room_group> {
             log("tag: ${snapshot.data!.tag}");
             log("isManager: $nowIsManager");
             log("numOfGoal: ${snapshot.data!.numOfGoal}");
+            log("nowGoal: ${snapshot.data!.nowGoal}");
             log("goal: ${snapshot.data!.goal}");
             return Scaffold(
               appBar: _roomMainAppBar(
@@ -301,6 +248,10 @@ class _roomMainState extends State<room_group> {
                   snapshot.data!.nowUser,
                   snapshot.data!.maxUser,
                   snapshot.data!.tag,
+                  snapshot.data!.periodicity,
+                  snapshot.data!.frequency,
+                  snapshot.data!.category,
+                  snapshot.data!.certificationType,
                   manager: nowIsManager),
               backgroundColor: LIGHTGREY,
               floatingActionButton: snapshot.data!.canChat
@@ -313,8 +264,12 @@ class _roomMainState extends State<room_group> {
                       height: 10,
                     ),
                     // 목표 기한
-                    _progressBar(snapshot.data!.goal, snapshot.data!.numOfGoal,
-                        snapshot.data!.endDay),
+                    _progressBar(
+                        snapshot.data!.goal,
+                        snapshot.data!.numOfGoal,
+                        snapshot.data!.nowGoal,
+                        snapshot.data!.endDay,
+                        snapshot.data!.isManager),
                     Container(
                       margin: const EdgeInsets.fromLTRB(20, 17, 20, 20),
                       child: Row(
@@ -342,8 +297,18 @@ class _roomMainState extends State<room_group> {
         });
   }
 
-  PreferredSizeWidget _roomMainAppBar(String title, String? info, bool canChat,
-      String? room_pwd, int nowUser, int maxUser, List<dynamic>? tag,
+  PreferredSizeWidget _roomMainAppBar(
+      String title,
+      String? info,
+      bool canChat,
+      String? room_pwd,
+      int nowUser,
+      int maxUser,
+      List<dynamic>? tag,
+      String? periodicity,
+      int frequency,
+      String category,
+      String certificationType,
       {bool manager = false}) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(80),
@@ -407,11 +372,16 @@ class _roomMainState extends State<room_group> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => RoomSetting_Basic(
-                              room_title: title,
-                              room_id: widget.room_id,
-                              room_pwd: room_pwd,
-                              canChat: canChat,
-                              tag: tag),
+                            room_title: title,
+                            room_id: widget.room_id,
+                            room_pwd: room_pwd,
+                            canChat: canChat,
+                            tag: tag,
+                            periodicity: periodicity,
+                            frequency: frequency,
+                            category: category,
+                            certificationType: certificationType,
+                          ),
                         ),
                       );
                     }
@@ -430,58 +400,163 @@ class _roomMainState extends State<room_group> {
     );
   }
 
-  SizedBox _progressBar(List<dynamic> goal, int numOfGoal, String endDay) {
+  Widget _progressBar(List<dynamic> goal, int numOfGoal, int nowGoal,
+      String endDay, bool isManager) {
     String endDate = endDay.split("T")[0];
     String endHour = endDay.split("T")[1].split(":")[0];
     String endMin = endDay.split("T")[1].split(":")[1];
-    return SizedBox(
-      height: 118,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          const Text(
-            "지금 목표는? ",
-            style: TextStyle(
-              color: POINT_COLOR,
-              fontFamily: 'bm',
-              fontSize: 18,
+    return GestureDetector(
+      onTap: () {
+        if (isManager == true) {
+          if (nowGoal < numOfGoal) {
+            milestone();
+          }
+        }
+      },
+      child: SizedBox(
+        height: 118,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Text(
+              "지금 목표는? ",
+              style: TextStyle(
+                color: POINT_COLOR,
+                fontFamily: 'bm',
+                fontSize: 18,
+              ),
             ),
-          ),
-          Text(
-            "${goal[0]}",
-            style: const TextStyle(
-              color: PRIMARY_COLOR,
-              fontFamily: 'bm',
-              fontSize: 22,
+            nowGoal != numOfGoal
+                ? Text(
+                    "${goal[nowGoal]}",
+                    style: const TextStyle(
+                      color: PRIMARY_COLOR,
+                      fontFamily: 'bm',
+                      fontSize: 22,
+                    ),
+                  )
+                : const Text(
+                    "목표를 달성했어요!",
+                    style: TextStyle(
+                      color: PRIMARY_COLOR,
+                      fontFamily: 'bm',
+                      fontSize: 22,
+                    ),
+                  ),
+            // progress bar
+            Padding(
+              padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+              child: HorizontalStepper(
+                totalStep: numOfGoal,
+                completedStep: nowGoal,
+                selectedColor: PRIMARY_COLOR,
+                backGroundColor: const Color.fromARGB(199, 193, 208, 214),
+              ),
             ),
-          ),
-          // progress bar
-          Padding(
-            padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-            child: HorizontalStepper(
-              totalStep: numOfGoal,
-              completedStep: 0,
-              selectedColor: PRIMARY_COLOR,
-              backGroundColor: const Color.fromARGB(199, 193, 208, 214),
-            ),
-          ),
-          // D-day
+            // D-day
 
-          Text(
-            "$endDate $endHour:$endMin까지 도전",
-            style: const TextStyle(
-              color: POINT_COLOR,
-              fontFamily: 'bm',
-              fontSize: 18,
+            Text(
+              "$endDate $endHour:$endMin까지 도전",
+              style: const TextStyle(
+                color: POINT_COLOR,
+                fontFamily: 'bm',
+                fontSize: 18,
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 3,
-          ),
-          const Divider(),
-        ],
+            const SizedBox(
+              height: 3,
+            ),
+            const Divider(),
+          ],
+        ),
       ),
     );
+  }
+
+  void milestone() {
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: ((context) {
+          return AlertDialog(
+            backgroundColor: LIGHTGREY,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: const Text('마일스톤'),
+            content: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: const Center(
+                    child:
+                        Text("현재 목표를 모두 달성하셨나요?\n다음 목표로 넘어가시려면\n'넘어가기'를 눌러주세요.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'bm',
+                              fontSize: 20,
+                            ))),
+              ),
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () async {
+                  String upMilestoneURL =
+                      '$serverUrl/api/v1/room/up-milestone/${widget.room_id}';
+                  final response =
+                      await http.post(Uri.parse(upMilestoneURL), headers: {
+                    'Authorization':
+                        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+                  });
+                  try {
+                    if (response.statusCode == 200) {
+                      log("마일스톤 넘기기 성공");
+                    }
+                  } catch (e) {
+                    log(response.body);
+                    log('$e');
+                    throw Exception('네트워크 오류가 발생했습니다.');
+                  }
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: POINT_COLOR,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  side: const BorderSide(
+                    color: POINT_COLOR,
+                    width: 1.0,
+                  ),
+                ),
+                child: const Text(
+                  "넘어가기",
+                  style: TextStyle(
+                      color: Color.fromARGB(226, 255, 255, 255),
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); //창 닫기
+                },
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: POINT_COLOR,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  side: const BorderSide(
+                    color: POINT_COLOR,
+                    width: 1.0,
+                  ),
+                ),
+                child: const Text(
+                  "닫기",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          );
+        }));
   }
 
   Column _certificated_person(int? mem) {
@@ -530,7 +605,7 @@ class _roomMainState extends State<room_group> {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return c_dialog(1); //room_id
+              return c_dialog(widget.room_id); //room_id
             },
           );
         },
