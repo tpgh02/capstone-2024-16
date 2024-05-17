@@ -137,6 +137,7 @@ public class RoomService {
                 .roomType(RoomType.GROUP)
                 .numOfGoal(numOfGoal)
                 .goal(goal)
+                .nowGoal(0)
                 .isFull(isFull)
                 .build();
 
@@ -158,20 +159,19 @@ public class RoomService {
 
     // 채팅방 인원 감소
     public void minusUserCnt(Long roomId){
-        log.info("room Id : {}", roomId);
         Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
         room.setNowUser(room.getNowUser()-1);
+
+        log.info("인원 : {}", room.getNowUser());
     }
 
-    // 채팅방 삭제
+    // 인증방 해체
     public void deleteRoom(Long roomId){
-        Room room = roomRepository.findById(roomId).
-                orElse(null);
-        if (room == null){
-            System.out.println("room = null");
-            return;
-        }
+
+        roomUserRepository.deleteAllInBatch(roomUserRepository.findAllByRoomId(roomId).orElseThrow(NotFoundException::new));
+        roomTagRepository.deleteAllInBatch(roomTagRepository.findAllByRoom(roomRepository.findById(roomId).orElseThrow(NotFoundException::new)).orElseThrow(NotFoundException::new));
         roomRepository.deleteById(roomId);
+
     }
 
     // 채팅방 공지 수정
@@ -298,18 +298,30 @@ public class RoomService {
         return roomData2;
     }
 
-    public User getUser(UserContext userContext) {
-        return userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
-    }
-    public RoomUser getRoomUser(User user, Room room){
-        return roomUserRepository.findByUserAndRoom(user, room).orElseThrow(NotFoundException::new);
-    }
-
     public RoomListData updateIsManager(RoomListData roomListData, User user){
         RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, roomRepository.findById(roomListData.getRoomId()).orElseThrow(NotFoundException::new)).orElseThrow(NotFoundException::new);
 
         roomListData.updateIsManager(roomUser.getIsManager());
         return roomListData;
     }
+
+    public void upMilestone(Long roomId) {
+
+        Room room = getRoom(roomId);
+        room.setNowGoal(room.getNowGoal() + 1);
+        roomRepository.save(room);
+
+    }
+
+    public User getUser(UserContext userContext) {
+        return userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
+    }
+    public Room getRoom(Long roomId){
+        return roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
+    }
+    public RoomUser getRoomUser(User user, Room room){
+        return roomUserRepository.findByUserAndRoom(user, room).orElseThrow(NotFoundException::new);
+    }
+
 
 }

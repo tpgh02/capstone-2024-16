@@ -27,6 +27,10 @@ public class RoomUser {
     @Setter
     private Boolean isManager = false;
 
+    @Builder.Default
+    @Setter
+    private Integer certificateTime = 0;
+
     @ManyToOne
     private User user;
 
