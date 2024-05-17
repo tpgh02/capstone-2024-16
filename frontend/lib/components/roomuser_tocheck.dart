@@ -5,6 +5,7 @@ import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 
 class RoomUserToCheck extends StatelessWidget {
+  final int roomUserId;
   final int room_id;
   final String user_name;
   final String user_img;
@@ -14,6 +15,7 @@ class RoomUserToCheck extends StatelessWidget {
   final String certificationType;
 
   const RoomUserToCheck(
+      this.roomUserId,
       this.room_id,
       this.user_name,
       this.user_img,
@@ -41,8 +43,7 @@ class RoomUserToCheck extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) => RoomUserProfile(
-                  user_name: user_name,
-                  user_img: user_img,
+                  roomUserId: roomUserId,
                   is_manager: is_manager,
                 ),
               );
@@ -51,7 +52,7 @@ class RoomUserToCheck extends StatelessWidget {
               width: 70,
               height: 70,
               child: ClipOval(
-                child: Image.asset(
+                child: Image.network(
                   user_img,
                   fit: BoxFit.cover,
                 ),

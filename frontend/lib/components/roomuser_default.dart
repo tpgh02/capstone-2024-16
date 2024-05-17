@@ -3,6 +3,7 @@ import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 
 class RoomUserDefault extends StatelessWidget {
+  final int roomUserId;
   final String user_name;
   final String user_img;
   final int upload_imgs;
@@ -10,8 +11,14 @@ class RoomUserDefault extends StatelessWidget {
   final bool is_manager;
   final String certificationType;
 
-  const RoomUserDefault(this.user_name, this.user_img, this.upload_imgs,
-      this.required_imgs, this.is_manager, this.certificationType);
+  const RoomUserDefault(
+      this.roomUserId,
+      this.user_name,
+      this.user_img,
+      this.upload_imgs,
+      this.required_imgs,
+      this.is_manager,
+      this.certificationType);
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +39,7 @@ class RoomUserDefault extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) => RoomUserProfile(
-                  user_name: user_name,
-                  user_img: user_img,
+                  roomUserId: roomUserId,
                   is_manager: is_manager,
                 ),
               );
@@ -42,7 +48,7 @@ class RoomUserDefault extends StatelessWidget {
               width: 70,
               height: 70,
               child: ClipOval(
-                child: Image.asset(
+                child: Image.network(
                   user_img,
                   fit: BoxFit.cover,
                 ),
