@@ -3,6 +3,7 @@ import 'package:dodo/components/room_list.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
 import 'package:dodo/screen/AIroom_cr.dart';
+import 'package:dodo/screen/Groproom_cr.dart';
 import 'package:dodo/screen/Room_cr.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -210,12 +211,12 @@ class _RoomListState extends State<RoomListPage> {
           children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(
                   Radius.circular(10),
                 ),
               ),
-              child: Text(
+              child: const Text(
                 'AI인증방 생성',
                 style: TextStyle(
                     color: Colors.white, fontFamily: 'bma', fontSize: 20),
@@ -226,8 +227,10 @@ class _RoomListState extends State<RoomListPage> {
             ),
             InkWell(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AIroom_cr()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AIroom_cr()));
                 },
                 child: Image.asset(
                   "assets/images/AI인증방생성.png",
@@ -240,12 +243,12 @@ class _RoomListState extends State<RoomListPage> {
           children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(
                   Radius.circular(10),
                 ),
               ),
-              child: Text(
+              child: const Text(
                 '일반 인증방 생성',
                 style: TextStyle(
                     color: Colors.white, fontFamily: 'bma', fontSize: 20),
@@ -257,7 +260,7 @@ class _RoomListState extends State<RoomListPage> {
             InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Room_cr()));
+                      MaterialPageRoute(builder: (context) => const Room_cr()));
                 },
                 child: Image.asset(
                   "assets/images/일반인증방생성.png",
@@ -270,12 +273,12 @@ class _RoomListState extends State<RoomListPage> {
           children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(
                   Radius.circular(10),
                 ),
               ),
-              child: Text(
+              child: const Text(
                 '그룹 인증방 생성',
                 style: TextStyle(
                     color: Colors.white, fontFamily: 'bma', fontSize: 20),
@@ -285,7 +288,12 @@ class _RoomListState extends State<RoomListPage> {
               width: 10,
             ),
             InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Groproom_cr()));
+                },
                 child: Image.asset(
                   "assets/images/그룹인증방생성.png",
                   fit: BoxFit.cover,
