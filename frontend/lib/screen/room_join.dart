@@ -96,7 +96,7 @@ class _room_joinState extends State<room_join> {
                               child: ClipRRect(
                                   borderRadius: BorderRadius.circular(50),
                                   child: Image.asset(
-                                      "../assets/images/turtle_noradius.png")),
+                                      "assets/images/turtle_noradius.png")),
                             ),
                             const SizedBox(
                               width: 10,
@@ -133,11 +133,11 @@ class _room_joinState extends State<room_join> {
                     const SizedBox(
                       height: 20,
                     ),
-                    //방소개
+                    //목표
                     Container(
                       alignment: Alignment.centerLeft,
                       child: const Text(
-                        "방 소개",
+                        "목표",
                         style: TextStyle(fontSize: 18, fontFamily: 'bma'),
                       ),
                     ),

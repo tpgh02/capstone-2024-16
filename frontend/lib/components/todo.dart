@@ -38,9 +38,15 @@ class _todoState extends State<todo> {
                 //사진을 둥글게 만들 수 있는 함수
                 ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.network(
-                widget.room_img,
-                fit: BoxFit.cover,
+              child: ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(0.25), // 어두운 필터 색상과 투명도 설정
+                  BlendMode.darken, // BlendMode 설정
+                ),
+                child: Image.network(
+                  widget.room_img,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
