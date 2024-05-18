@@ -322,7 +322,7 @@ class _roomMainState extends State<room_main> {
                         // 도전 완료 사용자 수
                         _certificated_person(snapshot.data!.nowUser),
                         // 인증하기 버튼
-                        _certification_button(),
+                        _certification_button(snapshot.data!.room_id),
                       ],
                     ),
                   ),
@@ -534,7 +534,7 @@ class _roomMainState extends State<room_main> {
     );
   }
 
-  SizedBox _certification_button() {
+  SizedBox _certification_button(int room_id) {
     return SizedBox(
       height: 100,
       child: ElevatedButton(
@@ -549,7 +549,7 @@ class _roomMainState extends State<room_main> {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return c_dialog(1); //room_id
+              return c_dialog(room_id);
             },
           );
         },
