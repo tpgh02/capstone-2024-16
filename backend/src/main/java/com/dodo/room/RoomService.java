@@ -2,6 +2,7 @@ package com.dodo.room;
 
 import com.dodo.exception.NotFoundException;
 import com.dodo.image.ImageRepository;
+import com.dodo.image.ImageService;
 import com.dodo.image.domain.Image;
 import com.dodo.room.domain.*;
 import com.dodo.room.dto.RoomData;
@@ -24,7 +25,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -46,6 +49,7 @@ public class RoomService {
     private final RoomTagRepository roomTagRepository;
     private final RoomTagService roomTagService;
     private final ImageRepository imageRepository;
+    private final ImageService imageService;
 
     public List<RoomListData> getMyRoomList(UserContext userContext) {
         User user = getUser(userContext);
@@ -244,12 +248,14 @@ public class RoomService {
 
     // 인증방 이미지 변경
     @Transactional
-    public RoomData changeRoomImage(Long roomId, Image image) {
+    public RoomData changeRoomImage(Long roomId, MultipartFile image) throws IOException {
 
         Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
 
         if(image == null) {room.setImage(imageRepository.findById(1L).get());}
-        else {room.setImage(image);}
+        else {
+            Image img = imageService.save(image);
+            room.setImage(img);}
 
         return RoomData.of(room);
     }

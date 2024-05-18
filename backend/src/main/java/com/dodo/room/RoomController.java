@@ -21,7 +21,9 @@ import com.dodo.user.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -220,8 +222,8 @@ public class RoomController {
     @CustomAuthentication
     @PostMapping("/change-image")
     @ResponseBody
-    public RoomData changeImage(@RequestPart(required = false) Long roomId,
-                                @RequestPart Image image){
+    public RoomData changeImage(@RequestParam(required = false) Long roomId,
+                                @RequestParam MultipartFile image) throws IOException {
 
         return roomService.changeRoomImage(roomId, image);
 
