@@ -158,7 +158,9 @@ class _searchPageState extends State<search2Page> {
                 ),
               ),
 
-              s2_tag(),
+              s2_tag(
+                tag: ['운동', '갓생'],
+              ),
             ],
           ),
         ),

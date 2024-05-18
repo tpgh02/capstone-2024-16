@@ -102,11 +102,11 @@ class _categoryPageState extends State<categoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: LIGHTGREY,
-        body: Column(
+      backgroundColor: LIGHTGREY,
+      body: SingleChildScrollView(
+        child: Column(
           children: [
             c_title("${widget.cateKor}"),
-
             FutureBuilder<List<RoomOfCategory>>(
               future: futureCategoryRooms,
               builder: (context, snapshot) {
@@ -157,19 +157,43 @@ class _categoryPageState extends State<categoryPage> {
                       ],
                     );
                   } else {
-                    return Text("${snapshot.data!.length}");
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                        children: snapshot.data!.map((RoomOfCategory) {
+                          return c_room(
+                              roomId: RoomOfCategory.roomId,
+                              room_title: RoomOfCategory.room_title,
+                              image: RoomOfCategory.image ??
+                                  {
+                                    "id": 1,
+                                    "url":
+                                        "https://my-dodo-bucket.s3.ap-northeast-2.amazonaws.com/image/default.png"
+                                  },
+                              maxUser: RoomOfCategory.maxUser,
+                              nowUser: RoomOfCategory.nowUser,
+                              endDay: RoomOfCategory.endDay,
+                              periodicity: RoomOfCategory.periodicity,
+                              room_pwd: RoomOfCategory.room_pwd,
+                              info: RoomOfCategory.info,
+                              canChat: RoomOfCategory.canChat,
+                              room_type: RoomOfCategory.room_type,
+                              certificationType:
+                                  RoomOfCategory.certificationType,
+                              frequency: RoomOfCategory.frequency,
+                              tag: RoomOfCategory.tag);
+                        }).toList(),
+                      ),
+                    );
                   }
-
-                  // 인증방 O
                 } else {
                   return const Text('No data available');
                 }
               },
             ),
-            // c_room(num: 0),
-            // c_room(num: 1),
-            // c_room(num: 2),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }
