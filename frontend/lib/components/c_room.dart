@@ -42,30 +42,6 @@ class c_room extends StatefulWidget {
 }
 
 class _c_roomState extends State<c_room> {
-  // final postList = [
-  //   {
-  //     "room_title": "자취요리왕",
-  //     "room_cap": "거북이도도",
-  //     "room_mem": "10",
-  //     "room_maxmem": "20",
-  //     "room_txt": "자취가 아닌 세계를 울릴 비룡이 되는 그날까지...",
-  //   },
-  //   {
-  //     "room_title": "오운완",
-  //     "room_cap": "김준현",
-  //     "room_mem": "10",
-  //     "room_maxmem": "20",
-  //     "room_txt":
-  //         "오늘의 운동을 인증했단 의미로 어쩌고 저쩌고 너가 해라 운동 안하면 큰일나오늘의 운동을 인증했단 의미로 어쩌고 저쩌고 너가 해라 운동 안하면 큰일나",
-  //   },
-  //   {
-  //     "room_title": "H.O.T",
-  //     "room_cap": "강타",
-  //     "room_mem": "10",
-  //     "room_maxmem": "20",
-  //     "room_txt": "세계를 강타할 핫 바디 ㄱㄱ",
-  //   },
-  // ];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -132,6 +108,22 @@ class _c_roomState extends State<c_room> {
                 // const SizedBox(
                 //   width: 5,
                 // ),
+                widget.room_pwd == null || widget.room_pwd == ""
+                    ? const SizedBox(height: 0.1)
+                    : const Row(children: [
+                        Icon(
+                          size: 20,
+                          Icons.lock,
+                          color: PRIMARY_COLOR,
+                        ),
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                            child: Icon(
+                              size: 5,
+                              Icons.circle,
+                              color: PRIMARY_COLOR,
+                            )),
+                      ]),
                 const Icon(
                   Icons.person,
                   color: PRIMARY_COLOR,
