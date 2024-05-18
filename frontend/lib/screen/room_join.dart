@@ -1,8 +1,11 @@
+import 'dart:developer';
+import 'package:dodo/screen/main_screen.dart';
+import 'package:http/http.dart' as http;
 import 'package:dodo/components/s2_tag.dart';
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/const/server.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class room_join extends StatefulWidget {
   final int roomId;
@@ -380,7 +383,9 @@ class _room_joinState extends State<room_join> {
                     color: PRIMARY_COLOR, // 버튼 배경색
                   ),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      enterRoom(context, widget.roomId);
+                    },
                     child: const Text(
                       '가입하기',
                       style: TextStyle(
@@ -391,5 +396,84 @@ class _room_joinState extends State<room_join> {
                   ),
                 ),
     );
+  }
+
+  void enterRoom(BuildContext context, int roomId) {
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: ((context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: const Text(
+              "그룹에 가입하시겠습니까?",
+              style: TextStyle(
+                color: POINT_COLOR,
+                fontSize: 20,
+              ),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                onPressed: () async {
+                  String enterRoomURL =
+                      '$serverUrl/api/v1/room/enter/${roomId}';
+                  final response =
+                      await http.post(Uri.parse(enterRoomURL), headers: {
+                    'Authorization':
+                        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+                  });
+                  try {
+                    if (response.statusCode == 200) {
+                      log("인증방 가입 성공");
+                    }
+                  } catch (e) {
+                    log(response.body);
+                    log('$e');
+                    throw Exception('네트워크 오류가 발생했습니다.');
+                  }
+
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const mainPage()));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: POINT_COLOR,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  side: const BorderSide(
+                    color: POINT_COLOR,
+                    width: 1.0,
+                  ),
+                ),
+                child: const Text(
+                  "예",
+                  style: TextStyle(
+                      color: Color.fromARGB(226, 255, 255, 255),
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); //창 닫기
+                },
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: POINT_COLOR,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  side: const BorderSide(
+                    color: POINT_COLOR,
+                    width: 1.0,
+                  ),
+                ),
+                child: const Text("아니오",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ],
+          );
+        }));
   }
 }
