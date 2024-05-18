@@ -117,7 +117,7 @@ class _roomListState extends State<room_list> {
 
   @override
   Widget build(BuildContext context) {
-    log("${widget.room_img}");
+    // log("${widget.room_img}");
     return Column(
       children: [
         Padding(

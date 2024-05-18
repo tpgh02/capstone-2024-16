@@ -180,18 +180,18 @@ class _RoomUserProfileState extends State<RoomUserProfile> {
 
             // 서버 연결 성공
             else if (snapshot.hasData) {
-              log("----User Profile----");
-              log("room id: ${widget.roomId}");
-              log("user id: ${widget.userId}");
-              log("room user id: ${snapshot.data!.roomUserId}");
-              log("user name: ${snapshot.data!.userName}");
-              log("room user image: ${snapshot.data!.image}");
-              log("since: ${snapshot.data!.since}");
-              log("success: ${snapshot.data!.success}");
-              log("all success: ${snapshot.data!.allSuccess}");
-              log("lately: ${snapshot.data!.lately}");
-              log("allLately: ${snapshot.data!.allLately}");
-              log("----User Profile----");
+              // log("----User Profile----");
+              // log("room id: ${widget.roomId}");
+              // log("user id: ${widget.userId}");
+              // log("room user id: ${snapshot.data!.roomUserId}");
+              // log("user name: ${snapshot.data!.userName}");
+              // log("room user image: ${snapshot.data!.image}");
+              // log("since: ${snapshot.data!.since}");
+              // log("success: ${snapshot.data!.success}");
+              // log("all success: ${snapshot.data!.allSuccess}");
+              // log("lately: ${snapshot.data!.lately}");
+              // log("allLately: ${snapshot.data!.allLately}");
+              // log("----User Profile----");
 
               return Column(
                 mainAxisSize: MainAxisSize.min,
@@ -231,18 +231,43 @@ class _RoomUserProfileState extends State<RoomUserProfile> {
 
                       // 닉네임
                       Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                          child: Text(
-                            '${snapshot.data!.userName}',
-                            style: const TextStyle(
-                              color: POINT_COLOR,
-                              fontFamily: 'bm',
-                              fontSize: 28,
+                          child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                            child: Text(
+                              '${snapshot.data!.userName}',
+                              style: const TextStyle(
+                                color: POINT_COLOR,
+                                fontFamily: 'bm',
+                                fontSize: 28,
+                              ),
                             ),
                           ),
-                        ),
-                      ),
+                          Text(
+                            'Since ${snapshot.data!.since}',
+                            style: const TextStyle(
+                                color: POINT_COLOR,
+                                fontFamily: 'bma',
+                                fontSize: 15),
+                          ),
+                          Text(
+                            '인증 성공 횟수: ${snapshot.data!.success}/${snapshot.data!.allSuccess}',
+                            style: const TextStyle(
+                                color: POINT_COLOR,
+                                fontFamily: 'bma',
+                                fontSize: 15),
+                          ),
+                          Text(
+                            '최근 인증 횟수: ${snapshot.data!.lately}/${snapshot.data!.allLately}',
+                            style: const TextStyle(
+                                color: POINT_COLOR,
+                                fontFamily: 'bma',
+                                fontSize: 15),
+                          ),
+                        ],
+                      )),
                     ],
                   ),
 
