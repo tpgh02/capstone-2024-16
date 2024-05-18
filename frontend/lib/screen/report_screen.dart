@@ -147,6 +147,19 @@ class _reportPageState extends State<reportPage> {
               FutureBuilder<UserData>(
                 future: myUserData,
                 builder: (context, snapshot) {
+                  Widget errorWidget = Column(
+                    children: const [
+                      Text(
+                        "서버 연결 실패",
+                        style: TextStyle(
+                          fontFamily: "kcc",
+                          fontSize: 20,
+                          color: PRIMARY_COLOR,
+                        ),
+                      ),
+                    ],
+                  );
+
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -156,23 +169,53 @@ class _reportPageState extends State<reportPage> {
                     );
                   } else if (snapshot.hasError) {
                     log("Main title: Error - ${snapshot.error.toString()}");
-                    return const Text("서버 연결 실패",
-                        style: TextStyle(
-                            fontFamily: "kcc",
-                            fontSize: 20,
-                            color: PRIMARY_COLOR));
-                  } else if (snapshot.hasData) {
-                    UserData data = snapshot.data!;
                     return Column(
                       children: [
                         Container(
                           alignment: Alignment.centerRight,
-                          child: Text(
-                            "도도", // If you have a name field in UserData, use it here
-                            style: const TextStyle(
-                                fontFamily: "bm",
-                                fontSize: 25,
-                                color: PRIMARY_COLOR),
+                          child: const Text(
+                            "도도",
+                            style: TextStyle(
+                              fontFamily: "bm",
+                              fontSize: 25,
+                              color: PRIMARY_COLOR,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        errorWidget,
+                      ],
+                    );
+                  } else if (snapshot.hasData) {
+                    UserData data = snapshot.data!;
+
+                    // 데이터 검증
+                    double thisMonthPercent =
+                        (data.thisMonth >= 0 && data.thisMonth <= 100)
+                            ? data.thisMonth / 100
+                            : 0.0;
+                    double mostActivityPercent =
+                        (data.mostActivity >= 0 && data.mostActivity <= 100)
+                            ? data.mostActivity / 100
+                            : 0.0;
+                    double mostActivity =
+                        (data.mostActivity >= 0 && data.mostActivity <= 100)
+                            ? data.mostActivity
+                            : 0.0;
+
+                    return Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.centerRight,
+                          child: const Text(
+                            "도도",
+                            style: TextStyle(
+                              fontFamily: "bm",
+                              fontSize: 25,
+                              color: PRIMARY_COLOR,
+                            ),
                           ),
                         ),
                         const SizedBox(
@@ -181,15 +224,17 @@ class _reportPageState extends State<reportPage> {
                         // First, achievement rate
                         Container(
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.grey.withOpacity(0.7),
-                                    spreadRadius: 0,
-                                    blurRadius: 5.0,
-                                    offset: const Offset(0, 3))
-                              ]),
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.7),
+                                spreadRadius: 0,
+                                blurRadius: 5.0,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(20),
                             child: Column(
@@ -199,7 +244,9 @@ class _reportPageState extends State<reportPage> {
                                   child: const Text(
                                     "이번달 달성률은",
                                     style: TextStyle(
-                                        fontFamily: "bm", fontSize: 25),
+                                      fontFamily: "bm",
+                                      fontSize: 25,
+                                    ),
                                   ),
                                 ),
                                 Row(
@@ -209,16 +256,19 @@ class _reportPageState extends State<reportPage> {
                                     Text(
                                       "${data.thisMonth.toStringAsFixed(0)}%",
                                       style: const TextStyle(
-                                          fontFamily: "bm",
-                                          fontSize: 50,
-                                          color: PRIMARY_COLOR),
+                                        fontFamily: "bm",
+                                        fontSize: 50,
+                                        color: PRIMARY_COLOR,
+                                      ),
                                     ),
                                     const Padding(
                                       padding: EdgeInsets.all(10.0),
                                       child: Text(
                                         "예요",
                                         style: TextStyle(
-                                            fontFamily: "bm", fontSize: 25),
+                                          fontFamily: "bm",
+                                          fontSize: 25,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -227,7 +277,7 @@ class _reportPageState extends State<reportPage> {
                                   animation: true,
                                   animationDuration: 100,
                                   lineHeight: 30,
-                                  percent: data.thisMonth / 100,
+                                  percent: thisMonthPercent,
                                   progressColor: PRIMARY_COLOR,
                                   barRadius: const Radius.circular(20),
                                 ),
@@ -248,7 +298,9 @@ class _reportPageState extends State<reportPage> {
                                 child: Text(
                                   "지난달 달성률은 ${data.lastMonth.toStringAsFixed(0)}%예요\n이번달 ${(data.thisMonth - data.lastMonth).toStringAsFixed(0)}% 더 높아요",
                                   style: const TextStyle(
-                                      fontFamily: "bm", fontSize: 25),
+                                    fontFamily: "bm",
+                                    fontSize: 25,
+                                  ),
                                 ),
                               ),
                               const SizedBox(
@@ -267,15 +319,17 @@ class _reportPageState extends State<reportPage> {
                         // Third, category
                         Container(
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.grey.withOpacity(0.7),
-                                    spreadRadius: 0,
-                                    blurRadius: 5.0,
-                                    offset: const Offset(0, 3))
-                              ]),
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.7),
+                                spreadRadius: 0,
+                                blurRadius: 5.0,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(20),
                             child: Column(
@@ -285,7 +339,9 @@ class _reportPageState extends State<reportPage> {
                                   child: const Text(
                                     "제일 열심히 한 분야는",
                                     style: TextStyle(
-                                        fontFamily: "bm", fontSize: 25),
+                                      fontFamily: "bm",
+                                      fontSize: 25,
+                                    ),
                                   ),
                                 ),
                                 Row(
@@ -322,15 +378,17 @@ class _reportPageState extends State<reportPage> {
                         // Fourth, most active
                         Container(
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.grey.withOpacity(0.7),
-                                    spreadRadius: 0,
-                                    blurRadius: 5.0,
-                                    offset: const Offset(0, 3))
-                              ]),
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.7),
+                                spreadRadius: 0,
+                                blurRadius: 5.0,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(20),
                             child: Column(
@@ -340,17 +398,20 @@ class _reportPageState extends State<reportPage> {
                                   child: const Text(
                                     "가장 많이 활동한 방에서 나는",
                                     style: TextStyle(
-                                        fontFamily: "bm", fontSize: 25),
+                                      fontFamily: "bm",
+                                      fontSize: 25,
+                                    ),
                                   ),
                                 ),
                                 Container(
                                   alignment: Alignment.bottomRight,
                                   child: Text(
-                                    "상위 ${data.mostActivity.toStringAsFixed(0)}%",
+                                    "상위 ${mostActivity.toStringAsFixed(0)}%",
                                     style: const TextStyle(
-                                        fontFamily: "bm",
-                                        fontSize: 40,
-                                        color: PRIMARY_COLOR),
+                                      fontFamily: "bm",
+                                      fontSize: 40,
+                                      color: PRIMARY_COLOR,
+                                    ),
                                   ),
                                 ),
                                 const Icon(
@@ -362,7 +423,7 @@ class _reportPageState extends State<reportPage> {
                                   animation: true,
                                   animationDuration: 100,
                                   lineHeight: 30,
-                                  percent: data.mostActivity / 100,
+                                  percent: mostActivityPercent,
                                   progressColor: PRIMARY_COLOR,
                                   barRadius: const Radius.circular(20),
                                 ),
@@ -382,16 +443,19 @@ class _reportPageState extends State<reportPage> {
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const main2Page()));
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const main2Page(),
+                                ),
+                              );
                             },
                             child: const Text(
                               "확인",
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'bm',
-                                  fontSize: 20),
+                                color: Colors.white,
+                                fontFamily: 'bm',
+                                fontSize: 20,
+                              ),
                             ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: PRIMARY_COLOR,
