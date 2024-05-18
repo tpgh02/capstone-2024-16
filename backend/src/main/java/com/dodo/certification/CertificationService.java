@@ -218,7 +218,7 @@ public class CertificationService {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new NotFoundException("인증방을 찾을 수 없습니다"));
 
-        List<RoomUser> roomUserList = roomUserRepository.findAllByUserAndRoom(user, room)
+        List<RoomUser> roomUserList = roomUserRepository.findAllByRoomId(roomId)
                 .orElseThrow(() -> new NotFoundException("인증방의 회원을 찾을 수 엇습니다"));
 
 

@@ -19,6 +19,7 @@ import com.dodo.roomuser.domain.RoomUser;
 import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -235,18 +236,8 @@ public class RoomController {
     public String repel(@RequestParam Long roomId, @RequestAttribute UserContext userContext, @RequestParam Long userId) {
         roomService.repel(roomId, userContext, userId);
 
+        return "OK";
 
-        // 확인
-        RoomUser roomUser = roomUserRepository.findByUserAndRoom(userRepository.findById(userId).get(), roomRepository.findById(roomId).get())
-                .orElse(null);
-
-        if (roomUser == null) {
-            return "해당 유저는 인증방에서 삭제되었습니다." + "\n" +
-                    "nowUser = " + roomRepository.findById(roomId).get().getNowUser();
-        }
-        else {
-            return "유저가 인증방에서 삭제되지 않았습니다.." ;
-        }
     }
 
     // 인증방 제목으로 검색
