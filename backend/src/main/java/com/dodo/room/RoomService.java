@@ -70,6 +70,11 @@ public class RoomService {
                         .thenComparing(RoomData::getNowUser).reversed())
                 .toList();
 
+        for(RoomData roomData : roomDataList){
+            List<String> tags = getTags(roomData.getRoomId());
+            roomData.updateTag(tags);
+        }
+
         return roomDataList;
     }
 
@@ -310,11 +315,7 @@ public class RoomService {
         RoomJoinData roomJoinData = new RoomJoinData(room);
         roomJoinData.updateIsIn(roomUser != null);
 
-        List<RoomTag> roomTag = roomTagRepository.findAllByRoom(room).orElseThrow(NotFoundException::new);
-        List<String> tags = roomTag.stream()
-                .map(RoomTag::getTag)
-                .map(Tag::getName)
-                .toList();
+        List<String> tags = getTags(roomId);
         roomJoinData.updateTag(tags);
         
         return roomJoinData;
@@ -344,6 +345,12 @@ public class RoomService {
     public RoomUser getRoomUser(User user, Room room){
         return roomUserRepository.findByUserAndRoom(user, room).orElseThrow(NotFoundException::new);
     }
-
+    public List<String> getTags(Long roomId){
+        List<RoomTag> roomTags = roomTagRepository.findAllByRoom(roomRepository.findById(roomId).orElseThrow(NotFoundException::new)).orElseThrow(NotFoundException::new);
+        return roomTags.stream()
+               .map(RoomTag::getTag)
+               .map(Tag::getName)
+               .toList();
+    }
 
 }
