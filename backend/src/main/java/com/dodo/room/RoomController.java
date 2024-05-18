@@ -5,6 +5,7 @@ import com.dodo.image.domain.Image;
 import com.dodo.room.domain.Category;
 import com.dodo.room.domain.RoomType;
 import com.dodo.room.dto.RoomData;
+import com.dodo.room.dto.RoomJoinData;
 import com.dodo.room.dto.RoomListData;
 import com.dodo.tag.repository.RoomTagRepository;
 import com.dodo.tag.service.RoomTagService;
@@ -265,6 +266,12 @@ public class RoomController {
                     .distinct()
                     .collect(Collectors.toList());
         }
+    }
+
+    @GetMapping("/room-detail-to-join")
+    @ResponseBody
+    public RoomJoinData getRoomDetailToJoin(@RequestParam Long roomId, @RequestAttribute UserContext userContext) {
+        return roomService.getRoomDetatil(roomId, userContext);
     }
 
     // 그룹인증방의 마일스톤 넘기기

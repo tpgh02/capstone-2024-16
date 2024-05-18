@@ -6,6 +6,7 @@ import com.dodo.image.ImageService;
 import com.dodo.image.domain.Image;
 import com.dodo.room.domain.*;
 import com.dodo.room.dto.RoomData;
+import com.dodo.room.dto.RoomJoinData;
 import com.dodo.room.dto.RoomListData;
 import com.dodo.roomuser.RoomUserRepository;
 import com.dodo.roomuser.RoomUserService;
@@ -17,14 +18,10 @@ import com.dodo.tag.service.RoomTagService;
 import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
 import com.dodo.user.domain.UserContext;
-import com.dodo.user.dto.PasswordChangeRequestData;
-import com.dodo.user.dto.UserData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -65,7 +62,7 @@ public class RoomService {
     }
 
     public List<RoomData> getRoomListByCategory(Category category) {
-        return roomRepository.findAllByCategory(category)
+        List<RoomData> roomDataList =  roomRepository.findAllByCategory(category)
                 .orElseThrow(NotFoundException::new)
                 .stream()
                 .map(RoomData::of)
@@ -73,6 +70,7 @@ public class RoomService {
                         .thenComparing(RoomData::getNowUser).reversed())
                 .toList();
 
+        return roomDataList;
     }
 
     // 인증방 제목으로 검색
@@ -291,7 +289,7 @@ public class RoomService {
         return roomData;
     }
 
-    public RoomData getRoomData(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext, Room room) {
+    public RoomData getRoomData(RoomData roomData, UserContext userContext, Room room) {
         roomUserService.createRoomUser(userContext, room.getId());
         roomUserService.setManager(userContext, room);
         roomTagService.saveRoomTag(room, roomData.getTag());
@@ -302,6 +300,24 @@ public class RoomService {
         RoomData roomData2 = RoomData.of(room);
         roomData2.updateIsManager(true);
         return roomData2;
+    }
+
+    public RoomJoinData getRoomDetatil(Long roomId, UserContext userContext) {
+        Room room = getRoom(roomId);
+        User user = getUser(userContext);
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).orElse(null);
+
+        RoomJoinData roomJoinData = new RoomJoinData(room);
+        roomJoinData.updateIsIn(roomUser != null);
+
+        List<RoomTag> roomTag = roomTagRepository.findAllByRoom(room).orElseThrow(NotFoundException::new);
+        List<String> tags = roomTag.stream()
+                .map(RoomTag::getTag)
+                .map(Tag::getName)
+                .toList();
+        roomJoinData.updateTag(tags);
+        
+        return roomJoinData;
     }
 
     public RoomListData updateIsManager(RoomListData roomListData, User user){

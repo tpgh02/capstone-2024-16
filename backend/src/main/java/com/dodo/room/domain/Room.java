@@ -24,7 +24,8 @@ public class Room {
     @Setter private String info;
     private String notice;
     private LocalDateTime endDay;
-    private Long maxUser;
+    @Builder.Default
+    private Long maxUser = 50L;
     @Setter private Long nowUser;
     private Boolean canChat;
     private Integer numOfVoteSuccess;
