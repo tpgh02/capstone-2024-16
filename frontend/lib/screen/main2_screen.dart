@@ -78,7 +78,6 @@ class _main2PageState extends State<main2Page>
   late Future<List<calendarData>> _calendarDataFuture;
 
   Future<void> _initializeCalendarData(String roomId) async {
-    log("!!!");
     if (_selectedRoom != null) {
       final List<calendarData> calendarDataList =
           await fetchcalendarData(roomId);

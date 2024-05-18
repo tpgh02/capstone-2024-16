@@ -49,130 +49,132 @@ class _Room_crState extends State<Room_cr> {
           ),
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Form(
-          key: _globalKey,
-          autovalidateMode: _autovalidateMode,
-          child: Column(
-            children: [
-              // 인증방 제목
-              _buildTextFormField(
-                controller: _title,
-                labelText: '인증방 제목',
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return '제목을 입력해주세요';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              // 카테고리 선택
-              Container(width: double.infinity, child: _roomBtn()),
-              const SizedBox(height: 20),
-              // 해시태그 ( 선택 )
-              _buildTextFormField(
-                controller: _tag,
-                labelText: '해시태그 ( 선택 )',
-                validator: null,
-              ),
-              const SizedBox(height: 20),
-              // 인증방 목표 (30자 미만)
-              _buildTextFormField(
-                controller: _comments,
-                labelText: '인증방 목표 (30자 미만)',
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return '목표를 입력해주세요';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              // 최대 인원 수
-              _buildTextFormField(
-                controller: _peoplenum,
-                labelText: '최대 인원 수',
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return '최대 인원 수를 입력해주세요';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              // 비밀번호 (입력시 비밀방으로 생성)
-              _buildTextFormField(
-                controller: _password,
-                labelText: '비밀번호 (입력시 비밀방으로 생성)',
-                validator: null,
-              ),
-              const SizedBox(height: 20),
-              // 이전, 다음 버튼
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  OutlinedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      elevation: 2,
-                      foregroundColor: Colors.black,
-                      shadowColor: Colors.black,
-                      side: const BorderSide(color: PRIMARY_COLOR),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Form(
+            key: _globalKey,
+            autovalidateMode: _autovalidateMode,
+            child: Column(
+              children: [
+                // 인증방 제목
+                _buildTextFormField(
+                  controller: _title,
+                  labelText: '인증방 제목',
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return '제목을 입력해주세요';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                // 카테고리 선택
+                Container(width: double.infinity, child: _roomBtn()),
+                const SizedBox(height: 20),
+                // 해시태그 ( 선택 )
+                _buildTextFormField(
+                  controller: _tag,
+                  labelText: '해시태그 ( 선택 )',
+                  validator: null,
+                ),
+                const SizedBox(height: 20),
+                // 인증방 목표 (30자 미만)
+                _buildTextFormField(
+                  controller: _comments,
+                  labelText: '인증방 목표 (30자 미만)',
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return '목표를 입력해주세요';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                // 최대 인원 수
+                _buildTextFormField(
+                  controller: _peoplenum,
+                  labelText: '최대 인원 수',
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return '최대 인원 수를 입력해주세요';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                // 비밀번호 (입력시 비밀방으로 생성)
+                _buildTextFormField(
+                  controller: _password,
+                  labelText: '비밀번호 (입력시 비밀방으로 생성)',
+                  validator: null,
+                ),
+                const SizedBox(height: 20),
+                // 이전, 다음 버튼
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    OutlinedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        elevation: 2,
+                        foregroundColor: Colors.black,
+                        shadowColor: Colors.black,
+                        side: const BorderSide(color: PRIMARY_COLOR),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text(
+                        "이전",
+                        style: TextStyle(color: PRIMARY_COLOR),
                       ),
                     ),
-                    child: const Text(
-                      "이전",
-                      style: TextStyle(color: PRIMARY_COLOR),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  OutlinedButton(
-                    onPressed: () async {
-                      if (_globalKey.currentState!.validate()) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Room_cr2(
-                              _title.text,
-                              _select,
-                              _tag.text,
-                              _comments.text,
-                              _peoplenum.text,
-                              _password.text,
+                    const SizedBox(width: 10),
+                    OutlinedButton(
+                      onPressed: () async {
+                        if (_globalKey.currentState!.validate()) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Room_cr2(
+                                _title.text,
+                                _select,
+                                _tag.text,
+                                _comments.text,
+                                _peoplenum.text,
+                                _password.text,
+                              ),
                             ),
-                          ),
-                        );
-                      } else {
-                        setState(() {
-                          _autovalidateMode = AutovalidateMode.always;
-                        });
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: PRIMARY_COLOR,
-                      elevation: 2,
-                      foregroundColor: Colors.black,
-                      shadowColor: Colors.black,
-                      side: const BorderSide(color: PRIMARY_COLOR),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                          );
+                        } else {
+                          setState(() {
+                            _autovalidateMode = AutovalidateMode.always;
+                          });
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: PRIMARY_COLOR,
+                        elevation: 2,
+                        foregroundColor: Colors.black,
+                        shadowColor: Colors.black,
+                        side: const BorderSide(color: PRIMARY_COLOR),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text(
+                        "다음",
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    child: const Text(
-                      "다음",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              )
-            ],
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

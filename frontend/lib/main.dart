@@ -17,9 +17,12 @@ import 'package:dodo/screen/signup_screen.dart';
 import 'package:dodo/screen/store_screen.dart';
 import 'package:dodo/screen/Room_cr.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // 추가된 부분
 import 'package:dodo/screen/main_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized(); // 추가된 부분
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive); // 추가된 부분
   runApp(const MyApp());
 }
 

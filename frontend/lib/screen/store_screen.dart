@@ -110,14 +110,21 @@ class _searchPageState extends State<storePage> {
                       return Text('Error: ${snapshot.error}');
                     } else if (snapshot.hasData) {
                       if (snapshot.data!.isEmpty) {
-                        return Center(
-                          child: Text(
-                            '데이터가 존재하지 않습니다. 잠시 후 시도해주십시오',
-                            style: TextStyle(
-                                fontFamily: "bm",
-                                fontSize: 20,
-                                color: DARKGREY),
-                          ),
+                        return Column(
+                          children: [
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Center(
+                              child: Text(
+                                '데이터가 존재하지 않습니다. 잠시 후 시도해주십시오',
+                                style: TextStyle(
+                                    fontFamily: "bm",
+                                    fontSize: 20,
+                                    color: DARKGREY),
+                              ),
+                            ),
+                          ],
                         );
                       } else {
                         return Container(
