@@ -316,8 +316,10 @@ class _search2PageState extends State<search2Page> {
                 style: const TextStyle(
                     fontFamily: "bm", fontSize: 15, color: Colors.black),
               ),
+
             ),
           ],
+
         ),
       ),
     );

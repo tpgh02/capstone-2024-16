@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class c_title extends StatefulWidget {
-  //const c_title({super.key, required this.num});
   final String category;
 
   const c_title(this.category);
@@ -23,8 +22,10 @@ class _c_titleState extends State<c_title> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  PreferredSizeWidget build(BuildContext context) {
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(80),
+      child: Container(
         decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: DARKGREY)),
           color: Colors.white,
@@ -69,41 +70,43 @@ class _c_titleState extends State<c_title> {
                   ),
                 ],
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.green,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      const Text(
-                        "참여중",
-                        style: TextStyle(
-                            fontFamily: 'kcc',
-                            fontSize: 15,
-                            color: POINT_COLOR),
-                      ),
-                    ],
-                  ),
-                  const Text(
-                    "25개의 챌린지",
-                    style: TextStyle(
-                        fontFamily: 'kcc', fontSize: 15, color: POINT_COLOR),
-                  ),
-                ],
-              )
+              // Column(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   crossAxisAlignment: CrossAxisAlignment.end,
+              //   children: [
+              //     Row(
+              //       children: [
+              //         Container(
+              //           width: 8,
+              //           height: 8,
+              //           decoration: const BoxDecoration(
+              //             shape: BoxShape.circle,
+              //             color: Colors.green,
+              //           ),
+              //         ),
+              //         const SizedBox(
+              //           width: 5,
+              //         ),
+              //         const Text(
+              //           "참여중",
+              //           style: TextStyle(
+              //               fontFamily: 'kcc',
+              //               fontSize: 15,
+              //               color: POINT_COLOR),
+              //         ),
+              //       ],
+              //     ),
+              //     const Text(
+              //       "25개의 챌린지",
+              //       style: TextStyle(
+              //           fontFamily: 'kcc', fontSize: 15, color: POINT_COLOR),
+              //     ),
+              //   ],
+              // )
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

@@ -35,34 +35,6 @@ Future<String> fetchRoomInfo(Map<String, dynamic> form, int roomId) async {
   }
 }
 
-// 인증방 비밀번호 변경
-Future<String> fetchRoomPwd(Map<String, String> form, int roomId) async {
-  var url = '$serverUrl/api/v1/room/change-pwd/$roomId';
-  final response = await http.post(
-    Uri.parse(url),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
-    },
-    body: jsonEncode(form),
-  );
-  try {
-    if (response.statusCode == 200) {
-      var responseData = utf8.decode(response.bodyBytes);
-      log('인증방 비밀번호 수정 성공: $responseData');
-      return responseData;
-    } else {
-      log('인증방 비밀번호 수정 실패: ${response.body}');
-      throw Exception('인증방 수정을 실패하였습니다.');
-    }
-  } catch (e) {
-    log(response.body);
-    log('$e');
-    throw Exception('네트워크 오류가 발생했습니다.');
-  }
-}
-
 class RoomSetting_Manager extends StatefulWidget {
   final String room_title;
   final int room_id;
@@ -343,7 +315,7 @@ class _roomSetManagerState extends State<RoomSetting_Manager> {
                     log("$editedTag");
                   }
                   if (editedInfo.isEmpty) {
-                    editedInfo = null;
+                    editedInfo = "";
                   }
 
                   Map<String, dynamic> editedRoomData = {

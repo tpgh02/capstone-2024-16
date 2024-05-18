@@ -311,27 +311,4 @@ class _RoomListState extends State<RoomListPage> {
       ),
     );
   }
-
-  // Container appendRoom() {
-  //   return Container(
-  //     width: 70,
-  //     height: 70,
-  //     alignment: Alignment.bottomRight,
-  //     color: PRIMARY_COLOR,
-  //     margin: const EdgeInsets.all(20),
-  //     child: const Icon(
-  //       Icons.plus_one,
-  //       color: Colors.white,
-  //     ),
-
-  //     // FloatingActionButton(
-  //     //   onPressed: () {
-  //     //     // Navigator.push(
-  //     //     //     context, MaterialPageRoute(builder: (context) => appendRoom2()));
-  //     //   },
-  //     //   backgroundColor: PRIMARY_COLOR,
-  //     //   elevation: 1,
-  //     //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-  //   );
-  // }
 }
