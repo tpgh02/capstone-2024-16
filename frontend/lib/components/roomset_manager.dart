@@ -343,7 +343,7 @@ class _roomSetManagerState extends State<RoomSetting_Manager> {
                     log("$editedTag");
                   }
                   if (editedInfo.isEmpty) {
-                    editedInfo = null;
+                    editedInfo = "";
                   }
 
                   Map<String, dynamic> editedRoomData = {

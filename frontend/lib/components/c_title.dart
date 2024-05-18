@@ -22,8 +22,10 @@ class _c_titleState extends State<c_title> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  PreferredSizeWidget build(BuildContext context) {
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(80),
+      child: Container(
         decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: DARKGREY)),
           color: Colors.white,
@@ -103,6 +105,8 @@ class _c_titleState extends State<c_title> {
               // )
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

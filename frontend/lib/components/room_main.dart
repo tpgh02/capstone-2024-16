@@ -413,18 +413,18 @@ class _roomMainState extends State<room_main> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                info != null
-                    ? Text(
-                        info,
-                        style: const TextStyle(
+                info == null || info == ""
+                    ? const Text(
+                        "소개글이 없습니다.",
+                        style: TextStyle(
                           color: POINT_COLOR,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
                       )
-                    : const Text(
-                        "소개글이 없습니다.",
-                        style: TextStyle(
+                    : Text(
+                        info,
+                        style: const TextStyle(
                           color: POINT_COLOR,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
