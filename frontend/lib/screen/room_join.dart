@@ -348,27 +348,48 @@ class _room_joinState extends State<room_join> {
         ),
       ),
       bottomNavigationBar: //바닥 버튼
-          Container(
-        width: double.infinity,
-        height: 70,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.0), // 왼쪽 위 모서리
-            topRight: Radius.circular(20.0), // 오른쪽 위 모서리
-          ),
-          color: PRIMARY_COLOR, // 버튼 배경색
-        ),
-        child: TextButton(
-          onPressed: () {},
-          child: const Text(
-            '가입하기',
-            style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'kcc',
-                fontSize: 20), // 버튼 텍스트 색상
-          ),
-        ),
-      ),
+          widget.nowUser == widget.maxUser
+              ? Container(
+                  width: double.infinity,
+                  height: 70,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20.0), // 왼쪽 위 모서리
+                      topRight: Radius.circular(20.0), // 오른쪽 위 모서리
+                    ),
+                    color: Color.fromARGB(131, 173, 173, 173), // 버튼 배경색
+                  ),
+                  child: const Center(
+                    child: Text(
+                      '인원이 모두 찼습니다.',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'kcc',
+                          fontSize: 20), // 버튼 텍스트 색상
+                    ),
+                  ),
+                )
+              : Container(
+                  width: double.infinity,
+                  height: 70,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20.0), // 왼쪽 위 모서리
+                      topRight: Radius.circular(20.0), // 오른쪽 위 모서리
+                    ),
+                    color: PRIMARY_COLOR, // 버튼 배경색
+                  ),
+                  child: TextButton(
+                    onPressed: () {},
+                    child: const Text(
+                      '가입하기',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'kcc',
+                          fontSize: 20), // 버튼 텍스트 색상
+                    ),
+                  ),
+                ),
     );
   }
 }
