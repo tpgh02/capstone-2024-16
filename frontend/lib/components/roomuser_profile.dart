@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:dodo/screen/main_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:dodo/const/server.dart';
 import 'package:dodo/const/colors.dart';
@@ -20,19 +21,19 @@ Future<RoomUserInfo> fetchUserProfile(int roomUserId) async {
   }
 }
 
-Future<verifyMe> fetchUserId() async {
-  final response =
-      await http.get(Uri.parse('$serverUrl/api/v1/users/me'), headers: {
-    'Authorization':
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
-  });
-  if (response.statusCode == 200) {
-    log('VerifyMe: Connected!');
-    return verifyMe.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-  } else {
-    throw Exception('Mypage: fail to connect');
-  }
-}
+// Future<verifyMe> fetchUserId() async {
+//   final response =
+//       await http.get(Uri.parse('$serverUrl/api/v1/users/me'), headers: {
+//     'Authorization':
+//         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+//   });
+//   if (response.statusCode == 200) {
+//     log('VerifyMe: Connected!');
+//     return verifyMe.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+//   } else {
+//     throw Exception('Mypage: fail to connect');
+//   }
+// }
 
 class RoomUserInfo {
   final int roomUserId;
@@ -67,23 +68,29 @@ class RoomUserInfo {
   }
 }
 
-class verifyMe {
-  final int userId;
-  final String name;
+// class verifyMe {
+//   final int userId;
+//   final String name;
 
-  verifyMe({required this.userId, required this.name});
+//   verifyMe({required this.userId, required this.name});
 
-  factory verifyMe.fromJson(dynamic json) {
-    return verifyMe(userId: json['userId'], name: json['name']);
-  }
-}
+//   factory verifyMe.fromJson(dynamic json) {
+//     return verifyMe(userId: json['userId'], name: json['name']);
+//   }
+// }
 
 class RoomUserProfile extends StatefulWidget {
+  final int roomId;
+  final int userId;
   final int roomUserId;
   final bool is_manager;
 
   const RoomUserProfile(
-      {super.key, required this.roomUserId, required this.is_manager});
+      {super.key,
+      required this.roomId,
+      required this.userId,
+      required this.roomUserId,
+      required this.is_manager});
 
   @override
   State<RoomUserProfile> createState() => _RoomUserProfileState();
@@ -91,13 +98,13 @@ class RoomUserProfile extends StatefulWidget {
 
 class _RoomUserProfileState extends State<RoomUserProfile> {
   Future<RoomUserInfo>? nowUserInfo;
-  Future<verifyMe>? isMe;
+  // Future<verifyMe>? isMe;
 
   @override
   void initState() {
     super.initState();
     nowUserInfo = fetchUserProfile(widget.roomUserId);
-    isMe = fetchUserId();
+    // isMe = fetchUserId();
   }
 
   @override
@@ -173,6 +180,9 @@ class _RoomUserProfileState extends State<RoomUserProfile> {
 
             // 서버 연결 성공
             else if (snapshot.hasData) {
+              log("----User Profile----");
+              log("room id: ${widget.roomId}");
+              log("user id: ${widget.userId}");
               log("room user id: ${snapshot.data!.roomUserId}");
               log("user name: ${snapshot.data!.userName}");
               log("room user image: ${snapshot.data!.image}");
@@ -181,6 +191,7 @@ class _RoomUserProfileState extends State<RoomUserProfile> {
               log("all success: ${snapshot.data!.allSuccess}");
               log("lately: ${snapshot.data!.lately}");
               log("allLately: ${snapshot.data!.allLately}");
+              log("----User Profile----");
 
               return Column(
                 mainAxisSize: MainAxisSize.min,
@@ -246,9 +257,11 @@ class _RoomUserProfileState extends State<RoomUserProfile> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               height: 35,
-                              width: 90,
+                              width: MediaQuery.of(context).size.width * 0.2,
                               child: ElevatedButton(
-                                onPressed: () async {},
+                                onPressed: () async {
+                                  delegate(context, snapshot.data!.userName);
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: POINT_COLOR,
                                   minimumSize: Size.zero,
@@ -274,9 +287,12 @@ class _RoomUserProfileState extends State<RoomUserProfile> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               height: 34,
-                              width: 90,
+                              width: MediaQuery.of(context).size.width * 0.2,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  repel(context, snapshot.data!.userName);
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:
                                       const Color.fromARGB(255, 255, 98, 87),
@@ -287,7 +303,7 @@ class _RoomUserProfileState extends State<RoomUserProfile> {
                                   ),
                                 ),
                                 child: const Text(
-                                  '강 퇴',
+                                  '추방',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -303,7 +319,7 @@ class _RoomUserProfileState extends State<RoomUserProfile> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               height: 34,
-                              width: 90,
+                              width: MediaQuery.of(context).size.width * 0.2,
                               child: OutlinedButton(
                                 onPressed: () => Navigator.pop(context),
                                 style: OutlinedButton.styleFrom(
@@ -377,5 +393,169 @@ class _RoomUserProfileState extends State<RoomUserProfile> {
         ),
       ),
     );
+  }
+
+  // 권한 위임
+  void delegate(BuildContext context, String userName) {
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: ((context) {
+          return AlertDialog(
+            backgroundColor: LIGHTGREY,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: Text(
+              "정말 ${userName}님에게 방장 권한을 넘기시겠습니까?",
+              style: const TextStyle(
+                color: POINT_COLOR,
+                fontSize: 20,
+              ),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                onPressed: () async {
+                  String delegateURL =
+                      '$serverUrl/api/v1/room/delegate?userId=${widget.userId}';
+                  final response = await http.post(
+                    Uri.parse(delegateURL),
+                    headers: {
+                      'Content-Type': 'application/json; charset=UTF-8',
+                      'Authorization':
+                          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+                    },
+                    body: jsonEncode({"roomId": widget.roomId}),
+                  );
+                  try {
+                    if (response.statusCode == 200) {
+                      log("방장 권한 위임 성공");
+                    } else
+                      log("Error: ${response.body}");
+                  } catch (e) {
+                    log(response.body);
+                    log('$e');
+                    throw Exception('네트워크 오류가 발생했습니다.');
+                  }
+
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const mainPage())); //창 닫기
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: POINT_COLOR,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  side: const BorderSide(
+                    color: POINT_COLOR,
+                    width: 1.0,
+                  ),
+                ),
+                child: const Text(
+                  "예",
+                  style: TextStyle(
+                      color: Color.fromARGB(226, 255, 255, 255),
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); //창 닫기
+                },
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: POINT_COLOR,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  side: const BorderSide(
+                    color: POINT_COLOR,
+                    width: 1.0,
+                  ),
+                ),
+                child: const Text("아니오",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ],
+          );
+        }));
+  }
+
+  // 강퇴
+  void repel(BuildContext context, String userName) {
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: ((context) {
+          return AlertDialog(
+            backgroundColor: LIGHTGREY,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: Text(
+              "정말 ${userName}님을 추방하시겠습니까?",
+              style: const TextStyle(
+                color: POINT_COLOR,
+                fontSize: 20,
+              ),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                onPressed: () async {
+                  String replURL =
+                      '$serverUrl/api/v1/room/repel?roomId=${widget.roomId}&userId=${widget.userId}';
+                  final response =
+                      await http.post(Uri.parse(replURL), headers: {
+                    'Authorization':
+                        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+                  });
+                  try {
+                    if (response.statusCode == 200) {
+                      log("추방 성공");
+                    }
+                  } catch (e) {
+                    log(response.body);
+                    log('$e');
+                    throw Exception('네트워크 오류가 발생했습니다.');
+                  }
+
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: POINT_COLOR,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  side: const BorderSide(
+                    color: POINT_COLOR,
+                    width: 1.0,
+                  ),
+                ),
+                child: const Text(
+                  "예",
+                  style: TextStyle(
+                      color: Color.fromARGB(226, 255, 255, 255),
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); //창 닫기
+                },
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: POINT_COLOR,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  side: const BorderSide(
+                    color: POINT_COLOR,
+                    width: 1.0,
+                  ),
+                ),
+                child: const Text("아니오",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ],
+          );
+        }));
   }
 }

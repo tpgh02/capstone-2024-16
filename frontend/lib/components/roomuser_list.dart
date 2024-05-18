@@ -82,57 +82,6 @@ class _roomUserState extends State<RoomUserList> {
     futureUsersList = fetchRoomUsers(widget.room_id);
   }
 
-  // final userList = [
-  //   {
-  //     "user_name": "User1",
-  //     "user_img": "assets/images/cook.jpg",
-  //     "success": 0,
-  //     "wait": 1,
-  //     "max": 3,
-  //     "certification": false,
-  //   },
-  //   {
-  //     "user_name": "User2",
-  //     "user_img": "assets/images/cook.jpg",
-  //     "success": 0,
-  //     "wait": 2,
-  //     "max": 3,
-  //     "certification": false,
-  //   },
-  //   {
-  //     "user_name": "User3",
-  //     "user_img": "assets/images/cook.jpg",
-  //     "success": 1,
-  //     "wait": 1,
-  //     "max": 3,
-  //     "certification": false,
-  //   },
-  //   {
-  //     "user_name": "User4",
-  //     "user_img": "assets/images/cook.jpg",
-  //     "success": 3,
-  //     "wait": 0,
-  //     "max": 3,
-  //     "certification": true,
-  //   },
-  //   {
-  //     "user_name": "User5",
-  //     "user_img": "assets/images/cook.jpg",
-  //     "success": 0,
-  //     "wait": 3,
-  //     "max": 3,
-  //     "certification": false,
-  //   },
-  //   {
-  //     "user_name": "User6",
-  //     "user_img": "assets/images/cook.jpg",
-  //     "success": 3,
-  //     "wait": 0,
-  //     "max": 3,
-  //     "certification": true,
-  //   },
-  // ];
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -201,6 +150,7 @@ class _roomUserState extends State<RoomUserList> {
                               if ((success! + wait!) !=
                                   snapshot.data![idx].max) {
                                 return userContainer_default(
+                                    snapshot.data![idx].userId,
                                     snapshot.data![idx].roomUserId,
                                     snapshot.data![idx].userName,
                                     snapshot.data![idx].userImage['url'],
@@ -209,6 +159,7 @@ class _roomUserState extends State<RoomUserList> {
                               } else {
                                 if (success == snapshot.data![idx].max) {
                                   return userContainer_success(
+                                      snapshot.data![idx].userId,
                                       snapshot.data![idx].roomUserId,
                                       snapshot.data![idx].userName,
                                       snapshot.data![idx].userImage['url'],
@@ -216,6 +167,7 @@ class _roomUserState extends State<RoomUserList> {
                                       snapshot.data![idx].max);
                                 } else {
                                   return userContainer_tocheck(
+                                      snapshot.data![idx].userId,
                                       snapshot.data![idx].roomUserId,
                                       snapshot.data![idx].userName,
                                       snapshot.data![idx].userImage['url'],
@@ -242,29 +194,29 @@ class _roomUserState extends State<RoomUserList> {
   }
 
   Container userContainer_default(
-      roomUserId, name, img_root, upload, required) {
+      userId, roomUserId, name, img_root, upload, required) {
     return Container(
       alignment: Alignment.center,
-      child: RoomUserDefault(roomUserId, name, img_root, upload, required,
-          widget.is_manager, widget.certificationType),
+      child: RoomUserDefault(widget.room_id, userId, roomUserId, name, img_root,
+          upload, required, widget.is_manager, widget.certificationType),
     );
   }
 
   Container userContainer_tocheck(
-      roomUserId, name, img_root, upload, required) {
+      userId, roomUserId, name, img_root, upload, required) {
     return Container(
       alignment: Alignment.center,
-      child: RoomUserToCheck(roomUserId, widget.room_id, name, img_root, upload,
-          required, widget.is_manager, widget.certificationType),
+      child: RoomUserToCheck(userId, roomUserId, widget.room_id, name, img_root,
+          upload, required, widget.is_manager, widget.certificationType),
     );
   }
 
   Container userContainer_success(
-      roomUserId, name, img_root, upload, required) {
+      userId, roomUserId, name, img_root, upload, required) {
     return Container(
       alignment: Alignment.center,
-      child: RoomUserSuccess(roomUserId, name, img_root, upload, required,
-          widget.is_manager, widget.certificationType),
+      child: RoomUserSuccess(widget.room_id, userId, roomUserId, name, img_root,
+          upload, required, widget.is_manager, widget.certificationType),
     );
   }
 }

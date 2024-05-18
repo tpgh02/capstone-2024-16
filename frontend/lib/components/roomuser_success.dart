@@ -3,6 +3,8 @@ import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 
 class RoomUserSuccess extends StatelessWidget {
+  final int roomId;
+  final int userId;
   final int roomUserId;
   final String user_name;
   final String user_img;
@@ -12,6 +14,8 @@ class RoomUserSuccess extends StatelessWidget {
   final String certificationType;
 
   const RoomUserSuccess(
+      this.roomId,
+      this.userId,
       this.roomUserId,
       this.user_name,
       this.user_img,
@@ -39,6 +43,8 @@ class RoomUserSuccess extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) => RoomUserProfile(
+                  roomId: roomId,
+                  userId: userId,
                   roomUserId: roomUserId,
                   is_manager: is_manager,
                 ),

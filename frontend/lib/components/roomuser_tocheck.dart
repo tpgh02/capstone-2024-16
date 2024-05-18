@@ -5,6 +5,7 @@ import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 
 class RoomUserToCheck extends StatelessWidget {
+  final int userId;
   final int roomUserId;
   final int room_id;
   final String user_name;
@@ -15,6 +16,7 @@ class RoomUserToCheck extends StatelessWidget {
   final String certificationType;
 
   const RoomUserToCheck(
+      this.userId,
       this.roomUserId,
       this.room_id,
       this.user_name,
@@ -43,6 +45,8 @@ class RoomUserToCheck extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) => RoomUserProfile(
+                  roomId: room_id,
+                  userId: userId,
                   roomUserId: roomUserId,
                   is_manager: is_manager,
                 ),
