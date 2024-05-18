@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -108,14 +110,21 @@ class _c_dialogState extends State<c_dialog> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          status == 'wait'
-                              ? "인증을 기다리는 중이에요"
-                              : status == 'success'
-                                  ? "챌린지를 완료했어요"
-                                  : "오늘의 도전을\n아직 완료하지 않았어요",
-                          style:
-                              const TextStyle(fontFamily: 'bm', fontSize: 25),
+                        Flexible(
+                          child: AutoSizeText(
+                            status == 'wait'
+                                ? "인증을 기다리는 중이에요"
+                                : status == 'success'
+                                    ? "챌린지를 완료했어요"
+                                    : "오늘의 도전을\n아직 완료하지 않았어요",
+                            style:
+                                const TextStyle(fontFamily: 'bm', fontSize: 25),
+                            maxLines:
+                                2, // Set the maximum number of lines to avoid overflow
+                            minFontSize: 10, // Set the minimum font size
+                            overflow: TextOverflow
+                                .ellipsis, // Handle overflow if it happens
+                          ),
                         ),
                         IconButton(
                           onPressed: () {
@@ -253,9 +262,26 @@ class _c_dialogState extends State<c_dialog> {
       if (response.statusCode == 200) {
         print('성공적으로 업로드했습니다');
       } else {
-        print('서버로부터 잘못된 응답이 도착했습니다. 상태 코드: ${response.statusCode}');
+        Fluttertoast.showToast(
+          msg: "서버로부터 잘못된 응답이 도착했습니다. 상태 코드: ${response.statusCode}",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
       }
     } catch (e) {
+      Fluttertoast.showToast(
+        msg: "업로드 중 오류 발생: $e",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
       print('업로드 중 오류 발생: $e');
     }
   }
