@@ -340,45 +340,62 @@ class _Room_cr2State extends State<Room_cr2>
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 15),
-          child: Row(
+          child: Wrap(
+            direction: Axis.vertical,
+            spacing: 5,
+            runSpacing: 5,
+            alignment: WrapAlignment.start,
             children: [
-              Checkbox(
-                value: _peoplevote,
-                onChanged: (value) {
-                  setState(() {
-                    _peoplevote = value!;
-                  });
-                },
-                activeColor: PRIMARY_COLOR,
+              Row(
+                children: [
+                  Checkbox(
+                    value: _peoplevote,
+                    onChanged: (value) {
+                      setState(() {
+                        _peoplevote = value!;
+                        print(_peoplevote);
+                      });
+                    },
+                    activeColor: PRIMARY_COLOR,
+                  ),
+                  const Text(
+                    "구성원 투표",
+                    style: TextStyle(fontFamily: "bma", fontSize: 20),
+                  ),
+                ],
               ),
-              const Text(
-                "구성원 투표",
-                style: TextStyle(fontFamily: "bma", fontSize: 20),
+              const SizedBox(
+                width: 15,
               ),
-              const SizedBox(width: 15),
-              Checkbox(
-                value: _captinevote,
-                onChanged: (value) {
-                  setState(() {
-                    _captinevote = value!;
-                  });
-                },
-                activeColor: PRIMARY_COLOR,
+              const Row(
+                children: [
+                  Checkbox(
+                    value: true,
+                    onChanged: null,
+                    activeColor: PRIMARY_COLOR,
+                  ),
+                  Text(
+                    "방장 승인",
+                    style: TextStyle(fontFamily: "bma", fontSize: 20),
+                  ),
+                ],
               ),
-              const Text(
-                "방장 승인",
-                style: TextStyle(fontFamily: "bma", fontSize: 20),
+              const SizedBox(
+                width: 15,
               ),
-              const SizedBox(width: 15),
-              const Checkbox(
-                value: false,
-                onChanged: null,
-                activeColor: PRIMARY_COLOR,
-              ),
-              const Text(
-                "AI 인증",
-                style: TextStyle(fontFamily: "bma", fontSize: 20),
-              ),
+              const Row(
+                children: [
+                  Checkbox(
+                    value: true,
+                    onChanged: null,
+                    activeColor: PRIMARY_COLOR,
+                  ),
+                  Text(
+                    "AI 인증",
+                    style: TextStyle(fontFamily: "bma", fontSize: 20),
+                  ),
+                ],
+              )
             ],
           ),
         ),
