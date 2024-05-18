@@ -20,6 +20,20 @@ Future<RoomUserInfo> fetchUserProfile(int roomUserId) async {
   }
 }
 
+Future<verifyMe> fetchUserId() async {
+  final response =
+      await http.get(Uri.parse('$serverUrl/api/v1/users/me'), headers: {
+    'Authorization':
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+  });
+  if (response.statusCode == 200) {
+    log('VerifyMe: Connected!');
+    return verifyMe.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+  } else {
+    throw Exception('Mypage: fail to connect');
+  }
+}
+
 class RoomUserInfo {
   final int roomUserId;
   final String userName;
@@ -53,6 +67,17 @@ class RoomUserInfo {
   }
 }
 
+class verifyMe {
+  final int userId;
+  final String name;
+
+  verifyMe({required this.userId, required this.name});
+
+  factory verifyMe.fromJson(dynamic json) {
+    return verifyMe(userId: json['userId'], name: json['name']);
+  }
+}
+
 class RoomUserProfile extends StatefulWidget {
   final int roomUserId;
   final bool is_manager;
@@ -66,11 +91,13 @@ class RoomUserProfile extends StatefulWidget {
 
 class _RoomUserProfileState extends State<RoomUserProfile> {
   Future<RoomUserInfo>? nowUserInfo;
+  Future<verifyMe>? isMe;
 
   @override
   void initState() {
     super.initState();
     nowUserInfo = fetchUserProfile(widget.roomUserId);
+    isMe = fetchUserId();
   }
 
   @override
@@ -154,6 +181,7 @@ class _RoomUserProfileState extends State<RoomUserProfile> {
               log("all success: ${snapshot.data!.allSuccess}");
               log("lately: ${snapshot.data!.lately}");
               log("allLately: ${snapshot.data!.allLately}");
+
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -220,7 +248,7 @@ class _RoomUserProfileState extends State<RoomUserProfile> {
                               height: 35,
                               width: 90,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () async {},
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: POINT_COLOR,
                                   minimumSize: Size.zero,

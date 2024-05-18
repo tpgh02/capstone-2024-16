@@ -74,6 +74,7 @@ class RoomUserList extends StatefulWidget {
 
 class _roomUserState extends State<RoomUserList> {
   late Future<List<Users>>? futureUsersList;
+  late Future<int> futureIsme;
 
   @override
   void initState() {
@@ -180,6 +181,7 @@ class _roomUserState extends State<RoomUserList> {
                     ),
                   );
                 } else {
+                  log("members: ${snapshot.data!.length}");
                   return Container(
                     alignment: Alignment.centerRight,
                     decoration: BoxDecoration(
