@@ -272,7 +272,7 @@ public class RoomService {
         if (!roomManager.getIsManager()) {
             log.info("not manager");
         } else {
-            roomUserService.deleteChatRoomUser(roomId, userContext.getUserId());
+            roomUserService.deleteChatRoomUser(roomId, userId);
             minusUserCnt(roomId);
         }
 
