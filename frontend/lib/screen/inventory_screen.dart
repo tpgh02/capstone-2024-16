@@ -18,10 +18,10 @@ Future<List<Inven>> fetchInven() async {
   if (response.statusCode == 200) {
     final List<dynamic> jsonData = jsonDecode(utf8.decode(response.bodyBytes));
 
-    List<Inven> Invens = jsonData.map((json) => Inven.fromJson(json)).toList();
-    return Invens;
+    List<Inven> invens = jsonData.map((json) => Inven.fromJson(json)).toList();
+    return invens;
   } else {
-    throw Exception('Failed to load album');
+    throw Exception('Failed to load inventory');
   }
 }
 
@@ -29,7 +29,7 @@ class Inven {
   final int price;
   final String name;
   final String info;
-  final image;
+  final String image;
   final bool activate;
   final int creatureId;
 
@@ -114,37 +114,52 @@ class _searchPageState extends State<InvenPage> {
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else if (snapshot.hasData) {
-                      return Container(
-                        //color: Colors.yellow,
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.all(20),
-                        height: 195,
-
-                        child: CustomScrollView(
-                          slivers: <Widget>[
-                            SliverGrid(
-                              delegate: SliverChildBuilderDelegate(
-                                (BuildContext context, int idx) {
-                                  final inven = snapshot.data![idx];
-                                  return postContainer(
-                                      inven.price,
-                                      inven.image,
-                                      inven.name,
-                                      inven.info,
-                                      inven.activate,
-                                      inven.creatureId - 1);
-                                },
-                                childCount: snapshot.data!.length,
-                              ),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                childAspectRatio: 2 / 3,
-                              ),
+                      if (snapshot.data!.isEmpty) {
+                        return Column(
+                          children: [
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              '보관함이 비었습니다. 상점에서 구매해주십시오',
+                              style: TextStyle(
+                                  fontFamily: 'bm',
+                                  fontSize: 20,
+                                  color: DARKGREY),
                             ),
                           ],
-                        ),
-                      );
+                        );
+                      } else {
+                        return Container(
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.all(20),
+                          height: 195,
+                          child: CustomScrollView(
+                            slivers: <Widget>[
+                              SliverGrid(
+                                delegate: SliverChildBuilderDelegate(
+                                  (BuildContext context, int idx) {
+                                    final inven = snapshot.data![idx];
+                                    return postContainer(
+                                        inven.price,
+                                        inven.image,
+                                        inven.name,
+                                        inven.info,
+                                        inven.activate,
+                                        inven.creatureId - 1);
+                                  },
+                                  childCount: snapshot.data!.length,
+                                ),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  childAspectRatio: 2 / 3,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
                     } else {
                       return Container();
                     }
