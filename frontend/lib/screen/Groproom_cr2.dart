@@ -197,14 +197,14 @@ class _Groproom_cr2State extends State<Groproom_cr2>
                       const SizedBox(
                         width: 15,
                       ),
-                      Row(
+                      const Row(
                         children: [
-                          const Checkbox(
+                          Checkbox(
                             value: true,
                             onChanged: null,
                             activeColor: PRIMARY_COLOR,
                           ),
-                          const Text(
+                          Text(
                             "방장 승인",
                             style: TextStyle(fontFamily: "bma", fontSize: 20),
                           ),
@@ -213,14 +213,14 @@ class _Groproom_cr2State extends State<Groproom_cr2>
                       const SizedBox(
                         width: 15,
                       ),
-                      Row(
+                      const Row(
                         children: [
-                          const Checkbox(
+                          Checkbox(
                             value: true,
                             onChanged: null,
                             activeColor: PRIMARY_COLOR,
                           ),
-                          const Text(
+                          Text(
                             "AI 인증",
                             style: TextStyle(fontFamily: "bma", fontSize: 20),
                           ),
@@ -513,6 +513,11 @@ class _Groproom_cr2State extends State<Groproom_cr2>
             String _category = categoryMap[widget.category] ?? "ETC";
             String _period = periodMap[_selectedPeriod] ?? "DAILY";
             String certificationType = _peoplevote ? "BOTH" : "ADMIN";
+
+            // Extract texts from controllers
+            List<String> goals =
+                goalControllers.map((controller) => controller.text).toList();
+
             Map<String, dynamic> formData = {
               "name": widget.title,
               "category": _category,
@@ -531,6 +536,8 @@ class _Groproom_cr2State extends State<Groproom_cr2>
               "tag": widget.tag.split(" "),
               "maxUser": widget.peoplesnum,
               "pwd": widget.password,
+              "numOfGoal": _selectcount.replaceAll(RegExp(r'[^0-9]'), ''),
+              "goal": goals,
             };
 
             if (!_globalKey.currentState!.validate() || _selectedDate == null) {

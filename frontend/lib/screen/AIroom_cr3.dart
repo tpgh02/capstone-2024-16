@@ -94,7 +94,7 @@ class _AIroom_cr3State extends State<AIroom_cr3>
   );
 
   int changeNum(String input) {
-    String numbersString = input.toString().replaceAll(RegExp(r'[^0-9]'), '');
+    String numbersString = input.replaceAll(RegExp(r'[^0-9]'), '');
     return int.tryParse(numbersString) ?? 0;
   }
 
@@ -205,10 +205,87 @@ class _AIroom_cr3State extends State<AIroom_cr3>
                 _buildTabBar(),
                 const SizedBox(height: 20),
                 // 인증횟수 선택
-                _buildDropdownRow(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "인증횟수",
+                      style: TextStyle(fontFamily: "bm", fontSize: 20),
+                    ),
+                    Container(
+                      child: _buildDropdownButton(_selectcount, count, (value) {
+                        setState(() {
+                          _selectcount = value!;
+                        });
+                      }),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 20),
                 // 인증방식 선택
-                _buildCertificationOptions(),
+                const Row(
+                  children: [
+                    Text(
+                      "인증방식",
+                      style: TextStyle(fontFamily: "bm", fontSize: 20),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "(다중 선택 가능)",
+                      style: TextStyle(fontFamily: "bma", fontSize: 16),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15),
+                      child: Row(
+                        children: [
+                          Checkbox(
+                            value: _peoplevote,
+                            onChanged: (value) {
+                              setState(() {
+                                _peoplevote = value!;
+                              });
+                            },
+                            activeColor: PRIMARY_COLOR,
+                          ),
+                          const Text(
+                            "구성원 투표",
+                            style: TextStyle(fontFamily: "bma", fontSize: 20),
+                          ),
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          const Checkbox(
+                            value: true,
+                            onChanged: null,
+                            activeColor: PRIMARY_COLOR,
+                          ),
+                          const Text(
+                            "방장 승인",
+                            style: TextStyle(fontFamily: "bma", fontSize: 20),
+                          ),
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          const Checkbox(
+                            value: false,
+                            onChanged: null,
+                            activeColor: PRIMARY_COLOR,
+                          ),
+                          const Text(
+                            "AI 인증",
+                            style: TextStyle(fontFamily: "bma", fontSize: 20),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 20),
                 if (_peoplevote) _buildVoteOptions(),
                 const SizedBox(height: 20),
@@ -240,45 +317,25 @@ class _AIroom_cr3State extends State<AIroom_cr3>
 
   Widget _buildTabBar() {
     return TabBar(
-      overlayColor: MaterialStatePropertyAll(Colors.blue.shade100),
-      splashBorderRadius: BorderRadius.circular(20),
-      controller: tabController,
-      tabs: method.map(
-        (value) {
-          return DropdownMenuItem(
-            value: value,
-            child: Container(
-              alignment: Alignment.bottomCenter,
-              child: Text(
-                value,
-                style: const TextStyle(fontFamily: 'bm', fontSize: 20),
+        overlayColor: MaterialStatePropertyAll(Colors.blue.shade100),
+        splashBorderRadius: BorderRadius.circular(20),
+        controller: tabController,
+        tabs: method.map(
+          (value) {
+            return DropdownMenuItem(
+              value: value,
+              child: Container(
+                alignment: Alignment.bottomCenter,
+                child: Text(
+                  value,
+                  style: const TextStyle(fontFamily: 'bm', fontSize: 20),
+                ),
               ),
-            ),
-          );
-        },
-      ).toList(),
-      labelColor: PRIMARY_COLOR,
-      indicatorColor: PRIMARY_COLOR,
-    );
-  }
-
-  Widget _buildDropdownRow() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Text(
-          "인증횟수",
-          style: TextStyle(fontFamily: "bm", fontSize: 20),
-        ),
-        Container(
-          child: _buildDropdownButton(_selectcount, count, (value) {
-            setState(() {
-              _selectcount = value!;
-            });
-          }),
-        ),
-      ],
-    );
+            );
+          },
+        ).toList(),
+        labelColor: PRIMARY_COLOR,
+        indicatorColor: PRIMARY_COLOR);
   }
 
   Widget _buildCertificationOptions() {
@@ -548,7 +605,7 @@ class _AIroom_cr3State extends State<AIroom_cr3>
           focusColor: LIGHTGREY,
           iconEnabledColor: PRIMARY_COLOR,
           icon: const Icon(Icons.arrow_drop_down),
-          items: items.map((value) {
+          items: items.map((String value) {
             return DropdownMenuItem<String>(
               value: value,
               child: Container(

@@ -1,11 +1,30 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:http/http.dart' as http;
+
+Future<List<Map<String, dynamic>>> fetchRooms() async {
+  final response =
+      await http.get(Uri.parse('$serverUrl/api/v1/room/list'), headers: {
+    'Authorization':
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+  });
+  if (response.statusCode == 200) {
+    final List<dynamic> jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+    log("Main2 : Connected!");
+    return List<Map<String, dynamic>>.from(jsonData);
+  } else {
+    throw Exception('Failed to load room list in main');
+  }
+}
 
 class c_dialog extends StatefulWidget {
   final int room_id;
@@ -18,6 +37,51 @@ class c_dialog extends StatefulWidget {
 class _c_dialogState extends State<c_dialog> {
   final ImagePicker _picker = ImagePicker();
   final List<File?> _pickedImages = [];
+  String? status;
+  int frequency = 3;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchRoomDetails();
+  }
+
+  Future<void> _fetchRoomDetails() async {
+    try {
+      List<Map<String, dynamic>> rooms = await fetchRooms();
+      var room = rooms.firstWhere((room) => room['roomId'] == widget.room_id,
+          orElse: () => {});
+      if (room.isEmpty) {
+        Fluttertoast.showToast(
+          msg: "잠시 후 시도해주십시오",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        Navigator.of(context).pop();
+      } else {
+        setState(() {
+          status = room['status'];
+          frequency = room['frequency'] ?? 1;
+        });
+      }
+    } catch (e) {
+      log('Error fetching room details: $e');
+      Fluttertoast.showToast(
+        msg: "잠시 후 시도해주십시오",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      Navigator.of(context).pop();
+    }
+  }
 
   void getImage(ImageSource source) async {
     final XFile? image = await _picker.pickImage(source: source);
@@ -30,74 +94,118 @@ class _c_dialogState extends State<c_dialog> {
 
   @override
   Widget build(BuildContext context) {
-    int c_length = 1; // 인증 개수
-
-    return Dialog(
-      child: SizedBox(
-        height: 500,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "오늘의 도전을\n아직 완료하지 않았어요",
-                    style: TextStyle(fontFamily: 'bm', fontSize: 25),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: const Icon(
-                      Icons.close,
+    return status == null || frequency == 0
+        ? const Center(child: CircularProgressIndicator())
+        : Dialog(
+            backgroundColor: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: SizedBox(
+                height: 500,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          status == 'wait'
+                              ? "인증을 기다리는 중이에요"
+                              : status == 'success'
+                                  ? "챌린지를 완료했어요"
+                                  : "오늘의 도전을\n아직 완료하지 않았어요",
+                          style:
+                              const TextStyle(fontFamily: 'bm', fontSize: 25),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: const Icon(
+                            Icons.close,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                    status == 'success'
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                "assets/images/turtle.png",
+                                scale: 2,
+                              ),
+                              const SizedBox(
+                                height: 30,
+                              ),
+                              const Text(
+                                "대단해요!",
+                                style: TextStyle(
+                                    color: POINT_COLOR,
+                                    fontFamily: 'bma',
+                                    fontSize: 20),
+                              ),
+                              const Text(
+                                "내일도 화이팅이예요~",
+                                style: TextStyle(
+                                    color: POINT_COLOR,
+                                    fontFamily: 'bma',
+                                    fontSize: 20),
+                              )
+                            ],
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: Column(
+                              children: [
+                                SingleChildScrollView(
+                                  physics:
+                                      const AlwaysScrollableScrollPhysics(),
+                                  child: Column(
+                                    children: [
+                                      Column(
+                                        children:
+                                            List.generate(frequency, (index) {
+                                          return select(index);
+                                        }),
+                                      ),
+                                      const SizedBox(
+                                        height: 100,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment.bottomCenter,
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    height: 40,
+                                    child: ElevatedButton(
+                                      onPressed: () async {
+                                        await patchUserProfileImage(
+                                            _pickedImages, widget.room_id);
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: PRIMARY_COLOR,
+                                      ),
+                                      child: const Text(
+                                        "확인",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: 'bm',
+                                            fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                  ],
+                ),
               ),
             ),
-            Flexible(
-                child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              child: Column(
-                children: [
-                  Column(
-                    children: List.generate(c_length, (index) {
-                      return select(index);
-                    }),
-                  ),
-                ],
-              ),
-            )),
-            const SizedBox(
-              height: 100,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                  width: double.infinity,
-                  height: 40,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      await patchUserProfileImage(
-                          _pickedImages, widget.room_id);
-                    },
-                    child: const Text(
-                      "확인",
-                      style: TextStyle(
-                          color: Colors.white, fontFamily: 'bm', fontSize: 20),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: PRIMARY_COLOR,
-                    ),
-                  )),
-            ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 
   Future<dynamic> patchUserProfileImage(
@@ -156,7 +264,8 @@ class _c_dialogState extends State<c_dialog> {
     return Container(
       width: 180,
       height: 180,
-      margin: EdgeInsets.symmetric(vertical: 10),
+      color: LIGHTGREY,
+      margin: const EdgeInsets.symmetric(vertical: 10),
       child: InkWell(
         onTap: () {
           getImage(ImageSource.gallery);
