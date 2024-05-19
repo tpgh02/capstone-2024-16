@@ -39,7 +39,7 @@ Future<List<CalendarData>> fetchCalendarData(String roomId) async {
     if (jsonData is List<dynamic>) {
       List<CalendarData> calendarDatas =
           jsonData.map((json) => CalendarData.fromJson(json)).toList();
-      //log("that is fetch data: $jsonData");
+      log("m_state fetch data: $jsonData");
       return calendarDatas;
     } else {
       throw Exception('Data format is not as expected');

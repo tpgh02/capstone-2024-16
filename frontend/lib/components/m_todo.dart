@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:dodo/const/colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:dodo/components/todo.dart';
 import 'package:flutter/material.dart';
@@ -73,9 +74,42 @@ class _m_todoState extends State<m_todo> {
             const SizedBox(
               height: 20,
             ),
-            const Text(
-              '오늘도 도전',
-              style: TextStyle(fontFamily: "kcc", fontSize: 20),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: [
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Flexible(
+                    child: Divider(
+                      thickness: 1.2,
+                      height: 1,
+                      color: DARKGREY,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  const Text(
+                    '오늘도 도전',
+                    style: TextStyle(fontFamily: "kcc", fontSize: 20),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Flexible(
+                    child: Divider(
+                      thickness: 1.2,
+                      height: 1,
+                      color: DARKGREY,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                ],
+              ),
             ),
             Container(
               child: Container(

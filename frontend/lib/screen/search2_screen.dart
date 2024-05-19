@@ -239,11 +239,11 @@ class _search2PageState extends State<search2Page> {
   Widget _buildRoom(Post post) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    room_join())); //post.roomId, post.name, post.image)));
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) =>
+        //             room_join())); //post.roomId, post.name, post.image)));
       },
       child: Container(
         margin: const EdgeInsets.all(10),
@@ -316,10 +316,8 @@ class _search2PageState extends State<search2Page> {
                 style: const TextStyle(
                     fontFamily: "bm", fontSize: 15, color: Colors.black),
               ),
-
             ),
           ],
-
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
@@ -14,14 +15,12 @@ Future<Map> fetchCreate(Map<String, dynamic> userData) async {
     'Content-Type': 'application/json',
   };
   final response = await http.post(
-    Uri.parse(serverUrl + '/api/v1/room/create-ai-room'),
+    Uri.parse(serverUrl + '/api/v1/room/create-normal-room'),
     headers: headers,
     body: jsonEncode(userData),
   );
 
-  print('Request URL: ${serverUrl + '/api/v1/room/create-ai-room'}');
-  print('Request Headers: $headers');
-  print('Request Body: ${jsonEncode(userData)}');
+  log('Request Body: ${jsonEncode(userData)}');
 
   try {
     if (response.statusCode == 200) {
