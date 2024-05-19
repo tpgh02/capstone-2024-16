@@ -1,15 +1,11 @@
 package com.dodo.room.dto;
 
-import com.dodo.certification.domain.Certification;
 import com.dodo.certification.domain.CertificationStatus;
 import com.dodo.image.domain.Image;
-import com.dodo.room.domain.*;
-import com.dodo.user.domain.User;
+import com.dodo.room.domain.Room;
+import com.dodo.room.domain.RoomType;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @RequiredArgsConstructor
@@ -34,8 +30,8 @@ public class RoomListData {
         this.maxUser = room.getMaxUser();
         this.nowUser = room.getNowUser();
         this.password = room.getPassword();
-        this.status = CertificationStatus.WAIT;
         this.frequency = room.getFrequency();
+        this.status = CertificationStatus.FAIL;
 
     }
     public static RoomListData updateStatus(RoomListData roomListData, CertificationStatus certificationStatus){

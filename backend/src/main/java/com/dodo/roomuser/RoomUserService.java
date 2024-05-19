@@ -77,7 +77,8 @@ public class RoomUserService {
         List<Certification> certificationList = roomUserRepository.findByUserAndRoom(user, room).orElseThrow(NotFoundException::new)
                 .getCertification();
 
-        if (certificationList == null || certificationList.isEmpty()) { return CertificationStatus.WAIT; }
+        // 기본 FAIL 로 설정해둠
+        if (certificationList == null || certificationList.isEmpty()) { return CertificationStatus.FAIL; }
 
         return certificationList.get(certificationList.size() - 1).getStatus();
     }
