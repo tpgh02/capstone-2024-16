@@ -74,6 +74,7 @@ class RoomUserToCheck extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (context) => RoomCertiVote(
+                      certificationIdList: certificationIdList,
                       room_id: room_id,
                       user_name: user_name,
                     ),
@@ -91,6 +92,7 @@ class RoomUserToCheck extends StatelessWidget {
                       : showDialog(
                           context: context,
                           builder: (context) => RoomCertiVote(
+                            certificationIdList: certificationIdList,
                             room_id: room_id,
                             user_name: user_name,
                           ),
