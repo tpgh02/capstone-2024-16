@@ -4,6 +4,7 @@ import 'package:dodo/components/s2_hotroom.dart';
 import 'package:dodo/components/s2_tag.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
+import 'package:dodo/screen/main_screen.dart';
 import 'package:dodo/screen/room_join.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -33,14 +34,14 @@ Future<List<Post>> fetchPost(String searchQuery) async {
 class Post {
   final int roomId;
   final String name;
-  final Map<String, dynamic>? image; // 변경: image는 Map<String, dynamic>? 타입
+  final image; // 변경: image는 Map<String, dynamic>? 타입
   final int maxUser;
   final int nowUser;
   final String endDay;
   final String periodicity;
-  final String pwd;
+  final String? pwd;
   final String category;
-  final String info;
+  final String? info;
   final bool canChat;
   final int numOfVoteSuccess;
   final int? numOfVoteFail; // 변경: numOfVoteFail는 nullable
@@ -49,9 +50,10 @@ class Post {
   final int? nowGoal; // 변경: nowGoal는 nullable
   final bool isFull;
   final String? status;
+  final String roomType;
   final String certificationType;
   final int frequency;
-  final List<String>? tag;
+  final List<dynamic>? tag;
   final bool isManager;
 
   Post({
@@ -73,6 +75,7 @@ class Post {
     this.nowGoal,
     required this.isFull,
     this.status,
+    required this.roomType,
     required this.certificationType,
     required this.frequency,
     this.tag,
@@ -99,6 +102,7 @@ class Post {
       nowGoal: json['nowGoal'],
       isFull: json['isFull'],
       status: json['status'],
+      roomType: json['roomType'],
       certificationType: json['certificationType'],
       frequency: json['frequency'],
       tag: json['tag'] != null ? List<String>.from(json['tag']) : null,
@@ -242,8 +246,26 @@ class _search2PageState extends State<search2Page> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    room_join())); //post.roomId, post.name, post.image)));
+                builder: (context) => room_join(
+                    roomId: post.roomId,
+                    room_title: post.name,
+                    image: post.image ??
+                        {
+                          "id": 1,
+                          "url":
+                              "https://my-dodo-bucket.s3.ap-northeast-2.amazonaws.com/image/default.png"
+                        },
+                    maxUser: post.maxUser,
+                    nowUser: post.nowUser,
+                    endDay: post.endDay,
+                    periodicity: post.periodicity,
+                    room_pwd: post.pwd,
+                    info: post.info,
+                    canChat: post.canChat,
+                    room_type: post.roomType,
+                    certificationType: post.certificationType,
+                    frequency: post.frequency,
+                    tag: post.tag))); //post.roomId, post.name, post.image)));
       },
       child: Container(
         margin: const EdgeInsets.all(10),
@@ -311,15 +333,19 @@ class _search2PageState extends State<search2Page> {
             ),
             Container(
               alignment: Alignment.centerRight,
-              child: Text(
-                post.info,
-                style: const TextStyle(
-                    fontFamily: "bm", fontSize: 15, color: Colors.black),
-              ),
-
+              child: post.info == null || post.info == ""
+                  ? const Text(
+                      "소개가 없습니다.",
+                      style: TextStyle(
+                          fontFamily: "bm", fontSize: 15, color: Colors.black),
+                    )
+                  : Text(
+                      post.info!,
+                      style: const TextStyle(
+                          fontFamily: "bm", fontSize: 15, color: Colors.black),
+                    ),
             ),
           ],
-
         ),
       ),
     );
