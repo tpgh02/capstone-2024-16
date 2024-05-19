@@ -21,7 +21,7 @@ Future<List<Map<String, dynamic>>> fetchRooms() async {
   });
   if (response.statusCode == 200) {
     final List<dynamic> jsonData = jsonDecode(utf8.decode(response.bodyBytes));
-    log("Main2 : Connected!");
+    log('${jsonData}');
     return List<Map<String, dynamic>>.from(jsonData);
   } else {
     throw Exception('Failed to load room list in main');
@@ -167,21 +167,24 @@ class _c_dialogState extends State<c_dialog> {
                             padding: const EdgeInsets.only(top: 20),
                             child: Column(
                               children: [
-                                SingleChildScrollView(
-                                  physics:
-                                      const AlwaysScrollableScrollPhysics(),
-                                  child: Column(
-                                    children: [
-                                      Column(
-                                        children:
-                                            List.generate(frequency, (index) {
-                                          return select(index);
-                                        }),
-                                      ),
-                                      const SizedBox(
-                                        height: 100,
-                                      ),
-                                    ],
+                                Container(
+                                  height: 250,
+                                  child: SingleChildScrollView(
+                                    physics:
+                                        const AlwaysScrollableScrollPhysics(),
+                                    child: Column(
+                                      children: [
+                                        Column(
+                                          children:
+                                              List.generate(frequency, (index) {
+                                            return select(index);
+                                          }),
+                                        ),
+                                        const SizedBox(
+                                          height: 100,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 Container(

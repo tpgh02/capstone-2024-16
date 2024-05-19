@@ -213,19 +213,6 @@ class _Groproom_cr2State extends State<Groproom_cr2>
                       const SizedBox(
                         width: 15,
                       ),
-                      const Row(
-                        children: [
-                          Checkbox(
-                            value: true,
-                            onChanged: null,
-                            activeColor: PRIMARY_COLOR,
-                          ),
-                          Text(
-                            "AI 인증",
-                            style: TextStyle(fontFamily: "bma", fontSize: 20),
-                          ),
-                        ],
-                      )
                     ],
                   ),
                 ),
