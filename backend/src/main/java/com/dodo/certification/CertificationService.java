@@ -276,6 +276,7 @@ public class CertificationService {
                                 .forEach(c -> {
                                     if(c.getStatus() == CertificationStatus.WAIT) group.addWait();
                                     else if(c.getStatus() == CertificationStatus.SUCCESS) group.addSuccess();
+                                    if(c.getStatus() == CertificationStatus.WAIT || c.getStatus() == CertificationStatus.SUCCESS) group.addCertification(c);
                                 });
                     }
                     groupList.add(group);
@@ -288,6 +289,26 @@ public class CertificationService {
     }
 
     // AI로부터 정보를 받아와 인증 여부를 파악함.
+    @Data
+    @EqualsAndHashCode
+    public static class CertificationGroup {
+        private RoomUser roomUser;
+        private List<Certification> certificationList;
+        private Integer wait;
+        private Integer success;
+        public CertificationGroup(RoomUser roomUser) {
+            this.roomUser = roomUser;
+            this.wait = 0;
+            this.success = 0;
+            this.certificationList = new ArrayList<>();
+        }
+        public void addWait() { this.wait += 1; }
+        public void addSuccess() { this.success += 1; }
+        public void addCertification(Certification certification) {
+            this.certificationList.add(certification);
+        }
+    }
+
     public void analyze(AiResponseData aiResponseData) {
         Category category = aiResponseData.getCategory();
         Certification certification = certificationRepository.findById(aiResponseData.getCertificationId())
@@ -316,21 +337,6 @@ public class CertificationService {
             }
         }
         return null;
-    }
-
-    @Data
-    @EqualsAndHashCode
-    public static class CertificationGroup {
-        private RoomUser roomUser;
-        private Integer wait;
-        private Integer success;
-        public CertificationGroup(RoomUser roomUser) {
-            this.roomUser = roomUser;
-            this.wait = 0;
-            this.success = 0;
-        }
-        public void addWait() { this.wait += 1; }
-        public void addSuccess() { this.success += 1; }
     }
 
     private User getUser(UserContext userContext) {

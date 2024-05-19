@@ -23,7 +23,6 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
@@ -242,15 +241,16 @@ public class StatisticsService {
     }
 
     // TODO
-    // 이미지 앨범 받아오기
     public List<AlbumResponseData> getAlbum(UserContext userContext) {
         User user = userRepository.findById(userContext.getUserId())
                 .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다"));
         List<RoomUser> roomUserList = roomUserRepository.findAllByUser(user)
                 .orElse(new ArrayList<>());
-        List<Certification> certificationList = certificationRepository.findAllByRoomUserIn(roomUserList)
-                .orElse(new ArrayList<>());
-        return new ArrayList<>();
+        return certificationRepository.findAllByRoomUserIn(roomUserList)
+                .orElse(new ArrayList<>())
+                .stream()
+                .map(AlbumResponseData::new)
+                .toList();
     }
 
     public List<LocalDateTime> getThisWeek() {
