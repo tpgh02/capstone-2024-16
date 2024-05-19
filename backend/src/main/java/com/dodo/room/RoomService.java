@@ -231,12 +231,10 @@ public class RoomService {
             room.update(
                     roomData.getName(),
                     roomData.getInfo(),
-                    roomData.getEndDay(),
                     roomData.getMaxUser(),
                     roomData.getCanChat(),
                     roomData.getNumOfVoteSuccess(),
                     roomData.getNumOfVoteFail(),
-                    roomData.getImage(),
                     roomData.getPeriodicity(),
                     roomData.getFrequency(),
                     roomData.getCertificationType(),

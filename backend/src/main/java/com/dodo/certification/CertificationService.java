@@ -140,12 +140,10 @@ public class CertificationService {
 
     public CertificationDetailResponseData getCertificationDetail(
             UserContext userContext,
-            Long roomUserId
+            Long certificationId
     ) {
         User user = getUser(userContext);
-        RoomUser roomUser = roomUserRepository.findById(roomUserId)
-                .orElseThrow(() -> new NotFoundException("인증방 정보를 찾을 수 없습니다"));
-        Certification certification = certificationRepository.findByRoomUser(roomUser)
+        Certification certification = certificationRepository.findById(certificationId)
                 .orElseThrow(() -> new NotFoundException("인증 정보를 찾을 수 없습니다"));
         Vote vote = voteRepository.findByUserAndCertification(user, certification).orElse(null);
         Room room = certification.getRoomUser().getRoom();

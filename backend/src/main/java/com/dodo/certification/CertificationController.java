@@ -44,9 +44,9 @@ public class CertificationController {
     @GetMapping("/detail/{roomUserId}")
     public CertificationDetailResponseData getCertificationDetail(
             @RequestAttribute UserContext userContext,
-            @PathVariable Long roomUserId
+            @PathVariable Long certificationId
     ) {
-        return certificationService.getCertificationDetail(userContext, roomUserId);
+        return certificationService.getCertificationDetail(userContext, certificationId);
     }
 
 

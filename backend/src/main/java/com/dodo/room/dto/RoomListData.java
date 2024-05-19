@@ -22,6 +22,7 @@ public class RoomListData {
     private String password;
     private CertificationStatus status;
     private RoomType roomType;
+    private Integer frequency;
 
     private Boolean isManager = false;
 
@@ -34,6 +35,7 @@ public class RoomListData {
         this.nowUser = room.getNowUser();
         this.password = room.getPassword();
         this.status = CertificationStatus.WAIT;
+        this.frequency = room.getFrequency();
 
     }
     public static RoomListData updateStatus(RoomListData roomListData, CertificationStatus certificationStatus){
