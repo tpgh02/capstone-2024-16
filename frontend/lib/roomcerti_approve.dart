@@ -184,36 +184,7 @@ class _RoomCertiApproveState extends State<RoomCertiApprove> {
                           borderRadius: BorderRadius.circular(10)),
                       padding: const EdgeInsets.fromLTRB(10, 15, 20, 15),
                     ),
-                    onPressed: () async {
-                      String adminURL =
-                          '$serverUrl/api/v1/certification/approval';
-                      for (var i = 0;
-                          i < widget.certificationIdList.length;
-                          i++) {
-                        final response = await http.post(Uri.parse(adminURL),
-                            headers: {
-                              'Content-Type': 'application/json; charset=UTF-8',
-                              'Authorization':
-                                  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
-                            },
-                            body: jsonEncode({
-                              "certificationId": widget.certificationIdList[i],
-                              "status": "SUCCESS"
-                            }));
-                        try {
-                          if (response.statusCode == 200) {
-                            log("방장 승인 성공");
-                          } else {
-                            log("Error: ${response.body}");
-                          }
-                        } catch (e) {
-                          log(response.body);
-                          log('$e');
-                          throw Exception('네트워크 오류가 발생했습니다.');
-                        }
-                      }
-                      Navigator.pop(context);
-                    },
+                    onPressed: () {},
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -247,36 +218,7 @@ class _RoomCertiApproveState extends State<RoomCertiApprove> {
                           borderRadius: BorderRadius.circular(10)),
                       padding: const EdgeInsets.fromLTRB(10, 15, 20, 15),
                     ),
-                    onPressed: () async {
-                      String adminURL =
-                          '$serverUrl/api/v1/certification/approval';
-                      for (var i = 0;
-                          i < widget.certificationIdList.length;
-                          i++) {
-                        final response = await http.post(Uri.parse(adminURL),
-                            headers: {
-                              'Content-Type': 'application/json; charset=UTF-8',
-                              'Authorization':
-                                  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
-                            },
-                            body: jsonEncode({
-                              "certificationId": widget.certificationIdList[i],
-                              "status": "FAIL"
-                            }));
-                        try {
-                          if (response.statusCode == 200) {
-                            log("방장 거절 성공");
-                          } else {
-                            log("Error: ${response.body}");
-                          }
-                        } catch (e) {
-                          log(response.body);
-                          log('$e');
-                          throw Exception('네트워크 오류가 발생했습니다.');
-                        }
-                      }
-                      Navigator.pop(context);
-                    },
+                    onPressed: () {},
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
