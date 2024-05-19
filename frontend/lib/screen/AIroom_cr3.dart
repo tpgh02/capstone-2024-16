@@ -242,45 +242,65 @@ class _AIroom_cr3State extends State<AIroom_cr3>
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 15),
-                      child: Row(
+                      child: Wrap(
+                        direction: Axis.vertical,
+                        spacing: 5,
+                        runSpacing: 5,
+                        alignment: WrapAlignment.start,
                         children: [
-                          Checkbox(
-                            value: _peoplevote,
-                            onChanged: (value) {
-                              setState(() {
-                                _peoplevote = value!;
-                              });
-                            },
-                            activeColor: PRIMARY_COLOR,
-                          ),
-                          const Text(
-                            "구성원 투표",
-                            style: TextStyle(fontFamily: "bma", fontSize: 20),
-                          ),
-                          const SizedBox(
-                            width: 15,
-                          ),
-                          const Checkbox(
-                            value: true,
-                            onChanged: null,
-                            activeColor: PRIMARY_COLOR,
-                          ),
-                          const Text(
-                            "방장 승인",
-                            style: TextStyle(fontFamily: "bma", fontSize: 20),
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: _peoplevote,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _peoplevote = value!;
+                                    print(_peoplevote);
+                                  });
+                                },
+                                activeColor: PRIMARY_COLOR,
+                              ),
+                              const Text(
+                                "구성원 투표",
+                                style:
+                                    TextStyle(fontFamily: "bma", fontSize: 20),
+                              ),
+                            ],
                           ),
                           const SizedBox(
                             width: 15,
                           ),
-                          const Checkbox(
-                            value: false,
-                            onChanged: null,
-                            activeColor: PRIMARY_COLOR,
+                          const Row(
+                            children: [
+                              Checkbox(
+                                value: true,
+                                onChanged: null,
+                                activeColor: PRIMARY_COLOR,
+                              ),
+                              Text(
+                                "방장 승인",
+                                style:
+                                    TextStyle(fontFamily: "bma", fontSize: 20),
+                              ),
+                            ],
                           ),
-                          const Text(
-                            "AI 인증",
-                            style: TextStyle(fontFamily: "bma", fontSize: 20),
-                          )
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          const Row(
+                            children: [
+                              Checkbox(
+                                value: true,
+                                onChanged: null,
+                                activeColor: PRIMARY_COLOR,
+                              ),
+                              Text(
+                                "AI 인증",
+                                style:
+                                    TextStyle(fontFamily: "bma", fontSize: 20),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -294,6 +314,11 @@ class _AIroom_cr3State extends State<AIroom_cr3>
                 const SizedBox(height: 15),
                 // 인증 시간 설정
                 if (widget._isAI) _buildTimePickerButton(),
+                const SizedBox(height: 15),
+                if (widget._isAI &&
+                    !_ispick &&
+                    _autovalidateMode == AutovalidateMode.always)
+                  _buildValidationMessage('인증 시간을 설정해주세요'),
                 const SizedBox(height: 15),
                 // 이전, 다음 버튼
                 _buildButtonRow(context),
@@ -536,9 +561,13 @@ class _AIroom_cr3State extends State<AIroom_cr3>
               "tag": widget.tag.split(" "),
               "maxUser": widget.peoplesnum,
               "pwd": widget.password,
+              if (widget._isAI)
+                "certificationTime": _selectedTime.format(context),
             };
 
-            if (!_globalKey.currentState!.validate() || _selectedDate == null) {
+            if (!_globalKey.currentState!.validate() ||
+                _selectedDate == null ||
+                (widget._isAI && !_ispick)) {
               setState(() {
                 _autovalidateMode = AutovalidateMode.always;
               });

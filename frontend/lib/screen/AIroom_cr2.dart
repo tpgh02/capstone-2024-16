@@ -141,6 +141,11 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
                   OutlinedButton(
                     onPressed: () async {
                       if (_globalKey.currentState!.validate()) {
+                        if (_select.toString() == '운동') {
+                          _isAI = false;
+                        } else {
+                          _isAI = true;
+                        }
                         Navigator.push(
                           context,
                           MaterialPageRoute(
