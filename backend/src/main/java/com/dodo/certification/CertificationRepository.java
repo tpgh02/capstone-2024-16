@@ -14,4 +14,6 @@ public interface CertificationRepository extends JpaRepository<Certification, Lo
     Optional<List<Certification>> findAllByRoomUserId(Long roomUserId);
     Optional<List<Certification>> findAllByRoomUserRoom(Room room);
     Long countAllByRoomUser(RoomUser roomUser);
+
+    Optional<Certification> findByRoomUser(RoomUser roomUser);
 }

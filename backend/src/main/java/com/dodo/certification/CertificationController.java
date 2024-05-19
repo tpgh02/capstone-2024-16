@@ -41,12 +41,12 @@ public class CertificationController {
     }
 
     // 특정 인증 클릭했을 때 나오는 디테일 화면 보여주기
-    @GetMapping("/detail/{certificationId}")
+    @GetMapping("/detail/{roomUserId}")
     public CertificationDetailResponseData getCertificationDetail(
             @RequestAttribute UserContext userContext,
-            @PathVariable Long certificationId
+            @PathVariable Long roomUserId
     ) {
-        return certificationService.getCertificationDetail(userContext, certificationId);
+        return certificationService.getCertificationDetail(userContext, roomUserId);
     }
 
 
