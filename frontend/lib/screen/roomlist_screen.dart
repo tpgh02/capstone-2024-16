@@ -34,6 +34,7 @@ class MyRoom {
   final room_img;
   final int room_mem;
   final int room_maxmem;
+  final String? status;
   final String room_type;
   final bool is_manager;
 
@@ -44,6 +45,7 @@ class MyRoom {
     required this.room_img,
     required this.room_mem,
     required this.room_maxmem,
+    required this.status,
     required this.room_type,
     required this.is_manager,
   });
@@ -56,6 +58,7 @@ class MyRoom {
       room_img: json['image'],
       room_mem: json['nowUser'],
       room_maxmem: json['maxUser'],
+      status: json['status'],
       room_type: json['roomType'],
       is_manager: json['isManager'],
     );
@@ -153,7 +156,7 @@ class _RoomListState extends State<RoomListPage> {
                                 },
                             room_mem: MyRoom.room_mem,
                             room_maxmem: MyRoom.room_maxmem,
-                            canChat: true,
+                            status: MyRoom.status,
                             is_manager: MyRoom.is_manager,
                             certificationType: "VOTE",
                           );

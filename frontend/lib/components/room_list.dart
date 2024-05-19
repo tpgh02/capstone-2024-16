@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:developer';
 import 'package:dodo/components/room_group.dart';
@@ -28,9 +27,6 @@ Future<dynamic> fetchRoomImage(File? pickedImage, int roomId) async {
       FormData.fromMap({'image': toEditImage, 'roomId': roomId});
 
   try {
-    // dio.options.maxRedirects.isFinite;
-    log("step 1");
-
     dio.options.contentType = 'multipart/form-data';
     dio.options.maxRedirects.isFinite;
 
@@ -39,11 +35,9 @@ Future<dynamic> fetchRoomImage(File? pickedImage, int roomId) async {
           'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU',
     };
 
-    log("step 2");
     final imageEditResponse = await dio.post(editImageUrl,
         data: formData, options: Options(contentType: 'multipart/form-data'));
 
-    log("step 3");
     if (imageEditResponse.statusCode == 200) {
       log('커버 이미지 변경 성공: $imageEditResponse');
     } else {
@@ -100,7 +94,7 @@ class room_list extends StatefulWidget {
   final room_img;
   final int room_mem;
   final int room_maxmem;
-  final bool canChat;
+  final String? status;
   final bool is_manager;
   final String certificationType;
   const room_list({
@@ -112,7 +106,7 @@ class room_list extends StatefulWidget {
     required this.room_img,
     required this.room_mem,
     required this.room_maxmem,
-    required this.canChat,
+    required this.status,
     required this.is_manager,
     required this.certificationType,
   });
@@ -251,14 +245,25 @@ class _roomListState extends State<room_list> {
                   ),
                 ),
                 // 도장
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.black26, width: 1.5),
-                  ),
-                  width: 90,
-                  height: 90,
-                ),
+                widget.status == "FAIL" || widget.status == "WAIT"
+                    ? Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                              color: const Color.fromARGB(0, 0, 0, 0),
+                              width: 1.5),
+                        ),
+                        width: 70,
+                        height: 90,
+                      )
+                    : const SizedBox(
+                        width: 70,
+                        height: 90,
+                        child: Icon(
+                          Icons.check_box_rounded,
+                          size: 60,
+                          color: PRIMARY_COLOR,
+                        ))
               ],
             ),
           ),
