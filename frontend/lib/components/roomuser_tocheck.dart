@@ -5,6 +5,7 @@ import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 
 class RoomUserToCheck extends StatelessWidget {
+  final List<dynamic> certificationIdList;
   final int userId;
   final int roomUserId;
   final int room_id;
@@ -16,6 +17,7 @@ class RoomUserToCheck extends StatelessWidget {
   final String certificationType;
 
   const RoomUserToCheck(
+      this.certificationIdList,
       this.userId,
       this.roomUserId,
       this.room_id,
@@ -76,11 +78,32 @@ class RoomUserToCheck extends StatelessWidget {
                       user_name: user_name,
                     ),
                   );
-                } else {
+                } else if (certificationType == "BOTH") {
                   is_manager
                       ? showDialog(
                           context: context,
                           builder: (context) => RoomCertiApprove(
+                            certificationIdList: certificationIdList,
+                            room_id: room_id,
+                            user_name: user_name,
+                          ),
+                        )
+                      : showDialog(
+                          context: context,
+                          builder: (context) => RoomCertiVote(
+                            room_id: room_id,
+                            user_name: user_name,
+                          ),
+                        );
+                }
+
+                // ADMIN
+                else {
+                  is_manager
+                      ? showDialog(
+                          context: context,
+                          builder: (context) => RoomCertiApprove(
+                            certificationIdList: certificationIdList,
                             room_id: room_id,
                             user_name: user_name,
                           ),
