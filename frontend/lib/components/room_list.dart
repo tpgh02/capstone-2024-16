@@ -8,63 +8,83 @@ import 'package:dodo/const/server.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
-// import 'package:http_parser/http_parser.dart';
+import 'package:http_parser/http_parser.dart';
 
 // 인증방 이미지 변경
-Future<dynamic> fetchRoomImage(
-    File? pickedImage, int roomId, var room_img) async {
+Future<dynamic> fetchRoomImage(File? pickedImage, int roomId) async {
   var dio = Dio();
-  var url = '$serverUrl/api/v1/room/update?roomId=$roomId';
-
-  // final MultipartFile toEditImage;
-  // if (pickedImage != null) {
-  //   toEditImage = MultipartFile.fromFileSync(
-  //     pickedImage.path,
-  //     contentType: MediaType("image", "jpg"),
-  //   );
-  // } else {
-  //   throw Exception('이미지 파일이 유효하지 않습니다.');
-  // }
-  String? base64Image;
+  var editImageUrl = '$serverUrl/api/v1/room/change-image';
+  MultipartFile toEditImage;
   if (pickedImage != null) {
-    List<int> imageBytes = await pickedImage.readAsBytes();
-    base64Image = base64Encode(imageBytes);
+    toEditImage = MultipartFile.fromFileSync(
+      pickedImage.path,
+      contentType: MediaType("image", "jpg"),
+    );
   } else {
     throw Exception('이미지 파일이 유효하지 않습니다.');
   }
 
+  FormData formData =
+      FormData.fromMap({'image': toEditImage, 'roomId': roomId});
+
   try {
-    dio.options.maxRedirects.isFinite;
+    // dio.options.maxRedirects.isFinite;
     log("step 1");
 
-    Map<String, dynamic> jsonImage = {
-      "image": {"id": room_img['id'] + 1, "url": base64Image}
-    };
+    dio.options.contentType = 'multipart/form-data';
+    dio.options.maxRedirects.isFinite;
 
-    Map<String, dynamic> imageHeaders = {
-      'Content-Type': 'application/json',
+    dio.options.headers = {
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU',
     };
-
-    // dio.options.headers = {
-    //   HttpHeaders.contentTypeHeader: "application/json",
-    //   'Authorization':
-    //       'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
-    // };
 
     log("step 2");
-    final response = await dio.post(url,
-        data: jsonImage, options: Options(headers: imageHeaders));
+    final imageEditResponse = await dio.post(editImageUrl,
+        data: formData, options: Options(contentType: 'multipart/form-data'));
+
     log("step 3");
-    if (response.statusCode == 200) {
-      // final responseData = response.data;
-      // final imageUrl = responseData["image"]["url"];
-      print('커버 이미지 수정 성공');
-      //return imageUrl;
+    if (imageEditResponse.statusCode == 200) {
+      log('커버 이미지 변경 성공: $imageEditResponse');
     } else {
-      print('커버 이미지 수정 실패: ${response.statusCode}');
-      //return null;
+      log('서버로부터 잘못된 응답이 도착했습니다. 상태 코드: ${imageEditResponse.statusCode}');
+    }
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
+Future<dynamic> fetchBasicImage(int roomId) async {
+  var dio = Dio();
+  var editImageUrl = '$serverUrl/api/v1/room/change-image';
+
+  FormData formData = FormData.fromMap({
+    'image':
+        'https://my-dodo-bucket.s3.ap-northeast-2.amazonaws.com/image/default.png',
+    'roomId': roomId
+  });
+
+  try {
+    log("step 1");
+
+    dio.options.contentType = 'multipart/form-data';
+    dio.options.maxRedirects.isFinite;
+
+    dio.options.headers = {
+      'Authorization':
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU',
+    };
+
+    log("step 2");
+    final imageEditResponse = await dio.post(editImageUrl,
+        data: formData, options: Options(contentType: 'multipart/form-data'));
+
+    log("step 3");
+    if (imageEditResponse.statusCode == 200) {
+      log('커버 이미지 삭제 성공: $imageEditResponse');
+    } else {
+      log('서버로부터 잘못된 응답이 도착했습니다. 상태 코드: ${imageEditResponse.statusCode}');
     }
   } catch (e) {
     print(e);
@@ -117,7 +137,6 @@ class _roomListState extends State<room_list> {
 
   @override
   Widget build(BuildContext context) {
-    // log("${widget.room_img}");
     return Column(
       children: [
         Padding(
@@ -130,9 +149,7 @@ class _roomListState extends State<room_list> {
                 GestureDetector(
                   onTap: () {
                     widget.is_manager
-                        ? showModalBottomSheet(
-                            context: context,
-                            builder: ((builder) => editRoomImg()))
+                        ? editCoverDialog(widget.room_img['url'].toString())
                         : null;
                   },
                   child: SizedBox(
@@ -279,10 +296,6 @@ class _roomListState extends State<room_list> {
                 TextButton(
                   onPressed: () async {
                     getNewImage(ImageSource.gallery);
-                    if (_pickedImage !=
-                        File('assets/images/turtle_noradius.png')) {}
-                    await fetchRoomImage(
-                        _pickedImage, widget.room_id, widget.room_img);
                     Navigator.of(context).pop();
                   },
                   child: const Column(
@@ -304,7 +317,10 @@ class _roomListState extends State<room_list> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    fetchBasicImage(widget.room_id);
+                    Navigator.of(context).pop();
+                  },
                   child: const Column(
                     children: [
                       Icon(
@@ -329,5 +345,149 @@ class _roomListState extends State<room_list> {
         ),
       ),
     );
+  }
+
+  void editCoverDialog(
+    String imageurl,
+  ) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: ((context) {
+          return AlertDialog(
+            backgroundColor: LIGHTGREY,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: const Text("커버 이미지 수정",
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: POINT_COLOR)),
+            content: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (_pickedImage != File('assets/images/turtle_noradius.png'))
+                    Flexible(
+                      child: Stack(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 30, 0),
+                            child: SizedBox(
+                              width: 120,
+                              height: 120,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.network(
+                                  imageurl,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                          // 카메라 아이콘
+                          Positioned(
+                            bottom: 5,
+                            right: 35,
+                            child: InkWell(
+                              onTap: () => showModalBottomSheet(
+                                  context: context,
+                                  builder: ((builder) => editRoomImg())),
+                              child: const Icon(
+                                Icons.camera_enhance,
+                                color: PRIMARY_COLOR,
+                                size: 40,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    Flexible(
+                      child: Stack(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 30, 0),
+                            child: SizedBox(
+                              width: 120,
+                              height: 120,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.file(File(_pickedImage!.path)),
+                              ),
+                            ),
+                          ),
+                          // 카메라 아이콘
+                          Positioned(
+                            bottom: 5,
+                            right: 35,
+                            child: InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                    context: context,
+                                    builder: ((builder) => editRoomImg()));
+                              },
+                              child: const Icon(
+                                Icons.camera_enhance,
+                                color: PRIMARY_COLOR,
+                                size: 40,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              // 수정 버튼
+              ElevatedButton(
+                onPressed: () async {
+                  if (_pickedImage !=
+                      File('assets/images/turtle_noradius.png')) {
+                    await fetchRoomImage(_pickedImage, widget.room_id);
+                  }
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: POINT_COLOR,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  side: const BorderSide(
+                    color: POINT_COLOR,
+                    width: 1.0,
+                  ),
+                ),
+                child: const Text(
+                  "수정",
+                  style: TextStyle(
+                      color: Color.fromARGB(226, 255, 255, 255),
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+
+              // 닫기 버튼
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: POINT_COLOR,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  side: const BorderSide(
+                    color: POINT_COLOR,
+                    width: 1.0,
+                  ),
+                ),
+                child: const Text("취소",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ],
+          );
+        }));
   }
 }

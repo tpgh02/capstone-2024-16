@@ -754,11 +754,18 @@ class _roomSetManagerState extends State<RoomSetting_Manager> {
                 if (_deleteRoomKey.currentState!.validate()) {
                   String deleteroomUrl =
                       '$serverUrl/api/v1/room/delete-room/${widget.room_id}';
-                  await http.get(Uri.parse(deleteroomUrl), headers: {
+                  final response =
+                      await http.get(Uri.parse(deleteroomUrl), headers: {
                     'Authorization':
                         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
                   });
-                  log("인증방 해체 성공");
+                  if (response.statusCode == 200) {
+                    log("인증방 해체 성공");
+                  } else {
+                    log("인증방 해체 실패");
+                    throw Exception('Failed to delete room');
+                  }
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(
