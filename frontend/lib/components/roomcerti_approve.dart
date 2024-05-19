@@ -1,17 +1,89 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'package:dodo/const/server.dart';
+import 'package:http/http.dart' as http;
 import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 
+Future<CertiDetail> fetchCertiDetail(int certificationId) async {
+  final response = await http.get(
+      Uri.parse('$serverUrl/api/v1/certification/detail/${certificationId}'),
+      headers: {
+        'Authorization':
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+      });
+
+  if (response.statusCode == 200) {
+    log('Certification Detail: Connected!');
+    return CertiDetail.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+  } else {
+    throw Exception('Room Main: fail to connect');
+  }
+}
+
+class CertiDetail {
+  final image;
+  // final int? voteUp;
+  // final int? voteDown;
+  // final int? voteUpMax;
+  // final int? voteDownMax;
+  final String? certificationStatus;
+  // final String? myVoteStatus;
+
+  const CertiDetail({
+    required this.image,
+    // required this.voteUp,
+    // required this.voteDown,
+    // required this.voteUpMax,
+    // required this.voteDownMax,
+    required this.certificationStatus,
+    // required this.myVoteStatus
+  });
+
+  factory CertiDetail.fromJson(dynamic json) {
+    return CertiDetail(
+        image: json['image'], certificationStatus: json['certificationStatus']);
+  }
+}
+
 class RoomCertiApprove extends StatefulWidget {
+  final List<dynamic> certificationIdList;
   final int room_id;
   final String user_name;
   const RoomCertiApprove(
-      {super.key, required this.room_id, required this.user_name});
+      {super.key,
+      required this.certificationIdList,
+      required this.room_id,
+      required this.user_name});
 
   @override
   State<RoomCertiApprove> createState() => _RoomCertiApproveState();
 }
 
 class _RoomCertiApproveState extends State<RoomCertiApprove> {
+  late Future<List<CertiDetail>>? futureCertiDetails;
+
+  @override
+  void initState() {
+    super.initState();
+    futureCertiDetails = listToFuture();
+  }
+
+  Future<List<CertiDetail>>? listToFuture() async {
+    List<Future<CertiDetail>> listFutureDetail = [];
+
+    // 각 certification Id를 불러와 fetch 후 list에 저장
+    for (var i = 0; i < widget.certificationIdList.length; i++) {
+      Future<CertiDetail> certiDetailIndex =
+          fetchCertiDetail(widget.certificationIdList[i]);
+      listFutureDetail.add(certiDetailIndex);
+    }
+
+    // 데이터 타입 가공
+    List<CertiDetail>? certiDetails = await Future.wait(listFutureDetail);
+    return certiDetails;
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -23,9 +95,8 @@ class _RoomCertiApproveState extends State<RoomCertiApprove> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-
             Padding(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -49,19 +120,51 @@ class _RoomCertiApproveState extends State<RoomCertiApprove> {
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Column(
                   children: [
-                    Column(
-                      children: List.generate(
-                        3,
-                        (index) {
-                          return Container(
-                              margin: const EdgeInsets.only(bottom: 5),
-                              color: PRIMARY_COLOR,
-                              width: 180,
-                              height: 180,
-                              child: Text("${index + 1}"));
-                        },
-                      ),
-                    ),
+                    FutureBuilder<List<CertiDetail>>(
+                        future: futureCertiDetails,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            log("유저 리스트 연결 실패: ${snapshot.error}");
+                            return const Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '서버 연결에 실패하였습니다.',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.black45,
+                                      fontFamily: 'bm',
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          } else if (snapshot.hasData) {
+                            return Column(
+                              children: List.generate(
+                                snapshot.data!.length,
+                                (index) {
+                                  log("${snapshot.data![index].image['url']}");
+                                  return Container(
+                                      margin: const EdgeInsets.only(bottom: 5),
+                                      width: 180,
+                                      height: 180,
+                                      child: Image.network(
+                                          snapshot.data![index].image['url'],
+                                          fit: BoxFit.cover));
+                                },
+                              ),
+                            );
+                          } else {
+                            return const Text('No data available');
+                          }
+                        }),
                   ],
                 ),
               ),
@@ -81,7 +184,36 @@ class _RoomCertiApproveState extends State<RoomCertiApprove> {
                           borderRadius: BorderRadius.circular(10)),
                       padding: const EdgeInsets.fromLTRB(10, 15, 20, 15),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      String adminURL =
+                          '$serverUrl/api/v1/certification/approval';
+                      for (var i = 0;
+                          i < widget.certificationIdList.length;
+                          i++) {
+                        final response = await http.post(Uri.parse(adminURL),
+                            headers: {
+                              'Content-Type': 'application/json; charset=UTF-8',
+                              'Authorization':
+                                  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+                            },
+                            body: jsonEncode({
+                              "certificationId": widget.certificationIdList[i],
+                              "status": "SUCCESS"
+                            }));
+                        try {
+                          if (response.statusCode == 200) {
+                            log("방장 승인 성공");
+                          } else {
+                            log("Error: ${response.body}");
+                          }
+                        } catch (e) {
+                          log(response.body);
+                          log('$e');
+                          throw Exception('네트워크 오류가 발생했습니다.');
+                        }
+                      }
+                      Navigator.pop(context);
+                    },
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -115,7 +247,36 @@ class _RoomCertiApproveState extends State<RoomCertiApprove> {
                           borderRadius: BorderRadius.circular(10)),
                       padding: const EdgeInsets.fromLTRB(10, 15, 20, 15),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      String adminURL =
+                          '$serverUrl/api/v1/certification/approval';
+                      for (var i = 0;
+                          i < widget.certificationIdList.length;
+                          i++) {
+                        final response = await http.post(Uri.parse(adminURL),
+                            headers: {
+                              'Content-Type': 'application/json; charset=UTF-8',
+                              'Authorization':
+                                  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+                            },
+                            body: jsonEncode({
+                              "certificationId": widget.certificationIdList[i],
+                              "status": "FAIL"
+                            }));
+                        try {
+                          if (response.statusCode == 200) {
+                            log("방장 거절 성공");
+                          } else {
+                            log("Error: ${response.body}");
+                          }
+                        } catch (e) {
+                          log(response.body);
+                          log('$e');
+                          throw Exception('네트워크 오류가 발생했습니다.');
+                        }
+                      }
+                      Navigator.pop(context);
+                    },
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
