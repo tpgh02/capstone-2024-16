@@ -23,7 +23,6 @@ class _RoomCertiVoteState extends State<RoomCertiVote> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-
             Padding(
               padding: EdgeInsets.all(20),
               child: Row(
@@ -133,7 +132,10 @@ class _RoomCertiVoteState extends State<RoomCertiVote> {
                     ),
                     Container(
                       height: 25,
-                      width: MediaQuery.of(context).size.width * 0.4 * (1 / 5),
+                      width: MediaQuery.of(context).size.width *
+                          0.4 *
+                          (3 / 5) *
+                          (1 / 3),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color: const Color.fromARGB(255, 239, 104, 104),

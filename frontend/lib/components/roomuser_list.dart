@@ -27,6 +27,7 @@ Future<List<Users>> fetchRoomUsers(int roomId) async {
 class Users {
   final int userId;
   final int roomUserId;
+  final List<dynamic> certificationIdList;
   final String userName;
   final userImage;
   final int max;
@@ -37,6 +38,7 @@ class Users {
   const Users(
       {required this.userId,
       required this.roomUserId,
+      required this.certificationIdList,
       required this.userName,
       required this.userImage,
       required this.max,
@@ -48,6 +50,7 @@ class Users {
     return Users(
         userId: json['userId'],
         roomUserId: json['roomUserId'],
+        certificationIdList: json['certificationIdList'],
         userName: json['userName'],
         userImage: json['userImage'],
         max: json['max'],
@@ -147,7 +150,7 @@ class _roomUserState extends State<RoomUserList> {
                             (BuildContext context, int idx) {
                               final success = snapshot.data![idx].success;
                               final wait = snapshot.data![idx].wait;
-                              if ((success! + wait!) !=
+                              if ((success! + wait!) <
                                   snapshot.data![idx].max) {
                                 return userContainer_default(
                                     snapshot.data![idx].userId,
@@ -157,7 +160,8 @@ class _roomUserState extends State<RoomUserList> {
                                     (success + wait),
                                     snapshot.data![idx].max);
                               } else {
-                                if (success == snapshot.data![idx].max) {
+                                if (success == snapshot.data![idx].max ||
+                                    snapshot.data![idx].certification == true) {
                                   return userContainer_success(
                                       snapshot.data![idx].userId,
                                       snapshot.data![idx].roomUserId,
@@ -167,6 +171,7 @@ class _roomUserState extends State<RoomUserList> {
                                       snapshot.data![idx].max);
                                 } else {
                                   return userContainer_tocheck(
+                                      snapshot.data![idx].certificationIdList,
                                       snapshot.data![idx].userId,
                                       snapshot.data![idx].roomUserId,
                                       snapshot.data![idx].userName,
@@ -203,11 +208,20 @@ class _roomUserState extends State<RoomUserList> {
   }
 
   Container userContainer_tocheck(
-      userId, roomUserId, name, img_root, upload, required) {
+      certificationlist, userId, roomUserId, name, img_root, upload, required) {
     return Container(
       alignment: Alignment.center,
-      child: RoomUserToCheck(userId, roomUserId, widget.room_id, name, img_root,
-          upload, required, widget.is_manager, widget.certificationType),
+      child: RoomUserToCheck(
+          certificationlist,
+          userId,
+          roomUserId,
+          widget.room_id,
+          name,
+          img_root,
+          upload,
+          required,
+          widget.is_manager,
+          widget.certificationType),
     );
   }
 
