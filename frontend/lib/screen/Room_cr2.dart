@@ -186,6 +186,23 @@ class _Room_cr2State extends State<Room_cr2>
               Container(child: _tabBar()),
               const SizedBox(height: 20),
               // 인증횟수 선택
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "인증횟수",
+                    style: TextStyle(fontFamily: "bm", fontSize: 20),
+                  ),
+                  Container(
+                    child: _buildDropdownButton(_selectcount, count, (value) {
+                      setState(() {
+                        _selectcount = value!;
+                      });
+                    }),
+                  ),
+                ],
+              ),
+              //인증방식
               const Row(
                 children: [
                   Text(
@@ -383,19 +400,6 @@ class _Room_cr2State extends State<Room_cr2>
               const SizedBox(
                 width: 15,
               ),
-              const Row(
-                children: [
-                  Checkbox(
-                    value: true,
-                    onChanged: null,
-                    activeColor: PRIMARY_COLOR,
-                  ),
-                  Text(
-                    "AI 인증",
-                    style: TextStyle(fontFamily: "bma", fontSize: 20),
-                  ),
-                ],
-              )
             ],
           ),
         ),
@@ -550,14 +554,10 @@ class _Room_cr2State extends State<Room_cr2>
             String _category = categoryMap[widget.category] ?? "ETC";
             String _period = periodMap[_selectedPeriod] ?? "DAILY";
             String certificationType;
-            if (_peoplevote && _captinevote) {
+            if (_peoplevote) {
               certificationType = "BOTH";
-            } else if (_peoplevote) {
-              certificationType = "VOTE";
-            } else if (_captinevote) {
-              certificationType = "ADMIN";
             } else {
-              certificationType = "";
+              certificationType = "ADMIN";
             }
             Map<String, dynamic> formData = {
               "name": widget.title,
