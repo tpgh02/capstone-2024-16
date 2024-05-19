@@ -167,21 +167,24 @@ class _c_dialogState extends State<c_dialog> {
                             padding: const EdgeInsets.only(top: 20),
                             child: Column(
                               children: [
-                                SingleChildScrollView(
-                                  physics:
-                                      const AlwaysScrollableScrollPhysics(),
-                                  child: Column(
-                                    children: [
-                                      Column(
-                                        children:
-                                            List.generate(frequency, (index) {
-                                          return select(index);
-                                        }),
-                                      ),
-                                      const SizedBox(
-                                        height: 100,
-                                      ),
-                                    ],
+                                Container(
+                                  height: 250,
+                                  child: SingleChildScrollView(
+                                    physics:
+                                        const AlwaysScrollableScrollPhysics(),
+                                    child: Column(
+                                      children: [
+                                        Column(
+                                          children:
+                                              List.generate(frequency, (index) {
+                                            return select(index);
+                                          }),
+                                        ),
+                                        const SizedBox(
+                                          height: 100,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 Container(
