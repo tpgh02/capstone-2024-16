@@ -87,4 +87,12 @@ public class CreatureController {
         user.updateMileage(10000);
         userRepository.save(user);
     }
+
+    @PostMapping("/delete")
+    @CustomAuthentication
+    public String deleteCreature(@RequestAttribute UserContext userContext, @RequestParam Long creatureId){
+        creatureService.deleteCreature(userContext, creatureId);
+
+        return "OK";
+    }
 }

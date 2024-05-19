@@ -1,6 +1,7 @@
 package com.dodo.sea.service;
 
 import com.dodo.exception.NotFoundException;
+import com.dodo.exception.UnauthorizedException;
 import com.dodo.image.ImageRepository;
 import com.dodo.image.ImageService;
 import com.dodo.image.domain.Image;
@@ -126,6 +127,13 @@ public class CreatureService {
                 .filter(SeaCreature::getIsActivate)
                 .map(SeaCreatureData::new)
                 .toList();
+    }
+
+    public void deleteCreature(UserContext userContext, Long creatureId){
+        if(userContext.getUserId()  != 1L){
+            throw new UnauthorizedException("권한이 없습니다.");
+        }
+        creatureRepository.deleteById(creatureId);
     }
 
     private Sort sortByPrice(){
