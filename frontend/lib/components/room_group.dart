@@ -98,9 +98,11 @@ class RoomInfo_Group {
 
 class room_group extends StatefulWidget {
   final int room_id;
+  final String? status;
   const room_group({
     super.key,
     required this.room_id,
+    required this.status,
   });
 
   @override
@@ -276,7 +278,7 @@ class _roomMainState extends State<room_group> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           // 도전 완료 사용자 수
-                          _certificated_person(snapshot.data!.nowUser),
+                          _certificated_status(widget.status),
                           // 인증하기 버튼
                           _certification_button(),
                         ],
@@ -403,8 +405,6 @@ class _roomMainState extends State<room_group> {
   Widget _progressBar(List<dynamic> goal, int numOfGoal, int nowGoal,
       String endDay, bool isManager) {
     String endDate = endDay.split("T")[0];
-    String endHour = endDay.split("T")[1].split(":")[0];
-    String endMin = endDay.split("T")[1].split(":")[1];
     return GestureDetector(
       onTap: () {
         if (isManager == true) {
@@ -456,7 +456,7 @@ class _roomMainState extends State<room_group> {
             // D-day
 
             Text(
-              "$endDate $endHour:$endMin까지 도전",
+              "$endDate까지 도전",
               style: const TextStyle(
                 color: POINT_COLOR,
                 fontFamily: 'bm',
@@ -559,33 +559,35 @@ class _roomMainState extends State<room_group> {
         }));
   }
 
-  Column _certificated_person(int? mem) {
+  Column _certificated_status(String? status) {
     return Column(
       children: [
         const Text(
-          "목표를 위해\n도전한 사람은?",
+          "오늘도 도전을",
           textAlign: TextAlign.center,
           style: TextStyle(
-              color: POINT_COLOR, fontSize: 21, fontWeight: FontWeight.bold),
+              color: POINT_COLOR,
+              fontFamily: "bma",
+              fontSize: 21,
+              fontWeight: FontWeight.bold),
         ),
-        Row(
-          children: [
-            Text(
-              "1/$mem",
-              style: const TextStyle(
-                  color: POINT_COLOR,
-                  fontSize: 48,
-                  fontWeight: FontWeight.bold),
-            ),
-            const Text(
-              " 명",
-              style: TextStyle(
-                  color: POINT_COLOR,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
+        widget.status == "FAIL" || widget.status == "WAIT"
+            ? const Text(
+                "진행 중",
+                style: TextStyle(
+                    color: POINT_COLOR,
+                    fontFamily: "bm",
+                    fontSize: 46,
+                    fontWeight: FontWeight.bold),
+              )
+            : const Text(
+                "완료!",
+                style: TextStyle(
+                    color: POINT_COLOR,
+                    fontFamily: "bm",
+                    fontSize: 46,
+                    fontWeight: FontWeight.bold),
+              ),
       ],
     );
   }

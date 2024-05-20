@@ -169,10 +169,12 @@ class _roomListState extends State<room_list> {
                             if (widget.room_type != "GROUP") {
                               return room_main(
                                 room_id: widget.room_id,
+                                status: widget.status,
                               );
                             } else {
                               return room_group(
                                 room_id: widget.room_id,
+                                status: widget.status,
                               );
                             }
                           },
