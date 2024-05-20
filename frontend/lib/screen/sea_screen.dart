@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
 import 'package:dodo/screen/inventory_screen.dart';
@@ -46,6 +47,7 @@ Future<List<Items>> fetchItems() async {
     final List<dynamic> jsonData = jsonDecode(utf8.decode(response.bodyBytes));
     List<Items> Itemss = jsonData.map((json) => Items.fromJson(json)).toList();
     print(Itemss);
+    log(jsonDecode(utf8.decode(response.bodyBytes)).toString());
     return Itemss;
   } else {
     throw Exception('Failed to load data');
@@ -87,8 +89,7 @@ class _seaPageState extends State<seaPage> {
                         item.imageUrl,
                         scale: 3,
                         errorBuilder: (context, error, stackTrace) {
-                          return const Icon(
-                              Icons.error); // 에러 발생 시 대체 이미지로 아이콘을 표시합니다.
+                          return const Icon(Icons.error);
                         },
                       ),
                     ),
@@ -154,7 +155,33 @@ class _seaPageState extends State<seaPage> {
             ),
           );
         } else if (snapshot.hasError) {
-          return Center(child: Text("${snapshot.error}"));
+          return Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                child: Image.asset(
+                  "assets/images/sea.png",
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Center(
+                child: Container(
+                  color: Colors.white70,
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    "Error: ${snapshot.error}",
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 18,
+                      fontFamily: 'bm',
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ],
+          );
         }
         return Center(child: CircularProgressIndicator());
       },

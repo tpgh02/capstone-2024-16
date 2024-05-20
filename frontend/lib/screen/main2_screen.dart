@@ -10,6 +10,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 double _lastMonthPercentage = 0.0;
 double _thisMonthPercentage = 0.0;
+
 Future<List<MyRoom_Main>> fetchRoomsMain() async {
   final response =
       await http.get(Uri.parse('$serverUrl/api/v1/room/list'), headers: {
@@ -277,17 +278,13 @@ class _main2PageState extends State<main2Page>
                                   return _buildDefaultCalendar();
                                 } else if (snapshot.hasData) {
                                   final calendarDataList = snapshot.data!;
-                                  if (calendarDataList.isEmpty) {
-                                    //log("데이터 없음");
+                                  if (calendarDataList == null ||
+                                      calendarDataList.isEmpty) {
                                     return _buildDefaultCalendar();
                                   } else {
-                                    //log("데이터 있음");
-                                    return Container(
-                                      child: _CalendarData(calendarDataList),
-                                    );
+                                    return _CalendarData(calendarDataList);
                                   }
                                 } else {
-                                  log("데이터 에러 else");
                                   return _buildDefaultCalendar();
                                 }
                               }),
@@ -397,7 +394,7 @@ Widget _buildDefaultCalendar() {
   );
 }
 
-Widget _CalendarData(calendarDataList) {
+Widget _CalendarData(List<calendarData> calendarDataList) {
   return TableCalendar(
     focusedDay: DateTime.now(),
     firstDay: DateTime.utc(2024, 5, 1),

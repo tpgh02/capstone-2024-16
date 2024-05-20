@@ -521,23 +521,6 @@ class _Room_cr2State extends State<Room_cr2>
               return;
             }
 
-            if (!_peoplevote && !_captinevote) {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text('오류'),
-                  content: Text('인증 방식을 최소 하나 이상 선택해주십시오'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text('확인'),
-                    ),
-                  ],
-                ),
-              );
-              return;
-            }
-
             Map<String, String> categoryMap = {
               "운동": "EXERCISE",
               "헬스": "GYM",

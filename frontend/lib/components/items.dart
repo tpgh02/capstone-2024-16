@@ -43,8 +43,9 @@ class items extends StatefulWidget {
   final String name;
   final String info;
   final int c_id;
+  final bool isOwn;
 
-  const items(this.cost, this.img, this.name, this.info, this.c_id);
+  const items(this.cost, this.img, this.name, this.info, this.c_id, this.isOwn);
 
   @override
   State<items> createState() => _itemsState();
@@ -54,11 +55,13 @@ class _itemsState extends State<items> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        //누르면 팝업 생성하는 함수
-        itemsdialog(context, widget.cost, widget.img, widget.name, widget.info,
-            widget.c_id);
-      },
+      onTap: widget.isOwn
+          ? null // isOwn이 true인 경우 탭 기능 없음
+          : () {
+              //누르면 팝업 생성하는 함수
+              itemsdialog(context, widget.cost, widget.img, widget.name,
+                  widget.info, widget.c_id);
+            },
       child:
           //사진을 둥글게 만들 수 있는 함수
           Container(
@@ -66,7 +69,7 @@ class _itemsState extends State<items> {
         height: 130,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
+          color: widget.isOwn ? Colors.grey : Colors.white,
         ),
         child: Column(
           children: [
@@ -107,116 +110,123 @@ void itemsdialog(
   showDialog(
     context: context,
     builder: (context) {
-      return Dialog(
-          child: Container(
-        margin: const EdgeInsets.all(8),
-        width: 400,
-        height: 400,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(
-              height: 15,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Image.network(
-              img,
-              scale: 4,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              name,
-              style: const TextStyle(fontFamily: "bm", fontSize: 25),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(3.0),
-              child: Text(
-                info,
-                style: const TextStyle(fontFamily: "bma", fontSize: 18),
-              ),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
+      return Dialog(child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Container(
+            margin: const EdgeInsets.all(8),
+            width: constraints.maxWidth,
+            height: 500,
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.attach_money_rounded,
-                  color: Colors.amber,
+                const SizedBox(
+                  height: 25,
+                ),
+                Image.network(
+                  img,
+                  scale: 4,
+                ),
+                const SizedBox(
+                  height: 10,
                 ),
                 Text(
-                  '$cost',
-                  style: const TextStyle(fontFamily: "bma", fontSize: 25),
+                  name,
+                  style: const TextStyle(fontFamily: "bm", fontSize: 25),
                 ),
-              ],
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            //버튼존
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                OutlinedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: OutlinedButton.styleFrom(
-                    fixedSize: Size(150, 50),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    side: BorderSide(
-                      color: PRIMARY_COLOR,
-                      width: 3,
-                    ),
-                  ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(3.0),
                   child: Text(
-                    "닫기",
-                    style: TextStyle(
-                        color: Colors.black, fontSize: 25, fontFamily: 'bm'),
+                    info,
+                    style: const TextStyle(fontFamily: "bma", fontSize: 18),
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 const SizedBox(
-                  width: 30,
+                  height: 5,
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    fetchBuy(c_id).then((bool data) {
-                      print("오케이");
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.attach_money_rounded,
+                      color: Colors.amber,
+                    ),
+                    Text(
+                      '$cost',
+                      style: const TextStyle(fontFamily: "bma", fontSize: 25),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                //버튼존
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          side: BorderSide(
+                            color: PRIMARY_COLOR,
+                            width: 3,
+                          ),
+                        ),
+                        child: Text(
+                          "닫기",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 25,
+                              fontFamily: 'bm'),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          fetchBuy(c_id).then((bool data) {
+                            print("오케이");
 
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => buyPage(img, name)));
-                    }).catchError((error) {
-                      print("에러$error");
-                    });
-                  },
-                  child: Text(
-                    "구매",
-                    style: TextStyle(
-                        color: Colors.white, fontSize: 25, fontFamily: 'bm'),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    backgroundColor: PRIMARY_COLOR,
-                    fixedSize: const Size(150, 50),
-                  ),
-                )
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => buyPage(img, name)));
+                          }).catchError((error) {
+                            print("에러$error");
+                          });
+                        },
+                        child: Text(
+                          "구매",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 25,
+                              fontFamily: 'bm'),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          backgroundColor: PRIMARY_COLOR,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
+          );
+        },
       ));
     },
   );

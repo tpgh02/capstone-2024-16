@@ -2,22 +2,22 @@ import 'dart:convert';
 import 'package:dodo/components/items.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
 Future<List<Store>> fetchStore() async {
   var headers = {
     'Authorization':
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU',
+    'Content-Type': 'application/json; charset=UTF-8',
   };
-  final response =
-      await http.get(Uri.parse(serverUrl + '/api/v1/creature/store'));
-  response.headers.addAll(headers);
+
+  final response = await http.get(
+    Uri.parse(serverUrl + '/api/v1/creature/store'),
+    headers: headers, // 헤더를 요청과 함께 추가합니다
+  );
+
   if (response.statusCode == 200) {
-    // return Store.fromJson(jsonDecode(response.body)); //한국어 깨짐
-    //print(response.headers);
     Iterable storeList =
         jsonDecode(utf8.decode(response.bodyBytes)); //한국어 깨지는 걸 방지하기 위함
     List<Store> stores =
@@ -32,8 +32,9 @@ class Store {
   final int price;
   final String name;
   final String info;
-  final imageurl;
+  final String imageurl;
   final int creatureId;
+  final bool isOwn;
 
   const Store({
     required this.price,
@@ -41,6 +42,7 @@ class Store {
     required this.info,
     required this.imageurl,
     required this.creatureId,
+    required this.isOwn,
   });
 
   factory Store.fromJson(dynamic json) {
@@ -50,6 +52,7 @@ class Store {
       info: json['info'],
       imageurl: json['imageUrl'],
       creatureId: json['creatureId'],
+      isOwn: json['isOwn'],
     );
   }
 }
@@ -58,10 +61,10 @@ class storePage extends StatefulWidget {
   const storePage({super.key});
 
   @override
-  State<storePage> createState() => _searchPageState();
+  State<storePage> createState() => _storePageState();
 }
 
-class _searchPageState extends State<storePage> {
+class _storePageState extends State<storePage> {
   final widgetkey = GlobalKey();
   late Future<List<Store>>? futureStore;
 
@@ -101,13 +104,30 @@ class _searchPageState extends State<storePage> {
               ),
 
               Container(
+                height: 500,
                 child: FutureBuilder<List<Store>>(
                   future: futureStore,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return CircularProgressIndicator();
                     } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
+                      return Text('Error: ${snapshot.error}'); //디버깅시 사용
+                      // return Column(
+                      //   children: [
+                      //     SizedBox(
+                      //       height: 20,
+                      //     ),
+                      //     Center(
+                      //       child: Text(
+                      //         '데이터가 존재하지 않습니다. 잠시 후 시도해주십시오',
+                      //         style: TextStyle(
+                      //             fontFamily: "bm",
+                      //             fontSize: 20,
+                      //             color: DARKGREY),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // );
                     } else if (snapshot.hasData) {
                       if (snapshot.data!.isEmpty) {
                         return Column(
@@ -144,7 +164,8 @@ class _searchPageState extends State<storePage> {
                                         store.imageurl,
                                         store.name,
                                         store.info,
-                                        store.creatureId);
+                                        store.creatureId,
+                                        store.isOwn);
                                   },
                                   childCount: snapshot.data!.length,
                                 ),
@@ -177,10 +198,10 @@ class _searchPageState extends State<storePage> {
     );
   }
 
-  Container postContainer(price, _root, name, info, c_id) {
+  Container postContainer(price, _root, name, info, c_id, isOwn) {
     return Container(
         margin: const EdgeInsets.all(5),
         alignment: Alignment.center,
-        child: items(price, _root, name, info, c_id));
+        child: items(price, _root, name, info, c_id, isOwn));
   }
 }

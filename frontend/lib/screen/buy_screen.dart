@@ -4,6 +4,7 @@ import 'package:dodo/components/l_title.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
 import 'package:dodo/screen/login_screen.dart';
+import 'package:dodo/screen/main_screen.dart';
 import 'package:dodo/screen/sea_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -61,11 +62,13 @@ class _buyPageState extends State<buyPage> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => seaPage()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => mainPage()));
                       },
                       child: Text(
-                        "바다로 가기",
+                        "홈으로 가기",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 25,

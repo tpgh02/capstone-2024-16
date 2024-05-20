@@ -104,8 +104,8 @@ class _searchPageState extends State<InvenPage> {
                   ),
                 ],
               ),
-
               Container(
+                height: 500,
                 child: FutureBuilder<List<Inven>>(
                   future: futureInven,
                   builder: (context, snapshot) {
@@ -120,20 +120,24 @@ class _searchPageState extends State<InvenPage> {
                             SizedBox(
                               height: 20,
                             ),
-                            Text(
-                              '보관함이 비었습니다. 상점에서 구매해주십시오',
-                              style: TextStyle(
-                                  fontFamily: 'bm',
-                                  fontSize: 20,
-                                  color: DARKGREY),
+                            Center(
+                              child: Text(
+                                '데이터가 존재하지 않습니다. 잠시 후 시도해주십시오',
+                                style: TextStyle(
+                                    fontFamily: "bm",
+                                    fontSize: 20,
+                                    color: DARKGREY),
+                              ),
                             ),
                           ],
                         );
                       } else {
                         return Container(
+                          //color: Colors.yellow,
                           alignment: Alignment.centerRight,
                           padding: const EdgeInsets.all(20),
                           height: 195,
+
                           child: CustomScrollView(
                             slivers: <Widget>[
                               SliverGrid(
@@ -146,7 +150,7 @@ class _searchPageState extends State<InvenPage> {
                                         inven.name,
                                         inven.info,
                                         inven.activate,
-                                        inven.creatureId - 1);
+                                        (inven.creatureId) ?? 1);
                                   },
                                   childCount: snapshot.data!.length,
                                 ),
@@ -161,7 +165,13 @@ class _searchPageState extends State<InvenPage> {
                         );
                       }
                     } else {
-                      return Container();
+                      return Center(
+                        child: Text(
+                          '데이터가 존재하지 않습니다. 잠시 후 시도해주십시오',
+                          style: TextStyle(
+                              fontFamily: "bm", fontSize: 20, color: DARKGREY),
+                        ),
+                      );
                     }
                   },
                 ),

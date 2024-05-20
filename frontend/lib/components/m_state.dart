@@ -6,6 +6,8 @@ import 'package:dodo/const/server.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:dodo/token_storage.dart'; // 추가된 부분
 
 class CalendarData {
   final String date;
@@ -25,11 +27,14 @@ class CalendarData {
 }
 
 Future<List<CalendarData>> fetchCalendarData(String roomId) async {
+  final tokenStorage = TokenStorage(); // TokenStorage 인스턴스 생성
+  final token = await tokenStorage.getToken(); // 토큰 가져오기
+
   final response = await http.get(
     Uri.parse('$serverUrl/api/v1/report/weekly-goal'),
     headers: {
       'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU', //$token',
     },
   );
   if (response.statusCode == 200) {
@@ -196,7 +201,7 @@ Widget errorContent(String state) {
                 ),
               ),
               Text(
-                state,
+                "에러가 발생하였습니다. 잠시후 시도해주십시오",
                 style: const TextStyle(
                   fontFamily: 'bma',
                 ),
