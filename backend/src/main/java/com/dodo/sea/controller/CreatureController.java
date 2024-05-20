@@ -25,12 +25,8 @@ import java.util.List;
 public class CreatureController {
     private final CreatureService creatureService;
     private final UserRepository userRepository;
-    private final SeaCreatureRepository seaCreatureRepository;
 
 
-    // TODO
-    // 일단 이미지는 주석처리 해놨음. 주석만 빼면 됨
-    // usercontext로 admin인지 아닌지를 판별해서 업데이트 하도록 하는게 좋을 듯함.
     @PostMapping("/create")
     @ResponseBody
     //@CustomAuthentication
@@ -76,16 +72,6 @@ public class CreatureController {
     @CustomAuthentication
     public List<SeaCreatureData> displaySea(@RequestAttribute UserContext userContext){
         return creatureService.getSeaCreatures(userContext);
-    }
-
-    // TODO
-    // 임시 마일리지 얻는 함수
-    @PostMapping("/user-get-mileage")
-    @CustomAuthentication
-    public void getMileage(@RequestAttribute UserContext userContext){
-        User user = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
-        user.updateMileage(10000);
-        userRepository.save(user);
     }
 
     @PostMapping("/delete")
