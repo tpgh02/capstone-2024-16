@@ -12,6 +12,7 @@ public class CreatureData {
     private String name;
     private String info;
     private String imageUrl;
+    private Boolean isOwn;
 
 
     public CreatureData(Creature creature) {
@@ -20,5 +21,9 @@ public class CreatureData {
         this.name = creature.getName();
         this.info = creature.getInfo();
         this.imageUrl = creature.getImage().getUrl();
+    }
+
+    public void updateOwn(boolean isOwn) {
+        this.isOwn = isOwn;
     }
 }

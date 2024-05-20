@@ -99,10 +99,19 @@ public class CreatureService {
     }
 
     // 상점에서 모든 생물을 보여주기 위한 함수
-    public List<CreatureData> getAllCreature() {
-        return creatureRepository.findAll(sortByPrice()).stream()
+    public List<CreatureData> getAllCreature(UserContext userContext) {
+        User user = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
+
+
+        List<CreatureData> creatureDataList = creatureRepository.findAll(sortByPrice()).stream()
                 .map(CreatureData::new)
                 .toList();
+
+        for(CreatureData creatureData : creatureDataList){
+            creatureData.updateOwn(seaCreatureRepository.findByUserAndCreature(user, creatureRepository.findById(creatureData.getCreatureId()).orElseThrow(NotFoundException::new)).orElse(null) != null);
+        }
+
+        return creatureDataList;
     }
 
     // 유저가 보유한 생물을 보여주기 위한 함수

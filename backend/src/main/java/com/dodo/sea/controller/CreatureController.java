@@ -52,9 +52,10 @@ public class CreatureController {
     }
 
     @GetMapping("/store")
-    public List<CreatureData> store(){
+    @CustomAuthentication
+    public List<CreatureData> store(@RequestAttribute UserContext userContext){
 
-        return creatureService.getAllCreature();
+        return creatureService.getAllCreature(userContext);
     }
 
     @GetMapping("/inventory")
