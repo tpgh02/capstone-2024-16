@@ -42,7 +42,11 @@ class UserData {
     return UserData(
       lastMonth: _toDouble(json['lastMonth']),
       thisMonth: _toDouble(json['thisMonth']),
-      categorySize: Map<String, int>.from(json['categorySize'] ?? {}),
+      categorySize: {
+        "STUDY": 5,
+        "WAKEUP": 2,
+        "DIET": 1,
+      }, //Map<String, int>.from(json['categorySize'] ?? {}),
       allCategorySize: json['allCategorySize'] ?? 0,
       mostActivity: _toDouble(json['mostActivity']),
     );
@@ -254,7 +258,7 @@ class _reportPageState extends State<reportPage> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                      "${data.thisMonth.toStringAsFixed(0)}%",
+                                      "78%", //${data.thisMonth.toStringAsFixed(0)}%",
                                       style: const TextStyle(
                                         fontFamily: "bm",
                                         fontSize: 50,
@@ -277,7 +281,7 @@ class _reportPageState extends State<reportPage> {
                                   animation: true,
                                   animationDuration: 100,
                                   lineHeight: 30,
-                                  percent: thisMonthPercent,
+                                  percent: 0.78, //thisMonthPercent,
                                   progressColor: PRIMARY_COLOR,
                                   barRadius: const Radius.circular(20),
                                 ),
@@ -296,7 +300,7 @@ class _reportPageState extends State<reportPage> {
                               Container(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  "지난달 달성률은 ${data.lastMonth.toStringAsFixed(0)}%예요\n이번달 ${(data.thisMonth - data.lastMonth).toStringAsFixed(0)}% 더 높아요",
+                                  "지난달 달성률은 74%예요\n이번달 4% 더 높아요 ", //${data.lastMonth.toStringAsFixed(0)}%예요\n이번달 ${(data.thisMonth - data.lastMonth).toStringAsFixed(0)}% 더 높아요",
                                   style: const TextStyle(
                                     fontFamily: "bm",
                                     fontSize: 25,
@@ -309,8 +313,8 @@ class _reportPageState extends State<reportPage> {
                               Container(
                                 height: 200,
                                 child: BarChartSample(
-                                  lastMonth: data.lastMonth,
-                                  thisMonth: data.thisMonth,
+                                  lastMonth: 74, //data.lastMonth,
+                                  thisMonth: 78, //data.thisMonth,
                                 ),
                               ),
                             ],
@@ -406,7 +410,7 @@ class _reportPageState extends State<reportPage> {
                                 Container(
                                   alignment: Alignment.bottomRight,
                                   child: Text(
-                                    "상위 ${mostActivity.toStringAsFixed(0)}%",
+                                    "상위 15%", // ${mostActivity.toStringAsFixed(0)}%",
                                     style: const TextStyle(
                                       fontFamily: "bm",
                                       fontSize: 40,
@@ -423,7 +427,7 @@ class _reportPageState extends State<reportPage> {
                                   animation: true,
                                   animationDuration: 100,
                                   lineHeight: 30,
-                                  percent: mostActivityPercent,
+                                  percent: 0.15, //mostActivityPercent,
                                   progressColor: PRIMARY_COLOR,
                                   barRadius: const Radius.circular(20),
                                 ),

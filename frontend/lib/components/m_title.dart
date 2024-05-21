@@ -30,7 +30,8 @@ Future<UserName> fetchUserName() async {
   final response = await http.get(
     Uri.parse('$serverUrl/api/v1/users/simple-profile'),
     headers: {
-      'Authorization': 'Bearer $token',
+      'Authorization':
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU', //$token',
     },
   );
 

@@ -111,23 +111,23 @@ class _storePageState extends State<storePage> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return CircularProgressIndicator();
                     } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}'); //디버깅시 사용
-                      // return Column(
-                      //   children: [
-                      //     SizedBox(
-                      //       height: 20,
-                      //     ),
-                      //     Center(
-                      //       child: Text(
-                      //         '데이터가 존재하지 않습니다. 잠시 후 시도해주십시오',
-                      //         style: TextStyle(
-                      //             fontFamily: "bm",
-                      //             fontSize: 20,
-                      //             color: DARKGREY),
-                      //       ),
-                      //     ),
-                      //   ],
-                      // );
+                      //return Text('Error: ${snapshot.error}'); //디버깅시 사용
+                      return Column(
+                        children: [
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Center(
+                            child: Text(
+                              '데이터가 존재하지 않습니다. 잠시 후 시도해주십시오',
+                              style: TextStyle(
+                                  fontFamily: "bm",
+                                  fontSize: 20,
+                                  color: DARKGREY),
+                            ),
+                          ),
+                        ],
+                      );
                     } else if (snapshot.hasData) {
                       if (snapshot.data!.isEmpty) {
                         return Column(
