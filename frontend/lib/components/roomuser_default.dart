@@ -74,7 +74,8 @@ class RoomUserDefault extends StatelessWidget {
                     user_name,
                     style: const TextStyle(
                         color: POINT_COLOR,
-                        fontSize: 24,
+                        fontFamily: "bm",
+                        fontSize: 26,
                         fontWeight: FontWeight.w500),
                   ),
                   Row(

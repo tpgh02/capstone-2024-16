@@ -262,7 +262,7 @@ class _roomSetManagerState extends State<RoomSetting_Manager> {
                               borderRadius: BorderRadius.circular(10),
                               borderSide: const BorderSide(color: POINT_COLOR),
                             ),
-                            labelText: '인증방 소개',
+                            labelText: '인증방 목표',
                             labelStyle: const TextStyle(
                                 color: Color(0xff4f4f4f), fontSize: 18),
                             filled: true,

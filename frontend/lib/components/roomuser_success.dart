@@ -74,7 +74,8 @@ class RoomUserSuccess extends StatelessWidget {
                     user_name,
                     style: const TextStyle(
                         color: Color(0xffefefef),
-                        fontSize: 24,
+                        fontFamily: "bm",
+                        fontSize: 26,
                         fontWeight: FontWeight.w500),
                   ),
                   Row(
