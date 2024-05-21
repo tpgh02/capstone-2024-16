@@ -1,16 +1,14 @@
 package com.dodo.room;
 
 import com.dodo.config.auth.CustomAuthentication;
-import com.dodo.image.domain.Image;
+import com.dodo.exception.UnauthorizedException;
 import com.dodo.room.domain.Category;
 import com.dodo.room.domain.RoomType;
 import com.dodo.room.dto.RoomData;
 import com.dodo.room.dto.RoomJoinData;
 import com.dodo.room.dto.RoomListData;
-import com.dodo.tag.repository.RoomTagRepository;
 import com.dodo.tag.service.RoomTagService;
 import com.dodo.user.domain.UserContext;
-import com.dodo.user.dto.PasswordChangeRequestData;
 import lombok.RequiredArgsConstructor;
 import com.dodo.room.domain.Room;
 import com.dodo.exception.NotFoundException;
@@ -20,7 +18,6 @@ import com.dodo.roomuser.domain.RoomUser;
 import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -180,7 +177,7 @@ public class RoomController {
         RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).orElseThrow(NotFoundException::new);
 
         if (!roomUser.getIsManager()) {
-            return RoomData.of(room);
+            throw new UnauthorizedException("권한이 없습니다");
         }
 
         roomService.editInfo(room.getId(), txt);

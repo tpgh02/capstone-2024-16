@@ -35,6 +35,8 @@ public class Room {
     // 그룹일 때
     private Integer numOfGoal;
     @ElementCollection
+    @CollectionTable(name = "room_goals", joinColumns = @JoinColumn(name = "room_id"))
+    @Column(name = "goal")
     private List<String> goal;
     @Setter
     private Integer nowGoal;
