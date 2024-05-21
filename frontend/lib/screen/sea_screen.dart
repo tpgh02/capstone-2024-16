@@ -111,7 +111,7 @@ class _seaPageState extends State<seaPage> {
                                 builder: (context) => InvenPage()));
                       },
                       backgroundColor: PRIMARY_COLOR,
-                      heroTag: "actionButton",
+                      heroTag: "actionButton2",
                       child: Text(
                         "보관함",
                         style: TextStyle(
