@@ -34,7 +34,6 @@ public class CreatureService {
     private final ImageService imageService;
     private final SeaCreatureRepository seaCreatureRepository;
     private final UserRepository userRepository;
-    private final ImageRepository imageRepository;
 
 
     public CreatureData createCreature(String name, String info, Integer price
@@ -109,6 +108,7 @@ public class CreatureService {
 
         for(CreatureData creatureData : creatureDataList){
             creatureData.updateOwn(seaCreatureRepository.findByUserAndCreature(user, creatureRepository.findById(creatureData.getCreatureId()).orElseThrow(NotFoundException::new)).orElse(null) != null);
+            creatureData.updateCreatureId(seaCreatureRepository.findById(creatureData.getCreatureId()).orElseThrow(() -> new NotFoundException("없는 아이템입니다.")).getId());
         }
 
         return creatureDataList;

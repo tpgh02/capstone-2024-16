@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface SeaCreatureRepository extends JpaRepository<SeaCreature, Long> {
     Optional<List<SeaCreature>> findAllByUser(User user);
     Optional<SeaCreature> findByUserAndCreature(User user, Creature creature);
+    Optional<SeaCreature> findById(Long id);
 }
