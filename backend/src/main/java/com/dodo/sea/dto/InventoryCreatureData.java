@@ -17,11 +17,15 @@ public class InventoryCreatureData {
 
 
     public InventoryCreatureData(Creature creature, SeaCreature seaCreature) {
-        this.CreatureId = creature.getId();
+        this.CreatureId = seaCreature.getId();
         this.price = creature.getPrice();
         this.name = creature.getName();
         this.info = creature.getInfo();
         this.imageUrl = creature.getImage().getUrl();
         this.isActivate = seaCreature.getIsActivate();
+    }
+
+    public void updateCreatureId(Long creatureId) {
+        this.CreatureId = creatureId;
     }
 }

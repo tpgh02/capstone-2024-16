@@ -26,7 +26,4 @@ public class CreatureData {
     public void updateOwn(boolean isOwn) {
         this.isOwn = isOwn;
     }
-    public void updateCreatureId(Long creatureId) {
-        this.CreatureId = creatureId;
-    }
 }

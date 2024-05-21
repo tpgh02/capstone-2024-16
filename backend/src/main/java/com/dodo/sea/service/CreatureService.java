@@ -108,7 +108,6 @@ public class CreatureService {
 
         for(CreatureData creatureData : creatureDataList){
             creatureData.updateOwn(seaCreatureRepository.findByUserAndCreature(user, creatureRepository.findById(creatureData.getCreatureId()).orElseThrow(NotFoundException::new)).orElse(null) != null);
-            creatureData.updateCreatureId(seaCreatureRepository.findById(creatureData.getCreatureId()).orElseThrow(() -> new NotFoundException("없는 아이템입니다.")).getId());
         }
 
         return creatureDataList;
