@@ -529,8 +529,8 @@ class _AIroom_cr3State extends State<AIroom_cr3>
         OutlinedButton(
           onPressed: () {
             Map<String, String> categoryMap = {
-              "운동": "EXERCISE",
-              //"헬스": "GYM",
+              //"운동": "EXERCISE",
+              "헬스": "GYM",
               "기상": "WAKEUP",
               "학습": "STUDY",
               //"식단": "DIET",
@@ -540,7 +540,7 @@ class _AIroom_cr3State extends State<AIroom_cr3>
               "매일": "DAILY",
               "매주": "WEEKLY",
             };
-            String _category = categoryMap[widget.category] ?? "EXERCISE";
+            String _category = categoryMap[widget.category] ?? "GYM";
             String _period = periodMap[_selectedPeriod] ?? "DAILY";
             String certificationType = _peoplevote ? "BOTH" : "ADMIN";
             Map<String, dynamic> formData = {

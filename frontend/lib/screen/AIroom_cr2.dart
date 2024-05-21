@@ -10,8 +10,8 @@ class AIroom_cr2 extends StatefulWidget {
 }
 
 class _AIroom_cr2State extends State<AIroom_cr2> {
-  List _roomname = ['운동', '기상', '학습'];
-  Object? _select = '운동';
+  List _roomname = ['헬스', '기상', '학습'];
+  Object? _select = '헬스';
   TextEditingController _title = TextEditingController();
   TextEditingController _tag = TextEditingController();
   TextEditingController _comments = TextEditingController();
@@ -141,7 +141,7 @@ class _AIroom_cr2State extends State<AIroom_cr2> {
                   OutlinedButton(
                     onPressed: () async {
                       if (_globalKey.currentState!.validate()) {
-                        if (_select.toString() == '운동') {
+                        if (_select.toString() == '헬스') {
                           _isAI = false;
                         } else {
                           _isAI = true;
