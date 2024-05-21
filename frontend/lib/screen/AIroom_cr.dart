@@ -10,7 +10,7 @@ class AIroom_cr extends StatefulWidget {
 }
 
 class _AIroom_crState extends State<AIroom_cr> {
-  List _roomname = ['카테고리 더보기', '운동', '기상', '공부'];
+  List _roomname = ['카테고리 더보기', '헬스', '기상', '공부'];
   Object? _select = '카테고리 더보기';
   @override
   Widget build(BuildContext context) {
