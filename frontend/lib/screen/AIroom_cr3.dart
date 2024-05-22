@@ -117,6 +117,10 @@ class _AIroom_cr3State extends State<AIroom_cr3>
     });
   }
 
+  int _convertTimeOfDayToMinutes(TimeOfDay time) {
+    return time.hour * 60 + time.minute;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -328,6 +332,12 @@ class _AIroom_cr3State extends State<AIroom_cr3>
         ),
       ),
     );
+  }
+
+  String _formatTimeOfDay(TimeOfDay time) {
+    final hour = time.hour.toString().padLeft(2, '0');
+    final minute = time.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
   }
 
   Widget _buildValidationMessage(String message) {
@@ -562,9 +572,8 @@ class _AIroom_cr3State extends State<AIroom_cr3>
               "maxUser": widget.peoplesnum,
               "pwd": widget.password,
               if (widget._isAI)
-                "certificationTime": _selectedTime.format(context),
+                "certificationTime": _convertTimeOfDayToMinutes(_selectedTime),
             };
-
             if (!_globalKey.currentState!.validate() ||
                 _selectedDate == null ||
                 (widget._isAI && !_ispick)) {
