@@ -60,6 +60,33 @@ public class RoomData {
         roomData.certificationType = room.getCertificationType();
         roomData.frequency = room.getFrequency();
         roomData.isFull = room.getIsFull();
+        if (room.getGoal() != null){roomData.goal = Arrays.asList(room.getGoal().split(","));}
+        roomData.numOfGoal = room.getNumOfGoal();
+        roomData.roomType = room.getRoomType();
+        roomData.image = room.getImage();
+        roomData.nowGoal = room.getNowGoal();
+
+        return roomData;
+    }
+
+    public static RoomData groupOf(Room room) {
+        RoomData roomData = new RoomData();
+
+        roomData.roomId = room.getId();
+        roomData.name = room.getName();
+        roomData.maxUser = room.getMaxUser();
+        roomData.nowUser = room.getNowUser();
+        roomData.endDay = room.getEndDay();
+        roomData.periodicity = room.getPeriodicity();
+        roomData.pwd = room.getPassword();
+        roomData.category = room.getCategory();
+        roomData.info = room.getInfo();
+        roomData.canChat = room.getCanChat();
+        roomData.numOfVoteSuccess = room.getNumOfVoteSuccess();
+        roomData.numOfVoteFail = room.getNumOfVoteFail();
+        roomData.certificationType = room.getCertificationType();
+        roomData.frequency = room.getFrequency();
+        roomData.isFull = room.getIsFull();
         roomData.goal = Arrays.asList(room.getGoal().split(","));
         roomData.numOfGoal = room.getNumOfGoal();
         roomData.roomType = room.getRoomType();

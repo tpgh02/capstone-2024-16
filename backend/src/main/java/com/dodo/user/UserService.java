@@ -116,23 +116,23 @@ public class UserService {
         userRepository.save(user);
     }
 
-    @PostConstruct
-    public void makeInitialData() {
-        Image image = imageRepository.findById(1L).get();
-        User user = User.builder()
-                .authenticationType(AuthenticationType.PASSWORD)
-                .email("hello@hello.com")
-                .name("hello")
-                .mileage(999999999)
-                .image(image)
-                .introduceMessage("")
-                .build();
-
-        userRepository.save(user);
-        String password = passwordEncoder.encode("123");
-
-        passwordAuthenticationRepository.save(new PasswordAuthentication(user, password));
-    }
+//    @PostConstruct
+//    public void makeInitialData() {
+//        Image image = imageRepository.findById(1L).get();
+//        User user = User.builder()
+//                .authenticationType(AuthenticationType.PASSWORD)
+//                .email("hello@hello.com")
+//                .name("hello")
+//                .mileage(999999999)
+//                .image(image)
+//                .introduceMessage("")
+//                .build();
+//
+//        userRepository.save(user);
+//        String password = passwordEncoder.encode("123");
+//
+//        passwordAuthenticationRepository.save(new PasswordAuthentication(user, password));
+//    }
 
     public boolean checkPassword(UserContext userContext, String password) {
         User user = getUser(userContext);

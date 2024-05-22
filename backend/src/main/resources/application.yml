@@ -10,7 +10,7 @@ spring:
   #    defer-datasource-initialization: true
 
   datasource:
-    url: jdbc:postgresql://43.200.176.111:5432/dodo
+    url: jdbc:postgresql://43.200.176.111:5432/postgres
     username: seho
     password: tmxjel14145
 
