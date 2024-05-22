@@ -1,8 +1,10 @@
 package com.dodo.room;
 
 import com.dodo.config.auth.CustomAuthentication;
+import com.dodo.exception.NotFoundException;
 import com.dodo.exception.UnauthorizedException;
 import com.dodo.room.domain.Category;
+import com.dodo.room.domain.Room;
 import com.dodo.room.domain.RoomType;
 import com.dodo.room.dto.RoomData;
 import com.dodo.room.dto.RoomJoinData;
@@ -15,8 +17,13 @@ import com.dodo.exception.NotFoundException;
 import com.dodo.roomuser.RoomUserRepository;
 import com.dodo.roomuser.RoomUserService;
 import com.dodo.roomuser.domain.RoomUser;
+import com.dodo.tag.repository.RoomTagRepository;
+import com.dodo.tag.service.RoomTagService;
 import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
+import com.dodo.user.domain.UserContext;
+import com.dodo.user.dto.PasswordChangeRequestData;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
@@ -64,7 +71,7 @@ public class RoomController {
                 roomData.getMaxUser(), roomData.getCategory(), roomData.getInfo(),
                 roomData.getCertificationType(), roomData.getCanChat(),
                 roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
-                roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay(), RoomType.NORMAL);
+                roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay(), RoomType.NORMAL, roomData.getCertificationTime());
 
         return roomService.getRoomData(roomData, userContext, room);
     }
@@ -77,7 +84,7 @@ public class RoomController {
                 roomData.getMaxUser(), roomData.getCategory(), roomData.getInfo(),
                 roomData.getCertificationType(), roomData.getCanChat(),
                 roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
-                roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay(), RoomType.AI);
+                roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay(), RoomType.AI, roomData.getCertificationTime());
 
         return roomService.getRoomData(roomData, userContext, room);
     }

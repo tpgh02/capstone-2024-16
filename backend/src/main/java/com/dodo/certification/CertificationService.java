@@ -29,8 +29,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -87,6 +85,7 @@ public class CertificationService {
         if(room.getCategory() == Category.WAKEUP) {
             if(checkTime(room)) {
                 certification.setStatus(CertificationStatus.SUCCESS);
+                successCertificationToUpdateMileage(certification);
             } else {
                 certification.setStatus(CertificationStatus.FAIL);
             }
@@ -103,8 +102,7 @@ public class CertificationService {
     // 기상 시간 체크하고 기준 시간과 비교함
     private boolean checkTime(Room room) {
         // TODO -> 방에서 기준 시각 가져와야 함
-        LocalDateTime standard = null;
-        int standardMinute = standard.getMinute() + standard.getHour() * 60;
+        Integer standardMinute = room.getCertificationTime();
         int startMinute = (standardMinute - 30 + 1440) % 1440;
         int endMinute = (standardMinute + 30) % 1440;
 
@@ -312,6 +310,7 @@ public class CertificationService {
         Category category = aiResponseData.getCategory();
         Certification certification = certificationRepository.findById(aiResponseData.getCertificationId())
                 .orElseThrow(() -> new NotFoundException("인증 정보를 찾을 수 없습니다"));
+        Room room = certification.getRoomUser().getRoom();
 
         // 오류거나 결과 배열 비어있으면
         if(aiResponseData.getCode() == 500 || aiResponseData.getResult().get().isEmpty()) {
@@ -321,6 +320,11 @@ public class CertificationService {
 
         if(category == Category.STUDY) {
             Integer minute = extractTimeAndConvertToMinute(aiResponseData);
+            Integer certificationTime = room.getCertificationTime();
+            if(minute >= certificationTime) {
+                certification.setStatus(CertificationStatus.SUCCESS);
+                successCertificationToUpdateMileage(certification);
+            }
         } else if(category == Category.GYM) {
             certification.setStatus(CertificationStatus.SUCCESS);
             successCertificationToUpdateMileage(certification);
@@ -341,7 +345,7 @@ public class CertificationService {
                 }
             }
         }
-        return null;
+        throw new RuntimeException("시간이 나타나지 않음");
     }
 
     private User getUser(UserContext userContext) {

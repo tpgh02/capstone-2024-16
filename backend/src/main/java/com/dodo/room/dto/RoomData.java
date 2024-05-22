@@ -32,6 +32,9 @@ public class RoomData {
     private Integer nowGoal;
     private Boolean isFull;
 
+    // 인증 기준시각
+    private Integer certificationTime;
+
     public CertificationStatus status;
 
     private RoomType roomType;
@@ -66,6 +69,7 @@ public class RoomData {
         roomData.image = room.getImage();
         roomData.nowGoal = room.getNowGoal();
 
+        roomData.certificationTime = room.getCertificationTime();
         return roomData;
     }
 

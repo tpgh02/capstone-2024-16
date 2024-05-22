@@ -32,6 +32,9 @@ public class Room {
     private Integer numOfVoteFail;
     private Boolean isFull;
 
+    // 기상, 공부 인증일 경우에 기준 시각
+    private Integer certificationTime;
+
     // 그룹일 때
     private Integer numOfGoal;
     private String goal;
