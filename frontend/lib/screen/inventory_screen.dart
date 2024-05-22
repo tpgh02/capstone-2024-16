@@ -105,7 +105,7 @@ class _searchPageState extends State<InvenPage> {
                 ],
               ),
               Container(
-                height: 500,
+                height: 600,
                 child: FutureBuilder<List<Inven>>(
                   future: futureInven,
                   builder: (context, snapshot) {
