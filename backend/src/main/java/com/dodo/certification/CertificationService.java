@@ -97,7 +97,6 @@ public class CertificationService {
             transferToAi(room, certification);
         }
 
-        upCertificateTime(roomId, userContext);
         return new CertificationUploadResponseData(certification);
     }
 
@@ -185,7 +184,6 @@ public class CertificationService {
 
         if(certification.getVoteDown().equals(room.getNumOfVoteFail())) {
             certification.setStatus(CertificationStatus.FAIL);
-            downCertificateTime(room.getId(), userContext);
         }
 
         return new CertificationDetailResponseData(certification, vote, room);
@@ -384,46 +382,6 @@ public class CertificationService {
             if(count == room.getFrequency()) {
                 successUser.updateMileage(successUser.getMileage() + WEEKLY_SUCCESS_UPDATE_MILEAGE);
             }
-        }
-    }
-
-    public void upCertificateTime(Long roomId, UserContext userContext){
-        Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
-        User user = getUser(userContext);
-        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).orElseThrow(NotFoundException::new);
-
-        roomUser.setCertificateTime(roomUser.getCertificateTime() + 1);
-        roomUserRepository.save(roomUser);
-    }
-
-    public void downCertificateTime(Long roomId, UserContext userContext){
-        Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
-        User user = getUser(userContext);
-        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room).orElseThrow(NotFoundException::new);
-
-        roomUser.setCertificateTime(roomUser.getCertificateTime() - 1);
-        roomUserRepository.save(roomUser);
-    }
-
-    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
-    public void initDailyCertificateTime(){
-        List<RoomUser> roomUserList = roomUserRepository.findAll().stream()
-                .filter(roomUser -> roomUser.getRoom().getPeriodicity() == Periodicity.DAILY)
-                .toList();
-        for (RoomUser roomUser : roomUserList){
-            roomUser.setCertificateTime(0);
-            roomUserRepository.save(roomUser);
-        }
-    }
-
-    @Scheduled(cron = "0 0 0 ? * 1", zone = "Asia/Seoul")
-    public void initWeeklyCertificateTime(){
-        List<RoomUser> roomUserList = roomUserRepository.findAll().stream()
-                .filter(roomUser -> roomUser.getRoom().getPeriodicity() == Periodicity.WEEKLY)
-                .toList();
-        for (RoomUser roomUser : roomUserList){
-            roomUser.setCertificateTime(0);
-            roomUserRepository.save(roomUser);
         }
     }
 
