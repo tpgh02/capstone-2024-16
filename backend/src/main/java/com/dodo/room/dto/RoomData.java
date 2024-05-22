@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @Data
@@ -26,6 +27,7 @@ public class RoomData {
     private Integer numOfVoteSuccess;
     private Integer numOfVoteFail;
     private Integer numOfGoal;
+    private String stringGoal;
     private List<String> goal;
     private Integer nowGoal;
     private Boolean isFull;
@@ -58,7 +60,7 @@ public class RoomData {
         roomData.certificationType = room.getCertificationType();
         roomData.frequency = room.getFrequency();
         roomData.isFull = room.getIsFull();
-        roomData.goal = room.getGoal();
+        if (room.getGoal() != null){roomData.goal = Arrays.asList(room.getGoal().split(","));}
         roomData.numOfGoal = room.getNumOfGoal();
         roomData.roomType = room.getRoomType();
         roomData.image = room.getImage();

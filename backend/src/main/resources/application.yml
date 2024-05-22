@@ -1,23 +1,29 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
 #        format_sql: true
 #        show_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
-    defer-datasource-initialization: true
+#    defer-datasource-initialization: true
 
   datasource:
-    url: jdbc:h2:mem:tes;MODE=PostgreSQL;NON_KEYWORDS=USER
-    username: sa
-    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://43.200.176.111:5432/postgres
+    username: seho
+    password: tmxjel14145
+
   h2:
     console:
       enabled: true
       settings:
         web-allow-others: true
+
+  sql:
+    init:
+      mode : always
+      platform: h2
 
   output:
     ansi:
