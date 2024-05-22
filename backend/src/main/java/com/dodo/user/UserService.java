@@ -10,7 +10,6 @@ import com.dodo.user.domain.PasswordAuthentication;
 import com.dodo.user.domain.User;
 import com.dodo.user.domain.UserContext;
 import com.dodo.user.dto.*;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -114,24 +113,6 @@ public class UserService {
 
         user.update(userData.getName(), userData.getImage(), userData.getIntroduceMessage());
         userRepository.save(user);
-    }
-
-    @PostConstruct
-    public void makeInitialData() {
-        Image image = imageRepository.findById(1L).get();
-        User user = User.builder()
-                .authenticationType(AuthenticationType.PASSWORD)
-                .email("hello@hello.com")
-                .name("hello")
-                .mileage(999999999)
-                .image(image)
-                .introduceMessage("")
-                .build();
-
-        userRepository.save(user);
-        String password = passwordEncoder.encode("123");
-
-        passwordAuthenticationRepository.save(new PasswordAuthentication(user, password));
     }
 
     public boolean checkPassword(UserContext userContext, String password) {

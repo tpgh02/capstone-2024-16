@@ -29,6 +29,9 @@ public class RoomData {
     private List<String> goal;
     private Boolean isFull;
 
+    // 인증 기준시각
+    private Integer certificationTime;
+
     public CertificationStatus status;
 
     private RoomType roomType;
@@ -60,7 +63,7 @@ public class RoomData {
         roomData.goal = room.getGoal();
         roomData.numOfGoal = room.getNumOfGoal();
         roomData.roomType = room.getRoomType();
-
+        roomData.certificationTime = room.getCertificationTime();
         return roomData;
     }
 

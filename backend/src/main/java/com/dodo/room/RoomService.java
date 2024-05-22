@@ -16,7 +16,6 @@ import com.dodo.user.UserRepository;
 import com.dodo.user.domain.User;
 import com.dodo.user.domain.UserContext;
 import com.dodo.user.dto.PasswordChangeRequestData;
-import com.dodo.user.dto.UserData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -90,7 +89,7 @@ public class RoomService {
     public Room createRoom(String roomName, String roomPwd, Long maxUser, Category category,
                                  String info, CertificationType certificationType,
                                  Boolean canChat, Integer numOfVoteSuccess, Integer numOfVoteFail,
-                                 Integer frequency, Periodicity periodicity, LocalDateTime endDate, RoomType roomType){
+                                 Integer frequency, Periodicity periodicity, LocalDateTime endDate, RoomType roomType, Integer certificationTime){
         Boolean isFull = maxUser == 1;
         Room room = Room.builder()
                 .name(roomName)
@@ -108,6 +107,7 @@ public class RoomService {
                 .roomType(roomType)
                 .isFull(isFull)
                 .image(imageRepository.findById(1L).get())
+                .certificationTime(certificationTime)
                 .build();
 
         roomRepository.save(room);
