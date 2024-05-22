@@ -42,11 +42,7 @@ class UserData {
     return UserData(
       lastMonth: _toDouble(json['lastMonth']),
       thisMonth: _toDouble(json['thisMonth']),
-      categorySize: {
-        "STUDY": 5,
-        "WAKEUP": 2,
-        "DIET": 1,
-      }, //Map<String, int>.from(json['categorySize'] ?? {}),
+      categorySize: Map<String, int>.from(json['categorySize'] ?? {}),
       allCategorySize: json['allCategorySize'] ?? 0,
       mostActivity: _toDouble(json['mostActivity']),
     );
@@ -95,9 +91,8 @@ class _reportPageState extends State<reportPage> {
     var topCategories = sortedCategories.take(3).toList();
 
     double screenWidth = MediaQuery.of(context).size.width;
-    double textSize = screenWidth * 0.05; // Adjust to 5% of screen width
-    textSize =
-        textSize.clamp(12.0, 24.0); // Ensure text size is between 12 and 24
+    double textSize = screenWidth * 0.05;
+    textSize = textSize.clamp(12.0, 24.0);
 
     return topCategories.asMap().entries.map((entry) {
       int index = entry.key + 1;
@@ -115,7 +110,7 @@ class _reportPageState extends State<reportPage> {
                     color: PRIMARY_COLOR, fontSize: textSize, fontFamily: 'bm'),
               ),
               SizedBox(
-                width: screenWidth * 0.02, // Adjust to 2% of screen width
+                width: screenWidth * 0.02,
               ),
               Text(
                 "${percentage.toStringAsFixed(1)}%",
@@ -258,7 +253,7 @@ class _reportPageState extends State<reportPage> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                      "78%", //${data.thisMonth.toStringAsFixed(0)}%",
+                                      "${data.thisMonth.toStringAsFixed(0)}%",
                                       style: const TextStyle(
                                         fontFamily: "bm",
                                         fontSize: 50,
@@ -300,7 +295,7 @@ class _reportPageState extends State<reportPage> {
                               Container(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  "지난달 달성률은 74%예요\n이번달 4% 더 높아요 ", //${data.lastMonth.toStringAsFixed(0)}%예요\n이번달 ${(data.thisMonth - data.lastMonth).toStringAsFixed(0)}% 더 높아요",
+                                  "지난달 달성률은 ${data.lastMonth.toStringAsFixed(0)}%예요\n이번달 ${(data.thisMonth - data.lastMonth).toStringAsFixed(0)}% 더 높아요",
                                   style: const TextStyle(
                                     fontFamily: "bm",
                                     fontSize: 25,
@@ -313,8 +308,8 @@ class _reportPageState extends State<reportPage> {
                               Container(
                                 height: 200,
                                 child: BarChartSample(
-                                  lastMonth: 74, //data.lastMonth,
-                                  thisMonth: 78, //data.thisMonth,
+                                  lastMonth: data.lastMonth,
+                                  thisMonth: data.thisMonth,
                                 ),
                               ),
                             ],
@@ -410,7 +405,7 @@ class _reportPageState extends State<reportPage> {
                                 Container(
                                   alignment: Alignment.bottomRight,
                                   child: Text(
-                                    "상위 15%", // ${mostActivity.toStringAsFixed(0)}%",
+                                    "상위 ${mostActivity.toStringAsFixed(0)}%",
                                     style: const TextStyle(
                                       fontFamily: "bm",
                                       fontSize: 40,
