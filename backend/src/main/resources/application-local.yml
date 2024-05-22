@@ -23,9 +23,6 @@ spring:
     ansi:
       enabled: always
 
-  profiles:
-    include: private
-
 authentication:
   access-token:
     secretKey: ${JWT_SECRET}
