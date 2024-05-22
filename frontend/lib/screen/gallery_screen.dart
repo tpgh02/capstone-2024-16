@@ -113,7 +113,6 @@ class _galleryPageState extends State<galleryPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Top section
               Row(
                 children: [
                   IconButton(
@@ -132,7 +131,6 @@ class _galleryPageState extends State<galleryPage> {
                   ),
                 ],
               ),
-              // Gallery section
               FutureBuilder<List<Certification>>(
                 future: fetchImg(),
                 builder: (context, snapshot) {
@@ -179,28 +177,31 @@ class _galleryPageState extends State<galleryPage> {
                             );
                           },
                         ),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 40,
-                          child: ElevatedButton(
-                            onPressed: downloading
-                                ? null
-                                : () async {
-                                    if (snapshot.hasData &&
-                                        snapshot.data!.isNotEmpty) {
-                                      await downloadFile(
-                                          snapshot.data!.first.image.url);
-                                    }
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: PRIMARY_COLOR,
-                            ),
-                            child: Text(
-                              downloading ? progressString : "이미지로 다운받기",
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'bm',
-                                  fontSize: 20),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 40,
+                            child: ElevatedButton(
+                              onPressed: downloading
+                                  ? null
+                                  : () async {
+                                      if (snapshot.hasData &&
+                                          snapshot.data!.isNotEmpty) {
+                                        await downloadFile(
+                                            snapshot.data!.first.image.url);
+                                      }
+                                    },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: PRIMARY_COLOR,
+                              ),
+                              child: Text(
+                                downloading ? progressString : "이미지로 다운받기",
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'bm',
+                                    fontSize: 20),
+                              ),
                             ),
                           ),
                         ),
