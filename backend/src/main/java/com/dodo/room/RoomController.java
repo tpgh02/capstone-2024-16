@@ -88,7 +88,7 @@ public class RoomController {
     public RoomData createGroupRoom(@RequestBody RoomData roomData, @RequestAttribute UserContext userContext){
         Room room = roomService.createGroupRoom(roomData.getName(), roomData.getPwd(),
                 roomData.getMaxUser(), roomData.getCategory(), roomData.getInfo(),
-                roomData.getCertificationType(), roomData.getNumOfGoal(), roomData.getGoal(), roomData.getCanChat(),
+                roomData.getCertificationType(), roomData.getNumOfGoal(), roomData.getStringGoal(), roomData.getCanChat(),
                 roomData.getNumOfVoteSuccess(), roomData.getNumOfVoteSuccess(),
                 roomData.getFrequency(), roomData.getPeriodicity(), roomData.getEndDay());
 

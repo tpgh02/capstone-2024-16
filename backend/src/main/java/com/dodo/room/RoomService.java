@@ -124,7 +124,7 @@ public class RoomService {
 
     // 그룹 인증방 생성
     public Room createGroupRoom(String roomName, String roomPwd, Long maxUser, Category category,
-                                 String info, CertificationType certificationType, Integer numOfGoal, List<String> goal,
+                                 String info, CertificationType certificationType, Integer numOfGoal, String goal,
                                  Boolean canChat, Integer numOfVoteSuccess, Integer numOfVoteFail,
                                  Integer frequency, Periodicity periodicity, LocalDateTime endDate){
         Boolean isFull = maxUser == 1;
