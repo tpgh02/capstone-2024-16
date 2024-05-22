@@ -309,11 +309,14 @@ public class CertificationService {
         }
     }
 
+    @Transactional
     public void analyze(AiResponseData aiResponseData) {
         Category category = aiResponseData.getCategory();
         Certification certification = certificationRepository.findById(aiResponseData.getCertificationId())
                 .orElseThrow(() -> new NotFoundException("인증 정보를 찾을 수 없습니다"));
-        if(aiResponseData.getCode() == 500) {
+
+        // 오류거나 결과 배열 비어있으면
+        if(aiResponseData.getCode() == 500 || aiResponseData.getResult().get().isEmpty()) {
             // AI서버에서 인식 못함
             return ;
         }
@@ -321,7 +324,8 @@ public class CertificationService {
         if(category == Category.STUDY) {
             Integer minute = extractTimeAndConvertToMinute(aiResponseData);
         } else if(category == Category.GYM) {
-
+            certification.setStatus(CertificationStatus.SUCCESS);
+            successCertificationToUpdateMileage(certification);
         }
     }
 
@@ -332,8 +336,11 @@ public class CertificationService {
         for (String str : resultList) {
             if (str.contains(":")) {
                 int idx = str.indexOf(":");
-
-
+                if(idx - 2 > 0 && idx + 3 <= str.length()) {
+                    int hour = Integer.parseInt(str.substring(idx - 2, idx));
+                    int minute = Integer.parseInt(str.substring(idx + 1, idx + 3));
+                    return hour * 60 + minute;
+                }
             }
         }
         return null;
@@ -361,12 +368,10 @@ public class CertificationService {
 
         if(room.getPeriodicity() == Periodicity.DAILY) {
             // 일간
-
             successUser.updateMileage(successUser.getMileage() + DAILY_SUCCESS_UPDATE_MILEAGE);
         } else {
             // 주간
             // 주간 인증횟수 -> 주 n회 인증방이라면 n번쨰 인증 성공 시 50웑을 준다.
-
             RoomUser roomUser = certification.getRoomUser();
             List<LocalDateTime> thisWeek = statisticsService.getThisWeek();
             List<Certification> certificationList = certificationRepository.findAllByRoomUser(roomUser)
