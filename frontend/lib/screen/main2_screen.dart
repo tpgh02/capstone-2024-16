@@ -79,13 +79,10 @@ class _main2PageState extends State<main2Page>
   late Future<List<calendarData>> _calendarDataFuture;
 
   Future<void> _initializeCalendarData(String roomId) async {
-    if (_selectedRoom != null) {
-      final List<calendarData> calendarDataList =
-          await fetchcalendarData(roomId);
-      setState(() {
-        _calendarDataFuture = Future.value(calendarDataList);
-      });
-    }
+    final List<calendarData> calendarDataList = await fetchcalendarData(roomId);
+    setState(() {
+      _calendarDataFuture = Future.value(calendarDataList);
+    });
   }
 
   List<String> dayoff = ['지난 달', '이번 달'];
@@ -103,13 +100,12 @@ class _main2PageState extends State<main2Page>
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonData =
           jsonDecode(utf8.decode(response.bodyBytes));
-      _lastMonthPercentage = jsonData["lastMonth"];
-      _thisMonthPercentage = jsonData["thisMonth"];
-      final List<dynamic> calendarDataList = jsonData['calender'];
+      _lastMonthPercentage = jsonData["lastMonth"] ?? 0.0;
+      _thisMonthPercentage = jsonData["thisMonth"] ?? 0.0;
+      final List<dynamic> calendarDataList = jsonData['calender'] ?? [];
 
       List<calendarData> calendarDatas =
           calendarDataList.map((json) => calendarData.fromJson(json)).toList();
-      // log("that is fetch data:${calendarDataList}");
       return calendarDatas;
     } else {
       log("that is no");
@@ -183,49 +179,45 @@ class _main2PageState extends State<main2Page>
                             ConnectionState.waiting) {
                           return const CircularProgressIndicator();
                         } else if (snapshot.hasData) {
-                          return DropdownButton(
-                            value: _selectedRoom,
-                            items: (snapshot.data ?? []).map((room) {
-                              return DropdownMenuItem(
-                                value: room,
-                                child: Text(room.room_title,
-                                    style: const TextStyle(
-                                        fontFamily: 'bm', fontSize: 15)),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedRoom = value as MyRoom_Main?;
-                                if (_selectedRoom != null) {
-                                  _initializeCalendarData(
-                                      _selectedRoom!.room_id.toString());
-                                }
-                              });
-                            },
-                          );
+                          if (snapshot.data!.isEmpty) {
+                            return const Text(
+                              "가입된 방이 없습니다",
+                              style: TextStyle(
+                                fontFamily: 'bm',
+                                fontSize: 15,
+                                color: POINT_COLOR,
+                              ),
+                            );
+                          } else {
+                            return DropdownButton<MyRoom_Main>(
+                              value: _selectedRoom,
+                              items: snapshot.data!.map((room) {
+                                return DropdownMenuItem(
+                                  value: room,
+                                  child: Text(room.room_title,
+                                      style: const TextStyle(
+                                          fontFamily: 'bm', fontSize: 15)),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedRoom = value;
+                                  if (_selectedRoom != null) {
+                                    _initializeCalendarData(
+                                        _selectedRoom!.room_id.toString());
+                                  }
+                                });
+                              },
+                            );
+                          }
                         } else {
-                          return DropdownButton(
-                            value: _selectedRoom,
-                            items: (snapshot.data ?? []).map((room) {
-                              return DropdownMenuItem(
-                                value: room,
-                                child: Text(
-                                  room.room_title,
-                                  style: const TextStyle(
-                                      fontFamily: 'bm', fontSize: 15),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedRoom = value as MyRoom_Main?;
-
-                                _initializeCalendarData(
-                                    _selectedRoom!.room_id.toString());
-                                // _calendarDataFuture = fetchcalendarData(
-                                //     _selectedRoom!.room_id.toString());
-                              });
-                            },
+                          return const Text(
+                            "가입된 방이 없습니다",
+                            style: TextStyle(
+                              fontFamily: 'bm',
+                              fontSize: 15,
+                              color: POINT_COLOR,
+                            ),
                           );
                         }
                       },
@@ -253,7 +245,6 @@ class _main2PageState extends State<main2Page>
                   boxShadow: [
                     BoxShadow(
                         color: Colors.grey.withOpacity(0.5),
-                        //spreadRadius: 1,
                         blurRadius: 2,
                         offset: const Offset(0, 3)),
                   ],
@@ -273,13 +264,13 @@ class _main2PageState extends State<main2Page>
                                     ConnectionState.waiting) {
                                   return CircularProgressIndicator();
                                 } else if (snapshot.hasError) {
-                                  log(_selectedRoom!.room_id.toString());
+                                  log(_selectedRoom?.room_id.toString() ??
+                                      'No Room Selected');
                                   log('calendar Error: ${snapshot.error}');
                                   return _buildDefaultCalendar();
                                 } else if (snapshot.hasData) {
                                   final calendarDataList = snapshot.data!;
-                                  if (calendarDataList == null ||
-                                      calendarDataList.isEmpty) {
+                                  if (calendarDataList.isEmpty) {
                                     return _buildDefaultCalendar();
                                   } else {
                                     return _CalendarData(calendarDataList);
@@ -316,7 +307,6 @@ class _main2PageState extends State<main2Page>
                                     ),
                                     Text(
                                       formatPercentage(_lastMonthPercentage),
-                                      //"$_lastMonth%",
                                       style: const TextStyle(
                                           fontFamily: "bm", fontSize: 30),
                                     )
@@ -382,7 +372,7 @@ Widget _buildDefaultCalendar() {
     ),
     calendarStyle: const CalendarStyle(
       todayDecoration: BoxDecoration(
-        color: PRIMARY_COLOR, // 변경 가능
+        color: PRIMARY_COLOR,
         shape: BoxShape.circle,
       ),
     ),
@@ -409,12 +399,11 @@ Widget _CalendarData(List<calendarData> calendarDataList) {
     ),
     calendarStyle: const CalendarStyle(
       todayDecoration: BoxDecoration(
-        color: PRIMARY_COLOR, // 변경 가능
+        color: PRIMARY_COLOR,
         shape: BoxShape.circle,
       ),
     ),
     calendarBuilders: CalendarBuilders(
-      // 서버에서 받은 캘린더 데이터를 이용하여 셀을 구성하고 스타일 적용
       markerBuilder: (context, date, events) {
         final filteredData = calendarDataList
             .where((element) => element.date == date.day.toString());
@@ -424,7 +413,7 @@ Widget _CalendarData(List<calendarData> calendarDataList) {
           return Container(
             margin: const EdgeInsets.all(4.0),
             decoration: const BoxDecoration(
-              color: POINT_COLOR, // 변경 가능
+              color: POINT_COLOR,
               shape: BoxShape.circle,
             ),
             width: 8,
