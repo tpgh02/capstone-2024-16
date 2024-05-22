@@ -10,9 +10,10 @@ spring:
   #    defer-datasource-initialization: true
 
   datasource:
-    url: jdbc:h2:mem:tes;MODE=PostgreSQL;NON_KEYWORDS=USER
-    username: sa
-    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://43.200.176.111:5432/dodo
+    username: seho
+    password: tmxjel14145
+
   h2:
     console:
       enabled: true
