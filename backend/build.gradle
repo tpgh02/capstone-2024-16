@@ -45,7 +45,3 @@ dependencies {
 	// postgre
 	implementation 'org.postgresql:postgresql:42.2.2'
 }
-
-test {
-	useJUnitPlatform()
-}
