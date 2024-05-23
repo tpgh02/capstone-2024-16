@@ -1,5 +1,6 @@
 package com.dodo.roomuser;
 
+import com.dodo.certification.CertificationRepository;
 import com.dodo.certification.domain.Certification;
 import com.dodo.certification.domain.CertificationStatus;
 import com.dodo.exception.NotFoundException;
@@ -24,6 +25,7 @@ public class RoomUserService {
     private final RoomUserRepository roomUserRepository;
     private final UserRepository userRepository;
     private final RoomRepository roomRepository;
+    private final CertificationRepository certificationRepository;
 
     public void createRoomUser(UserContext userContext, Long roomId) {
         Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
@@ -64,6 +66,7 @@ public class RoomUserService {
             }
         }
 
+        certificationRepository.deleteAllInBatch(certificationRepository.findAllByRoomUser(roomUser).orElseThrow(() -> new NotFoundException("룸유저가 없습니다.")));
         roomUserRepository.delete(roomUser);
 
         log.info("삭제한 room : {}, user : {}", roomUser.getRoom().getId(), roomUser.getUser().getId());
