@@ -501,9 +501,9 @@ class _Groproom_cr2State extends State<Groproom_cr2>
             String _period = periodMap[_selectedPeriod] ?? "DAILY";
             String certificationType = _peoplevote ? "BOTH" : "ADMIN";
 
-            // Extract texts from controllers
-            List<String> goals =
-                goalControllers.map((controller) => controller.text).toList();
+            // Extract texts from controllers and join with commas
+            String goals =
+                goalControllers.map((controller) => controller.text).join(",");
 
             Map<String, dynamic> formData = {
               "name": widget.title,
@@ -516,7 +516,6 @@ class _Groproom_cr2State extends State<Groproom_cr2>
               "numOfVoteFail":
                   _selectfailvote.replaceAll(RegExp(r'[^0-9]'), ''),
               "frequency": _selectcount.replaceAll(RegExp(r'[^0-9]'), ''),
-              "periodicity": _period,
               "endDay": _selectedDate != null
                   ? _selectedDate.toString().split(" ")[0] + "T00:00:00"
                   : "",
@@ -524,7 +523,7 @@ class _Groproom_cr2State extends State<Groproom_cr2>
               "maxUser": widget.peoplesnum,
               "pwd": widget.password,
               "numOfGoal": _selectcount.replaceAll(RegExp(r'[^0-9]'), ''),
-              "goal": goals,
+              "stringGoal": goals,
             };
 
             if (!_globalKey.currentState!.validate() || _selectedDate == null) {
