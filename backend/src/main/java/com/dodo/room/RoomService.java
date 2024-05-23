@@ -1,5 +1,6 @@
 package com.dodo.room;
 
+import com.dodo.certification.CertificationRepository;
 import com.dodo.exception.NotFoundException;
 import com.dodo.image.ImageRepository;
 import com.dodo.image.ImageService;
@@ -48,6 +49,7 @@ public class RoomService {
     private final RoomTagService roomTagService;
     private final ImageRepository imageRepository;
     private final ImageService imageService;
+    private final CertificationRepository certificationRepository;
 
     public List<RoomListData> getMyRoomList(UserContext userContext) {
         User user = getUser(userContext);
@@ -177,8 +179,10 @@ public class RoomService {
     // 인증방 해체
     public void deleteRoom(Long roomId){
 
+        certificationRepository.deleteAllInBatch(certificationRepository.findAllByRoomUserId(roomId).orElseThrow(() -> new NotFoundException("룸유저가 없습니다.")));
         roomUserRepository.deleteAllInBatch(roomUserRepository.findAllByRoomId(roomId).orElseThrow(NotFoundException::new));
         roomTagRepository.deleteAllInBatch(roomTagRepository.findAllByRoom(roomRepository.findById(roomId).orElseThrow(NotFoundException::new)).orElseThrow(NotFoundException::new));
+
         roomRepository.deleteById(roomId);
 
     }
