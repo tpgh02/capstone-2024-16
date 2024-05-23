@@ -36,7 +36,7 @@ public class RoomUser {
     @ManyToOne
     private Room room;
 
-    @OneToMany(mappedBy = "roomUser")
+    @OneToMany(mappedBy = "roomUser", cascade = CascadeType.ALL)
     private List<Certification> certification;
 
     public RoomUser(User user, Room room) {

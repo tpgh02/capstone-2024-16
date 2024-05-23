@@ -66,7 +66,6 @@ public class RoomUserService {
             }
         }
 
-        certificationRepository.deleteAllInBatch(certificationRepository.findAllByRoomUser(roomUser).orElseThrow(() -> new NotFoundException("룸유저가 없습니다.")));
         roomUserRepository.delete(roomUser);
 
         log.info("삭제한 room : {}, user : {}", roomUser.getRoom().getId(), roomUser.getUser().getId());

@@ -166,12 +166,14 @@ public class RoomService {
         log.info("plus room Id : {}", roomId);
         Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
         room.setNowUser(room.getNowUser()+1);
+        roomRepository.save(room);
     }
 
     // 채팅방 인원 감소
     public void minusUserCnt(Long roomId){
         Room room = roomRepository.findById(roomId).orElseThrow(NotFoundException::new);
         room.setNowUser(room.getNowUser()-1);
+        roomRepository.save(room);
 
         log.info("인원 : {}", room.getNowUser());
     }
@@ -179,7 +181,6 @@ public class RoomService {
     // 인증방 해체
     public void deleteRoom(Long roomId){
 
-        certificationRepository.deleteAllInBatch(certificationRepository.findAllByRoomUserRoom(getRoom(roomId)).orElseThrow(() -> new NotFoundException("룸유저가 없습니다.")));
         roomUserRepository.deleteAllInBatch(roomUserRepository.findAllByRoomId(roomId).orElseThrow(NotFoundException::new));
         roomTagRepository.deleteAllInBatch(roomTagRepository.findAllByRoom(roomRepository.findById(roomId).orElseThrow(NotFoundException::new)).orElseThrow(NotFoundException::new));
 
