@@ -1,6 +1,7 @@
 package com.dodo.room;
 
 import com.dodo.certification.CertificationRepository;
+import com.dodo.certification.domain.Certification;
 import com.dodo.exception.NotFoundException;
 import com.dodo.image.ImageRepository;
 import com.dodo.image.ImageService;
@@ -150,6 +151,7 @@ public class RoomService {
                 .goal(goal)
                 .nowGoal(0)
                 .isFull(isFull)
+                .image(imageRepository.findById(1L).get())
                 .build();
 
         roomRepository.save(room);
@@ -180,6 +182,14 @@ public class RoomService {
 
     // 인증방 해체
     public void deleteRoom(Long roomId){
+
+        List<RoomUser> roomUserList = roomUserRepository.findAllByRoomId(roomId).orElseThrow(NotFoundException::new);
+        for(RoomUser roomUser : roomUserList){
+            for (Certification certificate : certificationRepository.findAllByRoomUser(roomUser).get()){
+                certificate.setRoomUser(null);
+                certificationRepository.save(certificate);
+            }
+        }
 
         roomUserRepository.deleteAllInBatch(roomUserRepository.findAllByRoomId(roomId).orElseThrow(NotFoundException::new));
         roomTagRepository.deleteAllInBatch(roomTagRepository.findAllByRoom(roomRepository.findById(roomId).orElseThrow(NotFoundException::new)).orElseThrow(NotFoundException::new));

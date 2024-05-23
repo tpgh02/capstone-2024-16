@@ -66,6 +66,10 @@ public class RoomUserService {
             }
         }
 
+        for (Certification certificate : certificationRepository.findAllByRoomUser(roomUser).get()){
+            certificate.setRoomUser(null);
+            certificationRepository.save(certificate);
+        }
         roomUserRepository.delete(roomUser);
 
         log.info("삭제한 room : {}, user : {}", roomUser.getRoom().getId(), roomUser.getUser().getId());
