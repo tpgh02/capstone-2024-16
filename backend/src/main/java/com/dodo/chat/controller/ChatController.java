@@ -15,13 +15,14 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class ChatController {
 
     private final SimpMessageSendingOperations template;
