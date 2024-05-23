@@ -28,7 +28,7 @@ class findpassPage extends StatelessWidget {
               alignment: Alignment.topRight,
               padding: const EdgeInsets.fromLTRB(0, 30, 30, 0),
               child: const Image(
-                image: AssetImage('../assets/images/logo.png'),
+                image: AssetImage('assets/images/logo.png'),
                 width: 110,
                 height: 110,
               ),
@@ -94,9 +94,21 @@ class findpassPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // SizedBox(
-                    //   height: ,
-                    // ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SignupPage()));
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: const Color(0xff464646),
+                      ),
+                      child: const Text(
+                        '로그인하러 가기',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
                     Container(
                       alignment: Alignment.bottomRight,
                       margin: const EdgeInsets.symmetric(horizontal: 20),

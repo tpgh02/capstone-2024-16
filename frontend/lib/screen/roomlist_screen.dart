@@ -1,7 +1,69 @@
+import 'package:custom_floating_action_button/custom_floating_action_button.dart';
 import 'package:dodo/components/room_list.dart';
 import 'package:dodo/const/colors.dart';
+import 'package:dodo/const/server.dart';
+import 'package:dodo/screen/AIroom_cr.dart';
+import 'package:dodo/screen/Groproom_cr.dart';
+import 'package:dodo/screen/Room_cr.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'dart:convert';
+import 'dart:developer';
+import 'package:http/http.dart' as http;
+
+Future<List<MyRoom>> fetchRooms() async {
+  final response =
+      await http.get(Uri.parse('$serverUrl/api/v1/room/list'), headers: {
+    'Authorization':
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
+  });
+  if (response.statusCode == 200) {
+    final List<dynamic> jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+
+    List<MyRoom> Rooms = jsonData.map((json) => MyRoom.fromJson(json)).toList();
+    log("인증방 리스트 연결 완료");
+    return Rooms;
+  } else {
+    throw Exception('Failed to load room list');
+  }
+}
+
+class MyRoom {
+  final String room_title;
+  final int room_id;
+  final String? room_pwd;
+  final room_img;
+  final int room_mem;
+  final int room_maxmem;
+  final String? status;
+  final String room_type;
+  final bool is_manager;
+
+  const MyRoom({
+    required this.room_title,
+    required this.room_id,
+    required this.room_pwd,
+    required this.room_img,
+    required this.room_mem,
+    required this.room_maxmem,
+    required this.status,
+    required this.room_type,
+    required this.is_manager,
+  });
+
+  factory MyRoom.fromJson(dynamic json) {
+    return MyRoom(
+      room_title: json['name'],
+      room_id: json['roomId'],
+      room_pwd: json['password'],
+      room_img: json['image'],
+      room_mem: json['nowUser'],
+      room_maxmem: json['maxUser'],
+      status: json['status'],
+      room_type: json['roomType'],
+      is_manager: json['isManager'],
+    );
+  }
+}
 
 class RoomListPage extends StatefulWidget {
   const RoomListPage({super.key});
@@ -10,42 +72,217 @@ class RoomListPage extends StatefulWidget {
   State<RoomListPage> createState() => _RoomListState();
 }
 
-class _RoomListState extends State<RoomListPage>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class _RoomListState extends State<RoomListPage> {
+  late Future<List<MyRoom>>? futureRoomList;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 5, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
+    futureRoomList = fetchRooms();
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-    return Scaffold(
-      appBar: _roomListAppBar(),
-      backgroundColor: LIGHTGREY,
-      floatingActionButton: appendRoom(),
-      body: const SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            room_list(num: 0),
-            room_list(num: 1),
-            room_list(num: 2),
-          ],
+    return CustomFloatingActionButton(
+      body: Scaffold(
+        appBar: _roomListAppBar(),
+        backgroundColor: LIGHTGREY,
+        body: FutureBuilder<List<MyRoom>>(
+          future: futureRoomList,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(child: CircularProgressIndicator()),
+                ],
+              );
+            } else if (snapshot.hasError) {
+              log("인증방 리스트 연결 실패: ${snapshot.error}");
+              return const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '서버 연결에 실패하였습니다.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black45,
+                        fontFamily: 'bm',
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            } else if (snapshot.hasData) {
+              if (snapshot.data?.length == 0) {
+                log('가입한 방이 없습니다.');
+                return const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '아직 가입한 그룹이 없습니다.\n그룹을 새로 만들거나 가입해 보세요!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.black45,
+                          fontFamily: 'bm',
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                log('가입한 방이 존재합니다.');
+                return SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 10),
+                      Column(
+                        children: snapshot.data!.map((MyRoom) {
+                          return room_list(
+                            room_title: MyRoom.room_title.toString(),
+                            room_id: MyRoom.room_id,
+                            room_pwd: MyRoom.room_pwd?.toString(),
+                            room_type: MyRoom.room_type.toString(),
+                            room_img: MyRoom.room_img ??
+                                {
+                                  "id": 1,
+                                  "url":
+                                      "https://my-dodo-bucket.s3.ap-northeast-2.amazonaws.com/image/default.png"
+                                },
+                            room_mem: MyRoom.room_mem,
+                            room_maxmem: MyRoom.room_maxmem,
+                            status: MyRoom.status,
+                            is_manager: MyRoom.is_manager,
+                            certificationType: "VOTE",
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            } else {
+              return const Text('No data available');
+            }
+          },
         ),
       ),
+      options: [
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              child: const Text(
+                'AI인증방 생성',
+                style: TextStyle(
+                    color: Colors.white, fontFamily: 'bma', fontSize: 20),
+              ),
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AIroom_cr()));
+                },
+                child: Image.asset(
+                  "assets/images/AI인증방생성.png",
+                  fit: BoxFit.cover,
+                  scale: 9,
+                )),
+          ],
+        ),
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              child: const Text(
+                '일반 인증방 생성',
+                style: TextStyle(
+                    color: Colors.white, fontFamily: 'bma', fontSize: 20),
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            InkWell(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Room_cr()));
+                },
+                child: Image.asset(
+                  "assets/images/일반인증방생성.png",
+                  fit: BoxFit.cover,
+                  scale: 9,
+                )),
+          ],
+        ),
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              child: const Text(
+                '그룹 인증방 생성',
+                style: TextStyle(
+                    color: Colors.white, fontFamily: 'bma', fontSize: 20),
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Groproom_cr()));
+                },
+                child: Image.asset(
+                  "assets/images/그룹인증방생성.png",
+                  fit: BoxFit.cover,
+                  scale: 9,
+                )),
+          ],
+        ),
+      ],
+      type: CustomFloatingActionButtonType.verticalUp,
+      floatinButtonColor: PRIMARY_COLOR,
+      openFloatingActionButton: const Icon(
+        Icons.add,
+        color: Colors.white,
+        size: 30,
+      ),
+      closeFloatingActionButton: const Icon(
+        Icons.close,
+        color: Colors.white,
+        size: 30,
+      ),
+      spaceFromBottom: 10,
+      barrierDismissible: false,
+      backgroundColor: Colors.black.withOpacity(0.6),
     );
   }
 
@@ -73,24 +310,6 @@ class _RoomListState extends State<RoomListPage>
             fontFamily: "bm",
             fontSize: 30,
           ),
-        ),
-      ),
-    );
-  }
-
-  Container appendRoom() {
-    return Container(
-      width: 70,
-      height: 70,
-      margin: const EdgeInsets.all(20),
-      child: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: PRIMARY_COLOR,
-        elevation: 1,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
         ),
       ),
     );

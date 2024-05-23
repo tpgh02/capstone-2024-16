@@ -13,8 +13,6 @@ import 'package:dodo/screen/roomlist_screen.dart';
 class mainPage extends StatefulWidget {
   final String? token;
   const mainPage({Key? key, this.token}) : super(key: key);
-  //const loginPage({Key? key, this.userId}) : super(key: key);
-
   @override
   State<mainPage> createState() => _mainPageState();
 }
@@ -25,6 +23,7 @@ class _mainPageState extends State<mainPage>
   int _selectedIndex = 0;
   String? user_name = '거북이도도';
   int _main_idx = 0;
+  PageController _pageController = PageController(initialPage: 0); // 여기서 초기화
 
   @override
   void initState() {
@@ -37,6 +36,7 @@ class _mainPageState extends State<mainPage>
   @override
   void dispose() {
     _tabController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -98,90 +98,89 @@ class _mainPageState extends State<mainPage>
         ),
       ),
       body: _selectedIndex == 0
-          ? SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Container(
-                //color: Colors.black,
-                child: Column(
-                  children: [
-                    m_title('$user_name'),
-                    const m_state("목표까지 얼마 안남았어요!"),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const m_todo(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.all(10),
-                          width: 12,
-                          height: 12,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: LIGHTGREY,
-                            ),
-                            borderRadius: _main_idx == 0
-                                ? null
-                                : BorderRadius.circular(50),
-                          ),
-                          child: FloatingActionButton(
-                            onPressed: () {
-                              _main_idx = 0;
-                            },
-                            backgroundColor:
-                                _main_idx == 0 ? DARKGREY : LIGHTGREY,
-                            hoverColor: LIGHTGREY,
-                            elevation: 0,
-                          ),
-                        ),
-                        Container(
-                            margin: EdgeInsets.all(10),
-                            width: 12,
-                            height: 12,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: LIGHTGREY,
-                              ),
-                              borderRadius: _main_idx == 0
-                                  ? null
-                                  : BorderRadius.circular(50),
-                            ),
-                            child: FloatingActionButton(
-                              onPressed: () {
-                                _main_idx = 1;
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => main2Page()));
-                              },
-                              backgroundColor:
-                                  _main_idx == 1 ? DARKGREY : Colors.black12,
-                              hoverColor: LIGHTGREY,
-                              elevation: 0,
-                            )),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+          ? PageView(
+              controller: _pageController,
+              onPageChanged: (index) {
+                setState(() {
+                  _main_idx = index;
+                });
+              },
+              children: [
+                _buildMainPageContent(context),
+                main2Page(),
+              ],
             )
           : _selectedIndex == 1
-              ?
-              //바다 화면 구성. sea_screen.dart
-              seaPage()
+              ? seaPage()
               : _selectedIndex == 2
-                  ?
-                  //방 화면 구성. room_screen.dart
-                  RoomListPage()
+                  ? const RoomListPage()
                   : _selectedIndex == 3
-                      ?
-                      // 검색 화면 구성. search_screen.dart
-                      searchPage()
-                      :
-                      // 개인 화면 구성. personal_screen.dart
-                      MyPage(),
+                      ? const searchPage()
+                      : const MyPage(),
+    );
+  }
+
+  Widget _buildMainPageContent(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          m_title(),
+          m_state(),
+          const SizedBox(
+            height: 20,
+          ),
+          const m_todo(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                margin: const EdgeInsets.all(10),
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: LIGHTGREY,
+                  ),
+                  borderRadius:
+                      _main_idx == 0 ? null : BorderRadius.circular(50),
+                ),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    _main_idx = 0;
+                    _pageController.jumpToPage(0);
+                  },
+                  backgroundColor: _main_idx == 0 ? DARKGREY : LIGHTGREY,
+                  hoverColor: LIGHTGREY,
+                  elevation: 0,
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: LIGHTGREY,
+                  ),
+                  borderRadius:
+                      _main_idx == 0 ? null : BorderRadius.circular(50),
+                ),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    _main_idx = 1;
+                    _pageController.jumpToPage(1);
+                  },
+                  backgroundColor: _main_idx == 1 ? DARKGREY : Colors.white,
+                  hoverColor: LIGHTGREY,
+                  elevation: 0,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

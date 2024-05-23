@@ -40,6 +40,21 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^1.2.1
   settings_ui: ^2.0.2
+  stomp_dart_client: 1.0.0
+  percent_indicator: ^4.2.3
+  dio: ^4.0.0
+  horizontal_stepper_step: ^0.0.5
+  path_provider: 2.0.1
+  vector_math: ^2.1.0
+  matrix_gesture_detector: ^0.2.0-nullsafety.1
+  provider: ^5.0.0
+  shared_preferences: ^2.0.0
+  custom_floating_action_button: ^0.0.3
+  validators: ^3.0.0
+  fluttertoast: ^8.0.9
+  fl_chart: ^0.36.0
+  auto_size_text: ^3.0.0
+  flutter_secure_storage : ^5.0.2
 
 dev_dependencies:
   flutter_test:
