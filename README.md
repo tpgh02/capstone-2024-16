@@ -32,7 +32,7 @@ The project uses AI technology to automatically validate the success of a challe
 ## 소개 영상
 
 
-[![오늘도도전 중간발표 시연영상](https://github.com/kookmin-sw/capstone-2024-16/assets/119032609/7f7b467b-de16-45d1-8338-c5a7aff17b60)](https://youtu.be/wamZGRxZSl8?si=J6L4Tb7LZaxbnF27)
+[![오늘도도전 최종발표 시연영상](https://github.com/kookmin-sw/capstone-2024-16/assets/119032609/7f7b467b-de16-45d1-8338-c5a7aff17b60)](https://youtu.be/wamZGRxZSl8?si=J6L4Tb7LZaxbnF27)
 
 
 ## 팀 소개
