@@ -284,6 +284,10 @@ public class RoomService {
         User manager = userRepository.findById(userContext.getUserId()).orElseThrow(NotFoundException::new);
         RoomUser roomManager = roomUserRepository.findByUserAndRoom(manager, room).orElseThrow(NotFoundException::new);
 
+        if(userId.equals(userContext.getUserId())){
+            throw new NotFoundException("방장은 자신을 추방할 수 없습니다.");
+        }
+
         if (!roomManager.getIsManager()) {
             log.info("not manager");
         } else {
