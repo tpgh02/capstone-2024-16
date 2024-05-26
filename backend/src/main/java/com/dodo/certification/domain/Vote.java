@@ -2,14 +2,13 @@ package com.dodo.certification.domain;
 
 import com.dodo.user.domain.User;
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.annotation.processing.Generated;
 
 @Entity
 @NoArgsConstructor
+@Data
 public class Vote {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,6 +16,15 @@ public class Vote {
     @ManyToOne
     private User user;
 
-    @OneToOne
+    @Enumerated(EnumType.STRING)
+    private VoteStatus voteStatus;
+
+    @ManyToOne
     private Certification certification;
+
+    public Vote(User user, Certification certification) {
+        this.user = user;
+        this.certification = certification;
+        this.voteStatus = VoteStatus.NONE;
+    }
 }

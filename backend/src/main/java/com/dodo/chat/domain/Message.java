@@ -2,6 +2,9 @@ package com.dodo.chat.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 
 @Getter
@@ -19,5 +22,6 @@ public class Message {
     private Long roomId;
     private Long userId;
     private String message;
-    private String time;
+    @CreatedDate
+    private LocalDateTime time;
 }

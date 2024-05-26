@@ -1,28 +1,48 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
-        format_sql: true
-        show_sql: true
-        dialect: org.hibernate.dialect.H2Dialect
-    defer-datasource-initialization: true
+#        format_sql: true
+#        show_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+#    defer-datasource-initialization: true
 
   datasource:
-    url: jdbc:h2:mem:tes;MODE=PostgreSQL;NON_KEYWORDS=USER
-    username: sa
-    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://43.200.176.111:5432/postgres
+    username: seho
+    password: tmxjel14145
+
   h2:
     console:
       enabled: true
+      settings:
+        web-allow-others: true
 
+  sql:
+    init:
+      mode : always
+      platform: h2
+
+  output:
+    ansi:
+      enabled: always
+
+  profiles:
+    include: private
 
 authentication:
   access-token:
-    secretKey: "136314nj6134lk6n413kvb"
+    secretKey: ${JWT_SECRET}
 
+ai:
+  server-url: "http://3.34.179.78:8080/ai/certification"
 
-# 실제 이미지 저장 경로
-imagepath : "/Users/w/Downloads/capstone/backend/src/main/resources/images/"
-serverurl : "http://localhost:8080"
+logging:
+  level:
+    org.springframework.web.socket.config.WebSocketMessageBrokerStats: ERROR
+#server:
+#  error:
+#    include-message: always
+
