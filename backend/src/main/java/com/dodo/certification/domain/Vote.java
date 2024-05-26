@@ -3,10 +3,7 @@ package com.dodo.certification.domain;
 import com.dodo.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.security.web.access.ExceptionTranslationFilter;
 
 @Entity
 @NoArgsConstructor

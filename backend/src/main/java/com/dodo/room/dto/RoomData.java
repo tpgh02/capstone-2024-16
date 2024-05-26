@@ -2,14 +2,13 @@ package com.dodo.room.dto;
 
 import com.dodo.certification.domain.CertificationStatus;
 import com.dodo.image.domain.Image;
-import com.dodo.room.domain.Category;
-import com.dodo.room.domain.CertificationType;
-import com.dodo.room.domain.Periodicity;
-import com.dodo.room.domain.Room;
+import com.dodo.room.domain.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 @Data
 @RequiredArgsConstructor
@@ -18,38 +17,33 @@ public class RoomData {
     private String name;
     private Image image;
     private Long maxUser;
-    private Long nowUsers;
+    private Long nowUser;
     private LocalDateTime endDay;
     private Periodicity periodicity;
     private String pwd;
     private Category category;
     private String info;
-    private String tag;
     private Boolean canChat;
     private Integer numOfVoteSuccess;
     private Integer numOfVoteFail;
+    private Integer numOfGoal;
+    private String stringGoal;
+    private List<String> goal;
+    private Integer nowGoal;
+    private Boolean isFull;
+
+    // 인증 기준시각
+    private Integer certificationTime;
 
     public CertificationStatus status;
 
+    private RoomType roomType;
     private CertificationType certificationType;
     private Integer frequency;
 
-    public RoomData(Room room) {
-        this.roomId = room.getId();
-        this.name = room.getName();
-        // this.image = room.getImage();
-        this.maxUser = room.getMaxUser();
-        this.nowUsers = room.getNowUser();
-        this.certificationType = room.getCertificationType();
+    private List<String> tag;
 
-        // TODO
-        // 방 불러올 떄 인증 상태를 같이 불러와야 하는디 아직 좀 더 생각해 봐야 할 것 같다.
-        // 일단 대기중으로 고정
-        this.status = CertificationStatus.WAIT;
-        this.maxUser = room.getMaxUser();
-        this.nowUsers = room.getNowUser();
-
-    }
+    private Boolean isManager = false;
 
     public static RoomData of(Room room) {
         RoomData roomData = new RoomData();
@@ -57,19 +51,33 @@ public class RoomData {
         roomData.roomId = room.getId();
         roomData.name = room.getName();
         roomData.maxUser = room.getMaxUser();
-        roomData.nowUsers = room.getNowUser();
-        // roomData.endDay = room.getEndDay();
+        roomData.nowUser = room.getNowUser();
+        roomData.endDay = room.getEndDay();
         roomData.periodicity = room.getPeriodicity();
         roomData.pwd = room.getPassword();
         roomData.category = room.getCategory();
         roomData.info = room.getInfo();
-        roomData.tag = room.getTag();
         roomData.canChat = room.getCanChat();
         roomData.numOfVoteSuccess = room.getNumOfVoteSuccess();
         roomData.numOfVoteFail = room.getNumOfVoteFail();
         roomData.certificationType = room.getCertificationType();
         roomData.frequency = room.getFrequency();
+        roomData.isFull = room.getIsFull();
+        if (room.getGoal() != null){roomData.goal = Arrays.asList(room.getGoal().split(","));}
+        roomData.numOfGoal = room.getNumOfGoal();
+        roomData.roomType = room.getRoomType();
+        roomData.image = room.getImage();
+        roomData.nowGoal = room.getNowGoal();
 
+        roomData.certificationTime = room.getCertificationTime();
         return roomData;
+    }
+
+    public void updateTag(List<String> tag){
+        this.tag = tag;
+    }
+
+    public void updateIsManager(Boolean isManager){
+        this.isManager = isManager;
     }
 }

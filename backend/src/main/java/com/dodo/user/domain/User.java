@@ -2,20 +2,18 @@ package com.dodo.user.domain;
 
 import com.dodo.image.domain.Image;
 import com.dodo.roomuser.domain.RoomUser;
+import com.dodo.sea.domain.SeaCreature;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-@Table(name = "user")
+@Table(name = "\"user\"")
 public class User {
 
     @Id
@@ -35,6 +33,20 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<RoomUser> roomUsers;
 
+    @Setter
+    @OneToMany
+    private List<SeaCreature> seaCreatures;
+
     @ManyToOne
     private Image image;
+
+    public void updateMileage(Integer mileage) {
+        this.mileage = mileage;
+    }
+
+    public void update(String name, Image image, String introduceMessage) {
+        this.name = name;
+        this.image = image;
+        this.introduceMessage = introduceMessage;
+    }
 }

@@ -2,21 +2,22 @@ package com.dodo.user;
 
 import com.dodo.exception.NotFoundException;
 import com.dodo.image.ImageRepository;
+import com.dodo.image.ImageService;
 import com.dodo.image.domain.Image;
-import com.dodo.image.domain.ImageProperties;
 import com.dodo.token.TokenService;
 import com.dodo.user.domain.AuthenticationType;
 import com.dodo.user.domain.PasswordAuthentication;
 import com.dodo.user.domain.User;
 import com.dodo.user.domain.UserContext;
-import com.dodo.user.dto.UserCreateRequestData;
-import com.dodo.user.dto.UserData;
-import com.dodo.user.dto.UserLoginRequestData;
+import com.dodo.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @Service
@@ -28,8 +29,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
     private final ImageRepository imageRepository;
+    private final ImageService imageService;
 
-    private final String DEFAULT_IMAGE_URL = "http://" + ImageProperties.serverUrl + ":8080/img?url=default";
 
     @Transactional
     public User register(UserCreateRequestData request) {
@@ -40,8 +41,7 @@ public class UserService {
         // TODO
         // 기본 이미지 설정
         // 나중에 바꿔야 함
-        Image image = imageRepository.findById(1L)
-                .orElse(imageRepository.save(new Image(DEFAULT_IMAGE_URL)));
+        Image image = imageRepository.findById(1L).get();
 
 
         log.info("{}", request.getType());
@@ -53,7 +53,6 @@ public class UserService {
                 .image(image)
                 .introduceMessage("")
                 .build();
-
 
         userRepository.save(user);
 
@@ -106,5 +105,70 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다"));
 
         return new UserData(user);
+    }
+
+    public void update(UserContext userContext, UserData userData) {
+        User user = userRepository.findById(userContext.getUserId())
+                .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다"));
+
+        user.update(userData.getName(), userData.getImage(), userData.getIntroduceMessage());
+        userRepository.save(user);
+    }
+
+    public boolean checkPassword(UserContext userContext, String password) {
+        User user = getUser(userContext);
+        PasswordAuthentication passwordAuthentication = passwordAuthenticationRepository.findByUser(user).get();
+        if(!passwordEncoder.matches(password, passwordAuthentication.getPassword())) {
+            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+        }
+        return true;
+    }
+
+    @Transactional
+    public boolean changePassword(UserContext userContext, PasswordChangeRequestData passwordChangeRequestData) {
+        User user = getUser(userContext);
+        PasswordAuthentication passwordAuthentication = passwordAuthenticationRepository.findByUser(user).get();
+        if(!passwordEncoder.matches(passwordChangeRequestData.getCurrentPassword(), passwordAuthentication.getPassword())) {
+            throw new RuntimeException("나의 비밀번호가 일치하지 않습니다.");
+        }
+        if(!passwordChangeRequestData.getChangePassword1().equals(passwordChangeRequestData.getChangePassword2())) {
+            throw new RuntimeException("새로운 비밀번호 1, 2가 일치하지 않습니다.");
+        }
+        if(passwordChangeRequestData.getCurrentPassword().equals(passwordChangeRequestData.getChangePassword1())) {
+            throw new RuntimeException("현재 비밀번호와 새로운 비밀번호가 일치합니다.");
+        }
+        passwordAuthentication.setPassword(passwordEncoder.encode(passwordChangeRequestData.getChangePassword1()));
+        return true;
+    }
+
+
+    @Transactional
+    public ProfileChangeResponseData changeProfile(UserContext userContext, MultipartFile img, UserUpdateRequestData requestData) throws IOException {
+        User user = getUser(userContext);
+        if(img != null) {
+            Image image = imageService.save(img);
+            user.setImage(image);
+        }
+        if(requestData != null) {
+            if(requestData.getName() != null) user.setName(requestData.getName());
+            if(requestData.getIntroduceMessage() != null) user.setIntroduceMessage(requestData.getIntroduceMessage());
+        }
+        return new ProfileChangeResponseData(user);
+    }
+
+    public ProfileRequestData getProfile(UserContext userContext) {
+        User user = getUser(userContext);
+        return new ProfileRequestData(user);
+    }
+
+    public Image getImage(UserContext userContext) {
+        User user = getUser(userContext);
+        return user.getImage();
+    }
+
+    @Transactional
+    public User getUser(UserContext userContext) {
+        return userRepository.findById(userContext.getUserId())
+                .orElseThrow(() -> new NotFoundException("유저정보가 올바르지 않습니다."));
     }
 }
