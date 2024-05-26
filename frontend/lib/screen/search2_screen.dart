@@ -137,6 +137,7 @@ class _search2PageState extends State<search2Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: LIGHTGREY,
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
@@ -243,7 +244,6 @@ class _search2PageState extends State<search2Page> {
   Widget _buildRoom(Post post) {
     return InkWell(
       onTap: () {
-
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -267,7 +267,6 @@ class _search2PageState extends State<search2Page> {
                     certificationType: post.certificationType,
                     frequency: post.frequency,
                     tag: post.tag))); //post.roomId, post.name, post.image)));
-
       },
       child: Container(
         margin: const EdgeInsets.all(10),
@@ -335,7 +334,6 @@ class _search2PageState extends State<search2Page> {
             ),
             Container(
               alignment: Alignment.centerRight,
-
               child: post.info == null || post.info == ""
                   ? const Text(
                       "소개가 없습니다.",
@@ -347,7 +345,6 @@ class _search2PageState extends State<search2Page> {
                       style: const TextStyle(
                           fontFamily: "bm", fontSize: 15, color: Colors.black),
                     ),
-
             ),
           ],
         ),
