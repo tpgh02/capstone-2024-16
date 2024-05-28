@@ -174,6 +174,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_image:
+    dependency: "direct main"
+    description:
+      name: flutter_image
+      sha256: a113b84279cbcb2579b5a269eeffc3ad03181cf5f94ea1665c4181b814d196b5
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.11"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -288,6 +296,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  image_gallery_saver:
+    dependency: "direct main"
+    description:
+      name: image_gallery_saver
+      sha256: be812580c7a320d3bf583af89cac6b376f170d48000aca75215a73285a3223a0
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.7.1"
   image_picker:
     dependency: "direct main"
     description:
@@ -448,6 +464,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  open_file:
+    dependency: "direct main"
+    description:
+      name: open_file
+      sha256: "5cd0288033d613ee7908aa974b7ff00805ae55d253f64d311603cf2e30613ca8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.1"
   path:
     dependency: transitive
     description:

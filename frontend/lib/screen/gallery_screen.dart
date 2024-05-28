@@ -1,14 +1,18 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
-import 'package:dodo/screen/main2_screen.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 // Fetch images from server
 Future<List<Certification>> fetchImg() async {
@@ -19,8 +23,7 @@ Future<List<Certification>> fetchImg() async {
   final response = await http.get(Uri.parse(serverUrl + '/api/v1/report/album'),
       headers: headers);
   if (response.statusCode == 200) {
-    Iterable certificationList = jsonDecode(utf8
-        .decode(response.bodyBytes)); // To prevent Korean character corruption
+    Iterable certificationList = jsonDecode(utf8.decode(response.bodyBytes));
     log('$certificationList');
     List<Certification> certifications =
         certificationList.map((json) => Certification.fromJson(json)).toList();
@@ -78,34 +81,62 @@ class galleryPage extends StatefulWidget {
 }
 
 class _galleryPageState extends State<galleryPage> {
-  final widgetKey = GlobalKey();
+  final GlobalKey _globalKey = GlobalKey();
   bool downloading = false;
   String progressString = "";
 
-  Future<void> downloadFile(String imgUrl) async {
-    Dio dio = Dio();
+  Future<void> _captureAndSave() async {
     try {
-      var dir = await getApplicationDocumentsDirectory();
-      await dio.download(imgUrl, '${dir.path}/myimage.jpg',
-          onReceiveProgress: (rec, total) {
-        setState(() {
-          downloading = true;
-          progressString = ((rec / total) * 100).toStringAsFixed(0) + '%';
-        });
+      setState(() {
+        downloading = true;
       });
-    } catch (e) {
-      print(e);
-    }
 
-    setState(() {
-      downloading = false;
-      progressString = 'Completed';
-    });
-    print('Download completed');
+      RenderRepaintBoundary boundary = _globalKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
+      ui.Image image = await boundary.toImage();
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+      log('Saving image to gallery');
+      final result = await ImageGallerySaver.saveImage(pngBytes);
+      log('Image saved: $result');
+
+      setState(() {
+        downloading = false;
+      });
+
+      Fluttertoast.showToast(
+        msg: "이미지 다운로드 완료!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } catch (e) {
+      setState(() {
+        downloading = false;
+      });
+      log('Error during download: $e');
+      Fluttertoast.showToast(
+        msg: "다운로드 중 오류 발생: $e",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final DateTime now = DateTime.now();
+    final String lastMonth = (now.month - 1).toString() + '월';
+
     return Scaffold(
       backgroundColor: LIGHTGREY,
       body: Padding(
@@ -131,84 +162,105 @@ class _galleryPageState extends State<galleryPage> {
                   ),
                 ],
               ),
-              FutureBuilder<List<Certification>>(
-                future: fetchImg(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Center(
-                          child: Text(
-                        '오류가 발생했습니다. 잠시 후 시도해 주십시오',
-                        style: TextStyle(
-                            fontFamily: 'bm', color: DARKGREY, fontSize: 25),
-                      )),
-                    );
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Center(
-                          child: Text(
-                        '이미지가 없습니다.',
-                        style: TextStyle(
-                            fontFamily: 'bm', color: DARKGREY, fontSize: 25),
-                      )),
-                    );
-                  } else {
-                    return Column(
-                      children: [
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
+              RepaintBoundary(
+                key: _globalKey,
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 2),
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white,
+                      ),
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          Text(
+                            lastMonth,
+                            style:
+                                const TextStyle(fontSize: 24, fontFamily: "bm"),
                           ),
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (context, index) {
-                            final certification = snapshot.data![index];
-                            return Image.network(
-                              certification.image.url,
-                              fit: BoxFit.cover,
-                            );
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 40,
-                            child: ElevatedButton(
-                              onPressed: downloading
-                                  ? null
-                                  : () async {
-                                      if (snapshot.hasData &&
-                                          snapshot.data!.isNotEmpty) {
-                                        await downloadFile(
-                                            snapshot.data!.first.image.url);
-                                      }
-                                    },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: PRIMARY_COLOR,
-                              ),
-                              child: Text(
-                                downloading ? progressString : "이미지로 다운받기",
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'bm',
-                                    fontSize: 20),
-                              ),
+                          const SizedBox(height: 16),
+                          FutureBuilder<List<Certification>>(
+                            future: fetchImg(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              } else if (snapshot.hasError) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Center(
+                                      child: Text(
+                                    '오류가 발생했습니다. 잠시 후 시도해 주십시오',
+                                    style: TextStyle(
+                                        fontFamily: 'bm',
+                                        color: DARKGREY,
+                                        fontSize: 25),
+                                  )),
+                                );
+                              } else if (!snapshot.hasData ||
+                                  snapshot.data!.isEmpty) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Center(
+                                      child: Text(
+                                    '이미지가 없습니다.',
+                                    style: TextStyle(
+                                        fontFamily: 'bm',
+                                        color: DARKGREY,
+                                        fontSize: 25),
+                                  )),
+                                );
+                              } else {
+                                return GridView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10,
+                                  ),
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (context, index) {
+                                    final certification = snapshot.data![index];
+                                    return Image.network(
+                                      certification.image.url,
+                                      fit: BoxFit.cover,
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 40,
+                        child: ElevatedButton(
+                          onPressed: downloading ? null : _captureAndSave,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: PRIMARY_COLOR,
+                          ),
+                          child: Text(
+                            downloading ? progressString : "이미지로 다운받기",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'bm',
+                              fontSize: 20,
                             ),
                           ),
                         ),
-                      ],
-                    );
-                  }
-                },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

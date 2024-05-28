@@ -134,6 +134,12 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "flutter_image",
+      "rootUri": "file:///C:/Users/happy/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_image-4.1.11",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "flutter_lints",
       "rootUri": "file:///C:/Users/happy/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-2.0.3",
       "packageUri": "lib/",
@@ -220,6 +226,12 @@
     {
       "name": "http_parser",
       "rootUri": "file:///C:/Users/happy/AppData/Local/Pub/Cache/hosted/pub.dev/http_parser-4.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "image_gallery_saver",
+      "rootUri": "file:///C:/Users/happy/AppData/Local/Pub/Cache/hosted/pub.dev/image_gallery_saver-1.7.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -340,6 +352,12 @@
     {
       "name": "nested",
       "rootUri": "file:///C:/Users/happy/AppData/Local/Pub/Cache/hosted/pub.dev/nested-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "open_file",
+      "rootUri": "file:///C:/Users/happy/AppData/Local/Pub/Cache/hosted/pub.dev/open_file-3.2.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -596,7 +614,7 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2024-05-20T01:41:31.026274Z",
+  "generated": "2024-05-28T12:20:46.403084Z",
   "generator": "pub",
   "generatorVersion": "3.3.1"
 }
