@@ -207,6 +207,7 @@ class _m_todoState extends State<m_todo> {
                                       sortedRooms[idx].room_id,
                                       sortedRooms[idx].room_status);
                                 }
+                                return null;
                               }, childCount: sortedRooms.length),
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(

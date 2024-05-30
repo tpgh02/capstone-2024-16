@@ -58,7 +58,6 @@ Future<int> fetchInfo(
   } catch (e) {
     print(response.body);
     print('네트워크 오류: $e');
-
     throw Exception('네트워크 오류가 발생했습니다');
   }
 }
@@ -71,6 +70,15 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _password2 = TextEditingController();
   bool _obscurePassword1 = true;
   bool _obscurePassword2 = true;
+
+  @override
+  void dispose() {
+    _email.dispose();
+    _username.dispose();
+    _password1.dispose();
+    _password2.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
