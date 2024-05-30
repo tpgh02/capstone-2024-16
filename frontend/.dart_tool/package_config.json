@@ -242,12 +242,6 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "image_gallery_saver",
-      "rootUri": "file:///C:/Users/happy/AppData/Local/Pub/Cache/hosted/pub.dev/image_gallery_saver-1.7.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "image_picker",
       "rootUri": "file:///C:/Users/happy/AppData/Local/Pub/Cache/hosted/pub.dev/image_picker-0.8.9",
       "packageUri": "lib/",
@@ -632,7 +626,7 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2024-05-30T04:45:38.298573Z",
+  "generated": "2024-05-30T10:29:40.359805Z",
   "generator": "pub",
   "generatorVersion": "3.3.1"
 }

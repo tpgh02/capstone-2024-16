@@ -3,6 +3,13 @@
         android:label="오늘도도전"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+         <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".MainActivity"
             android:exported="true"

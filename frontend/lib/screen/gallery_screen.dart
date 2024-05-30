@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -95,8 +94,8 @@ class _galleryPageState extends State<galleryPage> {
       Uint8List pngBytes = byteData!.buffer.asUint8List();
 
       log('Saving image to gallery');
-      final result = await ImageGallerySaver.saveImage(pngBytes);
-      log('Image saved: $result');
+      // final result = await ImageGallerySaver.saveImage(pngBytes);
+      // log('Image saved: $result');
 
       setState(() {
         downloading = false;
