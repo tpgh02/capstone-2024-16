@@ -14,13 +14,12 @@ import 'package:dodo/const/colors.dart';
 import 'package:dodo/const/server.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-// Fetch images from server
 Future<List<Certification>> fetchImg() async {
   var headers = {
     'Authorization':
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
   };
-  final response = await http.get(Uri.parse(serverUrl + '/api/v1/report/album'),
+  final response = await http.get(Uri.parse('${serverUrl}/api/v1/report/album'),
       headers: headers);
   if (response.statusCode == 200) {
     Iterable certificationList = jsonDecode(utf8.decode(response.bodyBytes));
@@ -33,7 +32,6 @@ Future<List<Certification>> fetchImg() async {
   }
 }
 
-// Certification model
 class Certification {
   final int certificationId;
   final ImageData image;
@@ -54,7 +52,6 @@ class Certification {
   }
 }
 
-// ImageData model
 class ImageData {
   final int id;
   final String url;
@@ -72,7 +69,6 @@ class ImageData {
   }
 }
 
-// Gallery Page
 class galleryPage extends StatefulWidget {
   const galleryPage({super.key});
 

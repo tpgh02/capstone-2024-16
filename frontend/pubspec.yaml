@@ -58,6 +58,7 @@ dependencies:
   open_file: ^3.2.1
   flutter_image: ^4.0.0
   image_gallery_saver: ^1.7.1
+  flutter_local_notifications: ^8.2.0
 
 dev_dependencies:
   flutter_test:
