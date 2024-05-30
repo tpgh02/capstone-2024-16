@@ -106,7 +106,7 @@ class _m_titleState extends State<m_title> {
                         );
                       } else if (snapshot.hasData) {
                         return Text(
-                          "김도도", //snapshot.data!.name,
+                          snapshot.data!.name,
                           style: const TextStyle(
                             fontFamily: "kcc",
                             fontSize: 40,
