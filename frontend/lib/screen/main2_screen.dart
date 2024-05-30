@@ -59,7 +59,7 @@ class calendarData {
   factory calendarData.fromJson(Map<String, dynamic> json) {
     return calendarData(
       date: json['date'],
-      flag: json['flag'] == "true",
+      flag: json['flag'],
     );
   }
 }

@@ -1,26 +1,56 @@
+import 'dart:developer';
 import 'package:dodo/components/room_notice.dart';
 import 'package:dodo/const/colors.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:dodo/const/server.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
-class Msg {
-  int roomId;
-  int userId;
-  String message;
-  String time;
-
-  Msg({
-    required this.roomId,
-    required this.userId,
-    required this.message,
-    required this.time,
+Future<List<ReceivedMsg>> fetchReceivedMsg(int roomId) async {
+  final response = await http
+      .get(Uri.parse('$serverUrl/chat/room-messages/$roomId'), headers: {
+    'Authorization':
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjF9.8PJk4wE2HsDlgLmFA_4PU2Ckb7TWmXfG0Hfz2pRE9WU'
   });
+  if (response.statusCode == 200) {
+    final List<dynamic> jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+    List<ReceivedMsg> nowMsgs =
+        jsonData.map((json) => ReceivedMsg.fromJson(json)).toList();
+    log("Chatting: Connected!");
+    return nowMsgs;
+  } else {
+    throw Exception('Failed to load chatting room');
+  }
 }
 
-List<dynamic> messageList = [];
+// future message class
+class ReceivedMsg {
+  final int userId;
+  final String message;
+  final String time;
+
+  const ReceivedMsg(
+      {required this.userId, required this.message, required this.time});
+
+  factory ReceivedMsg.fromJson(dynamic json) {
+    return ReceivedMsg(
+        userId: json['userId'], message: json['message'], time: json['time']);
+  }
+}
+
+// pub/sub message class
+class Msg {
+  int userId;
+  String message;
+
+  Msg({
+    required this.userId,
+    required this.message,
+  });
+}
 
 class RoomChatScreen extends StatefulWidget {
   final String room_title;
@@ -42,7 +72,8 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
   final String wsURL = "ws://43.200.176.111:8080/ws-stomp";
   late StompClient stompClient;
   final TextEditingController textEditingController = TextEditingController();
-  List<dynamic> messages = List.empty();
+  late Future<List<ReceivedMsg>>? futureMsgList;
+
   @override
   void initState() {
     super.initState();
@@ -51,12 +82,13 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
             url: wsURL,
             onConnect: onConnectCallback,
             beforeConnect: () async {
-              print('waiting to connect...');
+              log('waiting to connect...');
               await Future.delayed(const Duration(milliseconds: 200));
-              print('connecting...');
+              log('connecting...');
             },
             onWebSocketError: (dynamic error) => print(error.toString())));
     stompClient.activate();
+    futureMsgList = fetchReceivedMsg(widget.roomId);
   }
 
   void onConnectCallback(StompFrame frame) {
@@ -66,17 +98,10 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
       callback: (frame) {
         Map<String, dynamic> obj = json.decode(frame.body!);
         Msg msg = Msg(
-          roomId: obj['roomId'],
           userId: obj['userId'],
           message: obj['message'],
-          time: obj['time'],
         );
-        setState(() {
-          messageList.add(msg);
-        });
-        print(msg);
-        print(frame.body);
-        messages = jsonDecode(frame.body!).reversed.toList();
+        log("sub msg: ${msg.message}, frame: ${frame.body}");
       },
     );
   }
@@ -96,23 +121,14 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
       }
       // send
       stompClient.send(
-        destination: '/pub',
+        destination: '/pub/chat/sendMessage/${widget.roomId}',
         body: json.encode({
-          'roomId': widget.roomId,
           'userId': widget.userId,
           'message': sendMsg,
-          'time': '$hour:$minute',
         }),
       );
       textEditingController.clear();
-      messageList.add({
-        'roomId': widget.roomId,
-        'userId': widget.userId,
-        'message': sendMsg,
-        'time': '$hour:$minute',
-      });
-      print("send message");
-      print(messageList);
+      log("send message");
     }
   }
 
@@ -137,57 +153,103 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
             Expanded(
               child: Container(
                 padding: const EdgeInsets.fromLTRB(6, 20, 0, 20),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: messageList.length,
-                  itemBuilder: (context, index) {
-                    // Map<String, dynamic> item = messageList[index];
-                    return ListTile(
-                      title: Container(
-                          margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                          padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
-                          ),
+                child: FutureBuilder<List<ReceivedMsg>>(
+                    future: futureMsgList,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Center(child: CircularProgressIndicator()),
+                          ],
+                        );
+                      } else if (snapshot.hasError) {
+                        log("채팅방 연결 실패: ${snapshot.error}");
+                        return const Center(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      '${widget.userId} :',
-                                      style: const TextStyle(
-                                        color: POINT_COLOR,
-                                        fontFamily: 'bm',
-                                      ),
-                                    ),
-                                  ),
-                                  Text(
-                                    messageList[index]['time'],
-                                    style: const TextStyle(
-                                      color: POINT_COLOR,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const Divider(),
                               Text(
-                                messageList[index]['message'],
-                                style: const TextStyle(
-                                  color: POINT_COLOR,
-                                  // fontFamily: 'bma',
+                                '서버 연결에 실패하였습니다.',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.black45,
+                                  fontFamily: 'bm',
                                   fontSize: 20,
                                 ),
                               ),
                             ],
-                          )),
-                    );
-                  },
-                ),
+                          ),
+                        );
+                      } else if (snapshot.hasData) {
+                        log("${snapshot.data?.length}");
+                        return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: snapshot.data?.length,
+                            itemBuilder: (context, index) {
+                              String sendDate = snapshot.data![index].time
+                                  .split('T')[0]
+                                  .substring(2);
+                              String sendTime = snapshot.data![index].time
+                                  .split('T')[1]
+                                  .split('.')[0]
+                                  .substring(0, 5);
+
+                              return ListTile(
+                                title: Container(
+                                    margin:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                    padding: const EdgeInsets.fromLTRB(
+                                        15, 10, 15, 10),
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.white,
+                                    ),
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          // user id
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  '${widget.userId} :',
+                                                  style: const TextStyle(
+                                                    color: POINT_COLOR,
+                                                    fontFamily: 'bm',
+                                                  ),
+                                                ),
+                                              ),
+
+                                              // time indication
+                                              Text(
+                                                "$sendDate $sendTime",
+                                                style: const TextStyle(
+                                                  color: POINT_COLOR,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const Divider(),
+
+                                          // message
+                                          Text(
+                                            "${snapshot.data![index].message}", //messageList[index]['message'],
+                                            style: const TextStyle(
+                                              color: POINT_COLOR,
+                                              fontSize: 20,
+                                            ),
+                                          )
+                                        ])),
+                              );
+                            });
+                      } else {
+                        return const Text('No data available');
+                      }
+                    }),
               ),
             ),
             _TextInputForm(),
@@ -197,7 +259,7 @@ class _RoomChatScreenState extends State<RoomChatScreen> {
     );
   }
 
-  // AppBAr
+  // AppBar
   PreferredSizeWidget _roomMainAppBar(String title, {bool manager = false}) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(80),

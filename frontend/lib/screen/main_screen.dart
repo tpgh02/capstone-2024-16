@@ -154,6 +154,7 @@ class _mainPageState extends State<mainPage>
                   backgroundColor: _main_idx == 0 ? DARKGREY : LIGHTGREY,
                   hoverColor: LIGHTGREY,
                   elevation: 0,
+                  heroTag: "main1",
                 ),
               ),
               Container(
@@ -175,6 +176,7 @@ class _mainPageState extends State<mainPage>
                   backgroundColor: _main_idx == 1 ? DARKGREY : Colors.white,
                   hoverColor: LIGHTGREY,
                   elevation: 0,
+                  heroTag: "main2",
                 ),
               ),
             ],

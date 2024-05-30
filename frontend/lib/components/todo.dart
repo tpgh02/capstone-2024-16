@@ -6,8 +6,9 @@ class todo extends StatefulWidget {
   final String room_name;
   final String room_img;
   final int room_id;
+  final String room_status;
 
-  const todo(this.room_name, this.room_img, this.room_id);
+  const todo(this.room_name, this.room_img, this.room_id, this.room_status);
 
   @override
   State<todo> createState() => _todoState();
@@ -16,6 +17,7 @@ class todo extends StatefulWidget {
 class _todoState extends State<todo> {
   @override
   Widget build(BuildContext context) {
+    print("${widget.room_status}");
     return Stack(
       children: [
         Container(
@@ -27,12 +29,14 @@ class _todoState extends State<todo> {
           child: InkWell(
             onTap: () {
               //누르면 팝업 생성하는 함수
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return c_dialog(widget.room_id);
-                },
-              );
+              widget.room_status == "SUCCESS"
+                  ? {}
+                  : showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return c_dialog(widget.room_id);
+                      },
+                    );
             },
             child:
                 //사진을 둥글게 만들 수 있는 함수
@@ -40,7 +44,9 @@ class _todoState extends State<todo> {
               borderRadius: BorderRadius.circular(20),
               child: ColorFiltered(
                 colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.25), // 어두운 필터 색상과 투명도 설정
+                  widget.room_status == "SUCCESS"
+                      ? Colors.black.withOpacity(0.6)
+                      : Colors.black.withOpacity(0.25), // 어두운 필터 색상과 투명도 설정
                   BlendMode.darken, // BlendMode 설정
                 ),
                 child: Image.network(
@@ -57,10 +63,25 @@ class _todoState extends State<todo> {
           margin: const EdgeInsets.fromLTRB(15, 15, 15, 30),
           child: Text(
             widget.room_name,
-            style: const TextStyle(
-                fontFamily: "bm", fontSize: 22, color: Colors.white),
+            style: TextStyle(
+                fontFamily: "bm",
+                fontSize: 22,
+                color: widget.room_status == "SUCCESS"
+                    ? Colors.white.withOpacity(0.2)
+                    : Colors.white),
           ),
-        )
+        ),
+        widget.room_status == "SUCCESS"
+            ? Container(
+                alignment: Alignment.center,
+                //margin: const EdgeInsets.all(value)
+                child: const Text(
+                  "완료",
+                  style: TextStyle(
+                      fontFamily: "bm", fontSize: 25, color: Colors.white),
+                ),
+              )
+            : Container(),
       ],
     );
   }
