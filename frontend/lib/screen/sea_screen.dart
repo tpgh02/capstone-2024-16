@@ -60,131 +60,154 @@ class seaPage extends StatefulWidget {
 }
 
 class _seaPageState extends State<seaPage> {
+  late Future<List<Items>> _itemsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _itemsFuture = fetchItems();
+  }
+
+  Future<void> _refreshItems() async {
+    setState(() {
+      _itemsFuture = fetchItems();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Items>>(
-      future: fetchItems(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Container(
-            key: GlobalKey(),
-            child: Stack(
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: Image.asset(
-                    "assets/images/sea.png",
-                    fit: BoxFit.cover,
-                  ),
+    return Scaffold(
+      body: RefreshIndicator(
+        onRefresh: _refreshItems,
+        child: FutureBuilder<List<Items>>(
+          future: _itemsFuture,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Stack(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height,
+                      child: Image.asset(
+                        "assets/images/sea.png",
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    for (var item in snapshot.data!)
+                      Positioned(
+                        left: item.coordinate_x.toDouble(),
+                        top: item.coordinate_y.toDouble(),
+                        child: Container(
+                          width: 120,
+                          height: 120,
+                          child: Image.network(
+                            item.imageUrl,
+                            scale: 3,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(Icons.error);
+                            },
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
-                for (var item in snapshot.data!)
-                  Positioned(
-                    left: item.coordinate_x.toDouble(),
-                    top: item.coordinate_y.toDouble(),
+              );
+            } else if (snapshot.hasError) {
+              return Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: Image.asset(
+                      "assets/images/sea.png",
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Center(
                     child: Container(
-                      width: 120,
-                      height: 120,
-                      child: Image.network(
-                        item.imageUrl,
-                        scale: 3,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Icon(Icons.error);
-                        },
+                      color: Colors.white70,
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        "Error: ${snapshot.error}",
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 18,
+                          fontFamily: 'bm',
+                        ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
-                Align(
-                  alignment: Alignment(
-                      Alignment.bottomRight.x, Alignment.bottomRight.y - 0.3),
-                  child: Container(
-                    width: 70,
-                    height: 70,
-                    margin: const EdgeInsets.all(20),
-                    child: FloatingActionButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100)),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => InvenPage()));
-                      },
-                      backgroundColor: PRIMARY_COLOR,
-                      heroTag: "actionButton2",
-                      child: Text(
-                        "보관함",
-                        style: TextStyle(
-                            fontFamily: 'bm',
-                            fontSize: 20,
-                            color: Colors.white),
-                      ),
-                      elevation: 1,
-                    ),
+                ],
+              );
+            }
+            return Center(child: CircularProgressIndicator());
+          },
+        ),
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Container(
+              width: 80,
+              height: 80,
+              child: FloatingActionButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => InvenPage()),
+                  );
+                },
+                backgroundColor: PRIMARY_COLOR,
+                heroTag: "actionButton2",
+                child: Text(
+                  "보관함",
+                  style: TextStyle(
+                    fontFamily: 'bm',
+                    fontSize: 20,
+                    color: Colors.white,
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    width: 70,
-                    height: 70,
-                    margin: const EdgeInsets.all(20),
-                    child: FloatingActionButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100)),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => storePage()));
-                      },
-                      backgroundColor: PRIMARY_COLOR,
-                      heroTag: "actionButton",
-                      child: Text(
-                        "상점",
-                        style: TextStyle(
-                            fontFamily: 'bm',
-                            fontSize: 20,
-                            color: Colors.white),
-                      ),
-                      elevation: 1,
-                    ),
-                  ),
-                ),
-              ],
+                elevation: 1,
+              ),
             ),
-          );
-        } else if (snapshot.hasError) {
-          return Stack(
-            children: [
-              Container(
-                width: double.infinity,
-                height: double.infinity,
-                child: Image.asset(
-                  "assets/images/sea.png",
-                  fit: BoxFit.cover,
+            SizedBox(height: 16),
+            Container(
+              width: 80,
+              height: 80,
+              child: FloatingActionButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100),
                 ),
-              ),
-              Center(
-                child: Container(
-                  color: Colors.white70,
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    "Error: ${snapshot.error}",
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 18,
-                      fontFamily: 'bm',
-                    ),
-                    textAlign: TextAlign.center,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => storePage()),
+                  );
+                },
+                backgroundColor: PRIMARY_COLOR,
+                heroTag: "actionButton",
+                child: Text(
+                  "상점",
+                  style: TextStyle(
+                    fontFamily: 'bm',
+                    fontSize: 20,
+                    color: Colors.white,
                   ),
                 ),
+                elevation: 1,
               ),
-            ],
-          );
-        }
-        return Center(child: CircularProgressIndicator());
-      },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

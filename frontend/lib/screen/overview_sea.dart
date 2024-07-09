@@ -121,7 +121,7 @@ class _overview_seaState extends State<overview_sea> {
                     child: Image.network(
                       widget.img,
                       fit: BoxFit.cover,
-                      scale: 3,
+                      scale: 4,
                     ),
                   );
                 },

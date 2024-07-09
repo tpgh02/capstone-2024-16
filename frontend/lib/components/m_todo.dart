@@ -30,17 +30,20 @@ class MyRoom_Main {
   final String room_title;
   final int room_id;
   final room_img;
+  final room_status;
 
   const MyRoom_Main(
       {required this.room_title,
       required this.room_id,
-      required this.room_img});
+      required this.room_img,
+      required this.room_status});
 
   factory MyRoom_Main.fromJson(dynamic json) {
     return MyRoom_Main(
       room_title: json['name'],
       room_id: json['roomId'],
       room_img: json['image'],
+      room_status: json['status'],
     );
   }
 }
@@ -163,25 +166,49 @@ class _m_todoState extends State<m_todo> {
                           ),
                         );
                       } else {
+                        // room_status에 따라 정렬
+                        List<MyRoom_Main> sortedRooms = snapshot.data!;
+                        sortedRooms.sort((a, b) {
+                          if (a.room_status == b.room_status) {
+                            return 0;
+                          } else if (a.room_status == 'FAIL') {
+                            return -1;
+                          } else if (a.room_status == 'WAIT') {
+                            return b.room_status == 'FAIL' ? 1 : -1;
+                          } else {
+                            return 1;
+                          }
+                        });
+
                         return CustomScrollView(
                           slivers: <Widget>[
                             SliverGrid(
                               delegate: SliverChildBuilderDelegate(
                                   (BuildContext context, int idx) {
-                                if (snapshot.data![idx].room_img == null) {
+                                if (sortedRooms[idx].room_img == null) {
                                   return postContainer(
-                                      snapshot.data![idx].room_title.toString(),
+                                      sortedRooms[idx].room_title.toString(),
                                       "https://my-dodo-bucket.s3.ap-northeast-2.amazonaws.com/image/default.png",
-                                      snapshot.data![idx].room_id);
+                                      sortedRooms[idx].room_id,
+                                      sortedRooms[idx].room_status);
+                                } else if (sortedRooms[idx].room_status ==
+                                    null) {
+                                  postContainer(
+                                      sortedRooms[idx].room_title.toString(),
+                                      sortedRooms[idx].room_img['url'],
+                                      sortedRooms[idx].room_id,
+                                      "FAIL");
                                 } else {
                                   return postContainer(
-                                    snapshot.data![idx].room_title.toString(),
-                                    snapshot.data![idx].room_img['url']
-                                        .toString(),
-                                    snapshot.data![idx].room_id,
-                                  );
+                                      sortedRooms[idx].room_title.toString(),
+                                      sortedRooms[idx]
+                                          .room_img['url']
+                                          .toString(),
+                                      sortedRooms[idx].room_id,
+                                      sortedRooms[idx].room_status);
                                 }
-                              }, childCount: snapshot.data!.length),
+                                return null;
+                              }, childCount: sortedRooms.length),
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
@@ -195,33 +222,17 @@ class _m_todoState extends State<m_todo> {
                     }
                   },
                 ),
-                //오늘도 도전의 스크롤하는 부분
-                //     CustomScrollView(
-                //   slivers: <Widget>[
-                //     SliverGrid(
-                //       delegate: SliverChildBuilderDelegate(
-                //           (BuildContext context, int idx) {
-                //         return postContainer(postList[idx]['room_title'],
-                //             postList[idx]['room_img'], 1);
-                //       }, childCount: postList.length),
-                //       gridDelegate:
-                //           const SliverGridDelegateWithFixedCrossAxisCount(
-                //         crossAxisCount: 2,
-                //       ),
-                //     )
-                //   ],
-                // ),
               ),
             ),
           ],
         )));
   }
 
-  Container postContainer(title, img_root, room_id) {
+  Container postContainer(title, img_root, room_id, room_status) {
     return Container(
       margin: const EdgeInsets.all(10),
       alignment: Alignment.center,
-      child: todo(title, img_root, room_id),
+      child: todo(title, img_root, room_id, room_status),
     );
   }
 }

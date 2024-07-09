@@ -67,7 +67,11 @@ class _c_dialogState extends State<c_dialog> {
       } else {
         setState(() {
           status = room['status'];
-          frequency = room['frequency'] ?? 1;
+          if (room['roomType'] == 'GROUP') {
+            frequency = 1;
+          } else {
+            frequency = room['frequency'] ?? 1;
+          }
         });
       }
     } catch (e) {
@@ -136,83 +140,54 @@ class _c_dialogState extends State<c_dialog> {
                         ),
                       ],
                     ),
-                    status == 'success'
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                "assets/images/turtle.png",
-                                scale: 2,
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              ),
-                              const Text(
-                                "대단해요!",
-                                style: TextStyle(
-                                    color: POINT_COLOR,
-                                    fontFamily: 'bma',
-                                    fontSize: 20),
-                              ),
-                              const Text(
-                                "내일도 화이팅이예요~",
-                                style: TextStyle(
-                                    color: POINT_COLOR,
-                                    fontFamily: 'bma',
-                                    fontSize: 20),
-                              )
-                            ],
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: 250,
-                                  child: SingleChildScrollView(
-                                    physics:
-                                        const AlwaysScrollableScrollPhysics(),
-                                    child: Column(
-                                      children: [
-                                        Column(
-                                          children:
-                                              List.generate(frequency, (index) {
-                                            return select(index);
-                                          }),
-                                        ),
-                                        const SizedBox(
-                                          height: 100,
-                                        ),
-                                      ],
-                                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 250,
+                            child: SingleChildScrollView(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              child: Column(
+                                children: [
+                                  Column(
+                                    children: List.generate(frequency, (index) {
+                                      return select(index);
+                                    }),
                                   ),
-                                ),
-                                Container(
-                                  alignment: Alignment.bottomCenter,
-                                  child: SizedBox(
-                                    width: double.infinity,
-                                    height: 40,
-                                    child: ElevatedButton(
-                                      onPressed: () async {
-                                        await patchUserProfileImage(
-                                            _pickedImages, widget.room_id);
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: PRIMARY_COLOR,
-                                      ),
-                                      child: const Text(
-                                        "확인",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontFamily: 'bm',
-                                            fontSize: 20),
-                                      ),
-                                    ),
+                                  const SizedBox(
+                                    height: 100,
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
+                          Container(
+                            alignment: Alignment.bottomCenter,
+                            child: SizedBox(
+                              width: double.infinity,
+                              height: 40,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  await patchUserProfileImage(
+                                      _pickedImages, widget.room_id);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: PRIMARY_COLOR,
+                                ),
+                                child: const Text(
+                                  "확인",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'bm',
+                                      fontSize: 20),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

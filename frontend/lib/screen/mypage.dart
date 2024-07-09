@@ -8,6 +8,8 @@ import 'package:dodo/screen/mypage_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
+import 'package:dodo/screen/login_screen.dart';
+import 'package:dodo/token_storage.dart';
 import 'package:http_parser/http_parser.dart';
 
 Future<MyInfo> fetchMyInfo_GET() async {
@@ -662,8 +664,14 @@ class _MyPageState extends State<MyPage> {
           ),
           actions: <Widget>[
             ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop(); //창 닫기
+              onPressed: () async {
+                await TokenStorage().deleteToken();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => loginPage(),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: POINT_COLOR,
